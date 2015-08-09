@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
 //import de.robingrether.idisguise.api.DisguiseEvent;
 import de.robingrether.idisguise.api.UndisguiseEvent;
 import de.robingrether.idisguise.disguise.Disguise;
@@ -25,6 +26,7 @@ import de.robingrether.idisguise.io.UpdateCheck;
 import de.robingrether.idisguise.management.ChannelHandler;
 import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.GhostFactory;
+import de.robingrether.idisguise.management.PlayerUtil;
 import de.robingrether.idisguise.sound.SoundSystem;
 
 public class iDisguiseListener implements Listener {
@@ -112,12 +114,14 @@ public class iDisguiseListener implements Listener {
 		}
 		ChannelHandler.addHandler(p);
 		GhostFactory.addPlayer(p);
+		PlayerUtil.addPlayer(p);
 	}
 	
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		ChannelHandler.removeHandler(player);
+		PlayerUtil.removePlayer(player);
 	}
 	
 	@EventHandler
