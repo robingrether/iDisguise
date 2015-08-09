@@ -32,12 +32,11 @@ public class ChannelHandler extends ChannelDuplexHandler {
 		this.player = player;
 	}
 	
-	public synchronized void channelRead(ChannelHandlerContext context, Object object) throws Exception {
+	public void channelRead(ChannelHandlerContext context, Object object) throws Exception {
 		super.channelRead(context, object);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public synchronized void write(ChannelHandlerContext context, Object object, ChannelPromise promise) {
+	public void write(ChannelHandlerContext context, Object object, ChannelPromise promise) {
 		try {
 			if(object instanceof PacketPlayOutNamedEntitySpawn) {
 				PacketPlayOutNamedEntitySpawn packet = (PacketPlayOutNamedEntitySpawn)object;
