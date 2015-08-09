@@ -76,45 +76,24 @@ public class ChannelHandler extends ChannelDuplexHandler {
 				}
 			} else if(object instanceof PacketPlayOutBed) {
 				PacketPlayOutBed packet = (PacketPlayOutBed)object;
-				int entityId = fieldEntityIdBed.getInt(packet);
-				for(Player player : this.player.getWorld().getPlayers()) {
-					if(player.getEntityId() == entityId) {
-						if(player.getName().equalsIgnoreCase(this.player.getName())) {
-							break;
-						} else if(DisguiseManager.isDisguised(player) && !(DisguiseManager.getDisguise(player) instanceof PlayerDisguise)) {
-							return;
-						}
-						break;
-					}
+				Player player = PlayerUtil.getPlayerByEntityId(fieldEntityIdBed.getInt(packet));
+				if(player != null && !player.getName().equalsIgnoreCase(this.player.getName()) && DisguiseManager.isDisguised(player) && !(DisguiseManager.getDisguise(player) instanceof PlayerDisguise)) {
+					return;
 				}
 			} else if(object instanceof PacketPlayOutAnimation) {
 				PacketPlayOutAnimation packet = (PacketPlayOutAnimation)object;
 				int animation = fieldAnimation.getInt(packet);
 				if(animation == 2) {
-					int entityId = fieldEntityIdAnimation.getInt(packet);
-					for(Player player : this.player.getWorld().getPlayers()) {
-						if(player.getEntityId() == entityId) {
-							if(player.getName().equalsIgnoreCase(this.player.getName())) {
-								break;
-							} else if(DisguiseManager.isDisguised(player) && !(DisguiseManager.getDisguise(player) instanceof PlayerDisguise)) {
-								return;
-							}
-							break;
-						}
+					Player player = PlayerUtil.getPlayerByEntityId(fieldEntityIdAnimation.getInt(packet));
+					if(player != null && !player.getName().equalsIgnoreCase(this.player.getName()) && DisguiseManager.isDisguised(player) && !(DisguiseManager.getDisguise(player) instanceof PlayerDisguise)) {
+						return;
 					}
 				}
 			} else if(object instanceof PacketPlayOutEntityMetadata) {
 				PacketPlayOutEntityMetadata packet = (PacketPlayOutEntityMetadata)object;
-				int entityId = fieldEntityIdMetadata.getInt(packet);
-				for(Player player : this.player.getWorld().getPlayers()) {
-					if(player.getEntityId() == entityId) {
-						if(player.getName().equalsIgnoreCase(this.player.getName())) {
-							break;
-						} else if(DisguiseManager.isDisguised(player) && ObjectUtil.equals(DisguiseManager.getDisguise(player).getType(), DisguiseType.CREEPER, DisguiseType.ENDERMAN)) {
-							return;
-						}
-						break;
-					}
+				Player player = PlayerUtil.getPlayerByEntityId(fieldEntityIdMetadata.getInt(packet));
+				if(player != null && !player.getName().equalsIgnoreCase(this.player.getName()) && DisguiseManager.isDisguised(player) && ObjectUtil.equals(DisguiseManager.getDisguise(player).getType(), DisguiseType.CREEPER, DisguiseType.ENDERMAN)) {
+					return;
 				}
 			}
 			super.write(context, object, promise);
