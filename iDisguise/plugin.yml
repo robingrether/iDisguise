@@ -1,0 +1,135 @@
+name: iDisguise
+main: de.robingrether.idisguise.iDisguise
+version: 4-test-028-1.8.3
+author: Robingrether
+website: http://dev.bukkit.org/bukkit-plugins/idisguise/
+commands:
+   disguise:
+      description: Disguise.
+   dis:
+      description: Disguise.
+   d:
+      description: Disguise.
+   undisguise:
+      description: Undisguise.
+   undis:
+      description: Undisguise.
+   ud:
+      description: Undisguise.
+permissions:
+   iDisguise.*:
+      default: op
+      children:
+         iDisguise.baby: true
+         iDisguise.bat: true
+         iDisguise.blaze: true
+         iDisguise.cave_spider: true
+         iDisguise.charged_creeper: true
+         iDisguise.chicken: true
+         iDisguise.cow: true
+         iDisguise.creeper: true
+         iDisguise.ender_dragon: true
+         iDisguise.enderman: true
+         iDisguise.ghast: true
+         iDisguise.ghost: true
+         iDisguise.giant: true
+         iDisguise.horse: true
+         iDisguise.iron_golem: true
+         iDisguise.magma_cube: true
+         iDisguise.mushroom_cow: true
+         iDisguise.ocelot: true
+         iDisguise.pig: true
+         iDisguise.pig_zombie: true
+         iDisguise.player: true
+         iDisguise.random: true
+         iDisguise.sheep: true
+         iDisguise.silverfish: true
+         iDisguise.skeleton: true
+         iDisguise.slime: true
+         iDisguise.snowman: true
+         iDisguise.spider: true
+         iDisguise.squid: true
+         iDisguise.undisguise: true
+         iDisguise.villager: true
+         iDisguise.witch: true
+         iDisguise.wither: true
+         iDisguise.wither_skeleton: true
+         iDisguise.wolf: true
+         iDisguise.zombie: true
+         iDisguise.zombie_villager: true
+   iDisguise.admin:
+      default: op
+   iDisguise.baby:
+      default: op
+   iDisguise.bat:
+      default: op
+   iDisguise.blaze:
+      default: op
+   iDisguise.cave_spider:
+      default: op
+   iDisguise.charged_creeper:
+      default: op
+   iDisguise.chicken:
+      default: op
+   iDisguise.cow:
+      default: op
+   iDisguise.creeper:
+      default: op
+   iDisguise.ender_dragon:
+      default: op
+   iDisguise.enderman:
+      default: op
+   iDisguise.ghast:
+      default: op
+   iDisguise.ghost:
+      default: op
+   iDisguise.giant:
+      default: op
+   iDisguise.horse:
+      default: op
+   iDisguise.iron_golem:
+      default: op
+   iDisguise.magma_cube:
+      default: op
+   iDisguise.mushroom_cow:
+      default: op
+   iDisguise.ocelot:
+      default: op
+   iDisguise.pig:
+      default: op
+   iDisguise.pig_zombie:
+      default: op
+   iDisguise.player:
+      default: op
+   iDisguise.random:
+      default: op
+   iDisguise.sheep:
+      default: op
+   iDisguise.silverfish:
+      default: op
+   iDisguise.skeleton:
+      default: op
+   iDisguise.slime:
+      default: op
+   iDisguise.snowman:
+      default: op
+   iDisguise.spider:
+      default: op
+   iDisguise.squid:
+      default: op
+   iDisguise.undisguise:
+      default: op
+   iDisguise.villager:
+      default: op
+   iDisguise.witch:
+      default: op
+   iDisguise.wither:
+      default: op
+   iDisguise.wither_skeleton:
+      default: op
+   iDisguise.wolf:
+      default: op
+   iDisguise.zombie:
+      default: op
+   iDisguise.zombie_villager:
+      default: op
