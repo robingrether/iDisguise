@@ -12,20 +12,20 @@ public class ProfileUtil {
 	
 	private static final ConcurrentHashMap<String, GameProfile> gameProfiles = new ConcurrentHashMap<String, GameProfile>();
 	
-	public static String getCaseCorrectedName(String name) {
+	public static synchronized String getCaseCorrectedName(String name) {
 		ProfileLookupCallbackImpl callback = new ProfileLookupCallbackImpl();
 		MinecraftServer.getServer().getGameProfileRepository().findProfilesByNames(new String[] {name}, Agent.MINECRAFT, callback);
 		return callback.getGameProfile().getName();
 	}
 	
-	public static UUID getUniqueId(String name) {
+	public static synchronized UUID getUniqueId(String name) {
 		ProfileLookupCallbackImpl callback = new ProfileLookupCallbackImpl();
 		MinecraftServer.getServer().getGameProfileRepository().findProfilesByNames(new String[] {name}, Agent.MINECRAFT, callback);
 		System.out.println("[iDisguise] GameProfile: " + callback.getGameProfile().getName() + " | " + (callback.getGameProfile() != null ? callback.getGameProfile().getId().toString() : "null"));
 		return callback.getGameProfile().getId();
 	}
 	
-	public static GameProfile getGameProfile(String name) {
+	public static synchronized GameProfile getGameProfile(String name) {
 		if(gameProfiles.containsKey(name)) {
 			return gameProfiles.get(name);
 		} else {
