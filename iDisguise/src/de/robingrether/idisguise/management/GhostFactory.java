@@ -57,7 +57,7 @@ public class GhostFactory {
 	
 	public static void addPlayer(OfflinePlayer player) {
 		if(enabled) {
-			ghostTeam.addPlayer(player);
+			ghostTeam.addEntry(player.getName());
 		}
 	}
 	
