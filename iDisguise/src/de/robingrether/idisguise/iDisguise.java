@@ -822,6 +822,7 @@ public class iDisguise extends JavaPlugin {
 		return type.name().toLowerCase().replace("_", "-");
 	}
 	
+	@Deprecated
 	public String getNameFor(DisguiseType type) {
 		return type.name().toLowerCase();
 	}
