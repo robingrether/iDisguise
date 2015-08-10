@@ -107,10 +107,10 @@ public class iDisguiseListener implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player p = event.getPlayer();
 		if(p.hasPermission("iDisguise.admin") && plugin.checkForUpdates()) {
-			plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new UpdateCheck("iDisguise v" + plugin.getVersion(), p, ChatColor.GREEN + plugin.lang.getString("update.available")), 20L);
+			plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new UpdateCheck("iDisguise v" + plugin.getVersion(), p, ChatColor.GOLD + "An update for iDisguise is available: %s"), 20L);
 		}
 		if(DisguiseManager.isDisguised(p)) {
-			p.sendMessage(ChatColor.GREEN + plugin.lang.getString("listener.join.disguised"));
+			p.sendMessage(ChatColor.GOLD + "You are still disguised. Use " + ChatColor.ITALIC + "/disguise status" + ChatColor.RESET + ChatColor.GOLD + " to get more information.");
 		}
 		ChannelHandler.addHandler(p);
 		GhostFactory.addPlayer(p);
@@ -133,7 +133,7 @@ public class iDisguiseListener implements Listener {
 				plugin.getServer().getPluginManager().callEvent(undisEvent);
 				if(!undisEvent.isCancelled()) {
 					DisguiseManager.undisguiseToAll(p);
-					p.sendMessage(ChatColor.GREEN + plugin.lang.getString("listener.worldchange.un"));
+					p.sendMessage(ChatColor.GOLD + "You were undisguised because disguising is prohibited in this world.");
 				}
 			}
 		}
