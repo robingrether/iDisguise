@@ -38,7 +38,6 @@ public interface DisguiseAPI {
 	 */
 	public void undisguiseAll();
 	
-	
 	/**
 	 * Checks whether a player is disguised.
 	 * 
@@ -71,6 +70,7 @@ public interface DisguiseAPI {
 	 * @since 2.2.1
 	 * @return the locale code e.g. enUS
 	 */
+	@Deprecated
 	public String getLocale();
 	
 	/**
@@ -80,6 +80,7 @@ public interface DisguiseAPI {
 	 * @param name the name of the phrase
 	 * @return the localized phrase or " " if not existing
 	 */
+	@Deprecated
 	public String getLocalizedPhrase(String name);
 	
 	/**
