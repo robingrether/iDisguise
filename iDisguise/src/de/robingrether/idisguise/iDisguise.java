@@ -106,9 +106,9 @@ public class iDisguise extends JavaPlugin {
 		}
 		getServer().getServicesManager().register(DisguiseAPI.class, getAPI(), this, ServicePriority.Normal);
 		if(checkForUpdates()) {
-			getServer().getScheduler().runTaskLaterAsynchronously(this, new UpdateCheck(getFullName(), getServer().getConsoleSender(), "[iDisguise] " + lang.getString("update.available")), 20L);
+			getServer().getScheduler().runTaskLaterAsynchronously(this, new UpdateCheck(getFullName(), getServer().getConsoleSender(), "[iDisguise] " + "An update for iDisguise is available: %s"), 20L);
 		}
-		System.out.println("[iDisguise] " + String.format(lang.getString("plugin.enabled"), getVersion()));
+		System.out.println("[iDisguise] " + String.format("iDisguise v%s enabled!", getVersion()));
 	}
 	
 	public void onDisable() {
@@ -119,7 +119,7 @@ public class iDisguise extends JavaPlugin {
 		if(saveDisguises()) {
 			saveData();
 		}
-		System.out.println("[iDisguise] " + String.format(lang.getString("plugin.disabled"), getVersion()));
+		System.out.println("[iDisguise] " + String.format("iDisguise v%s disabled!", getVersion()));
 	}
 	
 	public void onReload() {
