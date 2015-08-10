@@ -136,6 +136,33 @@ public class iDisguise extends JavaPlugin {
 				sender.sendMessage(ChatColor.RED + "You have to use '/odisguise' from console.");
 				return true;
 			}
+			if(args.length == 0 || StringUtil.equalsIgnoreCase(args[0], "?", "help")) {
+				sender.sendMessage(ChatColor.GREEN + "iDisguise v" + getVersion() + " Help");
+				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " help - Shows this");
+				if(player.hasPermission("iDisguise.player")) {
+					sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " player <name> - Disguise as a player");
+				}
+				if(isGhostDisguiseEnabled() && player.hasPermission("iDisguise.player.ghost")) {
+					sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " ghost <name> - Disguise as a ghost player");
+				}
+				if(player.hasPermission("iDisguise.random")) {
+					sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " random - Disguise as a random mob");
+				}
+				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " status - Shows what you are currently disguised as");
+				if(!permissionForUndisguise() || player.hasPermission("iDisguise.undisguise")) {
+					sender.sendMessage(ChatColor.GOLD + "/undisguise - Undisguise");
+				}
+				if(player.hasPermission("iDisguise.undisguise.all")) {
+					sender.sendMessage(ChatColor.GOLD + "/undisguise <*/all> - Undisguise everyone");
+				}
+				if(player.hasPermission("iDisguise.undisguise.others")) {
+					sender.sendMessage(ChatColor.GOLD + "/undisguise <name> - Undisguise another player");
+				}
+				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " [subtype] <mobtype> [subtype] - Disguise as a mob with optional subtypes");
+				if(DisguiseManager.isDisguised(player)) {
+					// add subtype information
+				}
+			}
 			// disguise einfügen
 			return true;
 		} else if(StringUtil.equalsIgnoreCase(cmd.getName(), "ud", "undis", "undisguise")) {
@@ -185,8 +212,10 @@ public class iDisguise extends JavaPlugin {
 				} else {
 					sender.sendMessage(ChatColor.RED + "You are not allowed to undisguise everyone.");
 				}
+			} else {
+				// add undisguise other players
 			}
-		}
+		} //else if - add /odisguise
 		return true;
 	}
 	
