@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
+@Deprecated
 public class LanguageFile {
 	
 	private HashMap<String, String> lang = new HashMap<String, String>();

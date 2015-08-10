@@ -817,6 +817,7 @@ public class iDisguise extends JavaPlugin {
 		return configuration.getBoolean("check-for-updates");
 	}
 	
+	@Deprecated
 	public String getLangNameFor(DisguiseType type) {
 		return type.name().toLowerCase().replace("_", "-");
 	}
@@ -825,10 +826,12 @@ public class iDisguise extends JavaPlugin {
 		return type.name().toLowerCase();
 	}
 	
+	@Deprecated
 	public String getLocalization() {
 		return configuration.getString("localization");
 	}
 	
+	@Deprecated
 	public String getLangString(String name) {
 		return lang.getString(name);
 	}
