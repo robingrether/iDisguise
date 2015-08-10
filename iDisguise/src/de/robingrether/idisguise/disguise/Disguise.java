@@ -1,8 +1,10 @@
 package de.robingrether.idisguise.disguise;
 
 import java.io.Serializable;
+
 import net.minecraft.server.v1_8_R3.Entity;
 import net.minecraft.server.v1_8_R3.World;
+
 import org.bukkit.Location;
 
 /**
@@ -14,7 +16,7 @@ import org.bukkit.Location;
 public abstract class Disguise implements Serializable, Cloneable {
 	
 	private static final long serialVersionUID = 3699593353745149494L;
-	protected DisguiseType type;
+	protected final DisguiseType type;
 	
 	protected Disguise(DisguiseType type) {
 		this.type = type;
