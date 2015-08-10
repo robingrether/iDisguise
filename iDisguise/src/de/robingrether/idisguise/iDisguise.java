@@ -72,7 +72,7 @@ public class iDisguise extends JavaPlugin {
 		configuration.loadData();
 		configuration.saveData();
 		lang = new LanguageFile(getLocalization());
-		DisguiseManager.setAttribute(0, showNameWhileDisguised());
+		DisguiseManager.setAttribute(0, showOriginalPlayerNames());
 		SoundSystem.setEnabled(isSoundSystemEnabled());
 		try {
 			metrics = new Metrics(this);
@@ -149,7 +149,7 @@ public class iDisguise extends JavaPlugin {
 					sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " random - Disguise as a random mob");
 				}
 				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " status - Shows what you are currently disguised as");
-				if(!permissionForUndisguise() || player.hasPermission("iDisguise.undisguise")) {
+				if(!requirePermissionForUndisguising() || player.hasPermission("iDisguise.undisguise")) {
 					sender.sendMessage(ChatColor.GOLD + "/undisguise - Undisguise");
 				}
 				if(player.hasPermission("iDisguise.undisguise.all")) {
@@ -240,7 +240,7 @@ public class iDisguise extends JavaPlugin {
 					sender.sendMessage(ChatColor.RED + lang.getString("cmd.disguise.noperm"));
 				}
 			} else {
-				if(permissionForUndisguise() && (!player.hasPermission("iDisguise.undisguise"))) {
+				if(requirePermissionForUndisguising() && (!player.hasPermission("iDisguise.undisguise"))) {
 					sender.sendMessage(ChatColor.RED + lang.getString("cmd.disguise.noperm"));
 					return true;
 				}
@@ -262,7 +262,7 @@ public class iDisguise extends JavaPlugin {
 			return true;
 		}
 		if(args[0].equalsIgnoreCase("ghost")) {
-			if(!isPermittedInWorld(player.getWorld()) && !player.hasPermission("iDisguise.admin")) {
+			if(!isDisguisingPermittedInWorld(player.getWorld()) && !player.hasPermission("iDisguise.admin")) {
 				player.sendMessage(ChatColor.RED + lang.getString("cmd.disguise.badworld"));
 				return true;
 			}
@@ -283,7 +283,7 @@ public class iDisguise extends JavaPlugin {
 			}
 			executeDisguise(player, new PlayerDisguise(name, true));
 		} else if(args[0].equalsIgnoreCase("player")) {
-			if(!isPermittedInWorld(player.getWorld()) && !player.hasPermission("iDisguise.admin")) {
+			if(!isDisguisingPermittedInWorld(player.getWorld()) && !player.hasPermission("iDisguise.admin")) {
 				player.sendMessage(ChatColor.RED + lang.getString("cmd.disguise.badworld"));
 				return true;
 			}
@@ -345,7 +345,7 @@ public class iDisguise extends JavaPlugin {
 				}
 			}
 		} else if(args[0].equalsIgnoreCase("un")) {
-			if(permissionForUndisguise() && (!player.hasPermission("iDisguise.undisguise"))) {
+			if(requirePermissionForUndisguising() && (!player.hasPermission("iDisguise.undisguise"))) {
 				sender.sendMessage(ChatColor.RED + lang.getString("cmd.disguise.noperm"));
 				return true;
 			}
@@ -679,7 +679,7 @@ public class iDisguise extends JavaPlugin {
 	}
 	
 	private void executeDisguise(Player player, Disguise disguise) {
-		if(!isPermittedInWorld(player.getWorld()) && !player.hasPermission("iDisguise.admin")) {
+		if(!isDisguisingPermittedInWorld(player.getWorld()) && !player.hasPermission("iDisguise.admin")) {
 			player.sendMessage(ChatColor.RED + lang.getString("cmd.disguise.badworld"));
 			return;
 		}
@@ -793,23 +793,23 @@ public class iDisguise extends JavaPlugin {
 		return configuration.getBoolean("save-disguises");
 	}
 	
-	public boolean isEntityDamageAllowed() {
+	public boolean canDisguisedPlayersBeDamaged() {
 		return configuration.getBoolean("entity-damage-while-disguised");
 	}
 	
-	public boolean undisguiseOnHit() {
+	public boolean undisguisePlayerWhenHitByLiving() {
 		return configuration.getBoolean("undisguise-on-hit");
 	}
 	
-	public boolean permissionForUndisguise() {
+	public boolean requirePermissionForUndisguising() {
 		return configuration.getBoolean("permission-for-undisguise");
 	}
 	
-	public boolean isPermittedInWorld(World world) {
-		return isPermittedInWorld(world.getName());
+	public boolean isDisguisingPermittedInWorld(World world) {
+		return isDisguisingPermittedInWorld(world.getName());
 	}
 	
-	public boolean isPermittedInWorld(String world) {
+	public boolean isDisguisingPermittedInWorld(String world) {
 		return configuration.getStringList("permitted-worlds").contains(world);
 	}
 	
@@ -837,11 +837,11 @@ public class iDisguise extends JavaPlugin {
 		return lang.getString(name);
 	}
 	
-	public boolean undisguiseOnProjectileHit() {
+	public boolean undisguisePlayerWhenHitByProjectile() {
 		return configuration.getBoolean("undisguise-on-projectile-hit");
 	}
 	
-	public boolean undisguiseOnHitOther() {
+	public boolean undisguisePlayerWhenHitsOtherPlayer() {
 		return configuration.getBoolean("undisguise-on-hit-other");
 	}
 	
@@ -849,12 +849,12 @@ public class iDisguise extends JavaPlugin {
 		return configuration.getBoolean("sound-system");
 	}
 	
-	public boolean showNameWhileDisguised() {
+	public boolean showOriginalPlayerNames() {
 		return configuration.getBoolean("show-name-while-disguised");
 	}
 	
-	public boolean noTargetWhileDisguised() {
-		return configuration.getBoolean("no-target-while-disguised");
+	public boolean canMobsTargetDisguisedPlayers() {
+		return !configuration.getBoolean("no-target-while-disguised");
 	}
 	
 	public boolean isGhostDisguiseEnabled() {

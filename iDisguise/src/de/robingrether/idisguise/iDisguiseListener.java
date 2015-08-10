@@ -49,7 +49,7 @@ public class iDisguiseListener implements Listener {
 	public void onEntityTarget(EntityTargetEvent event) {
 		if(event.getTarget() instanceof Player) {
 			Player target = (Player)event.getTarget();
-			if(DisguiseManager.isDisguised(target) && plugin.noTargetWhileDisguised()) {
+			if(DisguiseManager.isDisguised(target) && !plugin.canMobsTargetDisguisedPlayers()) {
 				event.setCancelled(true);
 			}
 		}
@@ -62,10 +62,10 @@ public class iDisguiseListener implements Listener {
 			if(!event.isCancelled()) {
 				if(DisguiseManager.isDisguised(p)) {
 					if(event.getCause() == DamageCause.ENTITY_ATTACK) {
-						if(!plugin.isEntityDamageAllowed()) {
+						if(!plugin.canDisguisedPlayersBeDamaged()) {
 							event.setCancelled(true);
 						}
-						if(plugin.undisguiseOnHit()) {
+						if(plugin.undisguisePlayerWhenHitByLiving()) {
 							UndisguiseEvent undisEvent = new UndisguiseEvent(p, DisguiseManager.getDisguise(p).clone(), false);
 							plugin.getServer().getPluginManager().callEvent(undisEvent);
 							if(!undisEvent.isCancelled()) {
@@ -73,7 +73,7 @@ public class iDisguiseListener implements Listener {
 							}
 						}
 					} else if(event.getCause() == DamageCause.PROJECTILE) {
-						if(plugin.undisguiseOnProjectileHit()) {
+						if(plugin.undisguisePlayerWhenHitByProjectile()) {
 							UndisguiseEvent undisEvent = new UndisguiseEvent(p, DisguiseManager.getDisguise(p).clone(), false);
 							plugin.getServer().getPluginManager().callEvent(undisEvent);
 							if(!undisEvent.isCancelled()) {
@@ -93,7 +93,7 @@ public class iDisguiseListener implements Listener {
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 		if(event.getEntityType() == EntityType.PLAYER && event.getDamager() instanceof Player) {
 			Player damager = (Player)event.getDamager();
-			if(DisguiseManager.isDisguised(damager) && plugin.undisguiseOnHitOther()) {
+			if(DisguiseManager.isDisguised(damager) && plugin.undisguisePlayerWhenHitsOtherPlayer()) {
 				UndisguiseEvent undisEvent = new UndisguiseEvent(damager, DisguiseManager.getDisguise(damager).clone(), false);
 				plugin.getServer().getPluginManager().callEvent(undisEvent);
 				if(!undisEvent.isCancelled()) {
@@ -128,7 +128,7 @@ public class iDisguiseListener implements Listener {
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
 		Player p = event.getPlayer();
 		if(DisguiseManager.isDisguised(p)) {
-			if(!plugin.isPermittedInWorld(p.getWorld()) && !p.hasPermission("iDisguise.admin")) {
+			if(!plugin.isDisguisingPermittedInWorld(p.getWorld()) && !p.hasPermission("iDisguise.admin")) {
 				UndisguiseEvent undisEvent = new UndisguiseEvent(p, DisguiseManager.getDisguise(p).clone(), false);
 				plugin.getServer().getPluginManager().callEvent(undisEvent);
 				if(!undisEvent.isCancelled()) {
