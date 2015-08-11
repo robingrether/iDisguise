@@ -277,6 +277,7 @@ public class iDisguise extends JavaPlugin {
 		}
 	}
 	
+	@Deprecated
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player player = null;
 		if(sender instanceof Player) {
@@ -736,6 +737,7 @@ public class iDisguise extends JavaPlugin {
 		player.sendMessage(ChatColor.GREEN + " Enderman block in hand data: <data>");
 	}
 	
+	@Deprecated
 	private void executeDisguise(Player player, Disguise disguise) {
 		if(!isDisguisingPermittedInWorld(player.getWorld()) && !player.hasPermission("iDisguise.admin")) {
 			player.sendMessage(ChatColor.RED + lang.getString("cmd.disguise.badworld"));
