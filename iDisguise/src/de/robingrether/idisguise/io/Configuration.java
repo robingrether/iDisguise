@@ -23,10 +23,9 @@ public class Configuration {
 	public Configuration(File directory) {
 		configurationFile = new File(directory, "config.txt");
 		yamlConfigurationFile = new File(directory, "Config.yml");
-		setDefault("save-disguises", true, "If set to true the disguises will be saved when the plugin is disabled");
-		setDefault("permitted-worlds", Arrays.asList("world", "world_nether", "world_the_end"), "Here you must put the worlds where disguising should be allowed");
+		setDefault("save-disguises", true, "If set to true the disguises will be saved when the server is stopped");
+		setDefault("prohibited-worlds", Arrays.asList("prohibited1", "prohibited2"), "Disguising is prohibited in the following worlds");
 		setDefault("check-for-updates", true, "If set to true the plugin automatically checks if an update is available");
-		setDefault("localization", "enUS", "Here you must put the language code, for more information visit http://dev.bukkit.org/bukkit-plugins/idisguise/pages/config-languages/");
 		setDefault("sound-system", true, "If set to true the sound system is enabled, for more information visit http://dev.bukkit.org/bukkit-plugins/idisguise/pages/sound-system/");
 		setDefault("show-name-while-disguised", false, "If set to true every disguised player has his original name above his head");
 		setDefault("no-target-while-disguised", false, "If set to true mobs cannot target disguised players");

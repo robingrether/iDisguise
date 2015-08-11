@@ -62,6 +62,7 @@ public class iDisguise extends JavaPlugin {
 	
 	public iDisguiseListener listener;
 	public Configuration configuration;
+	@Deprecated
 	public LanguageFile lang;
 	public Metrics metrics;
 	
@@ -82,6 +83,7 @@ public class iDisguise extends JavaPlugin {
 					return DisguiseManager.getOnlineDisguiseCount();
 				}
 			});
+			@Deprecated
 			Graph graph2 = metrics.createGraph("Language");
 			graph2.addPlotter(new Plotter(lang.getLocalization()) {
 				public int getValue() {
@@ -810,7 +812,7 @@ public class iDisguise extends JavaPlugin {
 	}
 	
 	public boolean isDisguisingPermittedInWorld(String world) {
-		return configuration.getStringList("permitted-worlds").contains(world);
+		return !configuration.getStringList("prohibited-worlds").contains(world);
 	}
 	
 	public boolean checkForUpdates() {
@@ -829,7 +831,7 @@ public class iDisguise extends JavaPlugin {
 	
 	@Deprecated
 	public String getLocalization() {
-		return configuration.getString("localization");
+		return "enUS";
 	}
 	
 	@Deprecated
