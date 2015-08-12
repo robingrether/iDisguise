@@ -2,6 +2,7 @@ package de.robingrether.idisguise.disguise;
 
 import net.minecraft.server.v1_8_R3.EntityPig;
 import net.minecraft.server.v1_8_R3.World;
+
 import org.bukkit.Location;
 
 /**
@@ -14,6 +15,15 @@ public class PigDisguise extends MobDisguise {
 	
 	private static final long serialVersionUID = 7763610139408397729L;
 	private boolean saddled;
+	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 4.0.1
+	 */
+	public PigDisguise() {
+		this(true, false);
+	}
 	
 	/**
 	 * Creates an instance.

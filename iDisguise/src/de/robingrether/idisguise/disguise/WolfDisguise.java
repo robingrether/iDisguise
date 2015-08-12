@@ -2,6 +2,7 @@ package de.robingrether.idisguise.disguise;
 
 import net.minecraft.server.v1_8_R3.EntityWolf;
 import net.minecraft.server.v1_8_R3.World;
+
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 
@@ -16,6 +17,15 @@ public class WolfDisguise extends ColoredDisguise {
 	private static final long serialVersionUID = -6959472065307897736L;
 	private boolean tamed;
 	private boolean angry;
+	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 4.0.1
+	 */
+	public WolfDisguise() {
+		this(true, DyeColor.RED, false, false);
+	}
 	
 	/**
 	 * Creates an instance.

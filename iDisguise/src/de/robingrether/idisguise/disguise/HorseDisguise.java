@@ -2,6 +2,7 @@ package de.robingrether.idisguise.disguise;
 
 import net.minecraft.server.v1_8_R3.EntityHorse;
 import net.minecraft.server.v1_8_R3.World;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
@@ -25,6 +26,15 @@ public class HorseDisguise extends MobDisguise {
 	private boolean saddled;
 	private boolean hasChest;
 	private Armor armor;
+	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 4.0.1
+	 */
+	public HorseDisguise() {
+		this(true, Variant.HORSE, Style.NONE, Color.BROWN, false, false, Armor.NONE);
+	}
 	
 	/**
 	 * Creates an instance.

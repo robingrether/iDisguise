@@ -53,6 +53,16 @@ public class MobDisguise extends Disguise {
 	/**
 	 * Creates an instance.
 	 * 
+	 * @since 4.0.1
+	 * @param type the type to disguise as
+	 */
+	public MobDisguise(DisguiseType type) {
+		this(type, true);
+	}
+	
+	/**
+	 * Creates an instance.
+	 * 
 	 * @since 2.1.3
 	 * @param type the type to disguise as
 	 * @param adult should the disguise be an adult

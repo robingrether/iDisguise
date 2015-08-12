@@ -5,6 +5,7 @@ import net.minecraft.server.v1_8_R3.EntitySheep;
 import net.minecraft.server.v1_8_R3.EntityWolf;
 import net.minecraft.server.v1_8_R3.EnumColor;
 import net.minecraft.server.v1_8_R3.World;
+
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 
@@ -18,6 +19,16 @@ public class ColoredDisguise extends MobDisguise {
 	
 	private static final long serialVersionUID = -3226061055696087907L;
 	private DyeColor color;
+	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 4.0.1
+	 * @param type the type to disguise as
+	 */
+	public ColoredDisguise(DisguiseType type) {
+		this(type, true, DyeColor.WHITE);
+	}
 	
 	/**
 	 * Creates an instance.

@@ -1,6 +1,7 @@
 package de.robingrether.idisguise.disguise;
 
 import org.bukkit.Location;
+
 import net.minecraft.server.v1_8_R3.EntityInsentient;
 import net.minecraft.server.v1_8_R3.EntitySlime;
 import net.minecraft.server.v1_8_R3.World;
@@ -15,6 +16,15 @@ public class SizedDisguise extends MobDisguise {
 	
 	private static final long serialVersionUID = 6370692880641733105L;
 	private int size;
+	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 4.0.1
+	 */
+	public SizedDisguise(DisguiseType type) {
+		this(type, 1);
+	}
 	
 	/**
 	 * Creates an instance.

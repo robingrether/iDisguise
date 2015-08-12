@@ -2,12 +2,17 @@ package de.robingrether.idisguise.disguise;
 
 import net.minecraft.server.v1_8_R3.EntityRabbit;
 import net.minecraft.server.v1_8_R3.World;
+
 import org.bukkit.Location;
 
 public class RabbitDisguise extends MobDisguise {
 	
 	private static final long serialVersionUID = -2691206163684801474L;
 	private RabbitType rabbitType;
+	
+	public RabbitDisguise() {
+		this(true);
+	}
 	
 	public RabbitDisguise(boolean adult) {
 		this(adult, RabbitType.BROWN);

@@ -1,6 +1,7 @@
 package de.robingrether.idisguise.disguise;
 
 import org.bukkit.Location;
+
 import net.minecraft.server.v1_8_R3.EntityZombie;
 import net.minecraft.server.v1_8_R3.World;
 
@@ -8,6 +9,10 @@ public class ZombieDisguise extends MobDisguise {
 	
 	private static final long serialVersionUID = 3233813531511391233L;
 	private boolean isVillager;
+	
+	public ZombieDisguise() {
+		this(true);
+	}
 	
 	public ZombieDisguise(boolean adult) {
 		this(adult, false);

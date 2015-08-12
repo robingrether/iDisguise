@@ -2,6 +2,7 @@ package de.robingrether.idisguise.disguise;
 
 import net.minecraft.server.v1_8_R3.EntityVillager;
 import net.minecraft.server.v1_8_R3.World;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Villager.Profession;
 
@@ -15,6 +16,15 @@ public class VillagerDisguise extends MobDisguise {
 	
 	private static final long serialVersionUID = 4811148064924974891L;
 	private Profession profession;
+	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 4.0.1
+	 */
+	public VillagerDisguise() {
+		this(true, Profession.FARMER);
+	}
 	
 	/**
 	 * Creates an instance.

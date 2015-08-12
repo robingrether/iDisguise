@@ -3,6 +3,7 @@ package de.robingrether.idisguise.disguise;
 import net.minecraft.server.v1_8_R3.Block;
 import net.minecraft.server.v1_8_R3.EntityEnderman;
 import net.minecraft.server.v1_8_R3.World;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 
@@ -11,6 +12,10 @@ public class EndermanDisguise extends MobDisguise {
 	private static final long serialVersionUID = -4717245165572013853L;
 	private Material blockInHand;
 	private int blockInHandData;
+	
+	public EndermanDisguise() {
+		this(Material.AIR);
+	}
 	
 	public EndermanDisguise(Material blockInHand) {
 		this(blockInHand, 0);
