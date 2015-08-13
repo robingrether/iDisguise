@@ -23,7 +23,7 @@ public class SizedDisguise extends MobDisguise {
 	 * @since 4.0.1
 	 */
 	public SizedDisguise(DisguiseType type) {
-		this(type, 1);
+		this(type, 2);
 	}
 	
 	/**
