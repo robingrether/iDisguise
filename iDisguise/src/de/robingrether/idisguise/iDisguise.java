@@ -13,14 +13,12 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Horse;
 import org.bukkit.entity.Horse.Color;
 import org.bukkit.entity.Horse.Style;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Horse.Variant;
 import org.bukkit.entity.Skeleton.SkeletonType;
-import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -51,7 +49,6 @@ import de.robingrether.idisguise.disguise.ZombieDisguise;
 import de.robingrether.idisguise.io.Configuration;
 import de.robingrether.idisguise.io.Metrics.Graph;
 import de.robingrether.idisguise.io.Metrics.Plotter;
-import de.robingrether.idisguise.io.lang.LanguageFile;
 import de.robingrether.idisguise.io.Metrics;
 import de.robingrether.idisguise.io.SLAPI;
 import de.robingrether.idisguise.io.UpdateCheck;
@@ -60,7 +57,6 @@ import de.robingrether.idisguise.management.DisguiseList;
 import de.robingrether.idisguise.management.GhostFactory;
 import de.robingrether.idisguise.management.ProfileUtil;
 import de.robingrether.idisguise.sound.SoundSystem;
-import de.robingrether.util.ObjectUtil;
 import de.robingrether.util.RandomUtil;
 import de.robingrether.util.StringUtil;
 
@@ -70,8 +66,6 @@ public class iDisguise extends JavaPlugin {
 	
 	public iDisguiseListener listener;
 	public Configuration configuration;
-	@Deprecated
-	public LanguageFile lang;
 	public Metrics metrics;
 	
 	public void onEnable() {
@@ -80,7 +74,6 @@ public class iDisguise extends JavaPlugin {
 		configuration = new Configuration(directory);
 		configuration.loadData();
 		configuration.saveData();
-		lang = new LanguageFile(getLocalization());
 		DisguiseManager.setAttribute(0, showOriginalPlayerNames());
 		SoundSystem.setEnabled(isSoundSystemEnabled());
 		try {
@@ -89,13 +82,6 @@ public class iDisguise extends JavaPlugin {
 			graph1.addPlotter(new Plotter("Disguise Count") {
 				public int getValue() {
 					return DisguiseManager.getOnlineDisguiseCount();
-				}
-			});
-			@Deprecated
-			Graph graph2 = metrics.createGraph("Language");
-			graph2.addPlotter(new Plotter(lang.getLocalization()) {
-				public int getValue() {
-					return 1;
 				}
 			});
 			Graph graph3 = metrics.createGraph("Sound System");
@@ -896,11 +882,11 @@ public class iDisguise extends JavaPlugin {
 			}
 			
 			public String getLocale() {
-				return getLocalization();
+				return "enUS";
 			}
 			
 			public String getLocalizedPhrase(String name) {
-				return getLangString(name);
+				throw new UnsupportedOperationException("iDisguise no longer supports different languages.");
 			}
 			
 			public SoundSystem getSoundSystem(DisguiseType type) {
@@ -947,26 +933,6 @@ public class iDisguise extends JavaPlugin {
 	
 	public boolean checkForUpdates() {
 		return configuration.getBoolean("check-for-updates");
-	}
-	
-	@Deprecated
-	public String getLangNameFor(DisguiseType type) {
-		return type.name().toLowerCase().replace("_", "-");
-	}
-	
-	@Deprecated
-	public String getNameFor(DisguiseType type) {
-		return type.name().toLowerCase();
-	}
-	
-	@Deprecated
-	public String getLocalization() {
-		return "enUS";
-	}
-	
-	@Deprecated
-	public String getLangString(String name) {
-		return lang.getString(name);
 	}
 	
 	public boolean undisguisePlayerWhenHitByProjectile() {
