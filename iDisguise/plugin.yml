@@ -27,11 +27,13 @@ permissions:
          iDisguise.undisguise: true
    iDisguise.admin:
       children:
+         iDisguise.everywhere: true
          iDisguise.others: true
          iDisguise.reload: true
          iDisguise.undisguise.all: true
          iDisguise.undisguise.others: true
          iDisguise.update: true
+   iDisguise.everywhere:
    iDisguise.ghost:
    iDisguise.mob.*:
       children:
