@@ -59,6 +59,7 @@ import de.robingrether.idisguise.management.ProfileUtil;
 import de.robingrether.idisguise.sound.SoundSystem;
 import de.robingrether.util.RandomUtil;
 import de.robingrether.util.StringUtil;
+import de.robingrether.util.Validate;
 
 public class iDisguise extends JavaPlugin {
 	
@@ -162,11 +163,9 @@ public class iDisguise extends JavaPlugin {
 			} else if(StringUtil.equalsIgnoreCase(args[0], "player", "p")) {
 				if(args.length == 1) {
 					sender.sendMessage(ChatColor.RED + "Wrong usage: " + ChatColor.ITALIC + "/" + cmd.getName() + " " + args[0] + " <name>");
-				} else if(args[1].length() > 16) {
-					sender.sendMessage(ChatColor.RED + "Usernames may not be longer than 16 characters.");
-				} /*else if() {
-					check for bad symbols here
-				}*/ else {
+				} else if(!Validate.minecraftUsername(args[1])) {
+					sender.sendMessage(ChatColor.RED + "The given username is invalid.");
+				} else {
 					PlayerDisguise disguise = new PlayerDisguise(args[1], false);
 					if(hasPermission(player, disguise)) {
 						DisguiseEvent event = new DisguiseEvent(player, disguise);
@@ -200,11 +199,9 @@ public class iDisguise extends JavaPlugin {
 					} else {
 						sender.sendMessage(ChatColor.RED + "Wrong usage: " + ChatColor.ITALIC + "/" + cmd.getName() + " " + args[0] + " <name>");
 					}
-				} else if(args[1].length() > 16) {
-					sender.sendMessage(ChatColor.RED + "Usernames may not be longer than 16 characters.");
-				} /*else if() {
-					check for bad symbols here
-				}*/ else {
+				} else if(!Validate.minecraftUsername(args[1])) {
+					sender.sendMessage(ChatColor.RED + "The given username is invalid.");
+				} else {
 					PlayerDisguise disguise = new PlayerDisguise(args[1], true);
 					if(hasPermission(player, disguise)) {
 						DisguiseEvent event = new DisguiseEvent(player, disguise);
