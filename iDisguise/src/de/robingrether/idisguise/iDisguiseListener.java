@@ -37,14 +37,6 @@ public class iDisguiseListener implements Listener {
 		this.plugin = plugin;
 	}
 	
-	/*@EventHandler(priority = EventPriority.LOWEST)
-	public void onDisguise(DisguiseEvent event) {
-		Player player = event.getPlayer();
-		Disguise disguise = event.getDisguise();
-		boolean cancel = false;
-		event.setCancelled(cancel);
-	}*/
-	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onEntityTarget(EntityTargetEvent event) {
 		if(event.getTarget() instanceof Player) {
@@ -106,7 +98,7 @@ public class iDisguiseListener implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player p = event.getPlayer();
-		if(p.hasPermission("iDisguise.admin") && plugin.checkForUpdates()) {
+		if(p.hasPermission("iDisguise.update") && plugin.checkForUpdates()) {
 			plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new UpdateCheck("iDisguise v" + plugin.getVersion(), p, ChatColor.GOLD + "An update for iDisguise is available: %s"), 20L);
 		}
 		if(DisguiseManager.isDisguised(p)) {
@@ -128,7 +120,7 @@ public class iDisguiseListener implements Listener {
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
 		Player p = event.getPlayer();
 		if(DisguiseManager.isDisguised(p)) {
-			if(!plugin.isDisguisingPermittedInWorld(p.getWorld()) && !p.hasPermission("iDisguise.admin")) {
+			if(!plugin.isDisguisingPermittedInWorld(p.getWorld()) && !p.hasPermission("iDisguise.everywhere")) {
 				UndisguiseEvent undisEvent = new UndisguiseEvent(p, DisguiseManager.getDisguise(p).clone(), false);
 				plugin.getServer().getPluginManager().callEvent(undisEvent);
 				if(!undisEvent.isCancelled()) {
@@ -153,14 +145,6 @@ public class iDisguiseListener implements Listener {
 			}
 		}
 	}
-	
-	/*@EventHandler
-	public void onPlayerBedEnter(PlayerBedEnterEvent event) {
-		Player p = event.getPlayer();
-		if(DisguiseManager.getDisguise(p) instanceof MobDisguise) {
-			event.setCancelled(true);
-		}
-	}*/
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerMove(PlayerMoveEvent event) {
