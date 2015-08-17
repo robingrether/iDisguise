@@ -24,6 +24,7 @@ permissions:
          iDisguise.ghost: true:
          iDisguise.mob.*: true
          iDisguise.player.*: true
+         iDisguise.random: true
          iDisguise.undisguise: true
    iDisguise.admin:
       children:
@@ -261,6 +262,7 @@ permissions:
    iDisguise.mob.zombie.villager:
    iDisguise.others:
    iDisguise.player.*:
+   iDisguise.random:
    iDisguise.reload:
    iDisguise.undisguise:
    iDisguise.undisguise.all:
