@@ -133,13 +133,14 @@ public class iDisguise extends JavaPlugin {
 				sender.sendMessage(ChatColor.RED + "You have to use '/odisguise' from console.");
 				return true;
 			}
+			if(!(isDisguisingPermittedInWorld(player.getWorld()) || player.hasPermission("iDisguise.everywhere"))) {
+				sender.sendMessage(ChatColor.RED + "Using this plugin is prohibited in this world.");
+			}
 			if(args.length == 0 || StringUtil.equalsIgnoreCase(args[0], "?", "help")) {
 				sender.sendMessage(ChatColor.GREEN + "iDisguise v" + getVersion() + " Help");
 				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " help - Shows this");
-				if(player.hasPermission("iDisguise.player")) {
-					sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " player <name> - Disguise as a player");
-				}
-				if(isGhostDisguiseEnabled() && player.hasPermission("iDisguise.player.ghost")) {
+				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " player <name> - Disguise as a player");
+				if(isGhostDisguiseEnabled() && player.hasPermission("iDisguise.ghost")) {
 					sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " ghost <name> - Disguise as a ghost player");
 				}
 				if(player.hasPermission("iDisguise.random")) {
@@ -156,6 +157,7 @@ public class iDisguise extends JavaPlugin {
 					sender.sendMessage(ChatColor.GOLD + "/u" + (cmd.getName().equalsIgnoreCase("d") ? "" : "n") + cmd.getName() + " <name> - Undisguise another player");
 				}
 				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " [subtype] <mobtype> [subtype] - Disguise as a mob with optional subtypes");
+				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <subtype> - Change your current subtypes");
 				sender.sendMessage(ChatColor.GRAY + "Mobtypes: bat, blaze, cave_spider, chicken, cow, creeper, ender_dragon, enderman, endermite, ghast, giant, guardian, horse, iron_golem, magma_cube, mushroom_cow, ocelot, pig, pig_zombie, rabbit, sheep, silverfish, skeleton, slime, snowman, spider, squid, villager, witch, witherboss, wolf, zombie");
 				if(DisguiseManager.isDisguised(player)) {
 					sendSubtypeInformation(player, DisguiseManager.getDisguise(player).getType());
@@ -181,7 +183,9 @@ public class iDisguise extends JavaPlugin {
 					}
 				}
 			} else if(StringUtil.equalsIgnoreCase(args[0], "ghost", "g")) {
-				if(args.length == 1) {
+				if(!isGhostDisguiseEnabled()) {
+					sender.sendMessage(ChatColor.RED + "This feature is disabled!");
+				} else if(args.length == 1) {
 					if(DisguiseManager.isDisguised(player) && (DisguiseManager.getDisguise(player) instanceof PlayerDisguise)) {
 						PlayerDisguise disguise = new PlayerDisguise(((PlayerDisguise)DisguiseManager.getDisguise(player)).getName(), true);
 						if(hasPermission(player, disguise)) {
@@ -342,7 +346,7 @@ public class iDisguise extends JavaPlugin {
 				}
 			} else {
 				Disguise disguise = DisguiseManager.isDisguised(player) ? DisguiseManager.getDisguise(player).clone() : null;
-				for(String argument : args) { // change mob types
+				for(String argument : args) {
 					if(argument.equalsIgnoreCase("bat")) {
 						disguise = new MobDisguise(DisguiseType.BAT);
 					} else if(argument.equalsIgnoreCase("blaze")) {
@@ -757,9 +761,44 @@ public class iDisguise extends JavaPlugin {
 					sender.sendMessage(ChatColor.RED + "You are not allowed to undisguise everyone.");
 				}
 			} else {
-				sender.sendMessage(ChatColor.RED + "This feature is not available so far."); // add undisguise other players
+				if(player == null || player.hasPermission("iDisguise.undisguise.others")) {
+					if(getServer().matchPlayer(args[0]).isEmpty()) {
+						sender.sendMessage(ChatColor.RED + "Cannot find player " + ChatColor.ITALIC + args[0]);
+					} else {
+						player = getServer().matchPlayer(args[0]).get(0);
+						if(DisguiseManager.isDisguised(player)) {
+							if(args.length > 1 && args[1].equalsIgnoreCase("ignore")) {
+								DisguiseManager.undisguiseToAll(player);
+								sender.sendMessage(ChatColor.GOLD + "Undisguised " + ChatColor.ITALIC + player.getName());
+							} else {
+								UndisguiseEvent event = new UndisguiseEvent(player, DisguiseManager.getDisguise(player), false);
+								getServer().getPluginManager().callEvent(event);
+								if(!event.isCancelled()) {
+									DisguiseManager.undisguiseToAll(player);
+									sender.sendMessage(ChatColor.GOLD + "Undisguised " + ChatColor.ITALIC + player.getName());
+								} else {
+									sender.sendMessage(ChatColor.RED + "Some plugin denies " + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.RED + " to undisguise.");
+								}
+							}
+						} else {
+							sender.sendMessage(ChatColor.RED.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.RED + " is not disguised.");
+						}
+					}
+				} else {
+					sender.sendMessage(ChatColor.RED + "You are not allowed to undisguise other players.");
+				}
 			}
-		} //else if - add /odisguise
+		} else if(StringUtil.equalsIgnoreCase(cmd.getName(), "od", "odis", "odisguise")) {
+			/*if(args.length == 0) {
+				sender.sendMessage(ChatColor.RED + "Wrong usage: " + ChatColor.ITALIC + "/" + cmd.getName() + " <username> ...");
+				return true;
+			} else if(getServer().matchPlayer(args[0]).isEmpty()) {
+				sender.sendMessage(ChatColor.RED + "Cannot find player " + ChatColor.ITALIC + args[0]);
+				return true;
+			}
+			player = getServer().matchPlayer(args[0]).get(0);*/
+			sender.sendMessage(ChatColor.RED + "This feature is not available so far.");
+		}
 		return true;
 	}
 	
