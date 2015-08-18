@@ -90,7 +90,7 @@ permissions:
          iDisguise.mob.wolf.tamed: true
          iDisguise.mob.wolf.angry: true
          iDisguise.mob.zombie: true
-         iDisguise.mob.zombie.villager: true
+         iDisguise.mob.zombie.infected: true
    iDisguise.mob.baby:
       default: false
    iDisguise.mob.bat:
