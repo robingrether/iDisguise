@@ -2,6 +2,7 @@ package de.robingrether.idisguise.management;
 
 import java.lang.reflect.Field;
 import java.util.UUID;
+
 import net.minecraft.server.v1_8_R3.Entity;
 import net.minecraft.server.v1_8_R3.EntityInsentient;
 import net.minecraft.server.v1_8_R3.EntityLiving;
@@ -15,6 +16,7 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntity;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -22,6 +24,7 @@ import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.scheduler.BukkitRunnable;
+
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 
@@ -87,7 +90,7 @@ public class DisguiseManager {
 		if(disguise instanceof PlayerDisguise) {
 			player.setDisplayName(((PlayerDisguise)disguise).getName());
 			if(((PlayerDisguise)disguise).isGhost()) {
-				GhostFactory.addPlayer(Bukkit.getOfflinePlayer(ProfileUtil.getUniqueId(((PlayerDisguise)disguise).getName())));
+				GhostFactory.addPlayer(((PlayerDisguise)disguise).getName());
 				GhostFactory.addGhost(player);
 			}
 		}

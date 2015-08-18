@@ -31,7 +31,7 @@ public class GhostFactory {
 		}
 		ghostTeam.setCanSeeFriendlyInvisibles(true);
 		for(OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-			addPlayer(player);
+			addPlayer(player.getName());
 		}
 		taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 			public void run() {
@@ -55,9 +55,9 @@ public class GhostFactory {
 		enabled = false;
 	}
 	
-	public static void addPlayer(OfflinePlayer player) {
+	public static void addPlayer(String player) {
 		if(enabled) {
-			ghostTeam.addEntry(player.getName());
+			ghostTeam.addEntry(player);
 		}
 	}
 	

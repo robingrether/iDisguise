@@ -105,7 +105,7 @@ public class iDisguiseListener implements Listener {
 			p.sendMessage(ChatColor.GOLD + "You are still disguised. Use " + ChatColor.ITALIC + "/disguise status" + ChatColor.RESET + ChatColor.GOLD + " to get more information.");
 		}
 		ChannelHandler.addHandler(p);
-		GhostFactory.addPlayer(p);
+		GhostFactory.addPlayer(p.getName());
 		PlayerUtil.addPlayer(p);
 	}
 	
