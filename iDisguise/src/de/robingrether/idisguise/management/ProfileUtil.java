@@ -1,9 +1,10 @@
 package de.robingrether.idisguise.management;
 
-import java.lang.reflect.Field;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
 import net.minecraft.server.v1_8_R3.MinecraftServer;
+
 import com.mojang.authlib.Agent;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.ProfileLookupCallback;
@@ -21,7 +22,6 @@ public class ProfileUtil {
 	public static synchronized UUID getUniqueId(String name) {
 		ProfileLookupCallbackImpl callback = new ProfileLookupCallbackImpl();
 		MinecraftServer.getServer().getGameProfileRepository().findProfilesByNames(new String[] {name}, Agent.MINECRAFT, callback);
-		System.out.println("[iDisguise] GameProfile: " + callback.getGameProfile().getName() + " | " + (callback.getGameProfile() != null ? callback.getGameProfile().getId().toString() : "null"));
 		return callback.getGameProfile().getId();
 	}
 	
@@ -49,14 +49,7 @@ public class ProfileUtil {
 		}
 		
 		public void onProfileLookupFailed(GameProfile gameProfile, Exception exception) {
-			exception.printStackTrace();
-			try {
-				Field field = GameProfile.class.getField("id");
-				field.setAccessible(true);
-				field.set(gameProfile, UUID.fromString("ffffffff-ffff-ffff-ffff-ffffffffffff"));
-			} catch(Exception e) {
-			}
-			this.gameProfile = gameProfile;
+			this.gameProfile = new GameProfile(UUID.fromString("ffffffff-ffff-ffff-ffff-ffffffffffff"), gameProfile.getName());
 		}
 		
 		public GameProfile getGameProfile() {
