@@ -1,6 +1,6 @@
 name: iDisguise
 main: de.robingrether.idisguise.iDisguise
-version: 4-test-028-1.8.3
+version: 4.0.1
 author: Robingrether
 website: http://dev.bukkit.org/bukkit-plugins/idisguise/
 commands:
@@ -21,12 +21,13 @@ permissions:
       default: op
       children:
          iDisguise.admin: true
-         iDisguise.ghost: true:
+         iDisguise.ghost: true
          iDisguise.mob.*: true
          iDisguise.player.*: true
          iDisguise.random: true
          iDisguise.undisguise: true
    iDisguise.admin:
+      default: false
       children:
          iDisguise.everywhere: true
          iDisguise.others: true
@@ -35,8 +36,11 @@ permissions:
          iDisguise.undisguise.others: true
          iDisguise.update: true
    iDisguise.everywhere:
+      default: false
    iDisguise.ghost:
+      default: false
    iDisguise.mob.*:
+      default: false
       children:
          iDisguise.mob.baby: true
          iDisguise.mob.bat: true
@@ -88,25 +92,43 @@ permissions:
          iDisguise.mob.zombie: true
          iDisguise.mob.zombie.villager: true
    iDisguise.mob.baby:
+      default: false
    iDisguise.mob.bat:
+      default: false
    iDisguise.mob.blaze:
+      default: false
    iDisguise.mob.cave_spider:
+      default: false
    iDisguise.mob.chicken:
+      default: false
    iDisguise.mob.cow:
+      default: false
    iDisguise.mob.creeper:
+      default: false
    iDisguise.mob.creeper.powered:
+      default: false
    iDisguise.mob.ender_dragon:
+      default: false
    iDisguise.mob.enderman:
+      default: false
    iDisguise.mob.enderman.block:
+      default: false
    iDisguise.mob.endermite:
+      default: false
    iDisguise.mob.ghast:
+      default: false
    iDisguise.mob.giant:
+      default: false
    iDisguise.mob.guardian:
+      default: false
    iDisguise.mob.guardian.elder:
+      default: false
    iDisguise.mob.horse:
+      default: false
       children:
          iDisguise.mob.horse.variant.normal: true
    iDisguise.mob.horse.variant.*:
+      default: false
       children:
          iDisguise.mob.horse.variant.donkey: true
          iDisguise.mob.horse.variant.mule: true
@@ -114,34 +136,54 @@ permissions:
          iDisguise.mob.horse.variant.skeleton: true
          iDisguise.mob.horse.variant.undead: true
    iDisguise.mob.horse.variant.donkey:
+      default: false
    iDisguise.mob.horse.variant.mule:
+      default: false
    iDisguise.mob.horse.variant.normal:
+      default: false
    iDisguise.mob.horse.variant.skeleton:
+      default: false
    iDisguise.mob.horse.variant.undead:
+      default: false
    iDisguise.mob.iron_golem:
+      default: false
    iDisguise.mob.magma_cube:
+      default: false
    iDisguise.mob.magma_cube.giant:
+      default: false
    iDisguise.mob.mushroom_cow:
+      default: false
    iDisguise.mob.ocelot:
+      default: false
       children:
          iDisguise.mob.ocelot.type.wild: true
    iDisguise.mob.ocelot.type.*:
+      default: false
       children:
          iDisguise.mob.ocelot.type.black: true
          iDisguise.mob.ocelot.type.red: true
          iDisguise.mob.ocelot.type.siamese: true
          iDisguise.mob.ocelot.type.wild: true
    iDisguise.mob.ocelot.type.black:
+      default: false
    iDisguise.mob.ocelot.type.red:
+      default: false
    iDisguise.mob.ocelot.type.siamese:
+      default: false
    iDisguise.mob.ocelot.type.wild:
+      default: false
    iDisguise.mob.pig:
+      default: false
    iDisguise.mob.pig.saddled:
+      default: false
    iDisguise.mob.pig_zombie:
+      default: false
    iDisguise.mob.rabbit:
+      default: false
       children:
          iDisguise.mob.rabbit.type.brown: true
    iDisguise.mob.rabbit.type.*:
+      default: false
       children:
          iDisguise.mob.rabbit.type.black: true
          iDisguise.mob.rabbit.type.black-white: true
@@ -151,16 +193,25 @@ permissions:
          iDisguise.mob.rabbit.type.killer: true
          iDisguise.mob.rabbit.type.white: true
    iDisguise.mob.rabbit.type.black:
+      default: false
    iDisguise.mob.rabbit.type.black-white:
+      default: false
    iDisguise.mob.rabbit.type.brown:
+      default: false
    iDisguise.mob.rabbit.type.gold:
+      default: false
    iDisguise.mob.rabbit.type.salt-pepper:
+      default: false
    iDisguise.mob.rabbit.type.killer:
+      default: false
    iDisguise.mob.rabbit.type.white:
+      default: false
    iDisguise.mob.sheep:
+      default: false
       children:
          iDisguise.mob.sheep.color.white: true
-   iDisguise.mob.sheep.color.*
+   iDisguise.mob.sheep.color.*:
+      default: false
       children:
          iDisguise.mob.sheep.color.black: true
          iDisguise.mob.sheep.color.blue: true
@@ -179,33 +230,59 @@ permissions:
          iDisguise.mob.sheep.color.white: true
          iDisguise.mob.sheep.color.yellow: true
    iDisguise.mob.sheep.color.black:
+      default: false
    iDisguise.mob.sheep.color.blue:
+      default: false
    iDisguise.mob.sheep.color.brown:
+      default: false
    iDisguise.mob.sheep.color.cyan:
+      default: false
    iDisguise.mob.sheep.color.gray:
+      default: false
    iDisguise.mob.sheep.color.green:
+      default: false
    iDisguise.mob.sheep.color.light-blue:
+      default: false
    iDisguise.mob.sheep.color.lime:
+      default: false
    iDisguise.mob.sheep.color.magenta:
+      default: false
    iDisguise.mob.sheep.color.orange:
+      default: false
    iDisguise.mob.sheep.color.pink:
+      default: false
    iDisguise.mob.sheep.color.purple:
+      default: false
    iDisguise.mob.sheep.color.red:
+      default: false
    iDisguise.mob.sheep.color.silver:
+      default: false
    iDisguise.mob.sheep.color.white:
+      default: false
    iDisguise.mob.sheep.color.yellow:
+      default: false
    iDisguise.mob.silverfish:
+      default: false
    iDisguise.mob.skeleton:
+      default: false
    iDisguise.mob.skeleton.wither:
+      default: false
    iDisguise.mob.slime:
+      default: false
    iDisguise.mob.slime.giant:
+      default: false
    iDisguise.mob.snowman:
+      default: false
    iDisguise.mob.spider:
+      default: false
    iDisguise.mob.squid:
+      default: false
    iDisguise.mob.villager:
+      default: false
       children:
          iDisguise.mob.villager.profession.farmer: true
    iDisguise.mob.villager.profession.*:
+      default: false
       children:
          iDisguise.mob.villager.profession.blacksmith: true
          iDisguise.mob.villager.profession.butcher: true
@@ -213,16 +290,25 @@ permissions:
          iDisguise.mob.villager.profession.librarian: true
          iDisguise.mob.villager.profession.priest: true
    iDisguise.mob.villager.profession.blacksmith:
+      default: false
    iDisguise.mob.villager.profession.butcher:
+      default: false
    iDisguise.mob.villager.profession.farmer:
+      default: false
    iDisguise.mob.villager.profession.librarian:
+      default: false
    iDisguise.mob.villager.profession.priest:
+      default: false
    iDisguise.mob.witch:
+      default: false
    iDisguise.mob.witherboss:
+      default: false
    iDisguise.mob.wolf:
+      default: false
       children:
          iDisguise.mob.wolf.collar.red: true
    iDisguise.mob.wolf.collar.*:
+      default: false
       children:
          iDisguise.mob.wolf.collar.black: true
          iDisguise.mob.wolf.collar.blue: true
@@ -241,30 +327,58 @@ permissions:
          iDisguise.mob.wolf.collar.white: true
          iDisguise.mob.wolf.collar.yellow: true
    iDisguise.mob.wolf.collar.black:
+      default: false
    iDisguise.mob.wolf.collar.blue:
+      default: false
    iDisguise.mob.wolf.collar.brown:
+      default: false
    iDisguise.mob.wolf.collar.cyan:
+      default: false
    iDisguise.mob.wolf.collar.gray:
+      default: false
    iDisguise.mob.wolf.collar.green:
+      default: false
    iDisguise.mob.wolf.collar.light-blue:
+      default: false
    iDisguise.mob.wolf.collar.lime:
+      default: false
    iDisguise.mob.wolf.collar.magenta:
+      default: false
    iDisguise.mob.wolf.collar.orange:
+      default: false
    iDisguise.mob.wolf.collar.pink:
+      default: false
    iDisguise.mob.wolf.collar.purple:
+      default: false
    iDisguise.mob.wolf.collar.red:
+      default: false
    iDisguise.mob.wolf.collar.silver:
+      default: false
    iDisguise.mob.wolf.collar.white:
+      default: false
    iDisguise.mob.wolf.collar.yellow:
+      default: false
    iDisguise.mob.wolf.tamed:
+      default: false
    iDisguise.mob.wolf.angry:
+      default: false
    iDisguise.mob.zombie:
-   iDisguise.mob.zombie.villager:
+      default: false
+   iDisguise.mob.zombie.infected:
+      default: false
    iDisguise.others:
+      default: false
    iDisguise.player.*:
+      default: false
    iDisguise.random:
+      default: false
    iDisguise.reload:
+      default: false
    iDisguise.undisguise:
+      default: false
    iDisguise.undisguise.all:
+      default: false
    iDisguise.undisguise.others:
+      default: false
    iDisguise.update:
+      default: false
