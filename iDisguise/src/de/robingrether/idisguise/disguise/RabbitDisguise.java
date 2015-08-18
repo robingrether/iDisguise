@@ -31,6 +31,16 @@ public class RabbitDisguise extends MobDisguise {
 		this.rabbitType = rabbitType;
 	}
 	
+	public RabbitDisguise clone() {
+		RabbitDisguise clone = new RabbitDisguise(adult, rabbitType);
+		clone.setCustomName(customName);
+		return clone;
+	}
+	
+	public boolean equals(Object object) {
+		return super.equals(object) && object instanceof RabbitDisguise && ((RabbitDisguise)object).rabbitType.equals(rabbitType);
+	}
+	
 	public EntityRabbit getEntity(World world, Location location, int id) {
 		EntityRabbit rabbit = (EntityRabbit)super.getEntity(world, location, id);
 		rabbit.setRabbitType(rabbitType.getId());
