@@ -276,7 +276,7 @@ public class iDisguise extends JavaPlugin {
 								sender.sendMessage(ChatColor.GRAY + " Angry: " + (((WolfDisguise)disguise).isAngry() ? "angry" : "not-angry"));
 								break;
 							case ZOMBIE:
-								sender.sendMessage(ChatColor.GRAY + " Zombie type: " + (((ZombieDisguise)disguise).isVillager() ? "villager" : "normal"));
+								sender.sendMessage(ChatColor.GRAY + " Zombie type: " + (((ZombieDisguise)disguise).isVillager() ? "infected" : "normal"));
 								break;
 							default: break;
 						}
@@ -683,7 +683,7 @@ public class iDisguise extends JavaPlugin {
 						for(String argument : args) {
 							if(argument.equalsIgnoreCase("normal")) {
 								((ZombieDisguise)disguise).setVillager(false);
-							} else if(argument.equalsIgnoreCase("villager")) {
+							} else if(argument.equalsIgnoreCase("infected")) {
 								((ZombieDisguise)disguise).setVillager(true);
 							}
 						}
@@ -699,7 +699,7 @@ public class iDisguise extends JavaPlugin {
 							sender.sendMessage(ChatColor.RED + "Some plugin denies you to disguise.");
 						} else {
 							DisguiseManager.disguiseToAll(player, disguise);
-							sender.sendMessage(ChatColor.GOLD + "You disguised. Type " + ChatColor.ITALIC + "/" + cmd.getName() + " status" + ChatColor.RESET + ChatColor.RED + " for information about your disguise.");
+							sender.sendMessage(ChatColor.GOLD + "You disguised. Type " + ChatColor.ITALIC + "/" + cmd.getName() + " status" + ChatColor.RESET + ChatColor.GOLD + " for information about your disguise.");
 						}
 					} else {
 						sender.sendMessage(ChatColor.RED + "You are not allowed to disguise.");
@@ -852,7 +852,7 @@ public class iDisguise extends JavaPlugin {
 				sender.sendMessage(ChatColor.GRAY + " Angry: angry, not-angry");
 				break;
 			case ZOMBIE:
-				sender.sendMessage(ChatColor.GRAY + " Zombie type: normal, villager");
+				sender.sendMessage(ChatColor.GRAY + " Zombie type: normal, infected");
 				break;
 			default: break;
 		}
@@ -927,7 +927,7 @@ public class iDisguise extends JavaPlugin {
 			case WOLF:
 				return player.hasPermission("iDisguise.mob.wolf") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.wolf.collar." + ((ColoredDisguise)disguise).getColor().name().toLowerCase().replace('_', '-')) && (!((WolfDisguise)disguise).isTamed() || player.hasPermission("iDisguise.mob.wolf.tamed")) && (!((WolfDisguise)disguise).isAngry() || player.hasPermission("iDisguise.mob.wolf.angry"));
 			case ZOMBIE:
-				return player.hasPermission("iDisguise.mob.zombie") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && (!((ZombieDisguise)disguise).isVillager() || player.hasPermission("iDisguise.mob.zombie.villager"));
+				return player.hasPermission("iDisguise.mob.zombie") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && (!((ZombieDisguise)disguise).isVillager() || player.hasPermission("iDisguise.mob.zombie.infected"));
 			default:
 				return false;
 		}
