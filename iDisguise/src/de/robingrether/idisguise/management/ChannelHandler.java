@@ -13,14 +13,21 @@ import org.bukkit.entity.Player;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.util.ObjectUtil;
+
 import net.minecraft.server.v1_8_R3.Packet;
 import net.minecraft.server.v1_8_R3.PacketPlayOutAnimation;
 import net.minecraft.server.v1_8_R3.PacketPlayOutBed;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntity;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntity.PacketPlayOutEntityLook;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntity.PacketPlayOutRelEntityMoveLook;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityTeleport;
 import net.minecraft.server.v1_8_R3.PacketPlayOutNamedEntitySpawn;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo.PlayerInfoData;
+import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
+
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
@@ -43,12 +50,21 @@ public class ChannelHandler extends ChannelDuplexHandler {
 			if(object instanceof PacketPlayOutNamedEntitySpawn) {
 				PacketPlayOutNamedEntitySpawn packet = (PacketPlayOutNamedEntitySpawn)object;
 				Player player = Bukkit.getPlayer((UUID)fieldUUID.get(packet));
-				if(DisguiseManager.isDisguised(player) && player != this.player) {
+				if(player != this.player && DisguiseManager.isDisguised(player)) {
 					Packet<?> packetSpawn = DisguiseManager.getSpawnPacket(player);
 					if(packetSpawn instanceof PacketPlayOutNamedEntitySpawn) {
 						// if(isGhost)
 						super.write(context, packetSpawn, promise);
 					} else {
+						if(DisguiseManager.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
+							byte yaw = fieldYawSpawnEntityLiving.getByte(packetSpawn);
+							if(yaw < 0) {
+								yaw += 128;
+							} else {
+								yaw -= 128;
+							}
+							fieldYawSpawnEntityLiving.set(packetSpawn, yaw);
+						}
 						DisguiseManager.sendPacketLater(this.player, packetSpawn, 1L);
 					}
 					DisguiseManager.updateAttributes(player, this.player);
@@ -62,7 +78,7 @@ public class ChannelHandler extends ChannelDuplexHandler {
 					List<PlayerInfoData> remove = new ArrayList<PlayerInfoData>();
 					for(PlayerInfoData playerInfo : list) {
 						Player player = Bukkit.getPlayer(playerInfo.a().getId());
-						if(player != null && DisguiseManager.isDisguised(player) && player != this.player) {
+						if(player != null && player != this.player && DisguiseManager.isDisguised(player)) {
 							if(DisguiseManager.getDisguise(player) instanceof PlayerDisguise) {
 								PlayerInfoData newPlayerInfo = packet.new PlayerInfoData(ProfileUtil.getGameProfile(((PlayerDisguise)DisguiseManager.getDisguise(player)).getName()), playerInfo.b(), playerInfo.c(), playerInfo.d());
 								remove.add(playerInfo);
@@ -97,6 +113,42 @@ public class ChannelHandler extends ChannelDuplexHandler {
 				if(player != null && !(player == this.player) && DisguiseManager.isDisguised(player) && ObjectUtil.equals(DisguiseManager.getDisguise(player).getType(), DisguiseType.CREEPER, DisguiseType.ENDERMAN)) {
 					return;
 				}
+			} else if(object instanceof PacketPlayOutEntityLook) {
+				PacketPlayOutEntityLook packet = (PacketPlayOutEntityLook)object;
+				Player player = PlayerUtil.getPlayerByEntityId(fieldEntityIdEntity.getInt(packet));
+				if(player != null && !(player == this.player) && DisguiseManager.isDisguised(player) && DisguiseManager.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
+					byte yaw = fieldYawEntity.getByte(packet);
+					if(yaw < 0) {
+						yaw += 128;
+					} else {
+						yaw -= 128;
+					}
+					fieldYawEntity.set(packet, yaw);
+				}
+			} else if(object instanceof PacketPlayOutRelEntityMoveLook) {
+				PacketPlayOutRelEntityMoveLook packet = (PacketPlayOutRelEntityMoveLook)object;
+				Player player = PlayerUtil.getPlayerByEntityId(fieldEntityIdEntity.getInt(packet));
+				if(player != null && !(player == this.player) && DisguiseManager.isDisguised(player) && DisguiseManager.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
+					byte yaw = fieldYawEntity.getByte(packet);
+					if(yaw < 0) {
+						yaw += 128;
+					} else {
+						yaw -= 128;
+					}
+					fieldYawEntity.set(packet, yaw);
+				}
+			} else if(object instanceof PacketPlayOutEntityTeleport) {
+				PacketPlayOutEntityTeleport packet = (PacketPlayOutEntityTeleport)object;
+				Player player = PlayerUtil.getPlayerByEntityId(fieldEntityIdTeleport.getInt(packet));
+				if(player != null && !(player == this.player) && DisguiseManager.isDisguised(player) && DisguiseManager.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
+					byte yaw = fieldYawTeleport.getByte(packet);
+					if(yaw < 0) {
+						yaw += 128;
+					} else {
+						yaw -= 128;
+					}
+					fieldYawTeleport.set(packet, yaw);
+				}
 			}
 			super.write(context, object, promise);
 		} catch(Exception e) {
@@ -121,7 +173,7 @@ public class ChannelHandler extends ChannelDuplexHandler {
 		}
 	}
 	
-	private static Field fieldUUID, fieldAction, fieldList, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata;
+	private static Field fieldUUID, fieldAction, fieldList, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving;
 	
 	static {
 		try {
@@ -157,6 +209,31 @@ public class ChannelHandler extends ChannelDuplexHandler {
 		try {
 			fieldEntityIdMetadata = PacketPlayOutEntityMetadata.class.getDeclaredField("a");
 			fieldEntityIdMetadata.setAccessible(true);
+		} catch(Exception e) {
+		}
+		try {
+			fieldEntityIdEntity = PacketPlayOutEntity.class.getDeclaredField("a");
+			fieldEntityIdEntity.setAccessible(true);
+		} catch(Exception e) {
+		}
+		try {
+			fieldYawEntity = PacketPlayOutEntity.class.getDeclaredField("e");
+			fieldYawEntity.setAccessible(true);
+		} catch(Exception e) {
+		}
+		try {
+			fieldEntityIdTeleport = PacketPlayOutEntityTeleport.class.getDeclaredField("a");
+			fieldEntityIdTeleport.setAccessible(true);
+		} catch(Exception e) {
+		}
+		try {
+			fieldYawTeleport = PacketPlayOutEntityTeleport.class.getDeclaredField("e");
+			fieldYawTeleport.setAccessible(true);
+		} catch(Exception e) {
+		}
+		try {
+			fieldYawSpawnEntityLiving = PacketPlayOutSpawnEntityLiving.class.getDeclaredField("i");
+			fieldYawSpawnEntityLiving.setAccessible(true);
 		} catch(Exception e) {
 		}
 	}
