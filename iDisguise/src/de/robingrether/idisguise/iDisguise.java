@@ -105,7 +105,7 @@ public class iDisguise extends JavaPlugin {
 		if(checkForUpdates()) {
 			getServer().getScheduler().runTaskLaterAsynchronously(this, new UpdateCheck(getFullName(), getServer().getConsoleSender(), "[iDisguise] " + "An update for iDisguise is available: %s"), 20L);
 		}
-		System.out.println("[iDisguise] " + String.format("iDisguise v%s enabled!", getVersion()));
+		System.out.println("[iDisguise] " + String.format("%s enabled!", getFullName()));
 	}
 	
 	public void onDisable() {
@@ -116,7 +116,7 @@ public class iDisguise extends JavaPlugin {
 		if(saveDisguises()) {
 			saveData();
 		}
-		System.out.println("[iDisguise] " + String.format("iDisguise v%s disabled!", getVersion()));
+		System.out.println("[iDisguise] " + String.format("%s disabled!", getFullName()));
 	}
 	
 	public void onReload() {
@@ -1015,7 +1015,7 @@ public class iDisguise extends JavaPlugin {
 	}
 	
 	public String getFullName() {
-		return "iDisguise v" + getVersion();
+		return "iDisguise " + getVersion();
 	}
 	
 	public boolean saveDisguises() {
