@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.util.ObjectUtil;
@@ -77,7 +79,7 @@ public class ChannelHandler extends ChannelDuplexHandler {
 			} else if(object instanceof PacketPlayOutBed) {
 				PacketPlayOutBed packet = (PacketPlayOutBed)object;
 				Player player = PlayerUtil.getPlayerByEntityId(fieldEntityIdBed.getInt(packet));
-				if(player != null && !player.getName().equalsIgnoreCase(this.player.getName()) && DisguiseManager.isDisguised(player) && !(DisguiseManager.getDisguise(player) instanceof PlayerDisguise)) {
+				if(player != null && !(player == this.player) && DisguiseManager.isDisguised(player) && !(DisguiseManager.getDisguise(player) instanceof PlayerDisguise)) {
 					return;
 				}
 			} else if(object instanceof PacketPlayOutAnimation) {
@@ -85,14 +87,14 @@ public class ChannelHandler extends ChannelDuplexHandler {
 				int animation = fieldAnimation.getInt(packet);
 				if(animation == 2) {
 					Player player = PlayerUtil.getPlayerByEntityId(fieldEntityIdAnimation.getInt(packet));
-					if(player != null && !player.getName().equalsIgnoreCase(this.player.getName()) && DisguiseManager.isDisguised(player) && !(DisguiseManager.getDisguise(player) instanceof PlayerDisguise)) {
+					if(player != null && !(player == this.player) && DisguiseManager.isDisguised(player) && !(DisguiseManager.getDisguise(player) instanceof PlayerDisguise)) {
 						return;
 					}
 				}
 			} else if(object instanceof PacketPlayOutEntityMetadata) {
 				PacketPlayOutEntityMetadata packet = (PacketPlayOutEntityMetadata)object;
 				Player player = PlayerUtil.getPlayerByEntityId(fieldEntityIdMetadata.getInt(packet));
-				if(player != null && !player.getName().equalsIgnoreCase(this.player.getName()) && DisguiseManager.isDisguised(player) && ObjectUtil.equals(DisguiseManager.getDisguise(player).getType(), DisguiseType.CREEPER, DisguiseType.ENDERMAN)) {
+				if(player != null && !(player == this.player) && DisguiseManager.isDisguised(player) && ObjectUtil.equals(DisguiseManager.getDisguise(player).getType(), DisguiseType.CREEPER, DisguiseType.ENDERMAN)) {
 					return;
 				}
 			}
