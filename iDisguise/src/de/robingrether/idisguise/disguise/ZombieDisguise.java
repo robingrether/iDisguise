@@ -42,7 +42,7 @@ public class ZombieDisguise extends MobDisguise {
 	}
 	
 	public EntityZombie getEntity(World world, Location location, int id) {
-		EntityZombie zombie = (EntityZombie)getEntity(world, location, id);
+		EntityZombie zombie = (EntityZombie)super.getEntity(world, location, id);
 		zombie.setVillager(isVillager);
 		return zombie;
 	}
