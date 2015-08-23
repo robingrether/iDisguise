@@ -226,6 +226,12 @@ public class HorseDisguise extends MobDisguise {
 			this.item = item;
 		}
 		
+		/**
+		 * Gets the associated Bukkit item stack.
+		 * 
+		 * @since 3.0.3
+		 * @return the associated item stack
+		 */
 		public ItemStack getItem() {
 			return item;
 		}

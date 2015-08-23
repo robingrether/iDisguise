@@ -37,6 +37,7 @@ public class UndisguiseEvent extends PlayerEvent {
 	/**
 	 * Indicates whether this undisguise is part of a '/undisguise *' command
 	 * 
+	 * @since 4.0.1
 	 * @return <code>true</code>, if this undisguise is part of a a '/undisguise *' command
 	 */
 	public final boolean undisguiseAll() {

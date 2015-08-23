@@ -22,10 +22,10 @@ public enum DisguiseType {
 	CREEPER(Type.MOB),
 	ENDER_DRAGON(Type.MOB),
 	ENDERMAN(Type.MOB),
-	ENDERMITE(Type.MOB), //
+	ENDERMITE(Type.MOB),
 	GHAST(Type.MOB),
 	GIANT(Type.MOB),
-	GUARDIAN(Type.MOB), //
+	GUARDIAN(Type.MOB),
 	HORSE(Type.MOB),
 	IRON_GOLEM(Type.MOB),
 	MAGMA_CUBE(Type.MOB),
@@ -33,7 +33,7 @@ public enum DisguiseType {
 	OCELOT(Type.MOB),
 	PIG(Type.MOB),
 	PIG_ZOMBIE(Type.MOB),
-	RABBIT(Type.MOB), //
+	RABBIT(Type.MOB),
 	SHEEP(Type.MOB),
 	SILVERFISH(Type.MOB),
 	SKELETON(Type.MOB),
