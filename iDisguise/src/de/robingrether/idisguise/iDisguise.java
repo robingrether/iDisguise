@@ -68,8 +68,14 @@ public class iDisguise extends JavaPlugin {
 	public iDisguiseListener listener;
 	public Configuration configuration;
 	public Metrics metrics;
+	private boolean enabled = false;
 	
 	public void onEnable() {
+		if(!checkVersion()) {
+			System.out.println("[iDisguise] " + String.format("%s is not compatible with your server version!", getFullName()));
+			getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
 		checkDirectory();
 		listener = new iDisguiseListener(this);
 		configuration = new Configuration(directory);
@@ -106,9 +112,13 @@ public class iDisguise extends JavaPlugin {
 			getServer().getScheduler().runTaskLaterAsynchronously(this, new UpdateCheck(getFullName(), getServer().getConsoleSender(), "[iDisguise] " + "An update for iDisguise is available: %s"), 20L);
 		}
 		System.out.println("[iDisguise] " + String.format("%s enabled!", getFullName()));
+		enabled = true;
 	}
 	
 	public void onDisable() {
+		if(!enabled) {
+			return;
+		}
 		if(isGhostDisguiseEnabled()) {
 			GhostFactory.disable();
 		}
@@ -117,6 +127,7 @@ public class iDisguise extends JavaPlugin {
 			saveData();
 		}
 		System.out.println("[iDisguise] " + String.format("%s disabled!", getFullName()));
+		enabled = false;
 	}
 	
 	public void onReload() {
@@ -930,6 +941,15 @@ public class iDisguise extends JavaPlugin {
 				return player.hasPermission("iDisguise.mob.zombie") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && (!((ZombieDisguise)disguise).isVillager() || player.hasPermission("iDisguise.mob.zombie.infected"));
 			default:
 				return false;
+		}
+	}
+	
+	private boolean checkVersion() {
+		try {
+			Class<?> clazz = Class.forName("net.minecraft.server.v1_8_R3.MinecraftServer");
+			return true;
+		} catch(ClassNotFoundException e) {
+			return false;
 		}
 	}
 	
