@@ -1,6 +1,7 @@
 package de.robingrether.idisguise.management;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.UUID;
 
 import net.minecraft.server.v1_8_R3.Entity;
@@ -14,6 +15,7 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutEntityHeadRotation;
 import net.minecraft.server.v1_8_R3.PacketPlayOutNamedEntitySpawn;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
+import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo.PlayerInfoData;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntity;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
 
@@ -26,12 +28,33 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import de.robingrether.idisguise.disguise.Disguise;
+import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 
 public class DisguiseManager {
 	
-	private static volatile DisguiseList disguiseList = new DisguiseList();
-	private static boolean[] attributes = new boolean[1]; // (0) show names
+	private static /*volatile*/ DisguiseList disguiseList = new DisguiseList();
+	private static final boolean[] attributes = new boolean[1]; // (0) show names
+	
+	private static Field fieldUUID, fieldAction, fieldListInfo;
+	
+	static {
+		try {
+			fieldUUID = PacketPlayOutNamedEntitySpawn.class.getDeclaredField("b");
+			fieldUUID.setAccessible(true);
+		} catch(Exception e) {
+		}
+		try {
+			fieldAction = PacketPlayOutPlayerInfo.class.getDeclaredField("a");
+			fieldAction.setAccessible(true);
+		} catch(Exception e) {
+		}
+		try {
+			fieldListInfo = PacketPlayOutPlayerInfo.class.getDeclaredField("b");
+			fieldListInfo.setAccessible(true);
+		} catch(Exception e) {
+		}
+	}
 	
 	public static Packet<?> getSpawnPacket(Player player) {
 		Packet<?> packetSpawn;
@@ -41,9 +64,7 @@ public class DisguiseManager {
 		} else if(disguise instanceof PlayerDisguise) {
 			packetSpawn = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());
 			try {
-				Field field = packetSpawn.getClass().getDeclaredField("b");
-				field.setAccessible(true);
-				field.set(packetSpawn, ProfileUtil.getUniqueId(((PlayerDisguise)disguise).getName()));
+				fieldUUID.set(packetSpawn, ProfileUtil.getUniqueId(((PlayerDisguise)disguise).getName()));
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -83,8 +104,21 @@ public class DisguiseManager {
 	}
 	
 	public static synchronized void disguiseToAll(Player player, Disguise disguise) {
-		if(isDisguised(player)) {
-			undisguiseToAll(player);
+		Disguise oldDisguise = disguiseList.getDisguise(player.getUniqueId());
+		if(oldDisguise instanceof PlayerDisguise) {
+			PacketPlayOutPlayerInfo packetPlayerInfo = new PacketPlayOutPlayerInfo();
+			try {
+				fieldAction.set(packetPlayerInfo, EnumPlayerInfoAction.REMOVE_PLAYER);
+				List<PlayerInfoData> list = (List<PlayerInfoData>)fieldListInfo.get(packetPlayerInfo);
+				list.add(packetPlayerInfo.new PlayerInfoData(ProfileUtil.getGameProfile(((PlayerDisguise)oldDisguise).getName()), ((CraftPlayer)player).getHandle().ping, ((CraftPlayer)player).getHandle().playerInteractManager.getGameMode(), null));
+				for(Player observer : player.getWorld().getPlayers()) {
+					if(observer == player) {
+						continue;
+					}
+					sendPacket(observer, packetPlayerInfo);
+				}
+			} catch(Exception e) {
+			}
 		}
 		disguiseList.putDisguise(player.getUniqueId(), disguise);
 		if(disguise instanceof PlayerDisguise) {
@@ -97,11 +131,8 @@ public class DisguiseManager {
 		Packet<?> packetDestroy = getDestroyPacket(player);
 		Packet<?> packetPlayerInfo = getPlayerInfoPacket(player);
 		Packet<?> packetSpawn = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());
-		for(Player observer : Bukkit.getOnlinePlayers()) {
-			if(!observer.getWorld().equals(player.getWorld())) {
-				continue;
-			}
-			if(observer.getName().equalsIgnoreCase(player.getName())) {
+		for(Player observer : player.getWorld().getPlayers()) {
+			if(observer == player) {
 				continue;
 			}
 			sendPacket(observer, packetDestroy);
@@ -115,18 +146,32 @@ public class DisguiseManager {
 		if(disguise == null) {
 			return null;
 		}
-		GhostFactory.removeGhost(player);
+		if(disguise instanceof PlayerDisguise) {
+			PacketPlayOutPlayerInfo packetPlayerInfo = new PacketPlayOutPlayerInfo();
+			try {
+				fieldAction.set(packetPlayerInfo, EnumPlayerInfoAction.REMOVE_PLAYER);
+				List<PlayerInfoData> list = (List<PlayerInfoData>)fieldListInfo.get(packetPlayerInfo);
+				list.add(packetPlayerInfo.new PlayerInfoData(ProfileUtil.getGameProfile(((PlayerDisguise)disguise).getName()), ((CraftPlayer)player).getHandle().ping, ((CraftPlayer)player).getHandle().playerInteractManager.getGameMode(), null));
+				for(Player observer : player.getWorld().getPlayers()) {
+					if(observer == player) {
+						continue;
+					}
+					sendPacket(observer, packetPlayerInfo);
+				}
+			} catch(Exception e) {
+			}
+		}
+		if(disguise.getType().equals(DisguiseType.GHOST)) {
+			GhostFactory.removeGhost(player);
+		}
 		Packet<?> packetDestroy = getDestroyPacket(player);
 		Packet<?> packetPlayerInfo = getPlayerInfoPacket(player);
 		Packet<?> packetSpawn = getSpawnPacket(player);
 		if(disguise instanceof PlayerDisguise) {
 			player.setDisplayName(player.getName());
 		}
-		for(Player observer : Bukkit.getOnlinePlayers()) {
-			if(!observer.getWorld().equals(player.getWorld())) {
-				continue;
-			}
-			if(observer.getName().equalsIgnoreCase(player.getName())) {
+		for(Player observer : player.getWorld().getPlayers()) {
+			if(observer == player) {
 				continue;
 			}
 			sendPacket(observer, packetDestroy);
@@ -148,10 +193,7 @@ public class DisguiseManager {
 	}
 	
 	public static synchronized void updateAttributes(Player player, Player observer) {
-		if(!observer.getWorld().equals(player.getWorld())) {
-			return;
-		}
-		if(observer.getName().equalsIgnoreCase(player.getName())) {
+		if(observer == player) {
 			return;
 		}
 		Packet<?>[] packets = new Packet<?>[6];
@@ -171,7 +213,7 @@ public class DisguiseManager {
 	}
 	
 	public static synchronized void updateAttributes(Player player) {
-		for(Player observer : Bukkit.getOnlinePlayers()) {
+		for(Player observer : player.getWorld().getPlayers()) {
 			updateAttributes(player, observer);
 		}
 	}
