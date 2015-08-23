@@ -132,8 +132,29 @@ public class iDisguise extends JavaPlugin {
 	}
 	
 	public void onReload() {
-		onDisable();
-		onEnable();
+		if(!enabled) {
+			return;
+		}
+		if(isGhostDisguiseEnabled()) {
+			GhostFactory.disable();
+		}
+		if(saveDisguises()) {
+			saveData();
+		}
+		System.out.println("[iDisguise] " + String.format("%s disabled!", getFullName()));
+		enabled = false;
+		configuration = new Configuration(directory);
+		configuration.loadData();
+		configuration.saveData();
+		DisguiseManager.setAttribute(0, showOriginalPlayerNames());
+		SoundSystem.setEnabled(isSoundSystemEnabled());
+		if(saveDisguises()) {
+			loadData();
+		}
+		if(isGhostDisguiseEnabled()) {
+			GhostFactory.enable(this);
+		}
+		enabled = true;
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -157,6 +178,9 @@ public class iDisguise extends JavaPlugin {
 				}
 				if(player.hasPermission("iDisguise.random")) {
 					sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " random - Disguise as a random mob");
+				}
+				if(player.hasPermission("iDisguise.reload")) {
+					sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " reload - Reloads the config file");
 				}
 				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " status - Shows what you are currently disguised as");
 				if(!requirePermissionForUndisguising() || player.hasPermission("iDisguise.undisguise")) {
@@ -355,6 +379,13 @@ public class iDisguise extends JavaPlugin {
 					}
 				} else {
 					sender.sendMessage(ChatColor.RED + "You are not allowed to disguise.");
+				}
+			} else if(args[0].equalsIgnoreCase("reload")) {
+				if(player.hasPermission("iDisguise.reload")) {
+					onReload();
+					sender.sendMessage(ChatColor.GOLD + "Reloaded config file.");
+				} else {
+					sender.sendMessage(ChatColor.RED + "You are not allowed to do this.");
 				}
 			} else {
 				Disguise disguise = DisguiseManager.isDisguised(player) ? DisguiseManager.getDisguise(player).clone() : null;
