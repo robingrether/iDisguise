@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerEvent;
 import de.robingrether.idisguise.disguise.Disguise;
 
 /**
- * This event is fired whenever someone attempts to disguise.<br />
+ * This event is fired whenever someone attempts to disguise.<br>
  * This class replaces the old DisguiseAsPlayerEvent and DisguiseAsMobEvent classes.
  * 
  * @since 3.0.1

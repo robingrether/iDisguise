@@ -4,7 +4,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 /**
- * Represents an advanced sound system which randomly plays one of an array of defined sounds on death, hurt, idle.<br />
+ * Represents an advanced sound system which randomly plays one of an array of defined sounds on death, hurt, idle.<br>
  * This class can be extended.
  * 
  * @since 2.2.1
@@ -15,7 +15,7 @@ public class AdvancedSoundSystem extends SoundSystem {
 	protected Sound[] death, hurt, idle;
 	
 	/**
-	 * Creates an advanced sound system from an array of death sounds, an array of hurt sounds and an array of idle sounds.<br />
+	 * Creates an advanced sound system from an array of death sounds, an array of hurt sounds and an array of idle sounds.<br>
 	 * Each array can be null.
 	 * 
 	 * @since 2.2.1

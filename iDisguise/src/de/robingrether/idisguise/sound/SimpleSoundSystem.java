@@ -4,7 +4,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 /**
- * Represents a simple sound system which plays a defined sound on death, hurt, idle.<br />
+ * Represents a simple sound system which plays a defined sound on death, hurt, idle.<br>
  * This class can be extended.
  * 
  * @since 2.2.1
@@ -15,7 +15,7 @@ public class SimpleSoundSystem extends SoundSystem {
 	protected Sound death, hurt, idle;
 	
 	/**
-	 * Creates a simple sound system from a death sound, a hurt sound and an idle sound.<br />
+	 * Creates a simple sound system from a death sound, a hurt sound and an idle sound.<br>
 	 * Each sound can be null.
 	 * 
 	 * @since 2.2.1

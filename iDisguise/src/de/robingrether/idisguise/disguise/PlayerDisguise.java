@@ -83,7 +83,7 @@ public class PlayerDisguise extends Disguise {
 	
 	/**
 	 * {@inheritDoc}
-	 * <br />
+	 * <br>
 	 * This method is never used and always returns <code>null</code>.
 	 * 
 	 * @return <code>null</code>

@@ -22,7 +22,7 @@ public class Validate {
 	}
 	
 	/**
-	 * Indicates whether a given minecraft username is valid. <br />
+	 * Indicates whether a given minecraft username is valid. <br>
 	 * Minecraft usernames may not be longer than 16 characters and they may not contain any characters except letters, numbers and underscores.
 	 * 
 	 * @since 4.0.1

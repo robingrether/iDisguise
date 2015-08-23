@@ -115,7 +115,7 @@ public class RabbitDisguise extends MobDisguise {
 		}
 		
 		/**
-		 * Returns the associated id. <br />
+		 * Returns the associated id. <br>
 		 * This is used for internal handling.
 		 * 
 		 * @since 4.0.1

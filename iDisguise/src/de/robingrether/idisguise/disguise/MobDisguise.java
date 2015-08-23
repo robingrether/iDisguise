@@ -97,7 +97,7 @@ public class MobDisguise extends Disguise {
 	}
 	
 	/**
-	 * Gets the custom name of this entity.<br />
+	 * Gets the custom name of this entity.<br>
 	 * The default value is <code>null</code>.
 	 * 
 	 * @since 3.0.1
@@ -108,7 +108,7 @@ public class MobDisguise extends Disguise {
 	}
 	
 	/**
-	 * Sets the custom name of this entity.<br />
+	 * Sets the custom name of this entity.<br>
 	 * The default value is <code>null</code>.
 	 * 
 	 * @since 3.0.1

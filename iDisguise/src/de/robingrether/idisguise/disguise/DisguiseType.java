@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.Random;
 
 /**
- * This enum contains all types, you can disguise as.<br />
- * <br />
+ * This enum contains all types, you can disguise as.<br>
+ * <br>
  * WARNING: At any time, types may be added/removed from this Enum.
  * 
  * @since 2.1.3

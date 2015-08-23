@@ -10,7 +10,7 @@ import java.util.Random;
 public class RandomUtil {
 	
 	/**
-	 * This is the {@link java.util.Random} object that is used to create random numbers.<br />
+	 * This is the {@link java.util.Random} object that is used to create random numbers.<br>
 	 * You can modify this variable.
 	 */
 	public static Random random = new Random();
@@ -30,6 +30,7 @@ public class RandomUtil {
 	/**
 	 * Gets a random enum constant from the given enum type.
 	 * 
+	 * @param <T> the enum type
 	 * @param enumType the enum type
 	 * @return a random enum constant
 	 */

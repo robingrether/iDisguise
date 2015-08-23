@@ -51,7 +51,7 @@ public abstract class Disguise implements Serializable, Cloneable {
 	}
 	
 	/**
-	 * Gets the entity object the player turns into.<br />
+	 * Gets the entity object the player turns into.<br>
 	 * This is just for internal handling.
 	 * 
 	 * @since 3.0.1

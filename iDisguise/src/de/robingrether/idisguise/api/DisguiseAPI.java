@@ -6,7 +6,7 @@ import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.sound.SoundSystem;
 
 /**
- * The API to hook into iDisguise. The following code returns an object:<br />
+ * The API to hook into iDisguise. The following code returns an object:<br>
  * <code>Bukkit.getServicesManager().getRegistration(DisguiseAPI.class).getProvider();</code>
  * 
  * @since 2.1.3

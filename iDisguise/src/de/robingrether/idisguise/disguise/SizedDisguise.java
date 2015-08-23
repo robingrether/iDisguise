@@ -21,6 +21,7 @@ public class SizedDisguise extends MobDisguise {
 	 * Creates an instance.
 	 * 
 	 * @since 4.0.1
+	 * @param type the disguise type (should be either {@link DisguiseType#SLIME} or {@link DisguiseType#MAGMA_CUBE})
 	 */
 	public SizedDisguise(DisguiseType type) {
 		this(type, 2);

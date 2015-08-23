@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import de.robingrether.idisguise.disguise.DisguiseType;
 
 /**
- * This class represents a sound system.<br />
+ * This class represents a sound system.<br>
  * This class also manages the sound systems.
  * 
  * @since 2.2.1
