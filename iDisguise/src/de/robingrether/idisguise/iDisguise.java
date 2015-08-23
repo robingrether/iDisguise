@@ -141,7 +141,6 @@ public class iDisguise extends JavaPlugin {
 		if(saveDisguises()) {
 			saveData();
 		}
-		System.out.println("[iDisguise] " + String.format("%s disabled!", getFullName()));
 		enabled = false;
 		configuration = new Configuration(directory);
 		configuration.loadData();
