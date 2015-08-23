@@ -67,8 +67,9 @@ public interface DisguiseAPI {
 	/**
 	 * Gets the current locale for iDisguise.
 	 * 
+	 * @deprecated Localized messages are not supported anymore.
 	 * @since 2.2.1
-	 * @return the locale code e.g. enUS
+	 * @return always returns <code>enUS</code>, since this is not supported anymore
 	 */
 	@Deprecated
 	public String getLocale();
@@ -76,9 +77,10 @@ public interface DisguiseAPI {
 	/**
 	 * Gets a localized phrase.
 	 * 
+	 * @deprecated Localized messages are not supported anymore.
 	 * @since 2.2.1
 	 * @param name the name of the phrase
-	 * @return the localized phrase or " " if not existing
+	 * @return always returns <code>null</code>, since this is not supported anymore
 	 */
 	@Deprecated
 	public String getLocalizedPhrase(String name);

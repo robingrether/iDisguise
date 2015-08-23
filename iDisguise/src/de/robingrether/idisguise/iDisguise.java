@@ -1048,7 +1048,7 @@ public class iDisguise extends JavaPlugin {
 			}
 			
 			public String getLocalizedPhrase(String name) {
-				throw new UnsupportedOperationException("iDisguise no longer supports different languages.");
+				return null;
 			}
 			
 			public SoundSystem getSoundSystem(DisguiseType type) {
