@@ -8,6 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.server.v1_8_R3.DataWatcher.WatchableObject;
 import net.minecraft.server.v1_8_R3.Packet;
+import net.minecraft.server.v1_8_R3.PacketPlayInUseEntity;
+import net.minecraft.server.v1_8_R3.PacketPlayInUseEntity.EnumEntityUseAction;
 import net.minecraft.server.v1_8_R3.PacketPlayOutAnimation;
 import net.minecraft.server.v1_8_R3.PacketPlayOutBed;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntity;
@@ -20,18 +22,20 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo.PlayerInfoData;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
-import io.netty.channel.ChannelDuplexHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPromise;
 
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.util.ObjectUtil;
+
+import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
 
 public class ChannelHandler extends ChannelDuplexHandler {
 	
@@ -42,8 +46,30 @@ public class ChannelHandler extends ChannelDuplexHandler {
 		this.player = player;
 	}
 	
-	public void channelRead(ChannelHandlerContext context, Object object) throws Exception {
-		super.channelRead(context, object);
+	public void channelRead(ChannelHandlerContext context, Object object) {
+		try {
+			if(object instanceof PacketPlayInUseEntity) {
+				PacketPlayInUseEntity packet = (PacketPlayInUseEntity)object;
+				Player player = PlayerUtil.getPlayerByEntityId(fieldEntityIdUseEntity.getInt(packet));
+				if(player != null && player != this.player && DisguiseManager.isDisguised(player) && !packet.a().equals(EnumEntityUseAction.ATTACK)) {
+					if(ObjectUtil.equals(DisguiseManager.getDisguise(player).getType(), DisguiseType.SHEEP, DisguiseType.WOLF)) {
+						final Player observer = this.player;
+						final Player observed = player;
+						BukkitRunnable runnable = new BukkitRunnable() {
+							public void run() {
+								DisguiseManager.disguiseToAll(observed, DisguiseManager.getDisguise(observed));
+								observer.updateInventory();
+							}
+						};
+						runnable.runTaskLater(Bukkit.getPluginManager().getPlugin("iDisguise"), 2L);
+					}
+					return;
+				}
+			}
+			super.channelRead(context, object);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void write(ChannelHandlerContext context, Object object, ChannelPromise promise) {
@@ -95,7 +121,7 @@ public class ChannelHandler extends ChannelDuplexHandler {
 			} else if(object instanceof PacketPlayOutBed) {
 				PacketPlayOutBed packet = (PacketPlayOutBed)object;
 				Player player = PlayerUtil.getPlayerByEntityId(fieldEntityIdBed.getInt(packet));
-				if(player != null && !(player == this.player) && DisguiseManager.isDisguised(player) && !(DisguiseManager.getDisguise(player) instanceof PlayerDisguise)) {
+				if(player != null && player != this.player && DisguiseManager.isDisguised(player) && !(DisguiseManager.getDisguise(player) instanceof PlayerDisguise)) {
 					return;
 				}
 			} else if(object instanceof PacketPlayOutAnimation) {
@@ -103,14 +129,14 @@ public class ChannelHandler extends ChannelDuplexHandler {
 				int animation = fieldAnimation.getInt(packet);
 				if(animation == 2) {
 					Player player = PlayerUtil.getPlayerByEntityId(fieldEntityIdAnimation.getInt(packet));
-					if(player != null && !(player == this.player) && DisguiseManager.isDisguised(player) && !(DisguiseManager.getDisguise(player) instanceof PlayerDisguise)) {
+					if(player != null && player != this.player && DisguiseManager.isDisguised(player) && !(DisguiseManager.getDisguise(player) instanceof PlayerDisguise)) {
 						return;
 					}
 				}
 			} else if(object instanceof PacketPlayOutEntityMetadata) {
 				PacketPlayOutEntityMetadata packet = (PacketPlayOutEntityMetadata)object;
 				Player player = PlayerUtil.getPlayerByEntityId(fieldEntityIdMetadata.getInt(packet));
-				if(player != null && !(player == this.player) && DisguiseManager.isDisguised(player)) {
+				if(player != null && player != this.player && DisguiseManager.isDisguised(player)) {
 					if(DisguiseManager.getDisguise(player) instanceof MobDisguise) {
 						if(DisguiseManager.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
 							List<WatchableObject> list = (List<WatchableObject>)fieldListMetadata.get(packet);
@@ -134,7 +160,7 @@ public class ChannelHandler extends ChannelDuplexHandler {
 			} else if(object instanceof PacketPlayOutEntityLook) {
 				PacketPlayOutEntityLook packet = (PacketPlayOutEntityLook)object;
 				Player player = PlayerUtil.getPlayerByEntityId(fieldEntityIdEntity.getInt(packet));
-				if(player != null && !(player == this.player) && DisguiseManager.isDisguised(player) && DisguiseManager.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
+				if(player != null && player != this.player && DisguiseManager.isDisguised(player) && DisguiseManager.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
 					byte yaw = fieldYawEntity.getByte(packet);
 					if(yaw < 0) {
 						yaw += 128;
@@ -146,7 +172,7 @@ public class ChannelHandler extends ChannelDuplexHandler {
 			} else if(object instanceof PacketPlayOutRelEntityMoveLook) {
 				PacketPlayOutRelEntityMoveLook packet = (PacketPlayOutRelEntityMoveLook)object;
 				Player player = PlayerUtil.getPlayerByEntityId(fieldEntityIdEntity.getInt(packet));
-				if(player != null && !(player == this.player) && DisguiseManager.isDisguised(player) && DisguiseManager.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
+				if(player != null && player != this.player && DisguiseManager.isDisguised(player) && DisguiseManager.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
 					byte yaw = fieldYawEntity.getByte(packet);
 					if(yaw < 0) {
 						yaw += 128;
@@ -158,7 +184,7 @@ public class ChannelHandler extends ChannelDuplexHandler {
 			} else if(object instanceof PacketPlayOutEntityTeleport) {
 				PacketPlayOutEntityTeleport packet = (PacketPlayOutEntityTeleport)object;
 				Player player = PlayerUtil.getPlayerByEntityId(fieldEntityIdTeleport.getInt(packet));
-				if(player != null && !(player == this.player) && DisguiseManager.isDisguised(player) && DisguiseManager.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
+				if(player != null && player != this.player && DisguiseManager.isDisguised(player) && DisguiseManager.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
 					byte yaw = fieldYawTeleport.getByte(packet);
 					if(yaw < 0) {
 						yaw += 128;
@@ -191,7 +217,7 @@ public class ChannelHandler extends ChannelDuplexHandler {
 		}
 	}
 	
-	private static Field fieldUUID, fieldAction, fieldListInfo, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving, fieldListMetadata;
+	private static Field fieldUUID, fieldAction, fieldListInfo, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving, fieldListMetadata, fieldEntityIdUseEntity;
 	
 	static {
 		try {
@@ -257,6 +283,11 @@ public class ChannelHandler extends ChannelDuplexHandler {
 		try {
 			fieldListMetadata = PacketPlayOutEntityMetadata.class.getDeclaredField("b");
 			fieldListMetadata.setAccessible(true);
+		} catch(Exception e) {
+		}
+		try {
+			fieldEntityIdUseEntity = PacketPlayInUseEntity.class.getDeclaredField("a");
+			fieldEntityIdUseEntity.setAccessible(true);
 		} catch(Exception e) {
 		}
 	}
