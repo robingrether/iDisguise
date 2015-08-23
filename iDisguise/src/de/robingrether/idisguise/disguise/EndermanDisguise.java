@@ -33,6 +33,7 @@ public class EndermanDisguise extends MobDisguise {
 	 * 
 	 * @since 4.0.1
 	 * @param blockInHand the carried block
+	 * @throws IllegalArgumentException Material is not a block.
 	 */
 	public EndermanDisguise(Material blockInHand) {
 		this(blockInHand, 0);
@@ -44,6 +45,7 @@ public class EndermanDisguise extends MobDisguise {
 	 * @since 4.0.1
 	 * @param blockInHand the carried block
 	 * @param blockInHandData the carried block's data value
+	 * @throws IllegalArgumentException Material is not a block or data value is negative.
 	 */
 	public EndermanDisguise(Material blockInHand, int blockInHandData) {
 		super(DisguiseType.ENDERMAN, true);
@@ -72,6 +74,7 @@ public class EndermanDisguise extends MobDisguise {
 	 * 
 	 * @since 4.0.1
 	 * @param blockInHand the carried block
+	 * @throws IllegalArgumentException Material is not a block.
 	 */
 	public void setBlockInHand(Material blockInHand) {
 		if(!blockInHand.isBlock()) {
@@ -95,6 +98,7 @@ public class EndermanDisguise extends MobDisguise {
 	 * 
 	 * @since 4.0.1
 	 * @param blockInHandData the carried block's data value
+	 * @throws IllegalArgumentException Data value is negative.
 	 */
 	public void setBlockInHandData(int blockInHandData) {
 		if(blockInHandData < 0) {

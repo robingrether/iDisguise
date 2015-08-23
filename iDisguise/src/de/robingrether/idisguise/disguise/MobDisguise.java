@@ -66,6 +66,7 @@ public class MobDisguise extends Disguise {
 	 * @since 2.1.3
 	 * @param type the type to disguise as
 	 * @param adult should the disguise be an adult
+	 * @throws IllegalArgumentException DisguiseType is not a mob.
 	 */
 	public MobDisguise(DisguiseType type, boolean adult) {
 		super(type);

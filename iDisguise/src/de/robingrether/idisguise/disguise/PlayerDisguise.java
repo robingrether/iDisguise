@@ -1,7 +1,10 @@
 package de.robingrether.idisguise.disguise;
 
 import org.bukkit.Location;
+
 import de.robingrether.idisguise.management.ProfileUtil;
+import de.robingrether.util.Validate;
+
 import net.minecraft.server.v1_8_R3.Entity;
 import net.minecraft.server.v1_8_R3.World;
 
@@ -34,9 +37,13 @@ public class PlayerDisguise extends Disguise {
 	 * @since 2.3.1
 	 * @param name the player's name to disguise as
 	 * @param ghost whether the disguise should be a ghost or not
+	 * @throws IllegalArgumentException The given name is not valid.
 	 */
 	public PlayerDisguise(String name, boolean ghost) {
 		super(ghost ? DisguiseType.GHOST : DisguiseType.PLAYER);
+		if(!Validate.minecraftUsername(name)) {
+			throw new IllegalArgumentException("The given name is invalid!");
+		}
 		this.name = ProfileUtil.getCaseCorrectedName(name);
 	}
 	
