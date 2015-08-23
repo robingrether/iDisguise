@@ -110,7 +110,7 @@ public class iDisguise extends JavaPlugin {
 		}
 		getServer().getServicesManager().register(DisguiseAPI.class, getAPI(), this, ServicePriority.Normal);
 		if(checkForUpdates()) {
-			getServer().getScheduler().runTaskLaterAsynchronously(this, new UpdateCheck(getFullName(), getServer().getConsoleSender(), "[iDisguise] " + "An update for iDisguise is available: %s"), 20L);
+			getServer().getScheduler().runTaskLaterAsynchronously(this, new UpdateCheck(getFullName(), getServer().getConsoleSender(), ChatColor.GOLD + "[iDisguise] " + "An update for iDisguise is available: " + ChatColor.ITALIC + "%s"), 20L);
 		}
 		System.out.println("[iDisguise] " + String.format("%s enabled!", getFullName()));
 		enabled = true;
@@ -162,14 +162,14 @@ public class iDisguise extends JavaPlugin {
 			if(sender instanceof Player) {
 				player = (Player)sender;
 			} else {
-				sender.sendMessage(ChatColor.RED + "You have to use '/odisguise' from console.");
+				sender.sendMessage(ChatColor.RED + "You have to use " + ChatColor.ITALIC + "/odisguise" + ChatColor.RESET + ChatColor.RED + " from console.");
 				return true;
 			}
 			if(!(isDisguisingPermittedInWorld(player.getWorld()) || player.hasPermission("iDisguise.everywhere"))) {
 				sender.sendMessage(ChatColor.RED + "Using this plugin is prohibited in this world.");
 			}
 			if(args.length == 0 || StringUtil.equalsIgnoreCase(args[0], "?", "help")) {
-				sender.sendMessage(ChatColor.GREEN + "iDisguise v" + getVersion() + " Help");
+				sender.sendMessage(ChatColor.GREEN + getFullName() + " - Help");
 				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " help - Shows this");
 				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " player <name> - Disguise as a player");
 				if(isGhostDisguiseEnabled() && player.hasPermission("iDisguise.ghost")) {
@@ -193,7 +193,8 @@ public class iDisguise extends JavaPlugin {
 				}
 				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " [subtype] <mobtype> [subtype] - Disguise as a mob with optional subtypes");
 				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <subtype> - Change your current subtypes");
-				sender.sendMessage(ChatColor.GRAY + "Mobtypes: bat, blaze, cave_spider, chicken, cow, creeper, ender_dragon, enderman, endermite, ghast, giant, guardian, horse, iron_golem, magma_cube, mushroom_cow, ocelot, pig, pig_zombie, rabbit, sheep, silverfish, skeleton, slime, snowman, spider, squid, villager, witch, witherboss, wolf, zombie");
+				sender.sendMessage(ChatColor.GOLD + "Mobtypes:");
+				sender.sendMessage(ChatColor.GRAY + " bat, blaze, cave_spider, chicken, cow, creeper, ender_dragon, enderman, endermite, ghast, giant, guardian, horse, iron_golem, magma_cube, mushroom_cow, ocelot, pig, pig_zombie, rabbit, sheep, silverfish, skeleton, slime, snowman, spider, squid, villager, witch, witherboss, wolf, zombie");
 				if(DisguiseManager.isDisguised(player)) {
 					sendSubtypeInformation(player, DisguiseManager.getDisguise(player).getType());
 				}
