@@ -72,7 +72,7 @@ public class UpdateCheck implements Runnable {
 		Pattern pattern = Pattern.compile("[^\\(]*\\(MC:\\s*([0-9\\.]*).*");
 		Matcher matcher = pattern.matcher(Bukkit.getVersion());
 		if(matcher.matches() && matcher.group(1) != null) {
-			return matcher.group(1);
+			return matcher.group(1).startsWith("1.8") ? "1.8" : matcher.group(1);
 		} else {
 			return "";
 		}
