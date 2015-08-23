@@ -32,8 +32,8 @@ public class Configuration {
 		setDefault("entity-damage-while-disguised", true, "If set to false disguised players cannot be damaged");
 		setDefault("permission-for-undisguise", false, "If set to true players must have \"iDisguise.undisguise\" permission to undisguise");
 		setDefault("undisguise-on-hit", false, "If set to true players are undisguised when they are hit by another player or mob");
-		setDefault("undisguise-on-projectile-hit", false, "If set to true players are undisguise when they are hit by a projectile (e.g. arrow, snowball)");
-		setDefault("undisguise-on-hit-other", false, "If set to true players are undisguise when they hit another player");
+		setDefault("undisguise-on-projectile-hit", false, "If set to true players are undisguised when they are hit by a projectile (e.g. arrow, snowball)");
+		setDefault("undisguise-on-hit-other", false, "If set to true players are undisguised when they hit another player");
 		setDefault("ghost-disguises", true, "Enable/disable ghost disguises, you should disable this if you are using any scoreboard plugin");
 	}
 	
@@ -184,7 +184,6 @@ public class Configuration {
 			return value instanceof String ? (String)value : null;
 		}
 		
-		@SuppressWarnings("unchecked")
 		public List<String> listValue() {
 			return value instanceof List ? (List<String>)value : null;
 		}
