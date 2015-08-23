@@ -105,20 +105,24 @@ public class DisguiseManager {
 	
 	public static synchronized void disguiseToAll(Player player, Disguise disguise) {
 		Disguise oldDisguise = disguiseList.getDisguise(player.getUniqueId());
-		if(oldDisguise instanceof PlayerDisguise) {
-			PacketPlayOutPlayerInfo packetPlayerInfo = new PacketPlayOutPlayerInfo();
-			try {
-				fieldAction.set(packetPlayerInfo, EnumPlayerInfoAction.REMOVE_PLAYER);
-				List<PlayerInfoData> list = (List<PlayerInfoData>)fieldListInfo.get(packetPlayerInfo);
-				list.add(packetPlayerInfo.new PlayerInfoData(ProfileUtil.getGameProfile(((PlayerDisguise)oldDisguise).getName()), ((CraftPlayer)player).getHandle().ping, ((CraftPlayer)player).getHandle().playerInteractManager.getGameMode(), null));
-				for(Player observer : player.getWorld().getPlayers()) {
-					if(observer == player) {
-						continue;
-					}
-					sendPacket(observer, packetPlayerInfo);
-				}
-			} catch(Exception e) {
+		PacketPlayOutPlayerInfo packetPlayerInfoRemove = new PacketPlayOutPlayerInfo();
+		Packet<?> packetPlayerInfoAdd = getPlayerInfoPacket(player);
+		try {
+			fieldAction.set(packetPlayerInfoRemove, EnumPlayerInfoAction.REMOVE_PLAYER);
+			List<PlayerInfoData> list = (List<PlayerInfoData>)fieldListInfo.get(packetPlayerInfoRemove);
+			if(oldDisguise instanceof PlayerDisguise) {
+				list.add(packetPlayerInfoRemove.new PlayerInfoData(ProfileUtil.getGameProfile(((PlayerDisguise)oldDisguise).getName()), ((CraftPlayer)player).getHandle().ping, ((CraftPlayer)player).getHandle().playerInteractManager.getGameMode(), null));
+			} else {
+				list.add(packetPlayerInfoRemove.new PlayerInfoData(((CraftPlayer)player).getHandle().getProfile(), ((CraftPlayer)player).getHandle().ping, ((CraftPlayer)player).getHandle().playerInteractManager.getGameMode(), null));
 			}
+			for(Player observer : Bukkit.getOnlinePlayers()) {
+				if(observer == player) {
+					continue;
+				}
+				sendPacket(observer, packetPlayerInfoRemove);
+				sendPacket(observer, packetPlayerInfoAdd);
+			}
+		} catch(Exception e) {
 		}
 		disguiseList.putDisguise(player.getUniqueId(), disguise);
 		if(disguise instanceof PlayerDisguise) {
@@ -129,14 +133,13 @@ public class DisguiseManager {
 			}
 		}
 		Packet<?> packetDestroy = getDestroyPacket(player);
-		Packet<?> packetPlayerInfo = getPlayerInfoPacket(player);
+		
 		Packet<?> packetSpawn = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());
 		for(Player observer : player.getWorld().getPlayers()) {
 			if(observer == player) {
 				continue;
 			}
 			sendPacket(observer, packetDestroy);
-			sendPacket(observer, packetPlayerInfo);
 			sendPacket(observer, packetSpawn);
 		}
 	}
@@ -146,26 +149,27 @@ public class DisguiseManager {
 		if(disguise == null) {
 			return null;
 		}
-		if(disguise instanceof PlayerDisguise) {
-			PacketPlayOutPlayerInfo packetPlayerInfo = new PacketPlayOutPlayerInfo();
-			try {
-				fieldAction.set(packetPlayerInfo, EnumPlayerInfoAction.REMOVE_PLAYER);
-				List<PlayerInfoData> list = (List<PlayerInfoData>)fieldListInfo.get(packetPlayerInfo);
-				list.add(packetPlayerInfo.new PlayerInfoData(ProfileUtil.getGameProfile(((PlayerDisguise)disguise).getName()), ((CraftPlayer)player).getHandle().ping, ((CraftPlayer)player).getHandle().playerInteractManager.getGameMode(), null));
-				for(Player observer : player.getWorld().getPlayers()) {
-					if(observer == player) {
-						continue;
-					}
-					sendPacket(observer, packetPlayerInfo);
-				}
-			} catch(Exception e) {
+		PacketPlayOutPlayerInfo packetPlayerInfoRemove = new PacketPlayOutPlayerInfo();
+		Packet<?> packetPlayerInfoAdd = getPlayerInfoPacket(player);
+		try {
+			fieldAction.set(packetPlayerInfoRemove, EnumPlayerInfoAction.REMOVE_PLAYER);
+			List<PlayerInfoData> list = (List<PlayerInfoData>)fieldListInfo.get(packetPlayerInfoRemove);
+			if(disguise instanceof PlayerDisguise) {
+				list.add(packetPlayerInfoRemove.new PlayerInfoData(ProfileUtil.getGameProfile(((PlayerDisguise)disguise).getName()), ((CraftPlayer)player).getHandle().ping, ((CraftPlayer)player).getHandle().playerInteractManager.getGameMode(), null));
 			}
+			for(Player observer : Bukkit.getOnlinePlayers()) {
+				if(observer == player) {
+					continue;
+				}
+				sendPacket(observer, packetPlayerInfoRemove);
+				sendPacket(observer, packetPlayerInfoAdd);
+			}
+		} catch(Exception e) {
 		}
 		if(disguise.getType().equals(DisguiseType.GHOST)) {
 			GhostFactory.removeGhost(player);
 		}
 		Packet<?> packetDestroy = getDestroyPacket(player);
-		Packet<?> packetPlayerInfo = getPlayerInfoPacket(player);
 		Packet<?> packetSpawn = getSpawnPacket(player);
 		if(disguise instanceof PlayerDisguise) {
 			player.setDisplayName(player.getName());
@@ -175,7 +179,6 @@ public class DisguiseManager {
 				continue;
 			}
 			sendPacket(observer, packetDestroy);
-			sendPacket(observer, packetPlayerInfo);
 			sendPacket(observer, packetSpawn);
 		}
 		updateAttributes(player);
