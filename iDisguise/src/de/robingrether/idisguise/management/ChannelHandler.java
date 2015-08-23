@@ -111,7 +111,6 @@ public class ChannelHandler extends ChannelDuplexHandler {
 								add.add(newPlayerInfo);
 							} else {
 								remove.add(playerInfo);
-								DisguiseManager.sendPacketLater(this.player, new PacketPlayOutPlayerInfo(EnumPlayerInfoAction.REMOVE_PLAYER, ((CraftPlayer)player).getHandle()), 1L);
 							}
 						}
 					}
