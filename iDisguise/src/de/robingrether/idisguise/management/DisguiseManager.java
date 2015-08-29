@@ -217,6 +217,9 @@ public class DisguiseManager {
 	
 	public static synchronized void updateAttributes(Player player) {
 		for(Player observer : player.getWorld().getPlayers()) {
+			if(observer == player) {
+				continue;
+			}
 			updateAttributes(player, observer);
 		}
 	}
