@@ -3,7 +3,6 @@ package de.robingrether.idisguise.management;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.server.v1_8_R3.DataWatcher.WatchableObject;
@@ -76,8 +75,8 @@ public class ChannelHandler extends ChannelDuplexHandler {
 		try {
 			if(object instanceof PacketPlayOutNamedEntitySpawn) {
 				PacketPlayOutNamedEntitySpawn packet = (PacketPlayOutNamedEntitySpawn)object;
-				Player player = Bukkit.getPlayer((UUID)fieldUUID.get(packet));
-				if(player != this.player && DisguiseManager.isDisguised(player)) {
+				Player player = PlayerUtil.getPlayerByEntityId(fieldEntityIdNamedSpawn.getInt(packet));
+				if(player != null && player != this.player && DisguiseManager.isDisguised(player)) {
 					Packet<?> packetSpawn = DisguiseManager.getSpawnPacket(player);
 					if(packetSpawn instanceof PacketPlayOutNamedEntitySpawn) {
 						super.write(context, packetSpawn, promise);
@@ -216,14 +215,9 @@ public class ChannelHandler extends ChannelDuplexHandler {
 		}
 	}
 	
-	private static Field fieldUUID, fieldAction, fieldListInfo, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving, fieldListMetadata, fieldEntityIdUseEntity;
+	private static Field fieldAction, fieldListInfo, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving, fieldListMetadata, fieldEntityIdUseEntity, fieldEntityIdNamedSpawn;
 	
 	static {
-		try {
-			fieldUUID = PacketPlayOutNamedEntitySpawn.class.getDeclaredField("b");
-			fieldUUID.setAccessible(true);
-		} catch(Exception e) {
-		}
 		try {
 			fieldAction = PacketPlayOutPlayerInfo.class.getDeclaredField("a");
 			fieldAction.setAccessible(true);
@@ -287,6 +281,11 @@ public class ChannelHandler extends ChannelDuplexHandler {
 		try {
 			fieldEntityIdUseEntity = PacketPlayInUseEntity.class.getDeclaredField("a");
 			fieldEntityIdUseEntity.setAccessible(true);
+		} catch(Exception e) {
+		}
+		try {
+			fieldEntityIdNamedSpawn = PacketPlayOutNamedEntitySpawn.class.getDeclaredField("a");
+			fieldEntityIdNamedSpawn.setAccessible(true);
 		} catch(Exception e) {
 		}
 	}
