@@ -139,7 +139,7 @@ permissions:
          iDisguise.mob.horse.variant.donkey: true
          iDisguise.mob.horse.variant.mule: true
          iDisguise.mob.horse.variant.normal: true
-         iDisguise.mob.horse.variant.skeleton: true
+         iDisguise.mob.horse.variant.skeletal: true
          iDisguise.mob.horse.variant.undead: true
    iDisguise.mob.horse.variant.donkey:
       default: false
@@ -147,7 +147,7 @@ permissions:
       default: false
    iDisguise.mob.horse.variant.normal:
       default: false
-   iDisguise.mob.horse.variant.skeleton:
+   iDisguise.mob.horse.variant.skeletal:
       default: false
    iDisguise.mob.horse.variant.undead:
       default: false

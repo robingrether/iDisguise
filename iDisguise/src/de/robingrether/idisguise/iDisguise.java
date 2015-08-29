@@ -279,7 +279,7 @@ public class iDisguise extends JavaPlugin {
 								sender.sendMessage(ChatColor.GRAY + " Guardian type: " + (((GuardianDisguise)disguise).isElder() ? "elder" : "not-elder"));
 								break;
 							case HORSE:
-								sender.sendMessage(ChatColor.GRAY + " Variant: " + ((HorseDisguise)disguise).getVariant().name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal"));
+								sender.sendMessage(ChatColor.GRAY + " Variant: " + ((HorseDisguise)disguise).getVariant().name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal").replace("skeleton", "skeletal"));
 								sender.sendMessage(ChatColor.GRAY + " Style: " + ((HorseDisguise)disguise).getStyle().name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings"));
 								sender.sendMessage(ChatColor.GRAY + " Color: " + ((HorseDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 								sender.sendMessage(ChatColor.GRAY + " Saddle: " + (((HorseDisguise)disguise).isSaddled() ? "saddled" : "not-saddled"));
@@ -530,6 +530,7 @@ public class iDisguise extends JavaPlugin {
 									((HorseDisguise)disguise).setVariant(Variant.MULE);
 									break;
 								case "skeleton":
+								case "skeletal":
 									((HorseDisguise)disguise).setVariant(Variant.SKELETON_HORSE);
 									break;
 								case "undead":
@@ -958,7 +959,7 @@ public class iDisguise extends JavaPlugin {
 								sender.sendMessage(ChatColor.GRAY + " Guardian type: " + (((GuardianDisguise)disguise).isElder() ? "elder" : "not-elder"));
 								break;
 							case HORSE:
-								sender.sendMessage(ChatColor.GRAY + " Variant: " + ((HorseDisguise)disguise).getVariant().name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal"));
+								sender.sendMessage(ChatColor.GRAY + " Variant: " + ((HorseDisguise)disguise).getVariant().name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal").replace("skeleton", "skeletal"));
 								sender.sendMessage(ChatColor.GRAY + " Style: " + ((HorseDisguise)disguise).getStyle().name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings"));
 								sender.sendMessage(ChatColor.GRAY + " Color: " + ((HorseDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 								sender.sendMessage(ChatColor.GRAY + " Saddle: " + (((HorseDisguise)disguise).isSaddled() ? "saddled" : "not-saddled"));
@@ -1198,6 +1199,7 @@ public class iDisguise extends JavaPlugin {
 									((HorseDisguise)disguise).setVariant(Variant.MULE);
 									break;
 								case "skeleton":
+								case "skeletal":
 									((HorseDisguise)disguise).setVariant(Variant.SKELETON_HORSE);
 									break;
 								case "undead":
@@ -1437,7 +1439,7 @@ public class iDisguise extends JavaPlugin {
 				sender.sendMessage(ChatColor.GRAY + " Guardian type: elder, not-elder");
 				break;
 			case HORSE:
-				sender.sendMessage(ChatColor.GRAY + " Variant: donkey, normal, mule, skeleton, undead");
+				sender.sendMessage(ChatColor.GRAY + " Variant: donkey, normal, mule, skeletal, undead");
 				sender.sendMessage(ChatColor.GRAY + " Style: black-dots, no-markings, white-stripes, white-dots, whitefield");
 				sender.sendMessage(ChatColor.GRAY + " Color: black, brown, chestnut, creamy, dark-brown, gray, white");
 				sender.sendMessage(ChatColor.GRAY + " Saddle: saddled, not-saddled");
@@ -1507,7 +1509,7 @@ public class iDisguise extends JavaPlugin {
 			case GUARDIAN:
 				return player.hasPermission("iDisguise.mob.guardian") && (!((GuardianDisguise)disguise).isElder() || player.hasPermission("iDisguise.mob.guardian.elder"));
 			case HORSE:
-				return player.hasPermission("iDisguise.mob.horse") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.horse.variant." + ((HorseDisguise)disguise).getVariant().name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal"));
+				return player.hasPermission("iDisguise.mob.horse") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.horse.variant." + ((HorseDisguise)disguise).getVariant().name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal").replace("skeleton", "skeletal"));
 			case IRON_GOLEM:
 				return player.hasPermission("iDisguise.mob.iron_golem");
 			case MAGMA_CUBE:
