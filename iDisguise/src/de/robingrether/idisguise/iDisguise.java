@@ -523,7 +523,6 @@ public class iDisguise extends JavaPlugin {
 									((HorseDisguise)disguise).setVariant(Variant.DONKEY);
 									break;
 								case "normal":
-								case "horse":
 									((HorseDisguise)disguise).setVariant(Variant.HORSE);
 									break;
 								case "mule":
@@ -902,10 +901,10 @@ public class iDisguise extends JavaPlugin {
 					DisguiseEvent event = new DisguiseEvent(player, disguise);
 					getServer().getPluginManager().callEvent(event);
 					if(event.isCancelled()) {
-						sender.sendMessage(ChatColor.RED + "Some plugin denies " + player.getName() + " to disguise.");
+						sender.sendMessage(ChatColor.RED + "Some plugin denies " + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.RED + " to disguise.");
 					} else {
 						DisguiseManager.disguiseToAll(player, disguise);
-						sender.sendMessage(ChatColor.GOLD + player.getName() + " disguised as a player called " + ChatColor.ITALIC + args[2]);
+						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " disguised as a player called " + ChatColor.ITALIC + args[2]);
 					}
 				}
 			} else if(StringUtil.equalsIgnoreCase(args[1], "ghost", "g")) {
@@ -917,10 +916,10 @@ public class iDisguise extends JavaPlugin {
 						DisguiseEvent event = new DisguiseEvent(player, disguise);
 						getServer().getPluginManager().callEvent(event);
 						if(event.isCancelled()) {
-							sender.sendMessage(ChatColor.RED + "Some plugin denies " + player.getName() + " to disguise.");
+							sender.sendMessage(ChatColor.RED + "Some plugin denies " + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.RED + " to disguise.");
 						} else {
 							DisguiseManager.disguiseToAll(player, disguise);
-							sender.sendMessage(ChatColor.GOLD + player.getName() + " disguised as a ghost called " + ChatColor.ITALIC + disguise.getName());
+							sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " disguised as a ghost called " + ChatColor.ITALIC + disguise.getName());
 						}
 					} else {
 						sender.sendMessage(ChatColor.RED + "Wrong usage: " + ChatColor.ITALIC + "/" + cmd.getName() + " " + player.getName() + " " + args[1] + " <name>");
@@ -932,19 +931,19 @@ public class iDisguise extends JavaPlugin {
 					DisguiseEvent event = new DisguiseEvent(player, disguise);
 					getServer().getPluginManager().callEvent(event);
 					if(event.isCancelled()) {
-						sender.sendMessage(ChatColor.RED + "Some plugin denies " + player.getName() + " to disguise.");
+						sender.sendMessage(ChatColor.RED + "Some plugin denies " + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.RED + " to disguise.");
 					} else {
 						DisguiseManager.disguiseToAll(player, disguise);
-						sender.sendMessage(ChatColor.GOLD + player.getName() + " disguised as a ghost called " + ChatColor.ITALIC + args[2]);
+						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " disguised as a ghost called " + ChatColor.ITALIC + args[2]);
 					}
 				}
 			} else if(StringUtil.equalsIgnoreCase(args[1], "status", "state", "stat", "stats")) {
 				if(DisguiseManager.isDisguised(player)) {
 					Disguise disguise = DisguiseManager.getDisguise(player);
 					if(disguise instanceof PlayerDisguise) {
-						sender.sendMessage(ChatColor.GOLD + player.getName() + " is disguised as a " + (((PlayerDisguise)disguise).isGhost() ? "ghost" : "player") + " called " + ChatColor.ITALIC + ((PlayerDisguise)disguise).getName());
+						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " is disguised as a " + (((PlayerDisguise)disguise).isGhost() ? "ghost" : "player") + " called " + ChatColor.ITALIC + ((PlayerDisguise)disguise).getName());
 					} else if(disguise instanceof MobDisguise) {
-						sender.sendMessage(ChatColor.GOLD + player.getName() + " is disguised as a " + disguise.getType().name().toLowerCase(Locale.ENGLISH));
+						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " is disguised as a " + disguise.getType().name().toLowerCase(Locale.ENGLISH));
 						sender.sendMessage(ChatColor.GRAY + "Subtypes:");
 						sender.sendMessage(ChatColor.GRAY + " Age: " + (((MobDisguise)disguise).isAdult() ? "adult" : "baby"));
 						switch(disguise.getType()) {
@@ -1000,7 +999,7 @@ public class iDisguise extends JavaPlugin {
 						}
 					}
 				} else {
-					sender.sendMessage(ChatColor.GOLD + player.getName() + " is not disguised.");
+					sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " is not disguised.");
 				}
 			} else if(args[1].equalsIgnoreCase("random")) {
 				DisguiseType type = DisguiseType.random(Type.MOB);
@@ -1053,10 +1052,10 @@ public class iDisguise extends JavaPlugin {
 				DisguiseEvent event = new DisguiseEvent(player, disguise);
 				getServer().getPluginManager().callEvent(event);
 				if(event.isCancelled()) {
-					sender.sendMessage(ChatColor.RED + "Some plugin denies " + player.getName() + " to disguise.");
+					sender.sendMessage(ChatColor.RED + "Some plugin denies " + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.RED + " to disguise.");
 				} else {
 					DisguiseManager.disguiseToAll(player, disguise);
-					sender.sendMessage(ChatColor.GOLD + player.getName() + " disguised as a random mob. Type " + ChatColor.ITALIC + "/" + cmd.getName() + " " + player.getName() + " status" + ChatColor.RESET + ChatColor.GOLD + " to get more information.");
+					sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " disguised as a random mob. Type " + ChatColor.ITALIC + "/" + cmd.getName() + " " + player.getName() + " status" + ChatColor.RESET + ChatColor.GOLD + " to get more information.");
 				}
 			} else {
 				Disguise disguise = DisguiseManager.isDisguised(player) ? DisguiseManager.getDisguise(player).clone() : null;
@@ -1192,7 +1191,6 @@ public class iDisguise extends JavaPlugin {
 									((HorseDisguise)disguise).setVariant(Variant.DONKEY);
 									break;
 								case "normal":
-								case "horse":
 									((HorseDisguise)disguise).setVariant(Variant.HORSE);
 									break;
 								case "mule":
@@ -1410,10 +1408,10 @@ public class iDisguise extends JavaPlugin {
 					DisguiseEvent event = new DisguiseEvent(player, disguise);
 					getServer().getPluginManager().callEvent(event);
 					if(event.isCancelled()) {
-						sender.sendMessage(ChatColor.RED + "Some plugin denies " + player.getName() + " to disguise.");
+						sender.sendMessage(ChatColor.RED + "Some plugin denies " + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.RED + " to disguise.");
 					} else {
 						DisguiseManager.disguiseToAll(player, disguise);
-						sender.sendMessage(ChatColor.GOLD + player.getName() + " disguised. Type " + ChatColor.ITALIC + "/" + cmd.getName() + " " + player.getName() + " status" + ChatColor.RESET + ChatColor.GOLD + " for information about the disguise.");
+						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " disguised. Type " + ChatColor.ITALIC + "/" + cmd.getName() + " " + player.getName() + " status" + ChatColor.RESET + ChatColor.GOLD + " for information about the disguise.");
 					}
 				} else {
 					sender.sendMessage(ChatColor.RED + "Wrong usage. Type " + ChatColor.ITALIC + "/" + cmd.getName() + " " + player.getName() + " help" + ChatColor.RESET + ChatColor.RED + " for additional information.");
