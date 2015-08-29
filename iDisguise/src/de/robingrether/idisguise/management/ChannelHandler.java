@@ -136,23 +136,20 @@ public class ChannelHandler extends ChannelDuplexHandler {
 				Player player = PlayerUtil.getPlayerByEntityId(fieldEntityIdMetadata.getInt(packet));
 				if(player != null && player != this.player && DisguiseManager.isDisguised(player)) {
 					if(DisguiseManager.getDisguise(player) instanceof MobDisguise) {
-						if(DisguiseManager.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
-							List<WatchableObject> list = (List<WatchableObject>)fieldListMetadata.get(packet);
-							for(WatchableObject metadata : list) {
-								if(metadata.a() == 6) {
+						List<WatchableObject> list = (List<WatchableObject>)fieldListMetadata.get(packet);
+						List<WatchableObject> remove = new ArrayList<WatchableObject>();
+						for(WatchableObject metadata : list) {
+							if(metadata.a() == 6) {
+								if(DisguiseManager.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
 									metadata.a((Float)((Float)metadata.b() * 10));
-								}
-							}
-						} else if(DisguiseManager.getDisguise(player).getType().equals(DisguiseType.WITHER)) {
-							List<WatchableObject> list = (List<WatchableObject>)fieldListMetadata.get(packet);
-							for(WatchableObject metadata : list) {
-								if(metadata.a() == 6) {
+								} else if(DisguiseManager.getDisguise(player).getType().equals(DisguiseType.WITHER)) {
 									metadata.a((Float)((Float)metadata.b() * 15));
 								}
+							} else if(metadata.a() > 9) {
+								remove.add(metadata);
 							}
-						} else if(ObjectUtil.equals(DisguiseManager.getDisguise(player).getType(), DisguiseType.CREEPER, DisguiseType.ENDERMAN)) {
-							return;
 						}
+						list.removeAll(remove);
 					}
 				}
 			} else if(object instanceof PacketPlayOutEntityLook) {
