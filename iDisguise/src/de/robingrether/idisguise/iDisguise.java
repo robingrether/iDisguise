@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -74,13 +75,13 @@ public class iDisguise extends JavaPlugin {
 	
 	public void onEnable() {
 		if(!checkVersion()) {
-			System.out.println("[iDisguise] " + String.format("%s is not compatible with your server version!", getFullName()));
+			getLogger().log(Level.SEVERE, String.format("%s is not compatible with your server version!", getFullName()));
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
 		checkDirectory();
 		listener = new iDisguiseListener(this);
-		configuration = new Configuration(directory);
+		configuration = new Configuration(this, directory);
 		configuration.loadData();
 		configuration.saveData();
 		DisguiseManager.setAttribute(0, showOriginalPlayerNames());
@@ -111,9 +112,9 @@ public class iDisguise extends JavaPlugin {
 		}
 		getServer().getServicesManager().register(DisguiseAPI.class, getAPI(), this, ServicePriority.Normal);
 		if(checkForUpdates()) {
-			getServer().getScheduler().runTaskLaterAsynchronously(this, new UpdateCheck(getFullName(), getServer().getConsoleSender(), ChatColor.GOLD + "[iDisguise] " + "An update for iDisguise is available: " + ChatColor.ITALIC + "%s"), 20L);
+			getServer().getScheduler().runTaskLaterAsynchronously(this, new UpdateCheck(this, getServer().getConsoleSender(), ChatColor.GOLD + "[iDisguise] " + "An update for iDisguise is available: " + ChatColor.ITALIC + "%s"), 20L);
 		}
-		System.out.println("[iDisguise] " + String.format("%s enabled!", getFullName()));
+		getLogger().log(Level.INFO, String.format("%s enabled!", getFullName()));
 		enabled = true;
 	}
 	
@@ -128,7 +129,7 @@ public class iDisguise extends JavaPlugin {
 		if(saveDisguises()) {
 			saveData();
 		}
-		System.out.println("[iDisguise] " + String.format("%s disabled!", getFullName()));
+		getLogger().log(Level.INFO, String.format("%s disabled!", getFullName()));
 		enabled = false;
 	}
 	
@@ -143,7 +144,7 @@ public class iDisguise extends JavaPlugin {
 			saveData();
 		}
 		enabled = false;
-		configuration = new Configuration(directory);
+		configuration = new Configuration(this, directory);
 		configuration.loadData();
 		configuration.saveData();
 		DisguiseManager.setAttribute(0, showOriginalPlayerNames());

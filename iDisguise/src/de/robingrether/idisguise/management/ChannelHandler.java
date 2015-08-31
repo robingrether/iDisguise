@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 import net.minecraft.server.v1_8_R3.DataWatcher.WatchableObject;
 import net.minecraft.server.v1_8_R3.Packet;
@@ -31,7 +32,6 @@ import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.util.ObjectUtil;
-
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
@@ -67,7 +67,7 @@ public class ChannelHandler extends ChannelDuplexHandler {
 			}
 			super.channelRead(context, object);
 		} catch(Exception e) {
-			e.printStackTrace();
+			Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Packet handling error!", e);
 		}
 	}
 	
@@ -191,7 +191,7 @@ public class ChannelHandler extends ChannelDuplexHandler {
 			}
 			super.write(context, object, promise);
 		} catch(Exception e) {
-			e.printStackTrace();
+			Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Packet handling error!", e);
 		}
 	}
 	
@@ -286,19 +286,5 @@ public class ChannelHandler extends ChannelDuplexHandler {
 		} catch(Exception e) {
 		}
 	}
-	
-	/*private static void logPacket(Packet<?> packet) {
-		try {
-			Field[] fields = packet.getClass().getDeclaredFields();
-			StringBuilder builder = new StringBuilder("[iDisguise] Packet sent: ");
-			for(Field field : fields) {
-				field.setAccessible(true);
-				builder.append(field.getName() + "=" + (field.get(packet) != null ? field.get(packet).toString() : "null") + "; ");
-			}
-			System.out.println(builder.toString());
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}*/
 	
 }

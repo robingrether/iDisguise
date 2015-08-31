@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +13,8 @@ import org.bukkit.command.CommandSender;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+
+import de.robingrether.idisguise.iDisguise;
 
 public class UpdateCheck implements Runnable {
 	
@@ -23,13 +26,15 @@ public class UpdateCheck implements Runnable {
 	public static final String API_NAME = "name";
 	public static final String API_RELEASE_TYPE = "releaseType";
 	
+	private iDisguise plugin;
 	private String pluginVersion;
 	private String latestVersion;
 	private CommandSender toBeNotified;
 	private String notification;
 	
-	public UpdateCheck(String pluginVersion, CommandSender toBeNotified, String notification) {
-		this.pluginVersion = pluginVersion;
+	public UpdateCheck(iDisguise plugin, CommandSender toBeNotified, String notification) {
+		this.plugin = plugin;
+		this.pluginVersion = plugin.getFullName();
 		this.toBeNotified = toBeNotified;
 		this.notification = notification;
 	}
@@ -64,7 +69,7 @@ public class UpdateCheck implements Runnable {
 				}
 			}
 		} catch(Exception e) {
-			System.err.println("[iDisguise] An error occured while checking for updates.");
+			plugin.getLogger().log(Level.WARNING, "An error occured while checking for updates.", e);
 		}
 	}
 	

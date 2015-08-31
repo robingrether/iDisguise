@@ -11,16 +11,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+
 import org.bukkit.configuration.file.YamlConfiguration;
+
+import de.robingrether.idisguise.iDisguise;
 import de.robingrether.util.StringUtil;
 
 public class Configuration {
 	
 	private ConcurrentHashMap<String, Setting> settings = new ConcurrentHashMap<String, Setting>();
+	private iDisguise plugin;
 	private File configurationFile;
 	private File yamlConfigurationFile;
 	
-	public Configuration(File directory) {
+	public Configuration(iDisguise plugin, File directory) {
+		this.plugin = plugin;
 		configurationFile = new File(directory, "config.txt");
 		yamlConfigurationFile = new File(directory, "Config.yml");
 		setDefault("save-disguises", true, "If set to true the disguises will be saved when the server is stopped");
@@ -61,8 +67,7 @@ public class Configuration {
 				}
 				reader.close();
 			} catch(Exception e) {
-				System.err.println("[iDisguise] An error occured while loading the configuration.");
-				e.printStackTrace();
+				plugin.getLogger().log(Level.SEVERE, "An error occured while loading the configuration.", e);
 			}
 		} else if(yamlConfigurationFile.exists()) {
 			YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(yamlConfigurationFile);
@@ -105,8 +110,7 @@ public class Configuration {
 			}
 			writer.close();
 		} catch(Exception e) {
-			System.err.println("[iDisguise] An error occured while saving the configuration.");
-			e.printStackTrace();
+			plugin.getLogger().log(Level.SEVERE, "An error occured while saving the configuration.", e);
 		}
 	}
 	
