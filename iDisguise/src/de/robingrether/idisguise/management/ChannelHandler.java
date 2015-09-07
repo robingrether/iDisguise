@@ -2,6 +2,7 @@ package de.robingrether.idisguise.management;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -100,20 +101,19 @@ public class ChannelHandler extends ChannelDuplexHandler {
 				if(((EnumPlayerInfoAction)fieldAction.get(packet)) == EnumPlayerInfoAction.ADD_PLAYER) {
 					List<PlayerInfoData> list = (List<PlayerInfoData>)fieldListInfo.get(packet);
 					List<PlayerInfoData> add = new ArrayList<PlayerInfoData>();
-					List<PlayerInfoData> remove = new ArrayList<PlayerInfoData>();
-					for(PlayerInfoData playerInfo : list) {
+					for(Iterator<PlayerInfoData> iterator = list.iterator(); iterator.hasNext();) {
+						PlayerInfoData playerInfo = iterator.next();
 						Player player = Bukkit.getPlayer(playerInfo.a().getId());
 						if(player != null && player != this.player && DisguiseManager.isDisguised(player)) {
 							if(DisguiseManager.getDisguise(player) instanceof PlayerDisguise) {
 								PlayerInfoData newPlayerInfo = packet.new PlayerInfoData(ProfileUtil.getGameProfile(((PlayerDisguise)DisguiseManager.getDisguise(player)).getName()), playerInfo.b(), playerInfo.c(), null);
-								remove.add(playerInfo);
+								iterator.remove();
 								add.add(newPlayerInfo);
 							} else {
-								remove.add(playerInfo);
+								iterator.remove();
 							}
 						}
 					}
-					list.removeAll(remove);
 					list.addAll(add);
 				}
 			} else if(object instanceof PacketPlayOutBed) {
