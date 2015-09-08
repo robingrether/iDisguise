@@ -11,15 +11,17 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-public class GhostFactory {
+public abstract class GhostFactory {
 	
-	private static final String GHOST_TEAM_NAME = "Ghosts";
-	private static boolean enabled = false;
-	private static HashSet<UUID> ghosts;
-	private static Team ghostTeam;
-	private static int taskId;
+	public static GhostFactory instance;
 	
-	public static void enable(Plugin plugin) {
+	protected final String GHOST_TEAM_NAME = "Ghosts";
+	protected boolean enabled = false;
+	protected HashSet<UUID> ghosts;
+	protected Team ghostTeam;
+	protected int taskId;
+	
+	public void enable(Plugin plugin) {
 		if(enabled) {
 			return;
 		}
@@ -46,7 +48,7 @@ public class GhostFactory {
 		enabled = true;
 	}
 	
-	public static void disable() {
+	public void disable() {
 		if(!enabled) {
 			return;
 		}
@@ -55,13 +57,9 @@ public class GhostFactory {
 		enabled = false;
 	}
 	
-	public static void addPlayer(String player) {
-		if(enabled) {
-			ghostTeam.addEntry(player);
-		}
-	}
+	public abstract void addPlayer(String player);
 	
-	public static boolean addGhost(Player player) {
+	public boolean addGhost(Player player) {
 		if(enabled) {
 			player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15));
 			return ghosts.add(player.getUniqueId());
@@ -69,7 +67,7 @@ public class GhostFactory {
 		return false;
 	}
 	
-	public static boolean removeGhost(Player player) {
+	public boolean removeGhost(Player player) {
 		if(enabled) {
 			boolean remove = ghosts.remove(player.getUniqueId());
 			player.removePotionEffect(PotionEffectType.INVISIBILITY);
