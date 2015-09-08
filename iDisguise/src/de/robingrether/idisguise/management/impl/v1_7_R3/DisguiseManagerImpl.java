@@ -1,7 +1,11 @@
 package de.robingrether.idisguise.management.impl.v1_7_R3;
 
 import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import net.minecraft.server.v1_7_R3.Entity;
 import net.minecraft.server.v1_7_R3.Packet;
@@ -13,6 +17,7 @@ import net.minecraft.server.v1_7_R3.PacketPlayOutPlayerInfo;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_7_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
@@ -23,26 +28,15 @@ import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.management.DisguiseManager;
+import de.robingrether.idisguise.management.DisguiseMap;
+import de.robingrether.idisguise.management.DisguiseMapLegacy;
 import de.robingrether.idisguise.management.GhostFactory;
 import de.robingrether.idisguise.management.PacketHelper;
 import de.robingrether.idisguise.management.PlayerHelper;
 
 public class DisguiseManagerImpl extends DisguiseManager {
 	
-	private Field fieldName, fieldOnline;
-	
-	public DisguiseManagerImpl() {
-		try {
-			fieldName = PacketPlayOutPlayerInfo.class.getDeclaredField("a");
-			fieldName.setAccessible(true);
-		} catch(Exception e) {
-		}
-		try {
-			fieldOnline = PacketPlayOutPlayerInfo.class.getDeclaredField("b");
-			fieldOnline.setAccessible(true);
-		} catch(Exception e) {
-		}
-	}
+	private DisguiseMap disguiseMap = new DisguiseMap();
 	
 	public Packet getSpawnPacket(Player player) {
 		Packet packetSpawn;
@@ -77,26 +71,34 @@ public class DisguiseManagerImpl extends DisguiseManager {
 	}
 	
 	public synchronized void disguise(Player player, Disguise disguise) {
-		Disguise oldDisguise = disguiseList.getDisguise(player.getUniqueId());
-		PacketPlayOutPlayerInfo packetPlayerInfoRemove = new PacketPlayOutPlayerInfo();
-		Packet packetPlayerInfoAdd = getPlayerInfoPacket(player);
-		try {
-			fieldOnline.setBoolean(packetPlayerInfoRemove, false);
-			if(oldDisguise instanceof PlayerDisguise) {
-				fieldName.set(packetPlayerInfoRemove, ((PlayerDisguise)oldDisguise).getName());
-			} else {
-				fieldName.set(packetPlayerInfoRemove, player.getName());
-			}
-			for(Player observer : Bukkit.getOnlinePlayers()) {
-				if(observer == player) {
-					continue;
+		Disguise oldDisguise = disguiseMap.getDisguise(player.getUniqueId());
+		if(oldDisguise instanceof PlayerDisguise) {
+			try {
+				PacketPlayOutPlayerInfo packetPlayerInfoRemove = new PacketPlayOutPlayerInfo(((PlayerDisguise)disguise).getName(), false, ((CraftPlayer)player).getHandle().ping);
+				for(Player observer : Bukkit.getOnlinePlayers()) {
+					if(observer == player) {
+						continue;
+					}
+					sendPacket(observer, packetPlayerInfoRemove);
 				}
-				sendPacket(observer, packetPlayerInfoRemove);
-				sendPacket(observer, packetPlayerInfoAdd);
+			} catch(Exception e) {
 			}
-		} catch(Exception e) {
+			if(oldDisguise.getType().equals(DisguiseType.GHOST)) {
+				GhostFactory.instance.removeGhost(player);
+			}
+		} else if(oldDisguise == null) {
+			try {
+				PacketPlayOutPlayerInfo packetPlayerInfoRemove = new PacketPlayOutPlayerInfo(player.getName(), false, ((CraftPlayer)player).getHandle().ping);
+				for(Player observer : Bukkit.getOnlinePlayers()) {
+					if(observer == player) {
+						continue;
+					}
+					sendPacket(observer, packetPlayerInfoRemove);
+				}
+			} catch(Exception e) {
+			}
 		}
-		disguiseList.putDisguise(player.getUniqueId(), disguise);
+		disguiseMap.putDisguise(player.getUniqueId(), disguise);
 		if(disguise instanceof PlayerDisguise) {
 			player.setDisplayName(((PlayerDisguise)disguise).getName());
 			if(((PlayerDisguise)disguise).isGhost()) {
@@ -105,42 +107,40 @@ public class DisguiseManagerImpl extends DisguiseManager {
 			}
 		}
 		Packet packetDestroy = getDestroyPacket(player);
-		
+		Packet packetPlayerInfoAdd = getPlayerInfoPacket(player);
 		Packet packetSpawn = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());
 		for(Player observer : player.getWorld().getPlayers()) {
 			if(observer == player) {
 				continue;
 			}
 			sendPacket(observer, packetDestroy);
+			sendPacket(observer, packetPlayerInfoAdd);
 			sendPacket(observer, packetSpawn);
 		}
 	}
 	
 	public synchronized Disguise undisguise(Player player) {
-		Disguise disguise = disguiseList.removeDisguise(player.getUniqueId());
+		Disguise disguise = disguiseMap.removeDisguise(player.getUniqueId());
 		if(disguise == null) {
 			return null;
-		}
-		PacketPlayOutPlayerInfo packetPlayerInfoRemove = new PacketPlayOutPlayerInfo();
-		Packet packetPlayerInfoAdd = getPlayerInfoPacket(player);
-		try {
-			fieldOnline.setBoolean(packetPlayerInfoRemove, false);
-			if(disguise instanceof PlayerDisguise) {
-				fieldName.set(packetPlayerInfoRemove, ((PlayerDisguise)disguise).getName());
-			}
-			for(Player observer : Bukkit.getOnlinePlayers()) {
-				if(observer == player) {
-					continue;
+		}	
+		if(disguise instanceof PlayerDisguise) {
+			try {
+				PacketPlayOutPlayerInfo packetPlayerInfoRemove = new PacketPlayOutPlayerInfo(((PlayerDisguise)disguise).getName(), false, ((CraftPlayer)player).getHandle().ping);
+				for(Player observer : Bukkit.getOnlinePlayers()) {
+					if(observer == player) {
+						continue;
+					}
+					sendPacket(observer, packetPlayerInfoRemove);
 				}
-				sendPacket(observer, packetPlayerInfoRemove);
-				sendPacket(observer, packetPlayerInfoAdd);
+			} catch(Exception e) {
 			}
-		} catch(Exception e) {
-		}
-		if(disguise.getType().equals(DisguiseType.GHOST)) {
-			GhostFactory.instance.removeGhost(player);
+			if(disguise.getType().equals(DisguiseType.GHOST)) {
+				GhostFactory.instance.removeGhost(player);
+			}
 		}
 		Packet packetDestroy = getDestroyPacket(player);
+		Packet packetPlayerInfoAdd = getPlayerInfoPacket(player);
 		Packet packetSpawn = getSpawnPacket(player);
 		if(disguise instanceof PlayerDisguise) {
 			player.setDisplayName(player.getName());
@@ -150,10 +150,21 @@ public class DisguiseManagerImpl extends DisguiseManager {
 				continue;
 			}
 			sendPacket(observer, packetDestroy);
+			sendPacket(observer, packetPlayerInfoAdd);
 			sendPacket(observer, packetSpawn);
 		}
 		updateAttributes(player);
 		return disguise;
+	}
+	
+	public void undisguiseAll() {
+		for(UUID player : disguiseMap.getPlayers()) {
+			if(Bukkit.getPlayer(player) != null) {
+				undisguise(Bukkit.getPlayer(player));
+			} else {
+				disguiseMap.removeDisguise(player);
+			}
+		}
 	}
 	
 	public synchronized void updateAttributes(Player player, Player observer) {
@@ -182,6 +193,40 @@ public class DisguiseManagerImpl extends DisguiseManager {
 				continue;
 			}
 			updateAttributes(player, observer);
+		}
+	}
+	
+	public boolean isDisguised(Player player) {
+		return disguiseMap.isDisguised(player.getUniqueId());
+	}
+	
+	public Disguise getDisguise(Player player) {
+		return disguiseMap.getDisguise(player.getUniqueId());
+	}
+	
+	public Set<OfflinePlayer> getDisguisedPlayers() {
+		Set<OfflinePlayer> set = new HashSet<OfflinePlayer>();
+		for(UUID player : disguiseMap.getMap().keySet()) {
+			set.add(Bukkit.getOfflinePlayer(player));
+		}
+		return set;
+	}
+	
+	public Disguise removeDisguise(OfflinePlayer offlinePlayer) {
+		return disguiseMap.removeDisguise(offlinePlayer.getUniqueId());
+	}
+	
+	public Map getDisguises() {
+		return disguiseMap.getMap();
+	}
+	
+	public void updateDisguises(Map map) {
+		if(!map.keySet().isEmpty()) {
+			if(map.keySet().iterator().next() instanceof UUID) {
+				disguiseMap = new DisguiseMap(map);
+			} else if(map.keySet().iterator().next() instanceof String) {
+				disguiseMap = new DisguiseMap(new DisguiseMapLegacy(map));
+			}
 		}
 	}
 	
