@@ -2,6 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="D:/Users/robin_000/Java/CraftBukkit-Spigot/spigot-1.7.9-R0.3-SNAPSHOTBuild1543.jar"/>
+	<classpathentry kind="lib" path="D:/Users/robin_000/Java/CraftBukkit-Spigot/craftbukkit-1.8.8.jar"/>
+	<classpathentry kind="lib" path="D:/Users/robin_000/Java/CraftBukkit-Spigot/craftbukkit-1.8.3.jar"/>
+	<classpathentry kind="lib" path="D:/Users/robin_000/Java/CraftBukkit-Spigot/craftbukkit-1.8.jar"/>
+	<classpathentry kind="lib" path="D:/Users/robin_000/Java/CraftBukkit-Spigot/craftbukkit-1.7.10.jar"/>
+	<classpathentry kind="lib" path="D:/Users/robin_000/Java/CraftBukkit-Spigot/craftbukkit-1.7.9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

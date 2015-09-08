@@ -4,15 +4,12 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -55,11 +52,9 @@ import de.robingrether.idisguise.io.Metrics.Plotter;
 import de.robingrether.idisguise.io.Metrics;
 import de.robingrether.idisguise.io.SLAPI;
 import de.robingrether.idisguise.io.UpdateCheck;
-import de.robingrether.idisguise.management.DisguiseList;
 import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.GhostFactory;
 import de.robingrether.idisguise.management.PacketHelper;
-import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.VersionHelper;
 import de.robingrether.idisguise.sound.SoundSystem;
 import de.robingrether.util.RandomUtil;
@@ -789,17 +784,17 @@ public class iDisguise extends JavaPlugin {
 						sender.sendMessage(ChatColor.GOLD + "Undisguised everyone ignoring event cancelling.");
 					} else {
 						int count = 0;
-						int total = DisguiseManager.instance.getDisguiseList().getPlayers().size();
-						for(UUID uuid : DisguiseManager.instance.getDisguiseList().getPlayers()) {
-							if(Bukkit.getPlayer(uuid) != null) {
-								UndisguiseEvent event = new UndisguiseEvent(Bukkit.getPlayer(uuid), DisguiseManager.instance.getDisguise(Bukkit.getPlayer(uuid)), true);
+						int total = DisguiseManager.instance.getDisguisedPlayers().size();
+						for(OfflinePlayer offlinePlayer : DisguiseManager.instance.getDisguisedPlayers()) {
+							if(player.isOnline()) {
+								UndisguiseEvent event = new UndisguiseEvent(offlinePlayer.getPlayer(), DisguiseManager.instance.getDisguise(offlinePlayer.getPlayer()), true);
 								getServer().getPluginManager().callEvent(event);
 								if(!event.isCancelled()) {
-									DisguiseManager.instance.undisguise(Bukkit.getPlayer(uuid));
+									DisguiseManager.instance.undisguise(offlinePlayer.getPlayer());
 									count++;
 								}
 							} else {
-								DisguiseManager.instance.getDisguiseList().removeDisguise(uuid);
+								DisguiseManager.instance.removeDisguise(offlinePlayer);
 								count++;
 							}
 						}
@@ -1562,23 +1557,18 @@ public class iDisguise extends JavaPlugin {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	private void loadData() {
 		File dataFile = new File(directory, "data.bin");
 		File oldDataFile = new File(directory, "disguise.bin");
 		if(dataFile.exists()) {
 			Object map = SLAPI.load(dataFile);
-			if(map instanceof ConcurrentHashMap) {
-				DisguiseManager.instance.setDisguiseList(new DisguiseList((ConcurrentHashMap<UUID, Disguise>)map));
+			if(map instanceof Map) {
+				DisguiseManager.instance.updateDisguises((Map)map);
 			}
 		} else if(oldDataFile.exists()) {
-			Object oldMap = SLAPI.load(oldDataFile);
-			if(oldMap instanceof Map) {
-				ConcurrentHashMap<UUID, Disguise> converted = new ConcurrentHashMap<UUID, Disguise>();
-				for(Entry<String, Disguise> entry : ((Map<String, Disguise>)oldMap).entrySet()) {
-					converted.put(PlayerHelper.instance.getUniqueId(entry.getKey()), entry.getValue());
-				}
-				DisguiseManager.instance.setDisguiseList(new DisguiseList(converted));
+			Object map = SLAPI.load(oldDataFile);
+			if(map instanceof Map) {
+				DisguiseManager.instance.updateDisguises((Map)map);
 			}
 			oldDataFile.delete();
 		}
@@ -1586,7 +1576,7 @@ public class iDisguise extends JavaPlugin {
 	
 	private void saveData() {
 		File dataFile = new File(directory, "data.bin");
-		SLAPI.save(DisguiseManager.instance.getDisguiseList().getMap(), dataFile);
+		SLAPI.save(DisguiseManager.instance.getDisguises(), dataFile);
 	}
 	
 	public DisguiseAPI getAPI() {

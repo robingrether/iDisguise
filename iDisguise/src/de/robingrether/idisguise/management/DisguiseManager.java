@@ -1,8 +1,10 @@
 package de.robingrether.idisguise.management;
 
-import java.util.UUID;
+import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import de.robingrether.idisguise.disguise.Disguise;
@@ -10,8 +12,6 @@ import de.robingrether.idisguise.disguise.Disguise;
 public abstract class DisguiseManager {
 	
 	public static DisguiseManager instance;
-	
-	protected DisguiseList disguiseList = new DisguiseList();
 	
 	public abstract Object getSpawnPacket(Player player);
 	
@@ -25,27 +25,15 @@ public abstract class DisguiseManager {
 	
 	public abstract Disguise undisguise(Player player);
 	
-	public void undisguiseAll() {
-		for(UUID player : disguiseList.getPlayers()) {
-			if(Bukkit.getPlayer(player) != null) {
-				undisguise(Bukkit.getPlayer(player));
-			} else {
-				disguiseList.removeDisguise(player);
-			}
-		}
-	}
+	public abstract void undisguiseAll();
 	
 	public abstract void updateAttributes(Player player, Player observer);
 	
 	protected abstract void updateAttributes(Player player);
 	
-	public boolean isDisguised(Player player) {
-		return disguiseList.isDisguised(player.getUniqueId());
-	}
+	public abstract boolean isDisguised(Player player);
 	
-	public Disguise getDisguise(Player player) {
-		return disguiseList.getDisguise(player.getUniqueId());
-	}
+	public abstract Disguise getDisguise(Player player);
 	
 	public int getOnlineDisguiseCount() {
 		int count = 0;
@@ -57,12 +45,12 @@ public abstract class DisguiseManager {
 		return count;
 	}
 	
-	public DisguiseList getDisguiseList() {
-		return disguiseList;
-	}
+	public abstract Set<OfflinePlayer> getDisguisedPlayers();
 	
-	public void setDisguiseList(DisguiseList disguiseList) {
-		this.disguiseList = disguiseList;
-	}
+	public abstract Disguise removeDisguise(OfflinePlayer offlinePlayer);
+	
+	public abstract Map getDisguises();
+	
+	public abstract void updateDisguises(Map map);
 	
 }
