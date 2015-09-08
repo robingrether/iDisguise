@@ -5,11 +5,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 public class SLAPI {
 	
-	public static boolean save(Serializable obj, File file) {
+	public static boolean save(Object obj, File file) {
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
 			oos.writeObject(obj);
