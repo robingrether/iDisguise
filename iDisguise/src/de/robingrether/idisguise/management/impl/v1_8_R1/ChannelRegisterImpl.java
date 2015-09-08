@@ -22,7 +22,6 @@ import net.minecraft.server.v1_8_R1.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_8_R1.PacketPlayOutEntityTeleport;
 import net.minecraft.server.v1_8_R1.PacketPlayOutNamedEntitySpawn;
 import net.minecraft.server.v1_8_R1.PacketPlayOutPlayerInfo;
-import net.minecraft.server.v1_8_R1.EnumPlayerInfoAction;
 import net.minecraft.server.v1_8_R1.PlayerInfoData;
 import net.minecraft.server.v1_8_R1.PacketPlayOutSpawnEntityLiving;
 
@@ -48,17 +47,12 @@ import io.netty.channel.ChannelPromise;
 public class ChannelRegisterImpl extends ChannelRegister {
 	
 	private final Map<Player, ChannelHandler> registeredHandlers = new ConcurrentHashMap<Player, ChannelHandler>();
-	private Field fieldChannel, fieldAction, fieldListInfo, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving, fieldListMetadata, fieldEntityIdUseEntity, fieldEntityIdNamedSpawn;
+	private Field fieldChannel, fieldListInfo, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving, fieldListMetadata, fieldEntityIdUseEntity, fieldEntityIdNamedSpawn;
 	
 	public ChannelRegisterImpl() {
 		try {
 			fieldChannel = NetworkManager.class.getDeclaredField("i");
 			fieldChannel.setAccessible(true);
-		} catch(Exception e) {
-		}
-		try {
-			fieldAction = PacketPlayOutPlayerInfo.class.getDeclaredField("a");
-			fieldAction.setAccessible(true);
 		} catch(Exception e) {
 		}
 		try {
@@ -205,24 +199,22 @@ public class ChannelRegisterImpl extends ChannelRegister {
 					}
 				} else if(object instanceof PacketPlayOutPlayerInfo) {
 					PacketPlayOutPlayerInfo packet = (PacketPlayOutPlayerInfo)object;
-					if(((EnumPlayerInfoAction)fieldAction.get(packet)) == EnumPlayerInfoAction.ADD_PLAYER) {
-						List<PlayerInfoData> list = (List<PlayerInfoData>)fieldListInfo.get(packet);
-						List<PlayerInfoData> add = new ArrayList<PlayerInfoData>();
-						for(Iterator<PlayerInfoData> iterator = list.iterator(); iterator.hasNext();) {
-							PlayerInfoData playerInfo = iterator.next();
-							Player player = Bukkit.getPlayer(playerInfo.a().getId());
-							if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player)) {
-								if(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise) {
-									PlayerInfoData newPlayerInfo = new PlayerInfoData(packet, (GameProfile)PlayerHelper.instance.getGameProfile(((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName()), playerInfo.b(), playerInfo.c(), null);
-									iterator.remove();
-									add.add(newPlayerInfo);
-								} else {
-									iterator.remove();
-								}
+					List<PlayerInfoData> list = (List<PlayerInfoData>)fieldListInfo.get(packet);
+					List<PlayerInfoData> add = new ArrayList<PlayerInfoData>();
+					for(Iterator<PlayerInfoData> iterator = list.iterator(); iterator.hasNext();) {
+						PlayerInfoData playerInfo = iterator.next();
+						Player player = Bukkit.getPlayer(playerInfo.a().getId());
+						if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player)) {
+							if(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise) {
+								PlayerInfoData newPlayerInfo = new PlayerInfoData(packet, (GameProfile)PlayerHelper.instance.getGameProfile(((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName()), playerInfo.b(), playerInfo.c(), null);
+								iterator.remove();
+								add.add(newPlayerInfo);
+							} else {
+								iterator.remove();
 							}
 						}
-						list.addAll(add);
 					}
+					list.addAll(add);
 				} else if(object instanceof PacketPlayOutBed) {
 					PacketPlayOutBed packet = (PacketPlayOutBed)object;
 					Player player = PlayerHelper.instance.getPlayerByEntityId(fieldEntityIdBed.getInt(packet));

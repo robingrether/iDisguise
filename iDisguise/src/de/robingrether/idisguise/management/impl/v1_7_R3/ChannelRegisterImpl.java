@@ -43,7 +43,7 @@ import net.minecraft.util.io.netty.channel.ChannelPromise;
 public class ChannelRegisterImpl extends ChannelRegister {
 	
 	private final Map<Player, ChannelHandler> registeredHandlers = new ConcurrentHashMap<Player, ChannelHandler>();
-	private Field fieldChannel, fieldName, fieldOnline, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving, fieldListMetadata, fieldEntityIdUseEntity, fieldEntityIdNamedSpawn;
+	private Field fieldChannel, fieldName, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving, fieldListMetadata, fieldEntityIdUseEntity, fieldEntityIdNamedSpawn;
 	
 	public ChannelRegisterImpl() {
 		try {
@@ -54,11 +54,6 @@ public class ChannelRegisterImpl extends ChannelRegister {
 		try {
 			fieldName = PacketPlayOutPlayerInfo.class.getDeclaredField("a");
 			fieldName.setAccessible(true);
-		} catch(Exception e) {
-		}
-		try {
-			fieldOnline = PacketPlayOutPlayerInfo.class.getDeclaredField("b");
-			fieldOnline.setAccessible(true);
 		} catch(Exception e) {
 		}
 		try {
@@ -200,14 +195,12 @@ public class ChannelRegisterImpl extends ChannelRegister {
 					}
 				} else if(object instanceof PacketPlayOutPlayerInfo) {
 					PacketPlayOutPlayerInfo packet = (PacketPlayOutPlayerInfo)object;
-					if(fieldOnline.getBoolean(packet) == true) {
-						Player player = Bukkit.getPlayer((String)fieldName.get(packet));
-						if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player)) {
-							if(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise) {
-								fieldName.set(packet, ((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName());
-							} else {
-								return;
-							}
+					Player player = Bukkit.getPlayer((String)fieldName.get(packet));
+					if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player)) {
+						if(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise) {
+							fieldName.set(packet, ((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName());
+						} else {
+							return;
 						}
 					}
 				} else if(object instanceof PacketPlayOutBed) {
