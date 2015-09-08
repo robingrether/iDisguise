@@ -1,9 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import net.minecraft.server.v1_8_R3.EntityOcelot;
-import net.minecraft.server.v1_8_R3.World;
-
-import org.bukkit.Location;
 import org.bukkit.entity.Ocelot.Type;
 
 /**
@@ -72,16 +68,6 @@ public class OcelotDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof OcelotDisguise && ((OcelotDisguise)object).catType.equals(catType);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@SuppressWarnings("deprecation")
-	public EntityOcelot getEntity(World world, Location location, int id) {
-		EntityOcelot entity = (EntityOcelot)super.getEntity(world, location, id);
-		entity.setCatType(catType.getId());
-		return entity;
 	}
 	
 }

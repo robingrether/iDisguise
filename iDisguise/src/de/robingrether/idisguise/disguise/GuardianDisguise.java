@@ -1,9 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import org.bukkit.Location;
-import net.minecraft.server.v1_8_R3.EntityGuardian;
-import net.minecraft.server.v1_8_R3.World;
-
 /**
  * Represents a disguise as a guardian.
  * 
@@ -69,15 +65,6 @@ public class GuardianDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof GuardianDisguise && ((GuardianDisguise)object).isElder == isElder;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public EntityGuardian getEntity(World world, Location location, int id) {
-		EntityGuardian guardian = (EntityGuardian)super.getEntity(world, location, id);
-		guardian.setElder(isElder);
-		return guardian;
 	}
 	
 }

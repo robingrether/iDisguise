@@ -1,11 +1,6 @@
 package de.robingrether.idisguise.disguise;
 
-import net.minecraft.server.v1_8_R3.EntityHorse;
-import net.minecraft.server.v1_8_R3.World;
-
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Horse.Color;
 import org.bukkit.entity.Horse.Style;
 import org.bukkit.entity.Horse.Variant;
@@ -192,19 +187,6 @@ public class HorseDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof HorseDisguise && ((HorseDisguise)object).color.equals(color) && ((HorseDisguise)object).style.equals(style) && ((HorseDisguise)object).variant.equals(variant) && ((HorseDisguise)object).saddled == saddled && ((HorseDisguise)object).hasChest == hasChest && ((HorseDisguise)object).armor == armor;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public EntityHorse getEntity(World world, Location location, int id) {
-		EntityHorse entity = (EntityHorse)super.getEntity(world, location, id);
-		entity.setType(variant.ordinal());
-		entity.setVariant(color.ordinal() & 0xFF | style.ordinal() << 8);
-		entity.inventoryChest.setItem(0, saddled ? CraftItemStack.asNMSCopy(new ItemStack(Material.SADDLE)) : null);
-		entity.inventoryChest.setItem(1, CraftItemStack.asNMSCopy(armor.getItem()));
-		entity.setHasChest(hasChest);
-		return entity;
 	}
 	
 	/**

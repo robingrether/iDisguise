@@ -1,12 +1,7 @@
 package de.robingrether.idisguise.disguise;
 
-import org.bukkit.Location;
-
-import de.robingrether.idisguise.management.ProfileUtil;
+import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.util.Validate;
-
-import net.minecraft.server.v1_8_R3.Entity;
-import net.minecraft.server.v1_8_R3.World;
 
 /**
  * Represents a disguise as a player.
@@ -44,7 +39,7 @@ public class PlayerDisguise extends Disguise {
 		if(!Validate.minecraftUsername(name)) {
 			throw new IllegalArgumentException("The given name is invalid!");
 		}
-		this.name = ProfileUtil.getCaseCorrectedName(name);
+		this.name = PlayerHelper.instance.getCaseCorrectedName(name);
 	}
 	
 	/**
@@ -79,17 +74,6 @@ public class PlayerDisguise extends Disguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof PlayerDisguise && ((PlayerDisguise)object).name.equalsIgnoreCase(name);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 * <br>
-	 * This method is never used and always returns <code>null</code>.
-	 * 
-	 * @return <code>null</code>
-	 */
-	public Entity getEntity(World world, Location location, int id) {
-		return null;
 	}
 	
 }

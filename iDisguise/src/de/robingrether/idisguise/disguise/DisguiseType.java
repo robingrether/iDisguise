@@ -14,50 +14,52 @@ import java.util.Random;
  */
 public enum DisguiseType {
 	
-	BAT(Type.MOB),
-	BLAZE(Type.MOB),
-	CAVE_SPIDER(Type.MOB),
-	CHICKEN(Type.MOB),
-	COW(Type.MOB),
-	CREEPER(Type.MOB),
-	ENDER_DRAGON(Type.MOB),
-	ENDERMAN(Type.MOB),
-	ENDERMITE(Type.MOB),
-	GHAST(Type.MOB),
-	GIANT(Type.MOB),
-	GUARDIAN(Type.MOB),
-	HORSE(Type.MOB),
-	IRON_GOLEM(Type.MOB),
-	MAGMA_CUBE(Type.MOB),
-	MUSHROOM_COW(Type.MOB),
-	OCELOT(Type.MOB),
-	PIG(Type.MOB),
-	PIG_ZOMBIE(Type.MOB),
-	RABBIT(Type.MOB),
-	SHEEP(Type.MOB),
-	SILVERFISH(Type.MOB),
-	SKELETON(Type.MOB),
-	SLIME(Type.MOB),
-	SNOWMAN(Type.MOB),
-	SPIDER(Type.MOB),
-	SQUID(Type.MOB),
-	VILLAGER(Type.MOB),
-	WITCH(Type.MOB),
-	WITHER(Type.MOB),
-	WOLF(Type.MOB),
-	ZOMBIE(Type.MOB),
+	BAT(Type.MOB, "EntityBat"),
+	BLAZE(Type.MOB, "EntityBlaze"),
+	CAVE_SPIDER(Type.MOB, "EntityCaveSpider"),
+	CHICKEN(Type.MOB, "EntityChicken"),
+	COW(Type.MOB, "EntityCow"),
+	CREEPER(Type.MOB, "EntityCreeper"),
+	ENDER_DRAGON(Type.MOB, "EntityEnderDragon"),
+	ENDERMAN(Type.MOB, "EntityEnderman"),
+	ENDERMITE(Type.MOB, "EntityEndermite"),
+	GHAST(Type.MOB, "EntityGhast"),
+	GIANT(Type.MOB, "EntityGiantZombie"),
+	GUARDIAN(Type.MOB, "EntityGuardian"),
+	HORSE(Type.MOB, "EntityHorse"),
+	IRON_GOLEM(Type.MOB, "EntityGolem"),
+	MAGMA_CUBE(Type.MOB, "EntityMagmaCube"),
+	MUSHROOM_COW(Type.MOB, "EntityMushroomCow"),
+	OCELOT(Type.MOB, "EntityOcelot"),
+	PIG(Type.MOB, "EntityPig"),
+	PIG_ZOMBIE(Type.MOB, "EntityPigZombie"),
+	RABBIT(Type.MOB, "EntityRabbit"),
+	SHEEP(Type.MOB, "EntitySheep"),
+	SILVERFISH(Type.MOB, "EntitySilverfish"),
+	SKELETON(Type.MOB, "EntitySkeleton"),
+	SLIME(Type.MOB, "EntitySlime"),
+	SNOWMAN(Type.MOB, "EntitySnowman"),
+	SPIDER(Type.MOB, "EntitySpider"),
+	SQUID(Type.MOB, "EntitySquid"),
+	VILLAGER(Type.MOB, "EntityVillager"),
+	WITCH(Type.MOB, "EntityWitch"),
+	WITHER(Type.MOB, "EntityWither"),
+	WOLF(Type.MOB, "EntityWolf"),
+	ZOMBIE(Type.MOB, "EntityZombie"),
 	
-	GHOST(Type.PLAYER),
-	PLAYER(Type.PLAYER);
+	GHOST(Type.PLAYER, "EntityPlayer"),
+	PLAYER(Type.PLAYER, "EntityPlayer");
 	
 	//BLOCK(Type.OBJECT),
 	//ENDER_CRYSTAL(Type.OBJECT),
 	//PRIMED_TNT(Type.OBJECT);
 	
 	private Type type;
+	private String className;
 	
-	private DisguiseType(Type type) {
+	private DisguiseType(Type type, String className) {
 		this.type = type;
+		this.className = className;
 	}
 	
 	/**
@@ -98,6 +100,10 @@ public enum DisguiseType {
 	 */
 	public Type getType() {
 		return type;
+	}
+	
+	public Class<?> getClass(String packageName) throws ClassNotFoundException {
+		return Class.forName(packageName + "." + className);
 	}
 	
 	private static Random random = new Random();

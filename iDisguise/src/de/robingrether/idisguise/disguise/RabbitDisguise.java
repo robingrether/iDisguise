@@ -1,10 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import net.minecraft.server.v1_8_R3.EntityRabbit;
-import net.minecraft.server.v1_8_R3.World;
-
-import org.bukkit.Location;
-
 /**
  * Represents a disguise as a rabbit.
  * 
@@ -81,15 +76,6 @@ public class RabbitDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof RabbitDisguise && ((RabbitDisguise)object).rabbitType.equals(rabbitType);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public EntityRabbit getEntity(World world, Location location, int id) {
-		EntityRabbit rabbit = (EntityRabbit)super.getEntity(world, location, id);
-		rabbit.setRabbitType(rabbitType.getId());
-		return rabbit;
 	}
 	
 	/**

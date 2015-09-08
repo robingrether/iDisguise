@@ -1,10 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import net.minecraft.server.v1_8_R3.Block;
-import net.minecraft.server.v1_8_R3.EntityEnderman;
-import net.minecraft.server.v1_8_R3.World;
-
-import org.bukkit.Location;
 import org.bukkit.Material;
 
 /**
@@ -121,15 +116,6 @@ public class EndermanDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof EndermanDisguise && ((EndermanDisguise)object).blockInHand.equals(blockInHand) && ((EndermanDisguise)object).blockInHandData == blockInHandData;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public EntityEnderman getEntity(World world, Location location, int id) {
-		EntityEnderman entity = (EntityEnderman)super.getEntity(world, location, id);
-		entity.setCarried(Block.getById(blockInHand.getId()).fromLegacyData(blockInHandData));
-		return entity;
 	}
 	
 }

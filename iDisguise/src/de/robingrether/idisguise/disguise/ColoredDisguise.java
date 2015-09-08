@@ -1,13 +1,6 @@
 package de.robingrether.idisguise.disguise;
 
-import net.minecraft.server.v1_8_R3.EntityInsentient;
-import net.minecraft.server.v1_8_R3.EntitySheep;
-import net.minecraft.server.v1_8_R3.EntityWolf;
-import net.minecraft.server.v1_8_R3.EnumColor;
-import net.minecraft.server.v1_8_R3.World;
-
 import org.bukkit.DyeColor;
-import org.bukkit.Location;
 
 /**
  * Represents a disguise as a colored mob (e.g. sheep, dog).
@@ -77,20 +70,6 @@ public class ColoredDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof ColoredDisguise && ((ColoredDisguise)object).getColor().equals(color);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@SuppressWarnings("deprecation")
-	public EntityInsentient getEntity(World world, Location location, int id) {
-		EntityInsentient entity = super.getEntity(world, location, id);
-		if(entity instanceof EntitySheep) {
-			((EntitySheep)entity).setColor(EnumColor.fromColorIndex(color.getData()));
-		} else if(entity instanceof EntityWolf) {
-			((EntityWolf)entity).setCollarColor(EnumColor.fromColorIndex(color.getData()));
-		}
-		return entity;
 	}
 	
 }

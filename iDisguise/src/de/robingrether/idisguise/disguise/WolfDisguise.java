@@ -1,10 +1,6 @@
 package de.robingrether.idisguise.disguise;
 
-import net.minecraft.server.v1_8_R3.EntityWolf;
-import net.minecraft.server.v1_8_R3.World;
-
 import org.bukkit.DyeColor;
-import org.bukkit.Location;
 
 /**
  * Represents a disguise as a wolf.
@@ -96,16 +92,6 @@ public class WolfDisguise extends ColoredDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof WolfDisguise && ((WolfDisguise)object).angry == angry && ((WolfDisguise)object).tamed == tamed;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public EntityWolf getEntity(World world, Location location, int id) {
-		EntityWolf entity = (EntityWolf)super.getEntity(world, location, id);
-		entity.setTamed(tamed);
-		entity.setAngry(angry);
-		return entity;
 	}
 	
 }

@@ -2,11 +2,6 @@ package de.robingrether.idisguise.disguise;
 
 import java.io.Serializable;
 
-import net.minecraft.server.v1_8_R3.Entity;
-import net.minecraft.server.v1_8_R3.World;
-
-import org.bukkit.Location;
-
 /**
  * Represents a disguise.
  * 
@@ -49,17 +44,5 @@ public abstract class Disguise implements Serializable, Cloneable {
 	public boolean equals(Object object) {
 		return object instanceof Disguise && ((Disguise)object).getType().equals(type);
 	}
-	
-	/**
-	 * Gets the entity object the player turns into.<br>
-	 * This is just for internal handling.
-	 * 
-	 * @since 3.0.1
-	 * @param world the player's world
-	 * @param location the player's location
-	 * @param id the player's entity id
-	 * @return the entity object the player turns into
-	 */
-	public abstract Entity getEntity(World world, Location location, int id);
 	
 }

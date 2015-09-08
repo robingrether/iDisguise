@@ -1,9 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import net.minecraft.server.v1_8_R3.EntityVillager;
-import net.minecraft.server.v1_8_R3.World;
-
-import org.bukkit.Location;
 import org.bukkit.entity.Villager.Profession;
 
 /**
@@ -72,16 +68,6 @@ public class VillagerDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof VillagerDisguise && ((VillagerDisguise)object).profession.equals(profession);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@SuppressWarnings("deprecation")
-	public EntityVillager getEntity(World world, Location location, int id) {
-		EntityVillager entity = (EntityVillager)super.getEntity(world, location, id);
-		entity.setProfession(profession.getId());
-		return entity;
 	}
 	
 }

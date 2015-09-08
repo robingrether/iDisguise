@@ -1,11 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import org.bukkit.Location;
-
-import net.minecraft.server.v1_8_R3.EntityInsentient;
-import net.minecraft.server.v1_8_R3.EntitySlime;
-import net.minecraft.server.v1_8_R3.World;
-
 /**
  * Represents a disguise as a sized mob (e.g. slime, magma slime).
  * 
@@ -73,17 +67,6 @@ public class SizedDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof SizedDisguise && ((SizedDisguise)object).size == size;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public EntityInsentient getEntity(World world, Location location, int id) {
-		EntityInsentient entity = super.getEntity(world, location, id);
-		if(entity instanceof EntitySlime) {
-			((EntitySlime)entity).setSize(size);
-		}
-		return entity;
 	}
 	
 }

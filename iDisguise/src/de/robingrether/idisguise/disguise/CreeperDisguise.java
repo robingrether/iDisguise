@@ -1,9 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import org.bukkit.Location;
-import net.minecraft.server.v1_8_R3.EntityCreeper;
-import net.minecraft.server.v1_8_R3.World;
-
 /**
  * Represents a disguise as a creeper.
  * 
@@ -69,15 +65,6 @@ public class CreeperDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof CreeperDisguise && ((CreeperDisguise)object).powered == powered;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public EntityCreeper getEntity(World world, Location location, int id) {
-		EntityCreeper creeper = (EntityCreeper)super.getEntity(world, location, id);
-		creeper.setPowered(powered);
-		return creeper;
 	}
 	
 }

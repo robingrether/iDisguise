@@ -1,8 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import net.minecraft.server.v1_8_R3.EntitySkeleton;
-import net.minecraft.server.v1_8_R3.World;
-import org.bukkit.Location;
 import org.bukkit.entity.Skeleton.SkeletonType;
 
 /**
@@ -70,15 +67,6 @@ public class SkeletonDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof SkeletonDisguise && ((SkeletonDisguise)object).skeletonType == skeletonType;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public EntitySkeleton getEntity(World world, Location location, int id) {
-		EntitySkeleton skeleton = (EntitySkeleton)super.getEntity(world, location, id);
-		skeleton.setSkeletonType(skeletonType.getId());
-		return skeleton;
 	}
 	
 }

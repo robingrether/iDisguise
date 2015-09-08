@@ -1,10 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import net.minecraft.server.v1_8_R3.EntityPig;
-import net.minecraft.server.v1_8_R3.World;
-
-import org.bukkit.Location;
-
 /**
  * Represents a disguise as a pig.
  * 
@@ -71,15 +66,6 @@ public class PigDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof PigDisguise && ((PigDisguise)object).saddled == saddled;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public EntityPig getEntity(World world, Location location, int id) {
-		EntityPig entity = (EntityPig)super.getEntity(world, location, id);
-		entity.setSaddle(saddled);
-		return entity;
 	}
 	
 }

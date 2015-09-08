@@ -1,10 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import org.bukkit.Location;
-
-import net.minecraft.server.v1_8_R3.EntityZombie;
-import net.minecraft.server.v1_8_R3.World;
-
 /**
  * Represents a disguise as a zombie.
  * 
@@ -81,15 +76,6 @@ public class ZombieDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof ZombieDisguise && ((ZombieDisguise)object).isVillager == isVillager;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public EntityZombie getEntity(World world, Location location, int id) {
-		EntityZombie zombie = (EntityZombie)super.getEntity(world, location, id);
-		zombie.setVillager(isVillager);
-		return zombie;
 	}
 	
 }
