@@ -70,15 +70,12 @@ public class DisguiseManagerImpl extends DisguiseManager {
 	public synchronized void disguise(Player player, Disguise disguise) {
 		Disguise oldDisguise = disguiseMap.getDisguise(player.getUniqueId());
 		if(oldDisguise == null || oldDisguise instanceof PlayerDisguise) {
-			try {
-				PacketPlayOutPlayerInfo packetPlayerInfoRemove = new PacketPlayOutPlayerInfo(player.getName(), false, ((CraftPlayer)player).getHandle().ping);
-				for(Player observer : Bukkit.getOnlinePlayers()) {
-					if(observer == player) {
-						continue;
-					}
-					sendPacket(observer, packetPlayerInfoRemove);
+			PacketPlayOutPlayerInfo packetPlayerInfoRemove = new PacketPlayOutPlayerInfo(player.getName(), false, ((CraftPlayer)player).getHandle().ping);
+			for(Player observer : Bukkit.getOnlinePlayers()) {
+				if(observer == player) {
+					continue;
 				}
-			} catch(Exception e) {
+				sendPacket(observer, packetPlayerInfoRemove);
 			}
 			if(oldDisguise != null && oldDisguise.getType().equals(DisguiseType.GHOST)) {
 				GhostFactory.instance.removeGhost(player);
