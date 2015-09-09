@@ -86,23 +86,7 @@ public class DisguiseManagerImpl extends DisguiseManager {
 	
 	public synchronized void disguise(Player player, Disguise disguise) {
 		Disguise oldDisguise = disguiseMap.getDisguise(player.getUniqueId());
-		if(oldDisguise instanceof PlayerDisguise) {
-			try {
-				PacketPlayOutPlayerInfo packetPlayerInfoRemove = new PacketPlayOutPlayerInfo(EnumPlayerInfoAction.REMOVE_PLAYER, new EntityPlayer[0]);
-				List<PlayerInfoData> list = (List<PlayerInfoData>)fieldListInfo.get(packetPlayerInfoRemove);
-				list.add(packetPlayerInfoRemove.new PlayerInfoData((GameProfile)PlayerHelper.instance.getGameProfile(((PlayerDisguise)oldDisguise).getName()), ((CraftPlayer)player).getHandle().ping, ((CraftPlayer)player).getHandle().playerInteractManager.getGameMode(), null));
-				for(Player observer : Bukkit.getOnlinePlayers()) {
-					if(observer == player) {
-						continue;
-					}
-					sendPacket(observer, packetPlayerInfoRemove);
-				}
-			} catch(Exception e) {
-			}
-			if(oldDisguise.getType().equals(DisguiseType.GHOST)) {
-				GhostFactory.instance.removeGhost(player);
-			}
-		} else if(oldDisguise == null) {
+		if(oldDisguise == null || oldDisguise instanceof PlayerDisguise) {
 			try {
 				PacketPlayOutPlayerInfo packetPlayerInfoRemove = new PacketPlayOutPlayerInfo(EnumPlayerInfoAction.REMOVE_PLAYER, ((CraftPlayer)player).getHandle());
 				for(Player observer : Bukkit.getOnlinePlayers()) {
@@ -112,6 +96,9 @@ public class DisguiseManagerImpl extends DisguiseManager {
 					sendPacket(observer, packetPlayerInfoRemove);
 				}
 			} catch(Exception e) {
+			}
+			if(oldDisguise != null && oldDisguise.getType().equals(DisguiseType.GHOST)) {
+				GhostFactory.instance.removeGhost(player);
 			}
 		}
 		disguiseMap.putDisguise(player.getUniqueId(), disguise);
