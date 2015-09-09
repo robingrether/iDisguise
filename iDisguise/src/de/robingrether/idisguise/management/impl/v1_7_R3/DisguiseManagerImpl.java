@@ -1,8 +1,6 @@
 package de.robingrether.idisguise.management.impl.v1_7_R3;
 
-import java.lang.reflect.Field;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -32,7 +30,6 @@ import de.robingrether.idisguise.management.DisguiseMap;
 import de.robingrether.idisguise.management.DisguiseMapLegacy;
 import de.robingrether.idisguise.management.GhostFactory;
 import de.robingrether.idisguise.management.PacketHelper;
-import de.robingrether.idisguise.management.PlayerHelper;
 
 public class DisguiseManagerImpl extends DisguiseManager {
 	
@@ -72,21 +69,7 @@ public class DisguiseManagerImpl extends DisguiseManager {
 	
 	public synchronized void disguise(Player player, Disguise disguise) {
 		Disguise oldDisguise = disguiseMap.getDisguise(player.getUniqueId());
-		if(oldDisguise instanceof PlayerDisguise) {
-			try {
-				PacketPlayOutPlayerInfo packetPlayerInfoRemove = new PacketPlayOutPlayerInfo(((PlayerDisguise)disguise).getName(), false, ((CraftPlayer)player).getHandle().ping);
-				for(Player observer : Bukkit.getOnlinePlayers()) {
-					if(observer == player) {
-						continue;
-					}
-					sendPacket(observer, packetPlayerInfoRemove);
-				}
-			} catch(Exception e) {
-			}
-			if(oldDisguise.getType().equals(DisguiseType.GHOST)) {
-				GhostFactory.instance.removeGhost(player);
-			}
-		} else if(oldDisguise == null) {
+		if(oldDisguise == null || oldDisguise instanceof PlayerDisguise) {
 			try {
 				PacketPlayOutPlayerInfo packetPlayerInfoRemove = new PacketPlayOutPlayerInfo(player.getName(), false, ((CraftPlayer)player).getHandle().ping);
 				for(Player observer : Bukkit.getOnlinePlayers()) {
@@ -96,6 +79,9 @@ public class DisguiseManagerImpl extends DisguiseManager {
 					sendPacket(observer, packetPlayerInfoRemove);
 				}
 			} catch(Exception e) {
+			}
+			if(oldDisguise != null && oldDisguise.getType().equals(DisguiseType.GHOST)) {
+				GhostFactory.instance.removeGhost(player);
 			}
 		}
 		disguiseMap.putDisguise(player.getUniqueId(), disguise);
