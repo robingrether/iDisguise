@@ -171,7 +171,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 								remove.add(playerInfo);
 								add.add(newPlayerInfo);
 							} else {
-								remove.addAll(remove);
+								remove.add(playerInfo);
 							}
 						}
 					}
