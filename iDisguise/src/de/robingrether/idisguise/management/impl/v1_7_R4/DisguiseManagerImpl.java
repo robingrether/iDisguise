@@ -69,21 +69,7 @@ public class DisguiseManagerImpl extends DisguiseManager {
 	
 	public synchronized void disguise(Player player, Disguise disguise) {
 		Disguise oldDisguise = disguiseMap.getDisguise(player.getUniqueId());
-		if(oldDisguise instanceof PlayerDisguise) {
-			try {
-				PacketPlayOutPlayerInfo packetPlayerInfoRemove = new PacketPlayOutPlayerInfo(((PlayerDisguise)disguise).getName(), false, ((CraftPlayer)player).getHandle().ping);
-				for(Player observer : Bukkit.getOnlinePlayers()) {
-					if(observer == player) {
-						continue;
-					}
-					sendPacket(observer, packetPlayerInfoRemove);
-				}
-			} catch(Exception e) {
-			}
-			if(oldDisguise.getType().equals(DisguiseType.GHOST)) {
-				GhostFactory.instance.removeGhost(player);
-			}
-		} else if(oldDisguise == null) {
+		if(oldDisguise == null || oldDisguise instanceof PlayerDisguise) {
 			try {
 				PacketPlayOutPlayerInfo packetPlayerInfoRemove = new PacketPlayOutPlayerInfo(player.getName(), false, ((CraftPlayer)player).getHandle().ping);
 				for(Player observer : Bukkit.getOnlinePlayers()) {
@@ -93,6 +79,9 @@ public class DisguiseManagerImpl extends DisguiseManager {
 					sendPacket(observer, packetPlayerInfoRemove);
 				}
 			} catch(Exception e) {
+			}
+			if(oldDisguise != null && oldDisguise.getType().equals(DisguiseType.GHOST)) {
+				GhostFactory.instance.removeGhost(player);
 			}
 		}
 		disguiseMap.putDisguise(player.getUniqueId(), disguise);
