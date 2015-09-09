@@ -2,7 +2,6 @@ package de.robingrether.idisguise.management.impl.v1_8_R1;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,6 +37,7 @@ import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.management.ChannelRegister;
 import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.PlayerHelper;
+import de.robingrether.util.Cloner;
 import de.robingrether.util.ObjectUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
@@ -48,74 +48,39 @@ public class ChannelRegisterImpl extends ChannelRegister {
 	
 	private final Map<Player, ChannelHandler> registeredHandlers = new ConcurrentHashMap<Player, ChannelHandler>();
 	private Field fieldChannel, fieldListInfo, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving, fieldListMetadata, fieldEntityIdUseEntity, fieldEntityIdNamedSpawn;
+	private Cloner<PacketPlayOutPlayerInfo> clonerPlayerInfo = new PlayerInfoCloner();
+	private Cloner<PacketPlayOutEntityMetadata> clonerEntityMetadata = new EntityMetadataCloner();
+	private Cloner<PacketPlayOutEntity> clonerEntity = new EntityCloner();
+	private Cloner<PacketPlayOutEntityTeleport> clonerEntityTeleport = new EntityTeleportCloner();
 	
 	public ChannelRegisterImpl() {
 		try {
 			fieldChannel = NetworkManager.class.getDeclaredField("i");
 			fieldChannel.setAccessible(true);
-		} catch(Exception e) {
-		}
-		try {
 			fieldListInfo = PacketPlayOutPlayerInfo.class.getDeclaredField("b");
 			fieldListInfo.setAccessible(true);
-		} catch(Exception e) {
-		}
-		try {
 			fieldEntityIdBed = PacketPlayOutBed.class.getDeclaredField("a");
 			fieldEntityIdBed.setAccessible(true);
-		} catch(Exception e) {
-		}
-		try {
 			fieldAnimation = PacketPlayOutAnimation.class.getDeclaredField("b");
 			fieldAnimation.setAccessible(true);
-		} catch(Exception e) {
-		}
-		try {
 			fieldEntityIdAnimation = PacketPlayOutAnimation.class.getDeclaredField("a");
 			fieldEntityIdAnimation.setAccessible(true);
-		} catch(Exception e) {
-		}
-		try {
 			fieldEntityIdMetadata = PacketPlayOutEntityMetadata.class.getDeclaredField("a");
 			fieldEntityIdMetadata.setAccessible(true);
-		} catch(Exception e) {
-		}
-		try {
 			fieldEntityIdEntity = PacketPlayOutEntity.class.getDeclaredField("a");
 			fieldEntityIdEntity.setAccessible(true);
-		} catch(Exception e) {
-		}
-		try {
 			fieldYawEntity = PacketPlayOutEntity.class.getDeclaredField("e");
 			fieldYawEntity.setAccessible(true);
-		} catch(Exception e) {
-		}
-		try {
 			fieldEntityIdTeleport = PacketPlayOutEntityTeleport.class.getDeclaredField("a");
 			fieldEntityIdTeleport.setAccessible(true);
-		} catch(Exception e) {
-		}
-		try {
 			fieldYawTeleport = PacketPlayOutEntityTeleport.class.getDeclaredField("e");
 			fieldYawTeleport.setAccessible(true);
-		} catch(Exception e) {
-		}
-		try {
 			fieldYawSpawnEntityLiving = PacketPlayOutSpawnEntityLiving.class.getDeclaredField("i");
 			fieldYawSpawnEntityLiving.setAccessible(true);
-		} catch(Exception e) {
-		}
-		try {
 			fieldListMetadata = PacketPlayOutEntityMetadata.class.getDeclaredField("b");
 			fieldListMetadata.setAccessible(true);
-		} catch(Exception e) {
-		}
-		try {
 			fieldEntityIdUseEntity = PacketPlayInUseEntity.class.getDeclaredField("a");
 			fieldEntityIdUseEntity.setAccessible(true);
-		} catch(Exception e) {
-		}
-		try {
 			fieldEntityIdNamedSpawn = PacketPlayOutNamedEntitySpawn.class.getDeclaredField("a");
 			fieldEntityIdNamedSpawn.setAccessible(true);
 		} catch(Exception e) {
@@ -147,7 +112,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 			this.player = player;
 		}
 	
-		public void channelRead(ChannelHandlerContext context, Object object) {
+		public synchronized void channelRead(ChannelHandlerContext context, Object object) {
 			try {
 				if(object instanceof PacketPlayInUseEntity) {
 					PacketPlayInUseEntity packet = (PacketPlayInUseEntity)object;
@@ -173,7 +138,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 			}
 		}
 		
-		public void write(ChannelHandlerContext context, Object object, ChannelPromise promise) {
+		public synchronized void write(ChannelHandlerContext context, Object object, ChannelPromise promise) {
 			try {
 				if(object instanceof PacketPlayOutNamedEntitySpawn) {
 					PacketPlayOutNamedEntitySpawn packet = (PacketPlayOutNamedEntitySpawn)object;
@@ -198,23 +163,26 @@ public class ChannelRegisterImpl extends ChannelRegister {
 						return;
 					}
 				} else if(object instanceof PacketPlayOutPlayerInfo) {
-					PacketPlayOutPlayerInfo packet = (PacketPlayOutPlayerInfo)object;
+					PacketPlayOutPlayerInfo packet = clonerPlayerInfo.clone((PacketPlayOutPlayerInfo)object);
 					List<PlayerInfoData> list = (List<PlayerInfoData>)fieldListInfo.get(packet);
 					List<PlayerInfoData> add = new ArrayList<PlayerInfoData>();
-					for(Iterator<PlayerInfoData> iterator = list.iterator(); iterator.hasNext();) {
-						PlayerInfoData playerInfo = iterator.next();
+					List<PlayerInfoData> remove = new ArrayList<PlayerInfoData>();
+					for(PlayerInfoData playerInfo : list) {
 						Player player = Bukkit.getPlayer(playerInfo.a().getId());
 						if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player)) {
 							if(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise) {
 								PlayerInfoData newPlayerInfo = new PlayerInfoData(packet, (GameProfile)PlayerHelper.instance.getGameProfile(((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName()), playerInfo.b(), playerInfo.c(), null);
-								iterator.remove();
+								remove.add(playerInfo);
 								add.add(newPlayerInfo);
 							} else {
-								iterator.remove();
+								remove.add(playerInfo);
 							}
 						}
 					}
+					list.removeAll(remove);
 					list.addAll(add);
+					super.write(context, packet, promise);
+					return;
 				} else if(object instanceof PacketPlayOutBed) {
 					PacketPlayOutBed packet = (PacketPlayOutBed)object;
 					Player player = PlayerHelper.instance.getPlayerByEntityId(fieldEntityIdBed.getInt(packet));
@@ -231,7 +199,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 						}
 					}
 				} else if(object instanceof PacketPlayOutEntityMetadata) {
-					PacketPlayOutEntityMetadata packet = (PacketPlayOutEntityMetadata)object;
+					PacketPlayOutEntityMetadata packet = clonerEntityMetadata.clone((PacketPlayOutEntityMetadata)object);
 					Player player = PlayerHelper.instance.getPlayerByEntityId(fieldEntityIdMetadata.getInt(packet));
 					if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player)) {
 						if(DisguiseManager.instance.getDisguise(player) instanceof MobDisguise) {
@@ -249,10 +217,12 @@ public class ChannelRegisterImpl extends ChannelRegister {
 								}
 							}
 							list.removeAll(remove);
+							super.write(context, packet, promise);
+							return;
 						}
 					}
 				} else if(object instanceof PacketPlayOutEntityLook) {
-					PacketPlayOutEntityLook packet = (PacketPlayOutEntityLook)object;
+					PacketPlayOutEntityLook packet = (PacketPlayOutEntityLook)clonerEntity.clone((PacketPlayOutEntityLook)object);
 					Player player = PlayerHelper.instance.getPlayerByEntityId(fieldEntityIdEntity.getInt(packet));
 					if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player) && DisguiseManager.instance.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
 						byte yaw = fieldYawEntity.getByte(packet);
@@ -262,9 +232,11 @@ public class ChannelRegisterImpl extends ChannelRegister {
 							yaw -= 128;
 						}
 						fieldYawEntity.set(packet, yaw);
+						super.write(context, packet, promise);
+						return;
 					}
 				} else if(object instanceof PacketPlayOutRelEntityMoveLook) {
-					PacketPlayOutRelEntityMoveLook packet = (PacketPlayOutRelEntityMoveLook)object;
+					PacketPlayOutRelEntityMoveLook packet = (PacketPlayOutRelEntityMoveLook)clonerEntity.clone((PacketPlayOutRelEntityMoveLook)object);
 					Player player = PlayerHelper.instance.getPlayerByEntityId(fieldEntityIdEntity.getInt(packet));
 					if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player) && DisguiseManager.instance.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
 						byte yaw = fieldYawEntity.getByte(packet);
@@ -274,9 +246,11 @@ public class ChannelRegisterImpl extends ChannelRegister {
 							yaw -= 128;
 						}
 						fieldYawEntity.set(packet, yaw);
+						super.write(context, packet, promise);
+						return;
 					}
 				} else if(object instanceof PacketPlayOutEntityTeleport) {
-					PacketPlayOutEntityTeleport packet = (PacketPlayOutEntityTeleport)object;
+					PacketPlayOutEntityTeleport packet = clonerEntityTeleport.clone((PacketPlayOutEntityTeleport)object);
 					Player player = PlayerHelper.instance.getPlayerByEntityId(fieldEntityIdTeleport.getInt(packet));
 					if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player) && DisguiseManager.instance.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
 						byte yaw = fieldYawTeleport.getByte(packet);
@@ -286,12 +260,121 @@ public class ChannelRegisterImpl extends ChannelRegister {
 							yaw -= 128;
 						}
 						fieldYawTeleport.set(packet, yaw);
+						super.write(context, packet, promise);
+						return;
 					}
 				}
 				super.write(context, object, promise);
 			} catch(Exception e) {
 				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Packet handling error!", e);
 			}
+		}
+		
+	}
+	
+	private class PlayerInfoCloner extends Cloner<PacketPlayOutPlayerInfo> {
+		
+		private Field a, b;
+		
+		private PlayerInfoCloner() {
+			try {
+				a = PacketPlayOutPlayerInfo.class.getDeclaredField("a");
+				a.setAccessible(true);
+				b = PacketPlayOutPlayerInfo.class.getDeclaredField("b");
+				b.setAccessible(true);
+			} catch(Exception e) {
+			}
+		}
+		
+		public PacketPlayOutPlayerInfo clone(PacketPlayOutPlayerInfo original) {
+			PacketPlayOutPlayerInfo clone = new PacketPlayOutPlayerInfo();
+			try {
+				a.set(clone, a.get(original));
+				b.set(clone, ((ArrayList<PlayerInfoData>)b.get(original)).clone());
+			} catch(Exception e) {
+			}
+			return clone;
+		}
+		
+	}
+	
+	private class EntityMetadataCloner extends Cloner<PacketPlayOutEntityMetadata> {
+		
+		private Field a, b;
+		
+		private EntityMetadataCloner() {
+			try {
+				a = PacketPlayOutEntityMetadata.class.getDeclaredField("a");
+				a.setAccessible(true);
+				b = PacketPlayOutEntityMetadata.class.getDeclaredField("b");
+				b.setAccessible(true);
+			} catch(Exception e) {
+			}
+		}
+		
+		public PacketPlayOutEntityMetadata clone(PacketPlayOutEntityMetadata original) {
+			PacketPlayOutEntityMetadata clone = new PacketPlayOutEntityMetadata();
+			try {
+				a.set(clone, a.get(original));
+				b.set(clone, ((ArrayList<WatchableObject>)b.get(original)).clone());
+			} catch(Exception e) {
+			}
+			return clone;
+		}
+		
+	}
+	
+	private class EntityCloner extends Cloner<PacketPlayOutEntity> {
+		
+		private Field[] fields;
+		
+		private EntityCloner() {
+			try {
+				fields = PacketPlayOutEntity.class.getDeclaredFields();
+				for(Field field : fields) {
+					field.setAccessible(true);
+				}
+			} catch(Exception e) {
+			}
+		}
+		
+		public PacketPlayOutEntity clone(PacketPlayOutEntity original) {
+			try {
+				PacketPlayOutEntity clone = original.getClass().newInstance();
+				for(Field field : fields) {
+					field.set(clone, field.get(original));
+				}
+				return clone;
+			} catch(Exception e) {
+				return null;
+			}
+		}
+		
+	}
+	
+	private class EntityTeleportCloner extends Cloner<PacketPlayOutEntityTeleport> {
+		
+		private Field[] fields;
+		
+		private EntityTeleportCloner() {
+			try {
+				fields = PacketPlayOutEntityTeleport.class.getDeclaredFields();
+				for(Field field : fields) {
+					field.setAccessible(true);
+				}
+			} catch(Exception e) {
+			}
+		}
+		
+		public PacketPlayOutEntityTeleport clone(PacketPlayOutEntityTeleport original) {
+			PacketPlayOutEntityTeleport clone = new PacketPlayOutEntityTeleport();
+			try {
+				for(Field field : fields) {
+					field.set(clone, field.get(original));
+				}
+			} catch(Exception e) {
+			}
+			return clone;
 		}
 		
 	}
