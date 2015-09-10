@@ -1,12 +1,11 @@
 package de.robingrether.idisguise.management;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.bukkit.Bukkit;
 
 import de.robingrether.idisguise.disguise.Disguise;
 
@@ -26,16 +25,19 @@ public class DisguiseMapLegacy {
 		disguises = new ConcurrentHashMap<String, Disguise>();
 		Map<UUID, Disguise> map = presentMap.getMap();
 		for(Entry<UUID, Disguise> entry : map.entrySet()) {
-			disguises.put(Bukkit.getOfflinePlayer(entry.getKey()).getName(), entry.getValue());
+			String name = PlayerHelper.instance.getName(entry.getKey());
+			if(name != null) {
+				disguises.put(name.toLowerCase(Locale.ENGLISH), entry.getValue());
+			}
 		}
 	}
 	
 	public boolean isDisguised(String player) {
-		return disguises.containsKey(player);
+		return disguises.containsKey(player.toLowerCase(Locale.ENGLISH));
 	}
 	
 	public Disguise getDisguise(String player) {
-		return disguises.get(player);
+		return disguises.get(player.toLowerCase(Locale.ENGLISH));
 	}
 	
 	public Map<String, Disguise> getMap() {
@@ -47,11 +49,11 @@ public class DisguiseMapLegacy {
 	}
 	
 	public void putDisguise(String player, Disguise disguise) {
-		disguises.put(player, disguise);
+		disguises.put(player.toLowerCase(Locale.ENGLISH), disguise);
 	}
 	
 	public Disguise removeDisguise(String player) {
-		return disguises.remove(player);
+		return disguises.remove(player.toLowerCase(Locale.ENGLISH));
 	}
 	
 }
