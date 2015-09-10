@@ -206,6 +206,16 @@ public class DisguiseManagerImpl extends DisguiseManager {
 		return disguiseMap.getDisguise(player.getUniqueId());
 	}
 	
+	public int getOnlineDisguiseCount() {
+		int count = 0;
+		for(Player player : Bukkit.getOnlinePlayers()) {
+			if(isDisguised(player)) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
 	public Set<OfflinePlayer> getDisguisedPlayers() {
 		Set<OfflinePlayer> set = new HashSet<OfflinePlayer>();
 		for(UUID player : disguiseMap.getMap().keySet()) {

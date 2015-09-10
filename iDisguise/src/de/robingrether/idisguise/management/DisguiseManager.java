@@ -3,7 +3,6 @@ package de.robingrether.idisguise.management;
 import java.util.Map;
 import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -35,15 +34,7 @@ public abstract class DisguiseManager {
 	
 	public abstract Disguise getDisguise(Player player);
 	
-	public int getOnlineDisguiseCount() {
-		int count = 0;
-		for(Player player : Bukkit.getOnlinePlayers()) {
-			if(isDisguised(player)) {
-				count++;
-			}
-		}
-		return count;
-	}
+	public abstract int getOnlineDisguiseCount();
 	
 	public abstract Set<OfflinePlayer> getDisguisedPlayers();
 	
