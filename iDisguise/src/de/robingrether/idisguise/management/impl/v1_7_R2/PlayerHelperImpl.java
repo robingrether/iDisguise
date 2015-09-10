@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -22,6 +24,10 @@ public class PlayerHelperImpl extends PlayerHelper {
 	public static final String API_URL = "https://api.mojang.com/user/profiles/";
 	
 	public PlayerHelperImpl() {
+		players = new HashMap<Integer, Player>();
+		for(Player player : Bukkit.getOnlinePlayers()) {
+			players.put(player.getEntityId(), player);
+		}
 	}
 	
 	public String getCaseCorrectedName(String name) {

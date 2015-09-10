@@ -11,7 +11,7 @@ public abstract class PlayerHelper {
 	
 	public static PlayerHelper instance;
 	
-	private Map<Integer, Player> players;
+	protected Map<Integer, Player> players;
 	
 	public synchronized void addPlayer(Player player) {
 		players.put(player.getEntityId(), player);
@@ -32,12 +32,5 @@ public abstract class PlayerHelper {
 	public abstract String getName(UUID uniqueId);
 	
 	public abstract Object getGameProfile(String name);
-	
-	protected PlayerHelper() {
-		players = new HashMap<Integer, Player>();
-		for(Player player : Bukkit.getOnlinePlayers()) {
-			players.put(player.getEntityId(), player);
-		}
-	}
 	
 }

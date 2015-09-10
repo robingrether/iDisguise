@@ -1,10 +1,12 @@
 package de.robingrether.idisguise.management.impl.v1_7_R3;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import net.minecraft.server.v1_7_R3.MinecraftServer;
 import net.minecraft.util.com.mojang.authlib.Agent;
@@ -17,6 +19,10 @@ public class PlayerHelperImpl extends PlayerHelper {
 	private final Map<String, GameProfile> gameProfiles = new ConcurrentHashMap<String, GameProfile>();
 	
 	public PlayerHelperImpl() {
+		players = new HashMap<Integer, Player>();
+		for(Player player : Bukkit.getOnlinePlayers()) {
+			players.put(player.getEntityId(), player);
+		}
 	}
 	
 	public synchronized String getCaseCorrectedName(String name) {
