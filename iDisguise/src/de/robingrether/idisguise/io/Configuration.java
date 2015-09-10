@@ -119,7 +119,7 @@ public class Configuration {
 	}
 	
 	public List<String> getStringList(String key) {
-		return settings.get(key) != null ? settings.get(key).listValue() : null;
+		return settings.get(key) != null ? settings.get(key).listValue() : Arrays.asList(new String[0]);
 	}
 	
 	public boolean getBoolean(String key) {
