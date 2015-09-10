@@ -2,8 +2,11 @@ package de.robingrether.idisguise.management;
 
 import org.bukkit.Bukkit;
 
+import de.robingrether.util.StringUtil;
+
 public class VersionHelper {
 	
+	private static final String[] versions = {"v1_5_R1", "v1_5_R2", "v1_6_R1", "v1_6_R2", "v1_6_R3", "v1_7_R1", "v1_7_R2", "v1_7_R3", "v1_7_R4", "v1_8_R1", "v1_8_R2", "v1_8_R3"};
 	private static boolean initialized = false;
 	private static String versionCode, orgBukkitCraftbukkit = "org.bukkit.craftbukkit", netMinecraftServer = "net.minecraft.server", orgBukkitCraftbukkitVersioned, netMinecraftServerVersioned;
 	
@@ -17,6 +20,28 @@ public class VersionHelper {
 	
 	public static String getNMSPackage() {
 		return netMinecraftServerVersioned;
+	}
+	
+	public static boolean requireVersion(String requiredVersion) {
+		if(!StringUtil.equals(requiredVersion, versions)) {
+			return false;
+		}
+		for(String version : versions) {
+			if(version.equals(requiredVersion)) {
+				return true;
+			} else if(version.equals(versionCode)) {
+				return false;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean require1_8() {
+		return requireVersion("v1_8_R1");
+	}
+	
+	public static boolean require1_6() {
+		return requireVersion("v1_6_R1");
 	}
 	
 	public static boolean init() {
