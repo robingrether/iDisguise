@@ -68,7 +68,7 @@ public class PacketHelperImpl extends PacketHelper {
 			}
 			Location location = player.getLocation();
 			entity.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-			entity.d(entityPlayer.id);
+			entity.id = entityPlayer.id;
 			if(mobDisguise instanceof ColoredDisguise) {
 				if(entity instanceof EntitySheep) {
 					((EntitySheep)entity).setColor(((ColoredDisguise)mobDisguise).getColor().getData());
