@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.bukkit.Bukkit;
+
 import net.minecraft.server.v1_8_R3.MinecraftServer;
 
 import com.mojang.authlib.Agent;
@@ -29,6 +31,10 @@ public class PlayerHelperImpl extends PlayerHelper {
 		ProfileLookupCallbackImpl callback = new ProfileLookupCallbackImpl();
 		MinecraftServer.getServer().getGameProfileRepository().findProfilesByNames(new String[] {name}, Agent.MINECRAFT, callback);
 		return callback.getGameProfile().getId();
+	}
+	
+	public synchronized String getName(UUID uniqueId) {
+		return Bukkit.getOfflinePlayer(uniqueId).getName();
 	}
 	
 	public synchronized GameProfile getGameProfile(String name) {
