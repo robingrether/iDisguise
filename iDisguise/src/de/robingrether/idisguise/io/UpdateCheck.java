@@ -1,6 +1,7 @@
 package de.robingrether.idisguise.io;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -51,25 +52,33 @@ public class UpdateCheck implements Runnable {
 	}
 	
 	private void checkForUpdate() {
+		BufferedReader reader = null;
 		try {
 			URL url = new URL(API_URL + PROJECT_ID);
 			URLConnection connection = url.openConnection();
-			connection.addRequestProperty("User-Agent", pluginVersion.replace(' ', '/') + " (by Robingrether)");
+			connection.addRequestProperty("User-Agent", pluginVersion.replace(' ', '/') + " (by RobinGrether)");
 			connection.setDoOutput(true);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			String response = reader.readLine();
 			JSONArray array = (JSONArray)JSONValue.parse(response);
 			latestVersion = null;
 			for(int i = 0; i < array.size(); i++) {
 				JSONObject object = (JSONObject)array.get(i);
-				Pattern pattern = Pattern.compile("\\D*([0-9\\.]*).*");
+				/*Pattern pattern = Pattern.compile("\\D*([0-9\\.]*).*");
 				Matcher matcher = pattern.matcher((String)object.get(API_GAME_VERSION));
-				if(matcher.matches() && matcher.group(1).equals(getMCVersion())) {
+				if(matcher.matches() && matcher.group(1).equals(getMCVersion())) {*/
 					latestVersion = (String)object.get(API_NAME);
+				//}
+			}
+		} catch(IOException e) {
+			plugin.getLogger().log(Level.WARNING, "An error occured while checking for updates.", e);
+		} finally {
+			if(reader != null) {
+				try {
+					reader.close();
+				} catch(IOException e) {
 				}
 			}
-		} catch(Exception e) {
-			plugin.getLogger().log(Level.WARNING, "An error occured while checking for updates.", e);
 		}
 	}
 	
