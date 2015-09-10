@@ -19,6 +19,7 @@ import net.minecraft.server.v1_6_R3.Packet33RelEntityMoveLook;
 import net.minecraft.server.v1_6_R3.Packet34EntityTeleport;
 import net.minecraft.server.v1_6_R3.Packet40EntityMetadata;
 import net.minecraft.server.v1_6_R3.Packet70Bed;
+import net.minecraft.server.v1_6_R3.Packet7UseEntity;
 import net.minecraft.server.v1_6_R3.PlayerConnection;
 import net.minecraft.server.v1_6_R3.WatchableObject;
 import net.minecraft.server.v1_6_R3.Packet;
@@ -26,6 +27,7 @@ import net.minecraft.server.v1_6_R3.Packet;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.MobDisguise;
@@ -34,6 +36,7 @@ import de.robingrether.idisguise.management.ChannelRegister;
 import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.util.Cloner;
+import de.robingrether.util.ObjectUtil;
 
 public class ChannelRegisterImpl extends ChannelRegister {
 	
@@ -76,32 +79,29 @@ public class ChannelRegisterImpl extends ChannelRegister {
 			super(MinecraftServer.getServer(), playerConnection.networkManager, playerConnection.player);
 			this.player = player;
 		}
-	
-		/*public synchronized void channelRead(ChannelHandlerContext context, Object object) {
+		
+		public synchronized void a(Packet7UseEntity packet7) {
 			try {
-				if(object instanceof PacketPlayInUseEntity) {
-					PacketPlayInUseEntity packet = (PacketPlayInUseEntity)object;
-					Player player = PlayerHelper.instance.getPlayerByEntityId(fieldEntityIdUseEntity.getInt(packet));
-					if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player) && !packet.c().equals(EnumEntityUseAction.ATTACK)) {
-						if(ObjectUtil.equals(DisguiseManager.instance.getDisguise(player).getType(), DisguiseType.SHEEP, DisguiseType.WOLF)) {
-							final Player observer = this.player;
-							final Player observed = player;
-							BukkitRunnable runnable = new BukkitRunnable() {
-								public void run() {
-									DisguiseManager.instance.disguise(observed, DisguiseManager.instance.getDisguise(observed));
-									observer.updateInventory();
-								}
-							};
-							runnable.runTaskLater(Bukkit.getPluginManager().getPlugin("iDisguise"), 2L);
-						}
-						return;
+				Player player = PlayerHelper.instance.getPlayerByEntityId(packet7.target);
+				if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player) && packet7.action == 0) {
+					if(ObjectUtil.equals(DisguiseManager.instance.getDisguise(player).getType(), DisguiseType.SHEEP, DisguiseType.WOLF)) {
+						final Player observer = this.player;
+						final Player observed = player;
+						BukkitRunnable runnable = new BukkitRunnable() {
+							public void run() {
+								DisguiseManager.instance.disguise(observed, DisguiseManager.instance.getDisguise(observed));
+								observer.updateInventory();
+							}
+						};
+						runnable.runTaskLater(Bukkit.getPluginManager().getPlugin("iDisguise"), 2L);
 					}
+					return;
 				}
-				super.channelRead(context, object);
+				super.a(packet7);
 			} catch(Exception e) {
 				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Packet handling error!", e);
 			}
-		}*/
+		}
 		
 		public synchronized void sendPacket(Packet packet) {
 			try {
