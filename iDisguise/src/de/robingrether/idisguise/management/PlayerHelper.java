@@ -29,6 +29,8 @@ public abstract class PlayerHelper {
 	
 	public abstract UUID getUniqueId(String name);
 	
+	public abstract String getName(UUID uniqueId);
+	
 	public abstract Object getGameProfile(String name);
 	
 	protected PlayerHelper() {
