@@ -76,6 +76,13 @@ public class VersionHelper {
 				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_7_R1.PacketHelperImpl();
 				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_7_R1.PlayerHelperImpl();
 				break;
+			case "v1_6_R3":
+				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_6_R3.ChannelRegisterImpl();
+				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_6_R3.DisguiseManagerImpl();
+				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_6_R3.GhostFactoryImpl();
+				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_6_R3.PacketHelperImpl();
+				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_6_R3.PlayerHelperImpl();
+				break;
 			default:
 				return false;
 		}
