@@ -1,9 +1,6 @@
 package de.robingrether.idisguise.disguise;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Horse.Color;
-import org.bukkit.entity.Horse.Style;
-import org.bukkit.entity.Horse.Variant;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -187,6 +184,56 @@ public class HorseDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof HorseDisguise && ((HorseDisguise)object).color.equals(color) && ((HorseDisguise)object).style.equals(style) && ((HorseDisguise)object).variant.equals(variant) && ((HorseDisguise)object).saddled == saddled && ((HorseDisguise)object).hasChest == hasChest && ((HorseDisguise)object).armor == armor;
+	}
+	
+	/**
+	 * Represents the different horse variants.
+	 * 
+	 * @since 4.1.1
+	 * @author Robingrether
+	 */
+	public enum Variant {
+		
+		HORSE,
+		DONKEY,
+		MULE,
+		UNDEAD_HORSE,
+		SKELETON_HORSE;
+		
+	}
+	
+	/**
+	 * Represents the different hide styles of a horse.
+	 * 
+	 * @since 4.1.1
+	 * @author Robingrether
+	 */
+	public enum Style {
+		
+		NONE,
+		WHITE,
+		WHITEFIELD,
+		WHITE_DOTS,
+		BLACK_DOTS;
+		
+	}
+	
+	/**
+	 * Represents the differnt hide colors of a horse.
+	 * 
+	 * @since 4.1.1
+	 * @author Robingrether
+	 */
+	public enum Color {
+		
+		WHITE,
+		CREAMY,
+		CHESTNUT,
+		BROWN,
+		BLACK,
+		GRAY,
+		DARK_BROWN;
+		
 	}
 	
 	/**
