@@ -71,7 +71,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 		}
 	}
 	
-	private class PlayerConnectionInjected extends PlayerConnection {
+	public class PlayerConnectionInjected extends PlayerConnection {
 		
 		private Player player;
 		
@@ -104,6 +104,14 @@ public class ChannelRegisterImpl extends ChannelRegister {
 		}
 		
 		public synchronized void sendPacket(Packet packet) {
+			sendPacket(packet, false);
+		}
+		
+		public synchronized void sendPacket(Packet packet, boolean fromPlugin) {
+			if(fromPlugin) {
+				super.sendPacket(packet);
+				return;
+			}
 			try {
 				if(packet instanceof Packet20NamedEntitySpawn) {
 					Packet20NamedEntitySpawn packet20 = (Packet20NamedEntitySpawn)packet;
