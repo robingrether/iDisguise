@@ -96,7 +96,7 @@ public class DisguiseManagerImpl extends DisguiseManager {
 				}
 				sendPacket(observer, packetPlayerInfoRemove);
 			}
-			if(oldDisguise != null && oldDisguise.getType().equals(DisguiseType.GHOST)) {
+			if(oldDisguise.getType().equals(DisguiseType.GHOST)) {
 				GhostFactory.instance.removeGhost(player);
 			}
 		}
