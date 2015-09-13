@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class HorseDisguise extends MobDisguise {
 	
-	private static final long serialVersionUID = 858102950254299362L;
+	private static final long serialVersionUID = 5142532563549602969L;
 	private Variant variant;
 	private Style style;
 	private Color color;
@@ -244,14 +244,14 @@ public class HorseDisguise extends MobDisguise {
 	 */
 	public enum Armor {
 		
-		IRON(new ItemStack(Material.IRON_BARDING)),
-		GOLD(new ItemStack(Material.GOLD_BARDING)),
-		DIAMOND(new ItemStack(Material.DIAMOND_BARDING)),
+		IRON("IRON_BARDING"),
+		GOLD("GOLD_BARDING"),
+		DIAMOND("DIAMOND_BARDING"),
 		NONE(null);
 		
-		private ItemStack item;
+		private String item;
 		
-		private Armor(ItemStack item) {
+		private Armor(String item) {
 			this.item = item;
 		}
 		
@@ -262,7 +262,7 @@ public class HorseDisguise extends MobDisguise {
 		 * @return the associated item stack
 		 */
 		public ItemStack getItem() {
-			return item;
+			return Material.getMaterial(item) == null ? null : new ItemStack(Material.getMaterial(item), 1);
 		}
 		
 	}
