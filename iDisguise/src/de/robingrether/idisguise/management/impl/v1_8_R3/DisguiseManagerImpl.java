@@ -129,6 +129,13 @@ public class DisguiseManagerImpl extends DisguiseManager {
 		}
 		disguiseMap.putDisguise(player.getUniqueId(), disguise);
 		if(disguise instanceof PlayerDisguise) {
+			Packet<?> packetPlayerInfoAdd = getPlayerInfoPacket(player);
+			for(Player observer : Bukkit.getOnlinePlayers()) {
+				if(observer == player) {
+					continue;
+				}
+				sendPacket(observer, packetPlayerInfoAdd);
+			}
 			player.setDisplayName(((PlayerDisguise)disguise).getName());
 			if(((PlayerDisguise)disguise).isGhost()) {
 				GhostFactory.instance.addPlayer(((PlayerDisguise)disguise).getName());
@@ -136,14 +143,12 @@ public class DisguiseManagerImpl extends DisguiseManager {
 			}
 		}
 		Packet<?> packetDestroy = getDestroyPacket(player);
-		Packet<?> packetPlayerInfoAdd = getPlayerInfoPacket(player);
 		Packet<?> packetSpawn = getSpawnPacket(player);
 		for(Player observer : player.getWorld().getPlayers()) {
 			if(observer == player) {
 				continue;
 			}
 			sendPacket(observer, packetDestroy);
-			sendPacket(observer, packetPlayerInfoAdd);
 			sendPacket(observer, packetSpawn);
 		}
 		updateAttributes(player);
@@ -153,7 +158,8 @@ public class DisguiseManagerImpl extends DisguiseManager {
 		Disguise disguise = disguiseMap.removeDisguise(player.getUniqueId());
 		if(disguise == null) {
 			return null;
-		}	
+		}
+		Packet<?> packetPlayerInfoAdd = getPlayerInfoPacket(player);
 		if(disguise instanceof PlayerDisguise) {
 			try {
 				PacketPlayOutPlayerInfo packetPlayerInfoRemove = new PacketPlayOutPlayerInfo(EnumPlayerInfoAction.REMOVE_PLAYER, new EntityPlayer[0]);
@@ -164,15 +170,22 @@ public class DisguiseManagerImpl extends DisguiseManager {
 						continue;
 					}
 					sendPacket(observer, packetPlayerInfoRemove);
+					sendPacket(observer, packetPlayerInfoAdd);
 				}
 			} catch(Exception e) {
 			}
 			if(disguise.getType().equals(DisguiseType.GHOST)) {
 				GhostFactory.instance.removeGhost(player);
 			}
+		} else {
+			for(Player observer : Bukkit.getOnlinePlayers()) {
+				if(observer == player) {
+					continue;
+				}
+				sendPacket(observer, packetPlayerInfoAdd);
+			}
 		}
 		Packet<?> packetDestroy = getDestroyPacket(player);
-		Packet<?> packetPlayerInfoAdd = getPlayerInfoPacket(player);
 		Packet<?> packetSpawn = getSpawnPacket(player);
 		if(disguise instanceof PlayerDisguise) {
 			player.setDisplayName(player.getName());
@@ -182,7 +195,6 @@ public class DisguiseManagerImpl extends DisguiseManager {
 				continue;
 			}
 			sendPacket(observer, packetDestroy);
-			sendPacket(observer, packetPlayerInfoAdd);
 			sendPacket(observer, packetSpawn);
 		}
 		updateAttributes(player);
