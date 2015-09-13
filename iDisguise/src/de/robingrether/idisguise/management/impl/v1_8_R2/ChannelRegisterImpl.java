@@ -7,7 +7,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
+import net.minecraft.server.v1_8_R2.CancelledPacketHandleException;
 import net.minecraft.server.v1_8_R2.DataWatcher.WatchableObject;
+import net.minecraft.server.v1_8_R2.MinecraftServer;
 import net.minecraft.server.v1_8_R2.Packet;
 import net.minecraft.server.v1_8_R2.PacketPlayInUseEntity;
 import net.minecraft.server.v1_8_R2.PacketPlayInUseEntity.EnumEntityUseAction;
@@ -22,6 +24,7 @@ import net.minecraft.server.v1_8_R2.PacketPlayOutNamedEntitySpawn;
 import net.minecraft.server.v1_8_R2.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_8_R2.PacketPlayOutPlayerInfo.PlayerInfoData;
 import net.minecraft.server.v1_8_R2.PacketPlayOutSpawnEntityLiving;
+import net.minecraft.server.v1_8_R2.PlayerConnection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
@@ -38,13 +41,10 @@ import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.util.Cloner;
 import de.robingrether.util.ObjectUtil;
-import io.netty.channel.ChannelDuplexHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPromise;
 
 public class ChannelRegisterImpl extends ChannelRegister {
 	
-	private final Map<Player, ChannelHandler> registeredHandlers = new ConcurrentHashMap<Player, ChannelHandler>();
+	private final Map<Player, PlayerConnectionInjected> registeredHandlers = new ConcurrentHashMap<Player, PlayerConnectionInjected>();
 	private Field fieldListInfo, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving, fieldListMetadata, fieldEntityIdUseEntity, fieldEntityIdNamedSpawn;
 	private Cloner<PacketPlayOutPlayerInfo> clonerPlayerInfo = new PlayerInfoCloner();
 	private Cloner<PacketPlayOutEntityMetadata> clonerEntityMetadata = new EntityMetadataCloner();
@@ -85,76 +85,80 @@ public class ChannelRegisterImpl extends ChannelRegister {
 	
 	public synchronized void registerHandler(Player player) {
 		try {
-			ChannelHandler handler = new ChannelHandler(player);
-			((CraftPlayer)player).getHandle().playerConnection.networkManager.k.pipeline().addBefore("packet_handler", "iDisguise", handler);
-			registeredHandlers.put(player, handler);
+			PlayerConnectionInjected playerConnection = new PlayerConnectionInjected(player, ((CraftPlayer)player).getHandle().playerConnection);
+			((CraftPlayer)player).getHandle().playerConnection = playerConnection;
+			registeredHandlers.put(player, playerConnection);
 		} catch(Exception e) {
 		}
 	}
 	
 	public synchronized void unregisterHandler(Player player) {
 		try {
-			ChannelHandler handler = registeredHandlers.remove(player);
-			((CraftPlayer)player).getHandle().playerConnection.networkManager.k.pipeline().remove(handler);
+			PlayerConnectionInjected playerConnection = registeredHandlers.remove(player);
 		} catch(Exception e) {
 		}
 	}
 	
-	private class ChannelHandler extends ChannelDuplexHandler {
+	public class PlayerConnectionInjected extends PlayerConnection {
 		
 		private Player player;
 		
-		private ChannelHandler(Player player) {
+		private PlayerConnectionInjected(Player player, PlayerConnection playerConnection) {
+			super(MinecraftServer.getServer(), playerConnection.networkManager, playerConnection.player);
 			this.player = player;
 		}
 	
-		public synchronized void channelRead(ChannelHandlerContext context, Object object) {
+		public synchronized void a(PacketPlayInUseEntity packet) {
 			try {
-				if(object instanceof PacketPlayInUseEntity) {
-					PacketPlayInUseEntity packet = (PacketPlayInUseEntity)object;
-					Player player = PlayerHelper.instance.getPlayerByEntityId(fieldEntityIdUseEntity.getInt(packet));
-					if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player) && !packet.a().equals(EnumEntityUseAction.ATTACK)) {
-						if(ObjectUtil.equals(DisguiseManager.instance.getDisguise(player).getType(), DisguiseType.SHEEP, DisguiseType.WOLF)) {
-							final Player observer = this.player;
-							final Player observed = player;
-							BukkitRunnable runnable = new BukkitRunnable() {
-								public void run() {
-									DisguiseManager.instance.disguise(observed, DisguiseManager.instance.getDisguise(observed));
-									observer.updateInventory();
-								}
-							};
-							runnable.runTaskLater(Bukkit.getPluginManager().getPlugin("iDisguise"), 2L);
-						}
-						return;
+				Player player = PlayerHelper.instance.getPlayerByEntityId(fieldEntityIdUseEntity.getInt(packet));
+				if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player) && !packet.a().equals(EnumEntityUseAction.ATTACK)) {
+					if(ObjectUtil.equals(DisguiseManager.instance.getDisguise(player).getType(), DisguiseType.SHEEP, DisguiseType.WOLF)) {
+						final Player observer = this.player;
+						final Player observed = player;
+						BukkitRunnable runnable = new BukkitRunnable() {
+							public void run() {
+								DisguiseManager.instance.disguise(observed, DisguiseManager.instance.getDisguise(observed));
+								observer.updateInventory();
+							}
+						};
+						runnable.runTaskLater(Bukkit.getPluginManager().getPlugin("iDisguise"), 2L);
 					}
+					return;
 				}
-				super.channelRead(context, object);
+				super.a(packet);
 			} catch(Exception e) {
+				if(e instanceof CancelledPacketHandleException) {
+					return;
+				}
 				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Packet handling error!", e);
 			}
 		}
 		
-		public synchronized void write(ChannelHandlerContext context, Object object, ChannelPromise promise) {
+		public synchronized void sendPacket(Packet packet) {
+			sendPacket(packet, false);
+		}
+		
+		public synchronized void sendPacket(Packet object, boolean fromPlugin) {
+			if(fromPlugin) {
+				super.sendPacket(object);
+				return;
+			}
 			try {
 				if(object instanceof PacketPlayOutNamedEntitySpawn) {
 					PacketPlayOutNamedEntitySpawn packet = (PacketPlayOutNamedEntitySpawn)object;
 					Player player = PlayerHelper.instance.getPlayerByEntityId(fieldEntityIdNamedSpawn.getInt(packet));
 					if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player)) {
 						Packet<?> packetSpawn = (Packet<?>)DisguiseManager.instance.getSpawnPacket(player);
-						if(packetSpawn instanceof PacketPlayOutNamedEntitySpawn) {
-							super.write(context, packetSpawn, promise);
-						} else {
-							if(DisguiseManager.instance.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
-								byte yaw = fieldYawSpawnEntityLiving.getByte(packetSpawn);
-								if(yaw < 0) {
-									yaw += 128;
-								} else {
-									yaw -= 128;
-								}
-								fieldYawSpawnEntityLiving.set(packetSpawn, yaw);
+						if(packetSpawn instanceof PacketPlayOutSpawnEntityLiving && DisguiseManager.instance.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
+							byte yaw = fieldYawSpawnEntityLiving.getByte(packetSpawn);
+							if(yaw < 0) {
+								yaw += 128;
+							} else {
+								yaw -= 128;
 							}
-							DisguiseManager.instance.sendPacketLater(this.player, packetSpawn, 1L);
+							fieldYawSpawnEntityLiving.set(packetSpawn, yaw);
 						}
+						super.sendPacket(packetSpawn);
 						DisguiseManager.instance.updateAttributes(player, this.player);
 						return;
 					}
@@ -177,7 +181,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 					}
 					list.removeAll(remove);
 					list.addAll(add);
-					super.write(context, packet, promise);
+					super.sendPacket(packet);
 					return;
 				} else if(object instanceof PacketPlayOutBed) {
 					PacketPlayOutBed packet = (PacketPlayOutBed)object;
@@ -213,7 +217,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 								}
 							}
 							list.removeAll(remove);
-							super.write(context, packet, promise);
+							super.sendPacket(packet);
 							return;
 						}
 					}
@@ -228,7 +232,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 							yaw -= 128;
 						}
 						fieldYawEntity.set(packet, yaw);
-						super.write(context, packet, promise);
+						super.sendPacket(packet);
 						return;
 					}
 				} else if(object instanceof PacketPlayOutRelEntityMoveLook) {
@@ -242,7 +246,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 							yaw -= 128;
 						}
 						fieldYawEntity.set(packet, yaw);
-						super.write(context, packet, promise);
+						super.sendPacket(packet);
 						return;
 					}
 				} else if(object instanceof PacketPlayOutEntityTeleport) {
@@ -256,11 +260,11 @@ public class ChannelRegisterImpl extends ChannelRegister {
 							yaw -= 128;
 						}
 						fieldYawTeleport.set(packet, yaw);
-						super.write(context, packet, promise);
+						super.sendPacket(packet);
 						return;
 					}
 				}
-				super.write(context, object, promise);
+				super.sendPacket(object);
 			} catch(Exception e) {
 				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Packet handling error!", e);
 			}
