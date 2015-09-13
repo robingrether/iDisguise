@@ -9,7 +9,6 @@ import java.util.logging.Level;
 
 import net.minecraft.server.v1_8_R1.CancelledPacketHandleException;
 import net.minecraft.server.v1_8_R1.MinecraftServer;
-import net.minecraft.server.v1_8_R1.NetworkManager;
 import net.minecraft.server.v1_8_R1.PlayerConnection;
 import net.minecraft.server.v1_8_R1.WatchableObject;
 import net.minecraft.server.v1_8_R1.Packet;
@@ -46,7 +45,7 @@ import de.robingrether.util.ObjectUtil;
 public class ChannelRegisterImpl extends ChannelRegister {
 	
 	private final Map<Player, PlayerConnectionInjected> registeredHandlers = new ConcurrentHashMap<Player, PlayerConnectionInjected>();
-	private Field fieldChannel, fieldListInfo, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving, fieldListMetadata, fieldEntityIdUseEntity, fieldEntityIdNamedSpawn;
+	private Field fieldListInfo, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving, fieldListMetadata, fieldEntityIdUseEntity, fieldEntityIdNamedSpawn;
 	private Cloner<PacketPlayOutPlayerInfo> clonerPlayerInfo = new PlayerInfoCloner();
 	private Cloner<PacketPlayOutEntityMetadata> clonerEntityMetadata = new EntityMetadataCloner();
 	private Cloner<PacketPlayOutEntity> clonerEntity = new EntityCloner();
@@ -54,8 +53,6 @@ public class ChannelRegisterImpl extends ChannelRegister {
 	
 	public ChannelRegisterImpl() {
 		try {
-			fieldChannel = NetworkManager.class.getDeclaredField("i");
-			fieldChannel.setAccessible(true);
 			fieldListInfo = PacketPlayOutPlayerInfo.class.getDeclaredField("b");
 			fieldListInfo.setAccessible(true);
 			fieldEntityIdBed = PacketPlayOutBed.class.getDeclaredField("a");
