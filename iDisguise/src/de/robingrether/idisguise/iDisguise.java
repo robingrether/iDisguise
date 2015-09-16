@@ -38,6 +38,7 @@ import de.robingrether.idisguise.disguise.HorseDisguise.Variant;
 import de.robingrether.idisguise.disguise.RabbitDisguise.RabbitType;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.OcelotDisguise;
+import de.robingrether.idisguise.disguise.OutdatedServerException;
 import de.robingrether.idisguise.disguise.PigDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.disguise.RabbitDisguise;
@@ -407,15 +408,30 @@ public class iDisguise extends JavaPlugin {
 					} else if(StringUtil.equalsIgnoreCase(argument, "enderman", "endermen")) {
 						disguise = new EndermanDisguise();
 					} else if(StringUtil.equalsIgnoreCase(argument, "endermite", "mite")) {
-						disguise = new MobDisguise(DisguiseType.ENDERMITE);
+						try {
+							disguise = new MobDisguise(DisguiseType.ENDERMITE);
+						} catch(OutdatedServerException e) {
+							sender.sendMessage(ChatColor.RED + "Endermites are not supported by this minecraft version.");
+							return true;
+						}
 					} else if(argument.equalsIgnoreCase("ghast")) {
 						disguise = new MobDisguise(DisguiseType.GHAST);
 					} else if(StringUtil.equalsIgnoreCase(argument, "giant", "giant_zombie", "giant-zombie", "giantzombie")) {
 						disguise = new MobDisguise(DisguiseType.GIANT);
 					} else if(argument.equalsIgnoreCase("guardian")) {
-						disguise = new GuardianDisguise();
+						try {
+							disguise = new GuardianDisguise();
+						} catch(OutdatedServerException e) {
+							sender.sendMessage(ChatColor.RED + "Guardians are not supported by this minecraft version.");
+							return true;
+						}
 					} else if(argument.equalsIgnoreCase("horse")) {
-						disguise = new HorseDisguise();
+						try {
+							disguise = new HorseDisguise();
+						} catch(OutdatedServerException e) {
+							sender.sendMessage(ChatColor.RED + "Horses are not supported by this minecraft version.");
+							return true;
+						}
 					} else if(StringUtil.equalsIgnoreCase(argument, "iron_golem", "iron-golem", "irongolem", "golem")) {
 						disguise = new MobDisguise(DisguiseType.IRON_GOLEM);
 					} else if(StringUtil.equalsIgnoreCase(argument, "magma_cube", "magma-cube", "magmacube", "magma", "lava_cube", "lava-cube", "lavacube", "lava", "magma_slime", "magma-slime", "magmaslime", "lava_slime", "lava-slime", "lavaslime")) {
@@ -429,7 +445,12 @@ public class iDisguise extends JavaPlugin {
 					} else if(StringUtil.equalsIgnoreCase(argument, "pig_zombie", "pig-zombie", "pigzombie", "pigman", "zombie_pigman", "zombie-pigman", "zombiepigman")) {
 						disguise = new MobDisguise(DisguiseType.PIG_ZOMBIE);
 					} else if(argument.equalsIgnoreCase("rabbit")) {
-						disguise = new RabbitDisguise();
+						try {
+							disguise = new RabbitDisguise();
+						} catch(OutdatedServerException e) {
+							sender.sendMessage(ChatColor.RED + "Rabbits are not supported by this minecraft version.");
+							return true;
+						}
 					} else if(argument.equalsIgnoreCase("sheep")) {
 						disguise = new ColoredDisguise(DisguiseType.SHEEP);
 					} else if(argument.equalsIgnoreCase("silverfish")) {
@@ -1075,15 +1096,29 @@ public class iDisguise extends JavaPlugin {
 					} else if(StringUtil.equalsIgnoreCase(argument, "enderman", "endermen")) {
 						disguise = new EndermanDisguise();
 					} else if(StringUtil.equalsIgnoreCase(argument, "endermite", "mite")) {
-						disguise = new MobDisguise(DisguiseType.ENDERMITE);
+						try {
+							disguise = new MobDisguise(DisguiseType.ENDERMITE);
+						} catch(OutdatedServerException e) {
+							sender.sendMessage(ChatColor.RED + "Endermites are not supported by this minecraft version.");
+						}
 					} else if(argument.equalsIgnoreCase("ghast")) {
 						disguise = new MobDisguise(DisguiseType.GHAST);
 					} else if(StringUtil.equalsIgnoreCase(argument, "giant", "giant_zombie", "giant-zombie", "giantzombie")) {
 						disguise = new MobDisguise(DisguiseType.GIANT);
 					} else if(argument.equalsIgnoreCase("guardian")) {
-						disguise = new GuardianDisguise();
+						try {
+							disguise = new GuardianDisguise();
+						} catch(OutdatedServerException e) {
+							sender.sendMessage(ChatColor.RED + "Guardians are not supported by this minecraft version.");
+							return true;
+						}
 					} else if(argument.equalsIgnoreCase("horse")) {
-						disguise = new HorseDisguise();
+						try {
+							disguise = new HorseDisguise();
+						} catch(OutdatedServerException e) {
+							sender.sendMessage(ChatColor.RED + "Horses are not supported by this minecraft version.");
+							return true;
+						}
 					} else if(StringUtil.equalsIgnoreCase(argument, "iron_golem", "iron-golem", "irongolem", "golem")) {
 						disguise = new MobDisguise(DisguiseType.IRON_GOLEM);
 					} else if(StringUtil.equalsIgnoreCase(argument, "magma_cube", "magma-cube", "magmacube", "magma", "lava_cube", "lava-cube", "lavacube", "lava", "magma_slime", "magma-slime", "magmaslime", "lava_slime", "lava-slime", "lavaslime")) {
@@ -1097,7 +1132,12 @@ public class iDisguise extends JavaPlugin {
 					} else if(StringUtil.equalsIgnoreCase(argument, "pig_zombie", "pig-zombie", "pigzombie", "pigman", "zombie_pigman", "zombie-pigman", "zombiepigman")) {
 						disguise = new MobDisguise(DisguiseType.PIG_ZOMBIE);
 					} else if(argument.equalsIgnoreCase("rabbit")) {
-						disguise = new RabbitDisguise();
+						try {
+							disguise = new RabbitDisguise();
+						} catch(OutdatedServerException e) {
+							sender.sendMessage(ChatColor.RED + "Rabbits are not supported by this minecraft version.");
+							return true;
+						}
 					} else if(argument.equalsIgnoreCase("sheep")) {
 						disguise = new ColoredDisguise(DisguiseType.SHEEP);
 					} else if(argument.equalsIgnoreCase("silverfish")) {

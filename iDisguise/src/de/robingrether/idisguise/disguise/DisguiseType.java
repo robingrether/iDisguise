@@ -1,8 +1,11 @@
 package de.robingrether.idisguise.disguise;
 
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
+
+import de.robingrether.idisguise.management.VersionHelper;
+import de.robingrether.util.ObjectUtil;
 
 /**
  * This enum contains all types, you can disguise as.<br>
@@ -116,7 +119,7 @@ public enum DisguiseType {
 	 * @return a random disguise type
 	 */
 	public static DisguiseType random(Type type) {
-		LinkedList<DisguiseType> types = new LinkedList<DisguiseType>(Arrays.asList(values()));
+		List<DisguiseType> types = Arrays.asList(values());
 		if(type != null) {
 			int pos = 0;
 			while(pos < types.size()) {
@@ -127,7 +130,11 @@ public enum DisguiseType {
 				}
 			}
 		}
-		return types.get(random.nextInt(types.size()));
+		DisguiseType randomType = types.get(random.nextInt(types.size()));
+		if((!VersionHelper.require1_8() && ObjectUtil.equals(randomType, DisguiseType.ENDERMITE, DisguiseType.GUARDIAN, DisguiseType.RABBIT)) || (!VersionHelper.require1_6() && randomType.equals(DisguiseType.HORSE))) {
+			randomType = random(type);
+		}
+		return randomType;
 	}
 	
 	/**

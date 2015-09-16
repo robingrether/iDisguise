@@ -2,6 +2,9 @@ package de.robingrether.idisguise.disguise;
 
 import java.io.Serializable;
 
+import de.robingrether.idisguise.management.VersionHelper;
+import de.robingrether.util.ObjectUtil;
+
 /**
  * Represents a disguise.
  * 
@@ -14,6 +17,9 @@ public abstract class Disguise implements Serializable, Cloneable {
 	protected final DisguiseType type;
 	
 	protected Disguise(DisguiseType type) {
+		if((!VersionHelper.require1_8() && ObjectUtil.equals(type, DisguiseType.ENDERMITE, DisguiseType.GUARDIAN, DisguiseType.RABBIT)) || (!VersionHelper.require1_6() && type.equals(DisguiseType.HORSE))) {
+			throw new OutdatedServerException("The given disguise type is not available on this server version.");
+		}
 		this.type = type;
 	}
 	
