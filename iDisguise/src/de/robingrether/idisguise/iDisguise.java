@@ -1559,7 +1559,7 @@ public class iDisguise extends JavaPlugin {
 			case PIG_ZOMBIE:
 				return player.hasPermission("iDisguise.mob.pig_zombie") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby"));
 			case PLAYER:
-				return player.hasPermission("iDisguise.player.*") || player.hasPermission("iDisguise.player." + ((PlayerDisguise)disguise).getName().toLowerCase(Locale.ENGLISH));
+				return (isPlayerDisguisePermitted(((PlayerDisguise)disguise).getName().toLowerCase(Locale.ENGLISH)) || player.hasPermission("iDisguise.player.prohibited")) && (player.hasPermission("iDisguise.player.*") || player.hasPermission("iDisguise.player." + ((PlayerDisguise)disguise).getName().toLowerCase(Locale.ENGLISH)));
 			case RABBIT:
 				return player.hasPermission("iDisguise.mob.rabbit") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.rabbit.type." + ((RabbitDisguise)disguise).getRabbitType().name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer"));
 			case SHEEP:
@@ -1693,6 +1693,10 @@ public class iDisguise extends JavaPlugin {
 	
 	public boolean isDisguisingPermittedInWorld(String world) {
 		return !configuration.getStringList("prohibited-worlds").contains(world);
+	}
+	
+	public boolean isPlayerDisguisePermitted(String name) {
+		return !configuration.getStringList("prohibited-player-disguises").contains(name);
 	}
 	
 	public boolean checkForUpdates() {

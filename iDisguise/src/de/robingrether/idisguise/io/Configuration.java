@@ -41,6 +41,7 @@ public class Configuration {
 		setDefault("undisguise-on-projectile-hit", false, "If set to true players are undisguised when they are hit by a projectile (e.g. arrow, snowball)");
 		setDefault("undisguise-on-hit-other", false, "If set to true players are undisguised when they hit another player");
 		setDefault("ghost-disguises", true, "Enable/disable ghost disguises, you should disable this if you are using any scoreboard plugin");
+		setDefault("prohibited-player-disguises", Arrays.asList("player1", "player2"), "Players who don't have 'iDisguise.player.prohibited' may not disguise as the following players");
 	}
 	
 	public void loadData() {
