@@ -9,8 +9,7 @@ import de.robingrether.util.ObjectUtil;
 
 /**
  * This enum contains all types, you can disguise as.<br>
- * <br>
- * WARNING: At any time, types may be added/removed from this Enum.
+ * From time to time (and from minecraft version to minecraft version), new enum constants may be added.
  * 
  * @since 2.1.3
  * @author Robingrether
@@ -105,6 +104,14 @@ public enum DisguiseType {
 		return type;
 	}
 	
+	/**
+	 * Returns this disguise type's class file inside the given package.
+	 * 
+	 * @param packageName the package
+	 * @return this disguise type's class file, if one exists
+	 * @throws ClassNotFoundException if the class file is not found inside the given package.
+	 * @since 4.1.1
+	 */
 	public Class<?> getClass(String packageName) throws ClassNotFoundException {
 		return Class.forName(packageName + "." + className);
 	}
