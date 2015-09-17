@@ -8,8 +8,10 @@ import org.bukkit.entity.Player;
  * This class can be extended.
  * 
  * @since 2.2.1
+ * @deprecated the current sound system will be reworked in the future
  * @author Robingrether
  */
+@Deprecated
 public class SimpleSoundSystem extends SoundSystem {
 	
 	protected Sound death, hurt, idle;

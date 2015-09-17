@@ -1653,10 +1653,12 @@ public class iDisguise extends JavaPlugin {
 				return null;
 			}
 			
+			@Deprecated
 			public SoundSystem getSoundSystem(DisguiseType type) {
 				return SoundSystem.getSoundSystem(type);
 			}
 			
+			@Deprecated
 			public void setSoundSystem(DisguiseType type, SoundSystem soundSystem) {
 				SoundSystem.setSoundSystem(type, soundSystem);
 			}

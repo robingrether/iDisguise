@@ -89,18 +89,22 @@ public interface DisguiseAPI {
 	 * Gets the current sound system for the given disguise type.
 	 * 
 	 * @since 2.2.1
+	 * @deprecated the current sound system will be reworked in the future
 	 * @param type the disguise type
 	 * @return the current sound system
 	 */
+	@Deprecated
 	public SoundSystem getSoundSystem(DisguiseType type);
 	
 	/**
 	 * Sets a sound system as the new sound system for the given disguise type.
 	 * 
 	 * @since 2.2.1
+	 * @deprecated the current sound system will be reworked in the future
 	 * @param type the disguise type
 	 * @param soundSystem the new sound system
 	 */
+	@Deprecated
 	public void setSoundSystem(DisguiseType type, SoundSystem soundSystem);
 	
 }

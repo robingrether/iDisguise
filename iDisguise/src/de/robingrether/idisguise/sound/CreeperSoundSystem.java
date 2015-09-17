@@ -8,8 +8,10 @@ import org.bukkit.entity.Player;
  * Represents a simple sound system for creeper.
  * 
  * @since 2.2.1
+ * @deprecated the current sound system will be reworked in the future
  * @author Robingrether
  */
+@Deprecated
 public class CreeperSoundSystem extends SimpleSoundSystem {
 	
 	/**

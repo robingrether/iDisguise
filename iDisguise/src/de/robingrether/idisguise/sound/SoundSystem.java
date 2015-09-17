@@ -11,8 +11,10 @@ import de.robingrether.idisguise.disguise.DisguiseType;
  * This class also manages the sound systems.
  * 
  * @since 2.2.1
+ * @deprecated the current sound system will be reworked in the future
  * @author Robingrether
  */
+@Deprecated
 public abstract class SoundSystem {
 	
 	private static final ConcurrentHashMap<DisguiseType, SoundSystem> soundSystems;
