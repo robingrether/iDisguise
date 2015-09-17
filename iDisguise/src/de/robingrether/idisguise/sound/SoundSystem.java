@@ -144,7 +144,7 @@ public abstract class SoundSystem {
 		setSoundSystem(DisguiseType.ENDER_DRAGON, new SimpleSoundSystem(Sound.ENDERDRAGON_DEATH, Sound.ENDERDRAGON_HIT, Sound.ENDERDRAGON_GROWL));
 		setSoundSystem(DisguiseType.ENDERMAN, new SimpleSoundSystem(Sound.ENDERMAN_DEATH, Sound.ENDERMAN_HIT, Sound.ENDERMAN_IDLE));
 		setSoundSystem(DisguiseType.GHAST, new AdvancedSoundSystem(new Sound[] {Sound.GHAST_DEATH}, null, new Sound[] {Sound.GHAST_MOAN, Sound.GHAST_SCREAM, Sound.GHAST_SCREAM2}));
-		setSoundSystem(DisguiseType.HORSE, new AdvancedSoundSystem(null, new Sound[] {Sound.HORSE_HIT}, new Sound [] {Sound.HORSE_BREATHE, Sound.HORSE_IDLE}));
+		//setSoundSystem(DisguiseType.HORSE, new AdvancedSoundSystem(null, new Sound[] {Sound.HORSE_HIT}, new Sound [] {Sound.HORSE_BREATHE, Sound.HORSE_IDLE}));
 		setSoundSystem(DisguiseType.IRON_GOLEM, new SimpleSoundSystem(Sound.IRONGOLEM_DEATH, Sound.IRONGOLEM_HIT, Sound.IRONGOLEM_WALK));
 		setSoundSystem(DisguiseType.MAGMA_CUBE, new AdvancedSoundSystem(null, null, new Sound[] {Sound.MAGMACUBE_JUMP, Sound.MAGMACUBE_WALK, Sound.MAGMACUBE_WALK2}));
 		setSoundSystem(DisguiseType.MUSHROOM_COW, new AdvancedSoundSystem(new Sound[] {Sound.COW_HURT}, new Sound[] {Sound.COW_HURT}, new Sound[] {Sound.COW_IDLE, Sound.COW_WALK}));
@@ -156,7 +156,7 @@ public abstract class SoundSystem {
 		setSoundSystem(DisguiseType.SKELETON, new AdvancedSoundSystem(new Sound[] {Sound.SKELETON_DEATH}, new Sound[] {Sound.SKELETON_HURT}, new Sound[] {Sound.SKELETON_IDLE, Sound.SKELETON_WALK}));
 		setSoundSystem(DisguiseType.SLIME, new AdvancedSoundSystem(null, new Sound[] {Sound.SLIME_ATTACK}, new Sound[] {Sound.SLIME_WALK, Sound.SLIME_WALK2}));
 		setSoundSystem(DisguiseType.SPIDER, new AdvancedSoundSystem(new Sound[] {Sound.SPIDER_DEATH}, null, new Sound[] {Sound.SPIDER_IDLE, Sound.SPIDER_WALK}));
-		setSoundSystem(DisguiseType.VILLAGER, new SimpleSoundSystem(Sound.VILLAGER_DEATH, Sound.VILLAGER_HIT, Sound.VILLAGER_IDLE));
+		//setSoundSystem(DisguiseType.VILLAGER, new SimpleSoundSystem(Sound.VILLAGER_DEATH, Sound.VILLAGER_HIT, Sound.VILLAGER_IDLE));
 		setSoundSystem(DisguiseType.WITHER, new SimpleSoundSystem(Sound.WITHER_DEATH, Sound.WITHER_HURT, Sound.WITHER_IDLE));
 		setSoundSystem(DisguiseType.WOLF, new AdvancedSoundSystem(new Sound[] {Sound.WOLF_DEATH}, new Sound[] {Sound.WOLF_HOWL, Sound.WOLF_HURT, Sound.WOLF_WHINE}, new Sound[] {Sound.WOLF_BARK, Sound.WOLF_PANT, Sound.WOLF_WALK}));
 		setSoundSystem(DisguiseType.ZOMBIE, new SimpleSoundSystem(Sound.ZOMBIE_DEATH, Sound.ZOMBIE_HURT, Sound.ZOMBIE_IDLE));
