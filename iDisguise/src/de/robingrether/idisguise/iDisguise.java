@@ -66,7 +66,7 @@ public class iDisguise extends JavaPlugin {
 	
 	public static final File directory = new File("plugins/iDisguise");
 	
-	public iDisguiseListener listener;
+	public EventListener listener;
 	public Configuration configuration;
 	public Metrics metrics;
 	private boolean enabled = false;
@@ -78,7 +78,7 @@ public class iDisguise extends JavaPlugin {
 			return;
 		}
 		checkDirectory();
-		listener = new iDisguiseListener(this);
+		listener = new EventListener(this);
 		configuration = new Configuration(this, directory);
 		configuration.loadData();
 		configuration.saveData();

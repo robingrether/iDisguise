@@ -1,5 +1,6 @@
 package de.robingrether.idisguise;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -27,11 +28,11 @@ import de.robingrether.idisguise.management.GhostFactory;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.sound.SoundSystem;
 
-public class iDisguiseListener implements Listener {
+public class EventListener implements Listener {
 	
 	private iDisguise plugin;
 	
-	public iDisguiseListener(iDisguise plugin) {
+	public EventListener(iDisguise plugin) {
 		this.plugin = plugin;
 	}
 	
@@ -131,16 +132,21 @@ public class iDisguiseListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerDeath(PlayerDeathEvent event) {
-		Player p = event.getEntity();
-		if(DisguiseManager.instance.isDisguised(p)) {
-			if(DisguiseManager.instance.getDisguise(p) instanceof PlayerDisguise) {
-				PlayerDisguise pd = (PlayerDisguise)DisguiseManager.instance.getDisguise(p);
-				event.setDeathMessage(event.getDeathMessage().replace(p.getName(), pd.getName()));
-			} else {
-				Disguise d = DisguiseManager.instance.getDisguise(p);
-				event.setDeathMessage(null);
-				SoundSystem.playDeathSound(p, d.getType());
+		String[] words = event.getDeathMessage().split(" ");
+		for(String word : words) {
+			Player player = Bukkit.getPlayer(word);
+			if(player != null && DisguiseManager.instance.isDisguised(player)) {
+				if(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise) {
+					event.setDeathMessage(event.getDeathMessage().replace(word, ((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName()));
+				} else {
+					event.setDeathMessage(null);
+					break;
+				}
 			}
+		}
+		Player player = event.getEntity();
+		if(DisguiseManager.instance.isDisguised(player) && DisguiseManager.instance.getDisguise(player) instanceof MobDisguise) {
+			SoundSystem.playDeathSound(player, DisguiseManager.instance.getDisguise(player).getType());
 		}
 	}
 	
