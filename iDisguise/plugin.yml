@@ -29,7 +29,7 @@ permissions:
          iDisguise.admin: true
          iDisguise.ghost: true
          iDisguise.mob.*: true
-         iDisguise.player.*: true
+         iDisguise.player.name.*: true
          iDisguise.random: true
          iDisguise.undisguise: true
    iDisguise.admin:
@@ -37,6 +37,7 @@ permissions:
       children:
          iDisguise.everywhere: true
          iDisguise.others: true
+         iDisguise.player.prohibited: true
          iDisguise.reload: true
          iDisguise.undisguise.all: true
          iDisguise.undisguise.others: true
@@ -374,8 +375,10 @@ permissions:
       default: false
    iDisguise.others:
       default: false
-   iDisguise.player.*:
+   iDisguise.player.name.*:
       default: false
+   iDisguise.player.prohibited:
+      degault: false
    iDisguise.random:
       default: false
    iDisguise.reload:

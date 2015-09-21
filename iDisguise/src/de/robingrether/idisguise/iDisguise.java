@@ -1539,7 +1539,7 @@ public class iDisguise extends JavaPlugin {
 			case GHAST:
 				return player.hasPermission("iDisguise.mob.ghast");
 			case GHOST:
-				return player.hasPermission("iDisguise.ghost") && (player.hasPermission("iDisguise.player.*") || player.hasPermission("iDisguise.player." + ((PlayerDisguise)disguise).getName().toLowerCase(Locale.ENGLISH)));
+				return player.hasPermission("iDisguise.ghost") && (player.hasPermission("iDisguise.player.name.*") || player.hasPermission("iDisguise.player.name." + ((PlayerDisguise)disguise).getName().toLowerCase(Locale.ENGLISH))) && (isPlayerDisguisePermitted(((PlayerDisguise)disguise).getName().toLowerCase(Locale.ENGLISH)) || player.hasPermission("iDisguise.player.prohibited"));
 			case GIANT:
 				return player.hasPermission("iDisguise.mob.giant");
 			case GUARDIAN:
@@ -1559,7 +1559,7 @@ public class iDisguise extends JavaPlugin {
 			case PIG_ZOMBIE:
 				return player.hasPermission("iDisguise.mob.pig_zombie") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby"));
 			case PLAYER:
-				return (isPlayerDisguisePermitted(((PlayerDisguise)disguise).getName().toLowerCase(Locale.ENGLISH)) || player.hasPermission("iDisguise.player.prohibited")) && (player.hasPermission("iDisguise.player.*") || player.hasPermission("iDisguise.player." + ((PlayerDisguise)disguise).getName().toLowerCase(Locale.ENGLISH)));
+				return (player.hasPermission("iDisguise.player.name.*") || player.hasPermission("iDisguise.player.name." + ((PlayerDisguise)disguise).getName().toLowerCase(Locale.ENGLISH))) && (isPlayerDisguisePermitted(((PlayerDisguise)disguise).getName().toLowerCase(Locale.ENGLISH)) || player.hasPermission("iDisguise.player.prohibited"));
 			case RABBIT:
 				return player.hasPermission("iDisguise.mob.rabbit") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.rabbit.type." + ((RabbitDisguise)disguise).getRabbitType().name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer"));
 			case SHEEP:
