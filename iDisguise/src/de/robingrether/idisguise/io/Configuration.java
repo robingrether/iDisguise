@@ -29,19 +29,19 @@ public class Configuration {
 		this.plugin = plugin;
 		configurationFile = new File(directory, "config.txt");
 		yamlConfigurationFile = new File(directory, "Config.yml");
-		setDefault("save-disguises", true, "If set to true the disguises will be saved when the server is stopped");
-		setDefault("prohibited-worlds", Arrays.asList("prohibited1", "prohibited2"), "Disguising is prohibited in the following worlds");
-		setDefault("check-for-updates", true, "If set to true the plugin automatically checks if an update is available");
-		setDefault("sound-system", true, "If set to true the sound system is enabled, for more information visit http://dev.bukkit.org/bukkit-plugins/idisguise/pages/sound-system/");
-		setDefault("show-name-while-disguised", false, "If set to true every disguised player has his original name above his head");
-		setDefault("no-target-while-disguised", false, "If set to true mobs cannot target disguised players");
-		setDefault("entity-damage-while-disguised", true, "If set to false disguised players cannot be damaged");
-		setDefault("permission-for-undisguise", false, "If set to true players must have \"iDisguise.undisguise\" permission to undisguise");
-		setDefault("undisguise-on-hit", false, "If set to true players are undisguised when they are hit by another player or mob");
-		setDefault("undisguise-on-projectile-hit", false, "If set to true players are undisguised when they are hit by a projectile (e.g. arrow, snowball)");
-		setDefault("undisguise-on-hit-other", false, "If set to true players are undisguised when they hit another player");
-		setDefault("ghost-disguises", true, "Enable/disable ghost disguises, you should disable this if you are using any scoreboard plugin");
-		setDefault("prohibited-player-disguises", Arrays.asList("player1", "player2"), "Players who don't have 'iDisguise.player.prohibited' may not disguise as the following players");
+		setDefault("save-disguises", true, "When this option is set to true, all the disguises are saved when the server shuts down,\nso all the players are still disguised after a restart.");
+		setDefault("prohibited-worlds", Arrays.asList("prohibited1", "prohibited2"), "You can put the worlds, you don't want your players to disguise in, here.\nYou can give admins the 'iDisguise.everywhere' permission so they can bypass this prohibition.");
+		setDefault("check-for-updates", true, "Enable this if you want the plugin to check for an update when the server starts.\nIf an update is available a message will be printed out into console,\nand every player who has the 'iDisguise.update' permission will receive a message.");
+		setDefault("sound-system", true, "When this option is set to true, the plugin will play realistic hurt/death/idle sounds for disguised players.\nVisit http://dev.bukkit.org/bukkit-plugins/idisguise/pages/sound-system/ for more information.\n(Not every mob type is supported so far)");
+		setDefault("show-name-while-disguised", false, "When this option is set to true, all disguised players will have their name above their head.\nThis only works for mob disguises.");
+		setDefault("no-target-while-disguised", false, "When this option is set to true, disguised players cannot be targeted by mobs (e.g. skeletons).");
+		setDefault("entity-damage-while-disguised", true, "When this option is set to false, disguised players cannot be damaged by mobs (e.g. zombies).");
+		setDefault("permission-for-undisguise", false, "When this option is set to true, disguised players need the 'iDisguise.undisguise' permission,\notherwise they cannot undisguise themselves anymore.");
+		setDefault("undisguise-on-hit", false, "When this option is set to true, a disguised player will be undisguised as soon as he is hit by another player.\nATTENTION: The player will not get notified about this!");
+		setDefault("undisguise-on-projectile-hit", false, "When this option is set to true, a disguised player will be undisguised as soon as he is hit by a projectile (e.g. arrows).\nATTENTION: The player will not get notified about this!");
+		setDefault("undisguise-on-hit-other", false, "When this option is set to true, a disguised player will be undisguised as soon as he attacks another player.\nATTENTION: The player will not get notified about this!");
+		setDefault("ghost-disguises", true, "Enable or disable ghost disguises.\nYou should disable this if you use any scoreboard plugin(s).");
+		setDefault("prohibited-player-disguises", Arrays.asList("player1", "player2"), "You can put the player names, you don't want your players to disguise as, here.\nYou can give admins the 'iDisguise.player.prohibited' permission so they can bypass this prohibition.");
 	}
 	
 	public void loadData() {
@@ -86,7 +86,7 @@ public class Configuration {
 		try {
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(configurationFile)));
 			for(Setting setting : new TreeMap<String, Setting>(settings).values()) {
-				writer.write("# " + setting.description() + "\n" + setting.key() + ": ");
+				writer.write("# " + setting.description().replace("\n", "\n# ") + "\n" + setting.key() + ": ");
 				Object value = setting.value();
 				if(value instanceof String) {
 					writer.write((String)value);
@@ -107,7 +107,7 @@ public class Configuration {
 				} else {
 					writer.write("\"" + value.toString() + "\"");
 				}
-				writer.write("\n");
+				writer.write("\n\n");
 			}
 			writer.close();
 		} catch(Exception e) {
