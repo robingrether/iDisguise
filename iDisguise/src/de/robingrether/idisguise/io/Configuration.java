@@ -48,7 +48,7 @@ public class Configuration {
 		if(configurationFile.exists()) {
 			try {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(configurationFile)));
-				String line, lastLine = null;
+				String line;
 				while((line = reader.readLine()) != null) {
 					if(!line.startsWith("#") && line.contains(":")) {
 						String[] split = line.split("\\s*:\\s*", 2);
@@ -62,9 +62,11 @@ public class Configuration {
 						} else {
 							value = split[1].replaceAll("(^\"|\"$)", "");
 						}
-						settings.put(split[0], new Setting(split[0], value, lastLine.substring(2)));
+						Setting setting = settings.get(split[0]);
+						if(setting != null && value.getClass().isAssignableFrom(setting.value().getClass())) {
+							settings.put(split[0], new Setting(split[0], value, setting.description()));
+						}
 					}
-					lastLine = line;
 				}
 				reader.close();
 			} catch(Exception e) {
