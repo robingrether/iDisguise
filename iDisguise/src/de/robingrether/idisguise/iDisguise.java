@@ -1100,6 +1100,7 @@ public class iDisguise extends JavaPlugin {
 							disguise = new MobDisguise(DisguiseType.ENDERMITE);
 						} catch(OutdatedServerException e) {
 							sender.sendMessage(ChatColor.RED + "Endermites are not supported by this minecraft version.");
+							return true;
 						}
 					} else if(argument.equalsIgnoreCase("ghast")) {
 						disguise = new MobDisguise(DisguiseType.GHAST);
