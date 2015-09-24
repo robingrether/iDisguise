@@ -1,7 +1,7 @@
 name: iDisguise
 main: de.robingrether.idisguise.iDisguise
 version: 4.0.3
-author: Robingrether
+author: RobinGrether
 website: http://dev.bukkit.org/bukkit-plugins/idisguise/
 commands:
    disguise:
