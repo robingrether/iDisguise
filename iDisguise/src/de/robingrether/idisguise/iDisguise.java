@@ -444,7 +444,7 @@ public class iDisguise extends JavaPlugin {
 						disguise = new PigDisguise();
 					} else if(StringUtil.equalsIgnoreCase(argument, "pig_zombie", "pig-zombie", "pigzombie", "pigman", "zombie_pigman", "zombie-pigman", "zombiepigman")) {
 						disguise = new MobDisguise(DisguiseType.PIG_ZOMBIE);
-					} else if(argument.equalsIgnoreCase("rabbit")) {
+					} else if(StringUtil.equalsIgnoreCase(argument, "rabbit", "bunny")) {
 						try {
 							disguise = new RabbitDisguise();
 						} catch(OutdatedServerException e) {
@@ -1132,7 +1132,7 @@ public class iDisguise extends JavaPlugin {
 						disguise = new PigDisguise();
 					} else if(StringUtil.equalsIgnoreCase(argument, "pig_zombie", "pig-zombie", "pigzombie", "pigman", "zombie_pigman", "zombie-pigman", "zombiepigman")) {
 						disguise = new MobDisguise(DisguiseType.PIG_ZOMBIE);
-					} else if(argument.equalsIgnoreCase("rabbit")) {
+					} else if(StringUtil.equalsIgnoreCase(argument, "rabbit", "bunny")) {
 						try {
 							disguise = new RabbitDisguise();
 						} catch(OutdatedServerException e) {
