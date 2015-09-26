@@ -190,13 +190,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 							List<WatchableObject> list = (List<WatchableObject>)fieldListMetadata.get(packet);
 							List<WatchableObject> remove = new ArrayList<WatchableObject>();
 							for(WatchableObject metadata : list) {
-								if(metadata.a() == 6) {
-									if(DisguiseManager.instance.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
-										metadata.a((Float)((Float)metadata.b() * 10));
-									} else if(DisguiseManager.instance.getDisguise(player).getType().equals(DisguiseType.WITHER)) {
-										metadata.a((Float)((Float)metadata.b() * 15));
-									}
-								} else if(metadata.a() > 9) {
+								if(metadata.a() > 9) {
 									remove.add(metadata);
 								}
 							}
