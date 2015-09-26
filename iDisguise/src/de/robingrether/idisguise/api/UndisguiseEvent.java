@@ -9,7 +9,7 @@ import de.robingrether.idisguise.disguise.Disguise;
  * This event is fired when a player undisguises.
  * 
  * @since 2.2.1
- * @author Robingrether
+ * @author RobinGrether
  */
 public class UndisguiseEvent extends PlayerEvent {
 	

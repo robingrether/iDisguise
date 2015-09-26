@@ -4,7 +4,7 @@ package de.robingrether.idisguise.disguise;
  * Represents a disguise as a pig.
  * 
  * @since 3.0.1
- * @author Robingrether
+ * @author RobinGrether
  */
 public class PigDisguise extends MobDisguise {
 	

@@ -6,7 +6,7 @@ import org.bukkit.Material;
  * Represents a disguise as an enderman.
  * 
  * @since 4.0.1
- * @author Robingrether
+ * @author RobinGrether
  */
 public class EndermanDisguise extends MobDisguise {
 	

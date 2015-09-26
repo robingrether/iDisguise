@@ -3,7 +3,7 @@ package de.robingrether.util;
 /**
  * Some utility methods for strings.
  * 
- * @author Robingrether
+ * @author RobinGrether
  */
 public class StringUtil {
 	

@@ -4,7 +4,7 @@ package de.robingrether.idisguise.disguise;
  * Represents a disguise as a mob.
  * 
  * @since 2.1.3
- * @author Robingrether
+ * @author RobinGrether
  */
 public class MobDisguise extends Disguise {
 	

@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
  * Represents a disguise as a horse.
  * 
  * @since 3.0.1
- * @author Robingrether
+ * @author RobinGrether
  */
 public class HorseDisguise extends MobDisguise {
 	
@@ -189,8 +189,8 @@ public class HorseDisguise extends MobDisguise {
 	/**
 	 * Represents the different horse variants.
 	 * 
-	 * @since 4.1.1
-	 * @author Robingrether
+	 * @since 5.0.1
+	 * @author RobinGrether
 	 */
 	public enum Variant {
 		
@@ -205,8 +205,8 @@ public class HorseDisguise extends MobDisguise {
 	/**
 	 * Represents the different hide styles of a horse.
 	 * 
-	 * @since 4.1.1
-	 * @author Robingrether
+	 * @since 5.0.1
+	 * @author RobinGrether
 	 */
 	public enum Style {
 		
@@ -221,8 +221,8 @@ public class HorseDisguise extends MobDisguise {
 	/**
 	 * Represents the differnt hide colors of a horse.
 	 * 
-	 * @since 4.1.1
-	 * @author Robingrether
+	 * @since 5.0.1
+	 * @author RobinGrether
 	 */
 	public enum Color {
 		
@@ -240,7 +240,7 @@ public class HorseDisguise extends MobDisguise {
 	 * Represents armor for a horse.
 	 * 
 	 * @since 3.0.3
-	 * @author Robingrether
+	 * @author RobinGrether
 	 */
 	public enum Armor {
 		

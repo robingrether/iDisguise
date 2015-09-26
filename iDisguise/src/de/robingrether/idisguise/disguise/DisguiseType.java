@@ -12,7 +12,7 @@ import de.robingrether.util.ObjectUtil;
  * From time to time (and from minecraft version to minecraft version), new enum constants may be added.
  * 
  * @since 2.1.3
- * @author Robingrether
+ * @author RobinGrether
  */
 public enum DisguiseType {
 	
@@ -110,7 +110,7 @@ public enum DisguiseType {
 	 * @param packageName the package
 	 * @return this disguise type's class file, if one exists
 	 * @throws ClassNotFoundException if the class file is not found inside the given package.
-	 * @since 4.1.1
+	 * @since 5.0.1
 	 */
 	public Class<?> getClass(String packageName) throws ClassNotFoundException {
 		return Class.forName(packageName + "." + className);
@@ -148,7 +148,7 @@ public enum DisguiseType {
 	 * The type a disguise can be: mob, player, object.
 	 * 
 	 * @since 2.1.3
-	 * @author Robingrether
+	 * @author RobinGrether
 	 */
 	public enum Type {
 		

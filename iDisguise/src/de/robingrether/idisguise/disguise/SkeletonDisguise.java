@@ -6,7 +6,7 @@ import org.bukkit.entity.Skeleton.SkeletonType;
  * Represents a disguise as a skeleton.
  * 
  * @since 4.0.1
- * @author Robingrether
+ * @author RobinGrether
  */
 public class SkeletonDisguise extends MobDisguise {
 	

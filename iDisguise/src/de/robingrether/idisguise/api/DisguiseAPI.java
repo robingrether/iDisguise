@@ -10,7 +10,7 @@ import de.robingrether.idisguise.sound.SoundSystem;
  * <code>Bukkit.getServicesManager().getRegistration(DisguiseAPI.class).getProvider();</code>
  * 
  * @since 2.1.3
- * @author Robingrether
+ * @author RobinGrether
  */
 public interface DisguiseAPI {
 	

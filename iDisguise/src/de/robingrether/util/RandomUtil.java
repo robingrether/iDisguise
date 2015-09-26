@@ -5,7 +5,7 @@ import java.util.Random;
 /**
  * This utility class provides the some methods from {@link java.util.Random}, but they are static here.
  * 
- * @author Robingrether
+ * @author RobinGrether
  */
 public class RandomUtil {
 	

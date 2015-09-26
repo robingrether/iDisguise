@@ -6,7 +6,7 @@ import org.bukkit.entity.Villager.Profession;
  * Represents a disguise as a villager.
  * 
  * @since 3.0.1
- * @author Robingrether
+ * @author RobinGrether
  */
 public class VillagerDisguise extends MobDisguise {
 	

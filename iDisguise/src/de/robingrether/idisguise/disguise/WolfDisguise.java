@@ -6,7 +6,7 @@ import org.bukkit.DyeColor;
  * Represents a disguise as a wolf.
  * 
  * @since 3.0.1
- * @author Robingrether
+ * @author RobinGrether
  */
 public class WolfDisguise extends ColoredDisguise {
 	

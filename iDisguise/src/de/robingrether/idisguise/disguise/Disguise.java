@@ -9,7 +9,7 @@ import de.robingrether.util.ObjectUtil;
  * Represents a disguise.
  * 
  * @since 2.1.3
- * @author Robingrether
+ * @author RobinGrether
  */
 public abstract class Disguise implements Serializable, Cloneable {
 	

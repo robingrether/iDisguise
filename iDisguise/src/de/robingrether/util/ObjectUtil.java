@@ -3,7 +3,7 @@ package de.robingrether.util;
 /**
  * Some utility methods for objects.
  * 
- * @author Robingrether
+ * @author RobinGrether
  */
 public class ObjectUtil {
 	

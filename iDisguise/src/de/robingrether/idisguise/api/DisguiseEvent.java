@@ -11,7 +11,7 @@ import de.robingrether.idisguise.disguise.Disguise;
  * This class replaces the old DisguiseAsPlayerEvent and DisguiseAsMobEvent classes.
  * 
  * @since 3.0.1
- * @author Robingrether
+ * @author RobinGrether
  */
 public class DisguiseEvent extends PlayerEvent implements Cancellable {
 	

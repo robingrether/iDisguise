@@ -4,7 +4,7 @@ package de.robingrether.idisguise.disguise;
  * Represents a disguise as a sized mob (e.g. slime, magma slime).
  * 
  * @since 3.0.1
- * @author Robingrether
+ * @author RobinGrether
  */
 public class SizedDisguise extends MobDisguise {
 	

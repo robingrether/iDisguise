@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 /**
  * Some utility methods to validate objects.
  * 
- * @author Robingrether
+ * @author RobinGrether
  */
 public class Validate {
 	

@@ -7,7 +7,7 @@ import de.robingrether.util.Validate;
  * Represents a disguise as a player.
  * 
  * @since 2.1.3
- * @author Robingrether
+ * @author RobinGrether
  */
 public class PlayerDisguise extends Disguise {
 	

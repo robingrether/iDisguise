@@ -12,7 +12,7 @@ import de.robingrether.idisguise.disguise.DisguiseType;
  * 
  * @since 2.2.1
  * @deprecated the current sound system will be reworked in the future
- * @author Robingrether
+ * @author RobinGrether
  */
 @Deprecated
 public abstract class SoundSystem {

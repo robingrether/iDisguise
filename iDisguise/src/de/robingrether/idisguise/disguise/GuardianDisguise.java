@@ -4,7 +4,7 @@ package de.robingrether.idisguise.disguise;
  * Represents a disguise as a guardian.
  * 
  * @since 4.0.1
- * @author Robingrether
+ * @author RobinGrether
  */
 public class GuardianDisguise extends MobDisguise {
 	

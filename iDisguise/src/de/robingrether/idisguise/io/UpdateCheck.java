@@ -6,10 +6,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -62,14 +59,8 @@ public class UpdateCheck implements Runnable {
 			String response = reader.readLine();
 			JSONArray array = (JSONArray)JSONValue.parse(response);
 			latestVersion = null;
-			for(int i = 0; i < array.size(); i++) {
-				JSONObject object = (JSONObject)array.get(i);
-				/*Pattern pattern = Pattern.compile("\\D*([0-9\\.]*).*");
-				Matcher matcher = pattern.matcher((String)object.get(API_GAME_VERSION));
-				if(matcher.matches() && matcher.group(1).equals(getMCVersion())) {*/
-					latestVersion = (String)object.get(API_NAME);
-				//}
-			}
+			JSONObject object = (JSONObject)array.get(array.size() - 1);
+			latestVersion = (String)object.get(API_NAME);
 		} catch(IOException e) {
 			plugin.getLogger().log(Level.WARNING, "An error occured while checking for updates.", e);
 		} finally {
@@ -79,16 +70,6 @@ public class UpdateCheck implements Runnable {
 				} catch(IOException e) {
 				}
 			}
-		}
-	}
-	
-	private static String getMCVersion() {
-		Pattern pattern = Pattern.compile("[^\\(]*\\(MC:\\s*([0-9\\.]*).*");
-		Matcher matcher = pattern.matcher(Bukkit.getVersion());
-		if(matcher.matches() && matcher.group(1) != null) {
-			return matcher.group(1).startsWith("1.8") ? "1.8" : matcher.group(1);
-		} else {
-			return "";
 		}
 	}
 	

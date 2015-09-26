@@ -6,7 +6,7 @@ import org.bukkit.entity.Ocelot.Type;
  * Represents a disguise as an ocelot.
  * 
  * @since 3.0.1
- * @author Robingrether
+ * @author RobinGrether
  */
 public class OcelotDisguise extends MobDisguise {
 	

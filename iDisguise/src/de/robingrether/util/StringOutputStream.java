@@ -5,7 +5,7 @@ import java.io.OutputStream;
 /**
  * A string output stream writes the data to a {@linkplain java.lang.String}.
  * 
- * @author Robingrether
+ * @author RobinGrether
  */
 public class StringOutputStream extends OutputStream {
 	

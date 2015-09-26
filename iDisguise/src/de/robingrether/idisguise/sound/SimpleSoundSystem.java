@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
  * 
  * @since 2.2.1
  * @deprecated the current sound system will be reworked in the future
- * @author Robingrether
+ * @author RobinGrether
  */
 @Deprecated
 public class SimpleSoundSystem extends SoundSystem {
