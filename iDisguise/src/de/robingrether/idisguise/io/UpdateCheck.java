@@ -45,7 +45,17 @@ public class UpdateCheck implements Runnable {
 	}
 	
 	private boolean isUpdateAvailable() {
-		return latestVersion != null && !pluginVersion.equals(latestVersion);
+		if(latestVersion != null && !pluginVersion.equals(latestVersion)) {
+			try {
+				int current = Integer.parseInt(pluginVersion.split(" ")[1].replace(".", ""));
+				int latest = Integer.parseInt(latestVersion.split(" ")[1].replace(".", ""));
+				return latest > current;
+			} catch(NumberFormatException e) {
+			} catch(ArrayIndexOutOfBoundsException e) {
+			}
+			return true;
+		}
+		return false;
 	}
 	
 	private void checkForUpdate() {
