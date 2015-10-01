@@ -127,15 +127,11 @@ public class ChannelRegisterImpl extends ChannelRegister {
 			}
 		}
 		
-		public synchronized void sendPacket(Packet packet) {
-			sendPacket(packet, false);
+		public synchronized void sendPacketFromPlugin(Packet packet) {
+			super.sendPacket(packet);
 		}
 		
-		public synchronized void sendPacket(Packet object, boolean fromPlugin) {
-			if(fromPlugin) {
-				super.sendPacket(object);
-				return;
-			}
+		public synchronized void sendPacket(Packet object) {
 			try {
 				if(object instanceof PacketPlayOutNamedEntitySpawn) {
 					PacketPlayOutNamedEntitySpawn packet = (PacketPlayOutNamedEntitySpawn)object;

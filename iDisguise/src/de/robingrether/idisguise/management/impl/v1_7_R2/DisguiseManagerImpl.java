@@ -66,7 +66,7 @@ public class DisguiseManagerImpl extends DisguiseManager {
 		if(packet == null) {
 			return;
 		}
-		((PlayerConnectionInjected)((CraftPlayer)player).getHandle().playerConnection).sendPacket((Packet)packet, true);
+		((PlayerConnectionInjected)((CraftPlayer)player).getHandle().playerConnection).sendPacketFromPlugin((Packet)packet);
 	}
 	
 	public void sendPacketLater(final Player player, final Object packet, long delay) {
