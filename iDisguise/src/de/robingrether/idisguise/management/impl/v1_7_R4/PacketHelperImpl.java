@@ -27,9 +27,9 @@ import de.robingrether.idisguise.disguise.ZombieDisguise;
 import de.robingrether.idisguise.management.PacketHelper;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.VersionHelper;
-
 import net.minecraft.server.v1_7_R4.Block;
 import net.minecraft.server.v1_7_R4.EntityAgeable;
+import net.minecraft.server.v1_7_R4.EntityBat;
 import net.minecraft.server.v1_7_R4.EntityCreeper;
 import net.minecraft.server.v1_7_R4.EntityEnderman;
 import net.minecraft.server.v1_7_R4.EntityHorse;
@@ -145,6 +145,9 @@ public class PacketHelperImpl extends PacketHelper {
 					zombie.setBaby(!zombieDisguise.isAdult());
 					zombie.setVillager(zombieDisguise.isVillager());
 				}
+			}
+			if(entity instanceof EntityBat) {
+				((EntityBat)entity).setAsleep(false);
 			}
 			if(attributes[0]) {
 				entity.setCustomName(player.getName());

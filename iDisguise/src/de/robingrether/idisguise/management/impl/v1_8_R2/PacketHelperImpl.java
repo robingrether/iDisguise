@@ -29,9 +29,9 @@ import de.robingrether.idisguise.disguise.ZombieDisguise;
 import de.robingrether.idisguise.management.PacketHelper;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.VersionHelper;
-
 import net.minecraft.server.v1_8_R2.Block;
 import net.minecraft.server.v1_8_R2.EntityAgeable;
+import net.minecraft.server.v1_8_R2.EntityBat;
 import net.minecraft.server.v1_8_R2.EntityCreeper;
 import net.minecraft.server.v1_8_R2.EntityEnderman;
 import net.minecraft.server.v1_8_R2.EntityGuardian;
@@ -156,6 +156,9 @@ public class PacketHelperImpl extends PacketHelper {
 					zombie.setBaby(!zombieDisguise.isAdult());
 					zombie.setVillager(zombieDisguise.isVillager());
 				}
+			}
+			if(entity instanceof EntityBat) {
+				((EntityBat)entity).setAsleep(false);
 			}
 			if(attributes[0]) {
 				entity.setCustomName(player.getName());
