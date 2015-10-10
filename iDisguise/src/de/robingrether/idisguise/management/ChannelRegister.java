@@ -10,4 +10,6 @@ public abstract class ChannelRegister {
 	
 	public abstract void unregisterHandler(Player player);
 	
+	public abstract void registerOnlinePlayers();
+	
 }

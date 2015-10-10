@@ -53,6 +53,7 @@ import de.robingrether.idisguise.io.Metrics.Plotter;
 import de.robingrether.idisguise.io.Metrics;
 import de.robingrether.idisguise.io.SLAPI;
 import de.robingrether.idisguise.io.UpdateCheck;
+import de.robingrether.idisguise.management.ChannelRegister;
 import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.GhostFactory;
 import de.robingrether.idisguise.management.PacketHelper;
@@ -114,6 +115,7 @@ public class iDisguise extends JavaPlugin {
 		}
 		getLogger().log(Level.INFO, String.format("%s enabled!", getFullName()));
 		enabled = true;
+		ChannelRegister.instance.registerOnlinePlayers();
 	}
 	
 	public void onDisable() {
@@ -1728,6 +1730,10 @@ public class iDisguise extends JavaPlugin {
 	
 	public boolean isGhostDisguiseEnabled() {
 		return configuration.getBoolean("ghost-disguises");
+	}
+	
+	public boolean enabled() {
+		return enabled;
 	}
 	
 }

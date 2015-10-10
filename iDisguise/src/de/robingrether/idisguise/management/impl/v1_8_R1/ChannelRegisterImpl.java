@@ -99,6 +99,12 @@ public class ChannelRegisterImpl extends ChannelRegister {
 		}
 	}
 	
+	public void registerOnlinePlayers() {
+		for(Player player : Bukkit.getOnlinePlayers()) {
+			registerHandler(player);
+		}
+	}
+	
 	public class PlayerConnectionInjected extends PlayerConnection {
 		
 		private Player player;
