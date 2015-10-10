@@ -12,13 +12,14 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import de.robingrether.idisguise.api.UndisguiseEvent;
-import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.io.UpdateCheck;
@@ -34,6 +35,13 @@ public class EventListener implements Listener {
 	
 	public EventListener(iDisguise plugin) {
 		this.plugin = plugin;
+	}
+	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onAsyncPlayerPreLogin(AsyncPlayerPreLoginEvent event) {
+		if(!plugin.enabled()) {
+			event.disallow(Result.KICK_OTHER, "Server start/reload has not finished yet");
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
