@@ -809,7 +809,7 @@ public class iDisguise extends JavaPlugin {
 						int count = 0;
 						int total = DisguiseManager.instance.getDisguisedPlayers().size();
 						for(OfflinePlayer offlinePlayer : DisguiseManager.instance.getDisguisedPlayers()) {
-							if(player.isOnline()) {
+							if(offlinePlayer.isOnline()) {
 								UndisguiseEvent event = new UndisguiseEvent(offlinePlayer.getPlayer(), DisguiseManager.instance.getDisguise(offlinePlayer.getPlayer()), true);
 								getServer().getPluginManager().callEvent(event);
 								if(!event.isCancelled()) {
