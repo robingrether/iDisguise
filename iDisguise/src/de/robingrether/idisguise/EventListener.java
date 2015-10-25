@@ -104,16 +104,16 @@ public class EventListener implements Listener {
 	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		Player p = event.getPlayer();
-		if(p.hasPermission("iDisguise.update") && plugin.checkForUpdates()) {
-			plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new UpdateCheck(plugin, p, ChatColor.GOLD + "An update for iDisguise is available: " + ChatColor.ITALIC + "%s"), 20L);
+		Player player = event.getPlayer();
+		if(player.hasPermission("iDisguise.update") && plugin.checkForUpdates()) {
+			plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new UpdateCheck(plugin, player, ChatColor.GOLD + "An update for iDisguise is available: " + ChatColor.ITALIC + "%s"), 20L);
 		}
-		if(DisguiseManager.instance.isDisguised(p)) {
-			p.sendMessage(ChatColor.GOLD + "You are still disguised. Use " + ChatColor.ITALIC + "/disguise status" + ChatColor.RESET + ChatColor.GOLD + " to get more information.");
+		if(DisguiseManager.instance.isDisguised(player)) {
+			player.sendMessage(ChatColor.GOLD + "You are still disguised. Use " + ChatColor.ITALIC + "/disguise status" + ChatColor.RESET + ChatColor.GOLD + " to get more information.");
 		}
-		ChannelRegister.instance.registerHandler(p);
-		GhostFactory.instance.addPlayer(p.getName());
-		PlayerHelper.instance.addPlayer(p);
+		ChannelRegister.instance.registerHandler(player);
+		GhostFactory.instance.addPlayer(player.getName());
+		PlayerHelper.instance.addPlayer(player);
 	}
 	
 	@EventHandler
@@ -140,15 +140,17 @@ public class EventListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerDeath(PlayerDeathEvent event) {
-		String[] words = event.getDeathMessage().split(" ");
-		for(String word : words) {
-			Player player = Bukkit.getPlayer(word);
-			if(player != null && DisguiseManager.instance.isDisguised(player)) {
-				if(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise) {
-					event.setDeathMessage(event.getDeathMessage().replace(word, ((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName()));
-				} else {
-					event.setDeathMessage(null);
-					break;
+		if(plugin.replaceDeathMessages()) {
+			String[] words = event.getDeathMessage().split(" ");
+			for(String word : words) {
+				Player player = Bukkit.getPlayer(word);
+				if(player != null && DisguiseManager.instance.isDisguised(player)) {
+					if(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise) {
+						event.setDeathMessage(event.getDeathMessage().replace(word, ((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName()));
+					} else {
+						event.setDeathMessage(null);
+						break;
+					}
 				}
 			}
 		}

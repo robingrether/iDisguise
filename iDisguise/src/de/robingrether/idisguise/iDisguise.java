@@ -1732,6 +1732,10 @@ public class iDisguise extends JavaPlugin {
 		return configuration.getBoolean("ghost-disguises");
 	}
 	
+	public boolean replaceDeathMessages() {
+		return configuration.getBoolean("replace-death-messages");
+	}
+	
 	public boolean enabled() {
 		return enabled;
 	}

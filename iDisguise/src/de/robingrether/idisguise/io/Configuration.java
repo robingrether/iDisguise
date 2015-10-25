@@ -42,6 +42,7 @@ public class Configuration {
 		setDefault("undisguise-on-hit-other", false, "When this option is set to true, a disguised player will be undisguised as soon as he attacks another player.\nATTENTION: The player will not get notified about this!");
 		setDefault("ghost-disguises", true, "Enable or disable ghost disguises.\nYou should disable this if you use any scoreboard plugin(s).");
 		setDefault("prohibited-player-disguises", Arrays.asList("player1", "player2"), "You can put the player names, you don't want your players to disguise as, here.\nYou can give admins the 'iDisguise.player.prohibited' permission so they can bypass this prohibition.");
+		setDefault("replace-death-messages", true, "When this option is enabled, disguised players' death and kill messages are replaced so nobody recognizes they are actual players.");
 	}
 	
 	public void loadData() {
