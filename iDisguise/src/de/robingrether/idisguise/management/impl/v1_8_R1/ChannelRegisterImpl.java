@@ -208,7 +208,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 							List<WatchableObject> list = (List<WatchableObject>)fieldListMetadata.get(packet);
 							List<WatchableObject> remove = new ArrayList<WatchableObject>();
 							for(WatchableObject metadata : list) {
-								if(metadata.a() > 9) {
+								if(metadata.a() > 9 || metadata.a() == 2 || metadata.a() == 3) {
 									remove.add(metadata);
 								}
 							}
