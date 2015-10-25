@@ -72,7 +72,7 @@ public class UpdateCheck implements Runnable {
 			JSONObject object = (JSONObject)array.get(array.size() - 1);
 			latestVersion = (String)object.get(API_NAME);
 		} catch(IOException e) {
-			plugin.getLogger().log(Level.WARNING, "An error occured while checking for updates.", e);
+			plugin.getLogger().log(Level.WARNING, "Update checking failed: " + e.getClass().getSimpleName());
 		} finally {
 			if(reader != null) {
 				try {
