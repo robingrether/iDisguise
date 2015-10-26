@@ -29,7 +29,7 @@ public enum DisguiseType {
 	GIANT(Type.MOB, "EntityGiantZombie"),
 	GUARDIAN(Type.MOB, "EntityGuardian"),
 	HORSE(Type.MOB, "EntityHorse"),
-	IRON_GOLEM(Type.MOB, "EntityGolem"),
+	IRON_GOLEM(Type.MOB, "EntityIronGolem"),
 	MAGMA_CUBE(Type.MOB, "EntityMagmaCube"),
 	MUSHROOM_COW(Type.MOB, "EntityMushroomCow"),
 	OCELOT(Type.MOB, "EntityOcelot"),
