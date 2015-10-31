@@ -1736,6 +1736,10 @@ public class iDisguise extends JavaPlugin {
 		return configuration.getBoolean("replace-death-messages");
 	}
 	
+	public boolean replaceJoinLeaveMessages() {
+		return configuration.getBoolean("replace-join-leave-messages");
+	}
+	
 	public boolean enabled() {
 		return enabled;
 	}

@@ -111,6 +111,15 @@ public class EventListener implements Listener {
 		if(DisguiseManager.instance.isDisguised(player)) {
 			player.sendMessage(ChatColor.GOLD + "You are still disguised. Use " + ChatColor.ITALIC + "/disguise status" + ChatColor.RESET + ChatColor.GOLD + " to get more information.");
 		}
+		if(plugin.replaceJoinLeaveMessages()) {
+			if(player != null && DisguiseManager.instance.isDisguised(player)) {
+				if(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise) {
+					event.setJoinMessage(event.getJoinMessage().replace(player.getName(), ((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName()));
+				} else {
+					event.setJoinMessage(null);
+				}
+			}
+		}
 		ChannelRegister.instance.registerHandler(player);
 		GhostFactory.instance.addPlayer(player.getName());
 		PlayerHelper.instance.addPlayer(player);
@@ -119,6 +128,15 @@ public class EventListener implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
+		if(plugin.replaceJoinLeaveMessages()) {
+			if(player != null && DisguiseManager.instance.isDisguised(player)) {
+				if(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise) {
+					event.setQuitMessage(event.getQuitMessage().replace(player.getName(), ((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName()));
+				} else {
+					event.setQuitMessage(null);
+				}
+			}
+		}
 		ChannelRegister.instance.unregisterHandler(player);
 		PlayerHelper.instance.removePlayer(player);
 	}
