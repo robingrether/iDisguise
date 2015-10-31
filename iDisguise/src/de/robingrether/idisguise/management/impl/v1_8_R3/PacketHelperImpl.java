@@ -82,6 +82,7 @@ public class PacketHelperImpl extends PacketHelper {
 			}
 			if(mobDisguise.getCustomName() != null && !mobDisguise.getCustomName().isEmpty()) {
 				entity.setCustomName(mobDisguise.getCustomName());
+				entity.setCustomNameVisible(true);
 			}
 			if(entity instanceof EntityAgeable && !mobDisguise.isAdult()) {
 				((EntityAgeable)entity).setAge(-24000);
@@ -162,6 +163,7 @@ public class PacketHelperImpl extends PacketHelper {
 			}
 			if(attributes[0]) {
 				entity.setCustomName(player.getName());
+				entity.setCustomNameVisible(true);
 			}
 			packet = new PacketPlayOutSpawnEntityLiving(entity);
 		} else if(disguise instanceof PlayerDisguise) {
