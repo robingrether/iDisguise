@@ -58,7 +58,7 @@ import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.GhostFactory;
 import de.robingrether.idisguise.management.PacketHelper;
 import de.robingrether.idisguise.management.VersionHelper;
-import de.robingrether.idisguise.sound.SoundSystem;
+import de.robingrether.idisguise.sound.Sounds;
 import de.robingrether.util.RandomUtil;
 import de.robingrether.util.StringUtil;
 import de.robingrether.util.Validate;
@@ -84,7 +84,7 @@ public class iDisguise extends JavaPlugin {
 		configuration.loadData();
 		configuration.saveData();
 		PacketHelper.instance.setAttribute(0, showOriginalPlayerNames());
-		SoundSystem.setEnabled(isSoundSystemEnabled());
+		Sounds.setEnabled(isSoundSystemEnabled());
 		try {
 			metrics = new Metrics(this);
 			Graph graph1 = metrics.createGraph("Disguise Count");
@@ -148,7 +148,7 @@ public class iDisguise extends JavaPlugin {
 		configuration.loadData();
 		configuration.saveData();
 		PacketHelper.instance.setAttribute(0, showOriginalPlayerNames());
-		SoundSystem.setEnabled(isSoundSystemEnabled());
+		Sounds.setEnabled(isSoundSystemEnabled());
 		if(saveDisguises()) {
 			loadData();
 		}
@@ -1624,6 +1624,7 @@ public class iDisguise extends JavaPlugin {
 	
 	public DisguiseAPI getAPI() {
 		return new DisguiseAPI() {
+			
 			public void disguiseToAll(Player player, Disguise disguise) {
 				DisguiseManager.instance.disguise(player, disguise);
 			}
@@ -1656,15 +1657,14 @@ public class iDisguise extends JavaPlugin {
 				return null;
 			}
 			
-			@Deprecated
-			public SoundSystem getSoundSystem(DisguiseType type) {
-				return SoundSystem.getSoundSystem(type);
+			public Sounds getSoundsForEntity(DisguiseType type) {
+				return Sounds.getSoundsForEntity(type);
 			}
 			
-			@Deprecated
-			public void setSoundSystem(DisguiseType type, SoundSystem soundSystem) {
-				SoundSystem.setSoundSystem(type, soundSystem);
+			public boolean setSoundsForEntity(DisguiseType type, Sounds sounds) {
+				return Sounds.setSoundsForEntity(type, sounds);
 			}
+			
 		};
 	}
 	

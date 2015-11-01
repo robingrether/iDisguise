@@ -27,7 +27,6 @@ import de.robingrether.idisguise.management.ChannelRegister;
 import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.GhostFactory;
 import de.robingrether.idisguise.management.PlayerHelper;
-import de.robingrether.idisguise.sound.SoundSystem;
 
 public class EventListener implements Listener {
 	
@@ -79,9 +78,6 @@ public class EventListener implements Listener {
 								DisguiseManager.instance.undisguise(p);
 							}
 						}
-					}
-					if(!event.isCancelled() && DisguiseManager.instance.isDisguised(p)) {
-						SoundSystem.playHurtSound(p, DisguiseManager.instance.getDisguise(p).getType());
 					}
 				}
 			}
@@ -173,19 +169,6 @@ public class EventListener implements Listener {
 			}
 		}
 		Player player = event.getEntity();
-		if(DisguiseManager.instance.isDisguised(player) && DisguiseManager.instance.getDisguise(player) instanceof MobDisguise) {
-			SoundSystem.playDeathSound(player, DisguiseManager.instance.getDisguise(player).getType());
-		}
-	}
-	
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerMove(PlayerMoveEvent event) {
-		Player p = event.getPlayer();
-		if(!event.isCancelled()) {
-			if(DisguiseManager.instance.getDisguise(p) instanceof MobDisguise) {
-				SoundSystem.playIdleSound(p, DisguiseManager.instance.getDisguise(p).getType());
-			}
-		}
 	}
 	
 }

@@ -1,9 +1,10 @@
 package de.robingrether.idisguise.api;
 
 import org.bukkit.entity.Player;
+
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
-import de.robingrether.idisguise.sound.SoundSystem;
+import de.robingrether.idisguise.sound.Sounds;
 
 /**
  * The API to hook into iDisguise. The following code returns an object:<br>
@@ -86,25 +87,22 @@ public interface DisguiseAPI {
 	public String getLocalizedPhrase(String name);
 	
 	/**
-	 * Gets the current sound system for the given disguise type.
+	 * Gets the {@link Sounds} for a specific entity type.
 	 * 
-	 * @since 2.2.1
-	 * @deprecated the current sound system will be reworked in the future
-	 * @param type the disguise type
-	 * @return the current sound system
+	 * @since 5.1.1
+	 * @param type the entity/disguise type
+	 * @return the sounds for the given entity/disguise type
 	 */
-	@Deprecated
-	public SoundSystem getSoundSystem(DisguiseType type);
+	public Sounds getSoundsForEntity(DisguiseType type);
 	
 	/**
-	 * Sets a sound system as the new sound system for the given disguise type.
+	 * Sets the {@link Sounds} for a specific entity type.
 	 * 
-	 * @since 2.2.1
-	 * @deprecated the current sound system will be reworked in the future
-	 * @param type the disguise type
-	 * @param soundSystem the new sound system
+	 * @since 5.1.1
+	 * @param type the entity/disguise type
+	 * @param sounds the sounds
+	 * @return <code>true</code>, if the sounds have been set
 	 */
-	@Deprecated
-	public void setSoundSystem(DisguiseType type, SoundSystem soundSystem);
+	public boolean setSoundsForEntity(DisguiseType type, Sounds sounds);
 	
 }
