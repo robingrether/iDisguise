@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
-import de.robingrether.idisguise.sound.Sounds;
+import de.robingrether.idisguise.management.Sounds;
 
 /**
  * The API to hook into iDisguise. The following code returns an object:<br>
