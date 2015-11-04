@@ -105,4 +105,20 @@ public interface DisguiseAPI {
 	 */
 	public boolean setSoundsForEntity(DisguiseType type, Sounds sounds);
 	
+	/**
+	 * Indicates whether the disguised players' sounds are currently replaced.
+	 * 
+	 * @since 5.1.1
+	 * @return <code>true</code>, if they are replaced
+	 */
+	public boolean isSoundsEnabled();
+	
+	/**
+	 * Sets whether the disguised players' sounds are replaced.
+	 * 
+	 * @since 5.1.1
+	 * @param enabled <code>true</code>, if they shall be replaced
+	 */
+	public void setSoundsEnabled(boolean enabled);
+	
 }

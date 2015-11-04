@@ -1665,6 +1665,14 @@ public class iDisguise extends JavaPlugin {
 				return Sounds.setSoundsForEntity(type, sounds);
 			}
 			
+			public boolean isSoundsEnabled() {
+				return Sounds.isEnabled();
+			}
+			
+			public void setSoundsEnabled(boolean enabled) {
+				Sounds.setEnabled(enabled);
+			}
+			
 		};
 	}
 	
