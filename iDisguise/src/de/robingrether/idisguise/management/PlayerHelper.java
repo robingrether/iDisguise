@@ -1,10 +1,8 @@
 package de.robingrether.idisguise.management;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public abstract class PlayerHelper {
