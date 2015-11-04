@@ -67,9 +67,9 @@ public class iDisguise extends JavaPlugin {
 	
 	public static final File directory = new File("plugins/iDisguise");
 	
-	public EventListener listener;
-	public Configuration configuration;
-	public Metrics metrics;
+	private EventListener listener;
+	private Configuration configuration;
+	private Metrics metrics;
 	private boolean enabled = false;
 	
 	public void onEnable() {
@@ -83,8 +83,8 @@ public class iDisguise extends JavaPlugin {
 		configuration = new Configuration(this, directory);
 		configuration.loadData();
 		configuration.saveData();
-		PacketHelper.instance.setAttribute(0, showOriginalPlayerNames());
-		Sounds.setEnabled(isSoundSystemEnabled());
+		PacketHelper.instance.setAttribute(0, configuration.getBoolean(Configuration.SHOW_PLAYER_NAMES));
+		Sounds.setEnabled(configuration.getBoolean(Configuration.REPLACE_SOUNDS));
 		try {
 			metrics = new Metrics(this);
 			Graph graph1 = metrics.createGraph("Disguise Count");
@@ -94,7 +94,7 @@ public class iDisguise extends JavaPlugin {
 				}
 			});
 			Graph graph3 = metrics.createGraph("Sound System");
-			graph3.addPlotter(new Plotter(isSoundSystemEnabled() ? "enabled" : "disabled") {
+			graph3.addPlotter(new Plotter(configuration.getBoolean(Configuration.REPLACE_SOUNDS) ? "enabled" : "disabled") {
 				public int getValue() {
 					return 1;
 				}
@@ -102,15 +102,15 @@ public class iDisguise extends JavaPlugin {
 			metrics.start();
 		} catch(Exception e) {
 		}
-		if(saveDisguises()) {
+		if(configuration.getBoolean(Configuration.STORE_DISGUISES)) {
 			loadData();
 		}
 		getServer().getPluginManager().registerEvents(listener, this);
-		if(isGhostDisguiseEnabled()) {
+		if(configuration.getBoolean(Configuration.GHOST_DISGUISES)) {
 			GhostFactory.instance.enable(this);
 		}
 		getServer().getServicesManager().register(DisguiseAPI.class, getAPI(), this, ServicePriority.Normal);
-		if(checkForUpdates()) {
+		if(configuration.getBoolean(Configuration.CHECK_FOR_UPDATES)) {
 			getServer().getScheduler().runTaskLaterAsynchronously(this, new UpdateCheck(this, getServer().getConsoleSender(), ChatColor.GOLD + "[iDisguise] " + "An update for iDisguise is available: " + ChatColor.ITALIC + "%s"), 20L);
 		}
 		getLogger().log(Level.INFO, String.format("%s enabled!", getFullName()));
@@ -122,11 +122,11 @@ public class iDisguise extends JavaPlugin {
 		if(!enabled) {
 			return;
 		}
-		if(isGhostDisguiseEnabled()) {
+		if(configuration.getBoolean(Configuration.GHOST_DISGUISES)) {
 			GhostFactory.instance.disable();
 		}
 		getServer().getScheduler().cancelTasks(this);
-		if(saveDisguises()) {
+		if(configuration.getBoolean(Configuration.STORE_DISGUISES)) {
 			saveData();
 		}
 		getLogger().log(Level.INFO, String.format("%s disabled!", getFullName()));
@@ -137,22 +137,22 @@ public class iDisguise extends JavaPlugin {
 		if(!enabled) {
 			return;
 		}
-		if(isGhostDisguiseEnabled()) {
+		if(configuration.getBoolean(Configuration.GHOST_DISGUISES)) {
 			GhostFactory.instance.disable();
 		}
-		if(saveDisguises()) {
+		if(configuration.getBoolean(Configuration.STORE_DISGUISES)) {
 			saveData();
 		}
 		enabled = false;
 		configuration = new Configuration(this, directory);
 		configuration.loadData();
 		configuration.saveData();
-		PacketHelper.instance.setAttribute(0, showOriginalPlayerNames());
-		Sounds.setEnabled(isSoundSystemEnabled());
-		if(saveDisguises()) {
+		PacketHelper.instance.setAttribute(0, configuration.getBoolean(Configuration.SHOW_PLAYER_NAMES));
+		Sounds.setEnabled(configuration.getBoolean(Configuration.REPLACE_SOUNDS));
+		if(configuration.getBoolean(Configuration.STORE_DISGUISES)) {
 			loadData();
 		}
-		if(isGhostDisguiseEnabled()) {
+		if(configuration.getBoolean(Configuration.GHOST_DISGUISES)) {
 			GhostFactory.instance.enable(this);
 		}
 		enabled = true;
@@ -175,7 +175,7 @@ public class iDisguise extends JavaPlugin {
 				sender.sendMessage(ChatColor.GREEN + getFullName() + " - Help");
 				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " help - Shows this");
 				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " player <name> - Disguise as a player");
-				if(isGhostDisguiseEnabled() && player.hasPermission("iDisguise.ghost")) {
+				if(getConfiguration().getBoolean(Configuration.GHOST_DISGUISES) && player.hasPermission("iDisguise.ghost")) {
 					sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " ghost <name> - Disguise as a ghost player");
 				}
 				if(player.hasPermission("iDisguise.random")) {
@@ -185,7 +185,7 @@ public class iDisguise extends JavaPlugin {
 					sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " reload - Reloads the config file");
 				}
 				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " status - Shows what you are currently disguised as");
-				if(!requirePermissionForUndisguising() || player.hasPermission("iDisguise.undisguise")) {
+				if(!getConfiguration().getBoolean(Configuration.UNDISGUISE_PERMISSION) || player.hasPermission("iDisguise.undisguise")) {
 					sender.sendMessage(ChatColor.GOLD + "/u" + (cmd.getName().equalsIgnoreCase("d") ? "" : "n") + cmd.getName() + " - Undisguise");
 				}
 				if(player.hasPermission("iDisguise.undisguise.all")) {
@@ -222,7 +222,7 @@ public class iDisguise extends JavaPlugin {
 					}
 				}
 			} else if(StringUtil.equalsIgnoreCase(args[0], "ghost", "g")) {
-				if(!isGhostDisguiseEnabled()) {
+				if(!getConfiguration().getBoolean(Configuration.GHOST_DISGUISES)) {
 					sender.sendMessage(ChatColor.RED + "This feature is disabled!");
 				} else if(args.length == 1) {
 					if(DisguiseManager.instance.isDisguised(player) && (DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise)) {
@@ -784,7 +784,7 @@ public class iDisguise extends JavaPlugin {
 					sender.sendMessage(ChatColor.RED + "You cannot undisguise as console.");
 				} else {
 					if(DisguiseManager.instance.isDisguised(player)) {
-						if(!requirePermissionForUndisguising() || player.hasPermission("iDisguise.undisguise")) {
+						if(!getConfiguration().getBoolean(Configuration.UNDISGUISE_PERMISSION) || player.hasPermission("iDisguise.undisguise")) {
 							UndisguiseEvent event = new UndisguiseEvent(player, DisguiseManager.instance.getDisguise(player), false);
 							getServer().getPluginManager().callEvent(event);
 							if(!event.isCancelled()) {
@@ -863,7 +863,7 @@ public class iDisguise extends JavaPlugin {
 				sender.sendMessage(ChatColor.GREEN + getFullName() + " - Help");
 				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> help - Shows this");
 				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> player <name> - Disguise as a player");
-				if(isGhostDisguiseEnabled()) {
+				if(getConfiguration().getBoolean(Configuration.GHOST_DISGUISES)) {
 					sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> ghost <name> - Disguise as a ghost player");
 				}
 				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> random - Disguise as a random mob");
@@ -894,7 +894,7 @@ public class iDisguise extends JavaPlugin {
 				sender.sendMessage(ChatColor.GREEN + getFullName() + " - Help");
 				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> help - Shows this");
 				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> player <name> - Disguise as a player");
-				if(isGhostDisguiseEnabled()) {
+				if(getConfiguration().getBoolean(Configuration.GHOST_DISGUISES)) {
 					sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> ghost <name> - Disguise as a ghost player");
 				}
 				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> random - Disguise as a random mob");
@@ -929,7 +929,7 @@ public class iDisguise extends JavaPlugin {
 					}
 				}
 			} else if(StringUtil.equalsIgnoreCase(args[1], "ghost", "g")) {
-				if(!isGhostDisguiseEnabled()) {
+				if(!getConfiguration().getBoolean(Configuration.GHOST_DISGUISES)) {
 					sender.sendMessage(ChatColor.RED + "This feature is disabled!");
 				} else if(args.length == 2) {
 					if(DisguiseManager.instance.isDisguised(player) && (DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise)) {
@@ -1676,20 +1676,8 @@ public class iDisguise extends JavaPlugin {
 		return "iDisguise " + getVersion();
 	}
 	
-	public boolean saveDisguises() {
-		return configuration.getBoolean("save-disguises");
-	}
-	
-	public boolean canDisguisedPlayersBeDamaged() {
-		return configuration.getBoolean("entity-damage-while-disguised");
-	}
-	
-	public boolean undisguisePlayerWhenHitByLiving() {
-		return configuration.getBoolean("undisguise-on-hit");
-	}
-	
-	public boolean requirePermissionForUndisguising() {
-		return configuration.getBoolean("permission-for-undisguise");
+	public Configuration getConfiguration() {
+		return configuration;
 	}
 	
 	public boolean isDisguisingPermittedInWorld(World world) {
@@ -1697,47 +1685,11 @@ public class iDisguise extends JavaPlugin {
 	}
 	
 	public boolean isDisguisingPermittedInWorld(String world) {
-		return !configuration.getStringList("prohibited-worlds").contains(world);
+		return !getConfiguration().getStringList(Configuration.PROHIBITED_WORLDS).contains(world);
 	}
 	
 	public boolean isPlayerDisguisePermitted(String name) {
-		return !configuration.getStringList("prohibited-player-disguises").contains(name);
-	}
-	
-	public boolean checkForUpdates() {
-		return configuration.getBoolean("check-for-updates");
-	}
-	
-	public boolean undisguisePlayerWhenHitByProjectile() {
-		return configuration.getBoolean("undisguise-on-projectile-hit");
-	}
-	
-	public boolean undisguisePlayerWhenHitsOtherPlayer() {
-		return configuration.getBoolean("undisguise-on-hit-other");
-	}
-	
-	public boolean isSoundSystemEnabled() {
-		return configuration.getBoolean("sound-system");
-	}
-	
-	public boolean showOriginalPlayerNames() {
-		return configuration.getBoolean("show-name-while-disguised");
-	}
-	
-	public boolean canMobsTargetDisguisedPlayers() {
-		return !configuration.getBoolean("no-target-while-disguised");
-	}
-	
-	public boolean isGhostDisguiseEnabled() {
-		return configuration.getBoolean("ghost-disguises");
-	}
-	
-	public boolean replaceDeathMessages() {
-		return configuration.getBoolean("replace-death-messages");
-	}
-	
-	public boolean replaceJoinLeaveMessages() {
-		return configuration.getBoolean("replace-join-leave-messages");
+		return !getConfiguration().getStringList(Configuration.PROHIBITED_PLAYERS).contains(name);
 	}
 	
 	public boolean enabled() {

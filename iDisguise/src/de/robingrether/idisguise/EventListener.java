@@ -16,12 +16,11 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import de.robingrether.idisguise.api.UndisguiseEvent;
-import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
+import de.robingrether.idisguise.io.Configuration;
 import de.robingrether.idisguise.io.UpdateCheck;
 import de.robingrether.idisguise.management.ChannelRegister;
 import de.robingrether.idisguise.management.DisguiseManager;
@@ -47,7 +46,7 @@ public class EventListener implements Listener {
 	public void onEntityTarget(EntityTargetEvent event) {
 		if(event.getTarget() instanceof Player) {
 			Player target = (Player)event.getTarget();
-			if(DisguiseManager.instance.isDisguised(target) && !plugin.canMobsTargetDisguisedPlayers()) {
+			if(DisguiseManager.instance.isDisguised(target) && !plugin.getConfiguration().getBoolean(Configuration.DISABLE_MOB_TARGET)) {
 				event.setCancelled(true);
 			}
 		}
@@ -60,10 +59,10 @@ public class EventListener implements Listener {
 			if(!event.isCancelled()) {
 				if(DisguiseManager.instance.isDisguised(p)) {
 					if(event.getCause() == DamageCause.ENTITY_ATTACK) {
-						if(!plugin.canDisguisedPlayersBeDamaged()) {
+						if(!plugin.getConfiguration().getBoolean(Configuration.ALLOW_DAMAGE)) {
 							event.setCancelled(true);
 						}
-						if(plugin.undisguisePlayerWhenHitByLiving()) {
+						if(plugin.getConfiguration().getBoolean(Configuration.UNDISGUISE_HURT)) {
 							UndisguiseEvent undisEvent = new UndisguiseEvent(p, DisguiseManager.instance.getDisguise(p).clone(), false);
 							plugin.getServer().getPluginManager().callEvent(undisEvent);
 							if(!undisEvent.isCancelled()) {
@@ -71,7 +70,7 @@ public class EventListener implements Listener {
 							}
 						}
 					} else if(event.getCause() == DamageCause.PROJECTILE) {
-						if(plugin.undisguisePlayerWhenHitByProjectile()) {
+						if(plugin.getConfiguration().getBoolean(Configuration.UNDISGUISE_PROJECTILE)) {
 							UndisguiseEvent undisEvent = new UndisguiseEvent(p, DisguiseManager.instance.getDisguise(p).clone(), false);
 							plugin.getServer().getPluginManager().callEvent(undisEvent);
 							if(!undisEvent.isCancelled()) {
@@ -88,7 +87,7 @@ public class EventListener implements Listener {
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 		if(event.getEntityType() == EntityType.PLAYER && event.getDamager() instanceof Player) {
 			Player damager = (Player)event.getDamager();
-			if(DisguiseManager.instance.isDisguised(damager) && plugin.undisguisePlayerWhenHitsOtherPlayer()) {
+			if(DisguiseManager.instance.isDisguised(damager) && plugin.getConfiguration().getBoolean(Configuration.UNDISGUISE_ATTACK)) {
 				UndisguiseEvent undisEvent = new UndisguiseEvent(damager, DisguiseManager.instance.getDisguise(damager).clone(), false);
 				plugin.getServer().getPluginManager().callEvent(undisEvent);
 				if(!undisEvent.isCancelled()) {
@@ -101,13 +100,13 @@ public class EventListener implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		if(player.hasPermission("iDisguise.update") && plugin.checkForUpdates()) {
+		if(player.hasPermission("iDisguise.update") && plugin.getConfiguration().getBoolean(Configuration.CHECK_FOR_UPDATES)) {
 			plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new UpdateCheck(plugin, player, ChatColor.GOLD + "An update for iDisguise is available: " + ChatColor.ITALIC + "%s"), 20L);
 		}
 		if(DisguiseManager.instance.isDisguised(player)) {
 			player.sendMessage(ChatColor.GOLD + "You are still disguised. Use " + ChatColor.ITALIC + "/disguise status" + ChatColor.RESET + ChatColor.GOLD + " to get more information.");
 		}
-		if(plugin.replaceJoinLeaveMessages()) {
+		if(plugin.getConfiguration().getBoolean(Configuration.REPLACE_JOIN_MESSAGES)) {
 			if(player != null && DisguiseManager.instance.isDisguised(player)) {
 				if(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise) {
 					event.setJoinMessage(event.getJoinMessage().replace(player.getName(), ((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName()));
@@ -124,7 +123,7 @@ public class EventListener implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		if(plugin.replaceJoinLeaveMessages()) {
+		if(plugin.getConfiguration().getBoolean(Configuration.REPLACE_JOIN_MESSAGES)) {
 			if(player != null && DisguiseManager.instance.isDisguised(player)) {
 				if(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise) {
 					event.setQuitMessage(event.getQuitMessage().replace(player.getName(), ((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName()));
@@ -154,7 +153,7 @@ public class EventListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerDeath(PlayerDeathEvent event) {
-		if(plugin.replaceDeathMessages()) {
+		if(plugin.getConfiguration().getBoolean(Configuration.REPLACE_DEATH_MESSAGES)) {
 			String[] words = event.getDeathMessage().split(" ");
 			for(String word : words) {
 				Player player = Bukkit.getPlayer(word);
