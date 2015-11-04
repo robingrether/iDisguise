@@ -10,6 +10,8 @@ import java.util.logging.Level;
 import net.minecraft.server.v1_7_R2.MinecraftServer;
 import net.minecraft.server.v1_7_R2.PlayerConnection;
 import net.minecraft.server.v1_7_R2.WatchableObject;
+import net.minecraft.server.v1_7_R2.EntityHuman;
+import net.minecraft.server.v1_7_R2.EntityPlayer;
 import net.minecraft.server.v1_7_R2.Packet;
 import net.minecraft.server.v1_7_R2.PacketPlayInUseEntity;
 import net.minecraft.server.v1_7_R2.EnumEntityUseAction;
@@ -21,6 +23,7 @@ import net.minecraft.server.v1_7_R2.PacketPlayOutRelEntityMoveLook;
 import net.minecraft.server.v1_7_R2.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_7_R2.PacketPlayOutEntityTeleport;
 import net.minecraft.server.v1_7_R2.PacketPlayOutNamedEntitySpawn;
+import net.minecraft.server.v1_7_R2.PacketPlayOutNamedSoundEffect;
 import net.minecraft.server.v1_7_R2.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_7_R2.PacketPlayOutSpawnEntityLiving;
 
@@ -35,17 +38,20 @@ import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.management.ChannelRegister;
 import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.PlayerHelper;
+import de.robingrether.idisguise.management.Sounds;
 import de.robingrether.util.Cloner;
 import de.robingrether.util.ObjectUtil;
+import de.robingrether.util.StringUtil;
 
 public class ChannelRegisterImpl extends ChannelRegister {
 	
 	private final Map<Player, PlayerConnectionInjected> registeredHandlers = new ConcurrentHashMap<Player, PlayerConnectionInjected>();
-	private Field fieldName, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving, fieldListMetadata, fieldEntityIdUseEntity, fieldEntityIdNamedSpawn;
+	private Field fieldName, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving, fieldListMetadata, fieldEntityIdUseEntity, fieldEntityIdNamedSpawn, fieldSoundEffect, fieldX, fieldY, fieldZ;
 	private Cloner<PacketPlayOutPlayerInfo> clonerPlayerInfo = new PlayerInfoCloner();
 	private Cloner<PacketPlayOutEntityMetadata> clonerEntityMetadata = new EntityMetadataCloner();
 	private Cloner<PacketPlayOutEntity> clonerEntity = new EntityCloner();
 	private Cloner<PacketPlayOutEntityTeleport> clonerEntityTeleport = new EntityTeleportCloner();
+	private Cloner<PacketPlayOutNamedSoundEffect> clonerSoundEffect = new SoundEffectCloner();
 	
 	public ChannelRegisterImpl() {
 		try {
@@ -75,6 +81,14 @@ public class ChannelRegisterImpl extends ChannelRegister {
 			fieldEntityIdUseEntity.setAccessible(true);
 			fieldEntityIdNamedSpawn = PacketPlayOutNamedEntitySpawn.class.getDeclaredField("a");
 			fieldEntityIdNamedSpawn.setAccessible(true);
+			fieldSoundEffect = PacketPlayOutNamedSoundEffect.class.getDeclaredField("a");
+			fieldSoundEffect.setAccessible(true);
+			fieldX = PacketPlayOutNamedSoundEffect.class.getDeclaredField("b");
+			fieldX.setAccessible(true);
+			fieldY = PacketPlayOutNamedSoundEffect.class.getDeclaredField("c");
+			fieldY.setAccessible(true);
+			fieldZ = PacketPlayOutNamedSoundEffect.class.getDeclaredField("d");
+			fieldZ.setAccessible(true);
 		} catch(Exception e) {
 		}
 	}
@@ -243,6 +257,44 @@ public class ChannelRegisterImpl extends ChannelRegister {
 						super.sendPacket(packet);
 						return;
 					}
+				} else if(object instanceof PacketPlayOutNamedSoundEffect) {
+					PacketPlayOutNamedSoundEffect packet = clonerSoundEffect.clone((PacketPlayOutNamedSoundEffect)object);
+					String soundEffect = (String)fieldSoundEffect.get(packet);
+					if(StringUtil.equals(soundEffect, "game.player.die", "game.player.hurt.fall.big", "game.player.hurt.fall.small", "game.player.hurt", "game.player.swim.splash", "game.player.swim")) {
+						EntityHuman nearestHuman = ((CraftPlayer)this.player).getHandle().world.findNearbyPlayer(fieldX.getInt(packet) / 8.0, fieldY.getInt(packet) / 8.0, fieldZ.getInt(packet) / 8.0, 1.0);
+						if(nearestHuman instanceof EntityPlayer) {
+							Player player = ((EntityPlayer)nearestHuman).getBukkitEntity();
+							if(player != null && player != this.player && DisguiseManager.instance.getDisguise(player) instanceof MobDisguise) {
+								MobDisguise disguise = (MobDisguise)DisguiseManager.instance.getDisguise(player);
+								String replacementSoundEffect = null;
+								switch(soundEffect) {
+									case "game.player.die":
+										replacementSoundEffect = Sounds.getDeath(disguise);
+										break;
+									case "game.player.hurt.fall.big":
+										replacementSoundEffect = Sounds.getFallBig(disguise);
+										break;
+									case "game.player.hurt.fall.small":
+										replacementSoundEffect = Sounds.getFallSmall(disguise);
+										break;
+									case "game.player.hurt":
+										replacementSoundEffect = Sounds.getHit(disguise);
+										break;
+									case "game.player.swim.splash":
+										replacementSoundEffect = Sounds.getSplash(disguise);
+										break;
+									case "game.player.swim":
+										replacementSoundEffect = Sounds.getSwim(disguise);
+										break;
+								}
+								if(replacementSoundEffect != null) {
+									fieldSoundEffect.set(packet, replacementSoundEffect);
+									super.sendPacket(packet);
+								}
+								return;
+							}
+						}
+					}
 				}
 				super.sendPacket(object);
 			} catch(Exception e) {
@@ -349,6 +401,33 @@ public class ChannelRegisterImpl extends ChannelRegister {
 		
 		public PacketPlayOutEntityTeleport clone(PacketPlayOutEntityTeleport original) {
 			PacketPlayOutEntityTeleport clone = new PacketPlayOutEntityTeleport();
+			try {
+				for(Field field : fields) {
+					field.set(clone, field.get(original));
+				}
+			} catch(Exception e) {
+			}
+			return clone;
+		}
+		
+	}
+	
+	private class SoundEffectCloner extends Cloner<PacketPlayOutNamedSoundEffect> {
+		
+		private Field[] fields;
+		
+		private SoundEffectCloner() {
+			try {
+				fields = PacketPlayOutNamedSoundEffect.class.getDeclaredFields();
+				for(Field field : fields) {
+					field.setAccessible(true);
+				}
+			} catch(Exception e) {
+			}
+		}
+		
+		public PacketPlayOutNamedSoundEffect clone(PacketPlayOutNamedSoundEffect original) {
+			PacketPlayOutNamedSoundEffect clone = new PacketPlayOutNamedSoundEffect();
 			try {
 				for(Field field : fields) {
 					field.set(clone, field.get(original));

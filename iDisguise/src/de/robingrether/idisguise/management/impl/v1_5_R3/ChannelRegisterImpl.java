@@ -18,10 +18,13 @@ import net.minecraft.server.v1_5_R3.Packet32EntityLook;
 import net.minecraft.server.v1_5_R3.Packet33RelEntityMoveLook;
 import net.minecraft.server.v1_5_R3.Packet34EntityTeleport;
 import net.minecraft.server.v1_5_R3.Packet40EntityMetadata;
+import net.minecraft.server.v1_5_R3.Packet62NamedSoundEffect;
 import net.minecraft.server.v1_5_R3.Packet70Bed;
 import net.minecraft.server.v1_5_R3.Packet7UseEntity;
 import net.minecraft.server.v1_5_R3.PlayerConnection;
 import net.minecraft.server.v1_5_R3.WatchableObject;
+import net.minecraft.server.v1_5_R3.EntityHuman;
+import net.minecraft.server.v1_5_R3.EntityPlayer;
 import net.minecraft.server.v1_5_R3.Packet;
 
 import org.bukkit.Bukkit;
@@ -35,22 +38,33 @@ import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.management.ChannelRegister;
 import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.PlayerHelper;
+import de.robingrether.idisguise.management.Sounds;
 import de.robingrether.util.Cloner;
 import de.robingrether.util.ObjectUtil;
+import de.robingrether.util.StringUtil;
 
 public class ChannelRegisterImpl extends ChannelRegister {
 	
 	private final Map<Player, PlayerConnectionInjected> registeredHandlers = new ConcurrentHashMap<Player, PlayerConnectionInjected>();
-	private Field fieldListMetadata;
+	private Field fieldListMetadata, fieldSoundEffect, fieldX, fieldY, fieldZ;
 	private Cloner<Packet201PlayerInfo> clonerPlayerInfo = new PlayerInfoCloner();
 	private Cloner<Packet40EntityMetadata> clonerEntityMetadata = new EntityMetadataCloner();
 	private Cloner<Packet30Entity> clonerEntity = new EntityCloner();
 	private Cloner<Packet34EntityTeleport> clonerEntityTeleport = new EntityTeleportCloner();
+	private Cloner<Packet62NamedSoundEffect> clonerSoundEffect = new SoundEffectCloner();
 	
 	public ChannelRegisterImpl() {
 		try {
 			fieldListMetadata = Packet40EntityMetadata.class.getDeclaredField("b");
 			fieldListMetadata.setAccessible(true);
+			fieldSoundEffect = Packet62NamedSoundEffect.class.getDeclaredField("a");
+			fieldSoundEffect.setAccessible(true);
+			fieldX = Packet62NamedSoundEffect.class.getDeclaredField("b");
+			fieldX.setAccessible(true);
+			fieldY = Packet62NamedSoundEffect.class.getDeclaredField("c");
+			fieldY.setAccessible(true);
+			fieldZ = Packet62NamedSoundEffect.class.getDeclaredField("d");
+			fieldZ.setAccessible(true);
 		} catch(Exception e) {
 		}
 	}
@@ -218,6 +232,44 @@ public class ChannelRegisterImpl extends ChannelRegister {
 						super.sendPacket(packet34);
 						return;
 					}
+				} else if(packet instanceof Packet62NamedSoundEffect) {
+					Packet62NamedSoundEffect packet62 = clonerSoundEffect.clone((Packet62NamedSoundEffect)packet);
+					String soundEffect = (String)fieldSoundEffect.get(packet62);
+					if(StringUtil.equals(soundEffect, "game.player.die", "game.player.hurt.fall.big", "game.player.hurt.fall.small", "game.player.hurt", "game.player.swim.splash", "game.player.swim")) {
+						EntityHuman nearestHuman = ((CraftPlayer)this.player).getHandle().world.findNearbyPlayer(fieldX.getInt(packet62) / 8.0, fieldY.getInt(packet62) / 8.0, fieldZ.getInt(packet62) / 8.0, 1.0);
+						if(nearestHuman instanceof EntityPlayer) {
+							Player player = ((EntityPlayer)nearestHuman).getBukkitEntity();
+							if(player != null && player != this.player && DisguiseManager.instance.getDisguise(player) instanceof MobDisguise) {
+								MobDisguise disguise = (MobDisguise)DisguiseManager.instance.getDisguise(player);
+								String replacementSoundEffect = null;
+								switch(soundEffect) {
+									case "game.player.die":
+										replacementSoundEffect = Sounds.getDeath(disguise);
+										break;
+									case "game.player.hurt.fall.big":
+										replacementSoundEffect = Sounds.getFallBig(disguise);
+										break;
+									case "game.player.hurt.fall.small":
+										replacementSoundEffect = Sounds.getFallSmall(disguise);
+										break;
+									case "game.player.hurt":
+										replacementSoundEffect = Sounds.getHit(disguise);
+										break;
+									case "game.player.swim.splash":
+										replacementSoundEffect = Sounds.getSplash(disguise);
+										break;
+									case "game.player.swim":
+										replacementSoundEffect = Sounds.getSwim(disguise);
+										break;
+								}
+								if(replacementSoundEffect != null) {
+									fieldSoundEffect.set(packet62, replacementSoundEffect);
+									super.sendPacket(packet62);
+								}
+								return;
+							}
+						}
+					}
 				}
 				super.sendPacket(packet);
 			} catch(Exception e) {
@@ -288,6 +340,33 @@ public class ChannelRegisterImpl extends ChannelRegister {
 		
 		public Packet34EntityTeleport clone(Packet34EntityTeleport original) {
 			return new Packet34EntityTeleport(original.a, original.b, original.c, original.d, original.e, original.f);
+		}
+		
+	}
+	
+	private class SoundEffectCloner extends Cloner<Packet62NamedSoundEffect> {
+		
+		private Field[] fields;
+		
+		private SoundEffectCloner() {
+			try {
+				fields = Packet62NamedSoundEffect.class.getDeclaredFields();
+				for(Field field : fields) {
+					field.setAccessible(true);
+				}
+			} catch(Exception e) {
+			}
+		}
+		
+		public Packet62NamedSoundEffect clone(Packet62NamedSoundEffect original) {
+			Packet62NamedSoundEffect clone = new Packet62NamedSoundEffect();
+			try {
+				for(Field field : fields) {
+					field.set(clone, field.get(original));
+				}
+			} catch(Exception e) {
+			}
+			return clone;
 		}
 		
 	}
