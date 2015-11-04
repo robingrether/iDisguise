@@ -14,6 +14,10 @@ public class Sounds {
 	private static Map<DisguiseType, Sounds> entitySounds = new ConcurrentHashMap<DisguiseType, Sounds>();
 	private static boolean enabled = false;
 	
+	public static boolean isEnabled() {
+		return enabled;
+	}
+	
 	public static void setEnabled(boolean enabled) {
 		Sounds.enabled = enabled;
 	}
