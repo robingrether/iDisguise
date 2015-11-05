@@ -232,7 +232,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 						super.sendPacket(packet34);
 						return;
 					}
-				} else if(packet instanceof Packet62NamedSoundEffect) {
+				} else if(Sounds.isEnabled() && packet instanceof Packet62NamedSoundEffect) {
 					Packet62NamedSoundEffect packet62 = clonerSoundEffect.clone((Packet62NamedSoundEffect)packet);
 					String soundEffect = (String)fieldSoundEffect.get(packet62);
 					if(StringUtil.equals(soundEffect, "game.player.die", "game.player.hurt.fall.big", "game.player.hurt.fall.small", "game.player.hurt", "game.player.swim.splash", "game.player.swim")) {
