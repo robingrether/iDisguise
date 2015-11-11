@@ -53,13 +53,14 @@ public class DisguiseManagerImpl extends DisguiseManager {
 		}
 	}
 	
-	public Packet<?> getSpawnPacket(Player player) {
-		Packet<?> packetSpawn;
+	public Packet<?>[] getSpawnPacket(Player player) {
+		Packet<?>[] packetSpawn;
 		Disguise disguise = getDisguise(player);
 		if(disguise == null) {
-			packetSpawn = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());
+			packetSpawn = new Packet<?>[1];
+			packetSpawn[0] = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());
 		} else {
-			packetSpawn = (Packet<?>)PacketHelper.instance.getPacket(player, disguise);
+			packetSpawn = (Packet<?>[])PacketHelper.instance.getPackets(player, disguise);
 		}
 		return packetSpawn;
 	}
@@ -84,17 +85,19 @@ public class DisguiseManagerImpl extends DisguiseManager {
 		return new PacketPlayOutEntityDestroy(player.getEntityId());
 	}
 	
-	private synchronized void sendPacket(Player player, Object packet) {
-		if(packet == null) {
+	private synchronized void sendPacket(Player player, Packet<?>... packets) {
+		if(packets == null) {
 			return;
 		}
-		((PlayerConnectionInjected)((CraftPlayer)player).getHandle().playerConnection).sendPacketFromPlugin((Packet<?>)packet);
+		for(Packet<?> packet : packets) {
+			((PlayerConnectionInjected)((CraftPlayer)player).getHandle().playerConnection).sendPacketFromPlugin(packet);
+		}
 	}
 	
 	public void sendPacketLater(final Player player, final Object packet, long delay) {
 		BukkitRunnable runnable = new BukkitRunnable() {
 			public void run() {
-				sendPacket(player, packet);
+				sendPacket(player, (Packet<?>)packet);
 			}
 		};
 		runnable.runTaskLater(Bukkit.getPluginManager().getPlugin("iDisguise"), delay);
@@ -143,7 +146,7 @@ public class DisguiseManagerImpl extends DisguiseManager {
 			}
 		}
 		Packet<?> packetDestroy = getDestroyPacket(player);
-		Packet<?> packetSpawn = getSpawnPacket(player);
+		Packet<?>[] packetSpawn = getSpawnPacket(player);
 		for(Player observer : player.getWorld().getPlayers()) {
 			if(observer == player) {
 				continue;
@@ -186,7 +189,7 @@ public class DisguiseManagerImpl extends DisguiseManager {
 			}
 		}
 		Packet<?> packetDestroy = getDestroyPacket(player);
-		Packet<?> packetSpawn = getSpawnPacket(player);
+		Packet<?>[] packetSpawn = getSpawnPacket(player);
 		if(disguise instanceof PlayerDisguise) {
 			player.setDisplayName(player.getName());
 		}

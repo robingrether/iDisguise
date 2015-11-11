@@ -1,22 +1,26 @@
 package de.robingrether.idisguise.management.impl.v1_8_R3;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import de.robingrether.idisguise.disguise.ColoredDisguise;
 import de.robingrether.idisguise.disguise.CreeperDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.EndermanDisguise;
+import de.robingrether.idisguise.disguise.FallingBlockDisguise;
 import de.robingrether.idisguise.disguise.GuardianDisguise;
 import de.robingrether.idisguise.disguise.HorseDisguise;
+import de.robingrether.idisguise.disguise.ItemDisguise;
+import de.robingrether.idisguise.disguise.MinecartDisguise;
 import de.robingrether.idisguise.disguise.MobDisguise;
+import de.robingrether.idisguise.disguise.ObjectDisguise;
 import de.robingrether.idisguise.disguise.OcelotDisguise;
 import de.robingrether.idisguise.disguise.PigDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
@@ -30,13 +34,17 @@ import de.robingrether.idisguise.management.PacketHelper;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.VersionHelper;
 import net.minecraft.server.v1_8_R3.Block;
+import net.minecraft.server.v1_8_R3.Entity;
 import net.minecraft.server.v1_8_R3.EntityAgeable;
 import net.minecraft.server.v1_8_R3.EntityBat;
 import net.minecraft.server.v1_8_R3.EntityCreeper;
 import net.minecraft.server.v1_8_R3.EntityEnderman;
+import net.minecraft.server.v1_8_R3.EntityFallingBlock;
 import net.minecraft.server.v1_8_R3.EntityGuardian;
 import net.minecraft.server.v1_8_R3.EntityHorse;
 import net.minecraft.server.v1_8_R3.EntityInsentient;
+import net.minecraft.server.v1_8_R3.EntityItem;
+import net.minecraft.server.v1_8_R3.EntityMinecartRideable;
 import net.minecraft.server.v1_8_R3.EntityOcelot;
 import net.minecraft.server.v1_8_R3.EntityPig;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
@@ -48,8 +56,12 @@ import net.minecraft.server.v1_8_R3.EntityVillager;
 import net.minecraft.server.v1_8_R3.EntityWolf;
 import net.minecraft.server.v1_8_R3.EntityZombie;
 import net.minecraft.server.v1_8_R3.EnumColor;
+import net.minecraft.server.v1_8_R3.Item;
+import net.minecraft.server.v1_8_R3.ItemStack;
 import net.minecraft.server.v1_8_R3.Packet;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_8_R3.PacketPlayOutNamedEntitySpawn;
+import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntity;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
 import net.minecraft.server.v1_8_R3.World;
 
@@ -65,13 +77,13 @@ public class PacketHelperImpl extends PacketHelper {
 		}
 	}
 	
-	public Packet<?> getPacket(Player player, Disguise disguise) {
+	public Object[] getPackets(Player player, Disguise disguise) {
 		if(disguise == null) {
 			return null;
 		}
 		EntityPlayer entityPlayer = ((CraftPlayer)player).getHandle();
 		DisguiseType type = disguise.getType();
-		Packet<?> packet = null;
+		List<Packet<?>> packets = new ArrayList<Packet<?>>();
 		if(disguise instanceof MobDisguise) {
 			MobDisguise mobDisguise = (MobDisguise)disguise;
 			EntityInsentient entity;
@@ -122,7 +134,7 @@ public class PacketHelperImpl extends PacketHelper {
 					EntityHorse horse = (EntityHorse)entity;
 					horse.setType(horseDisguise.getVariant().ordinal());
 					horse.setVariant(horseDisguise.getColor().ordinal() & 0xFF | horseDisguise.getStyle().ordinal() << 8);
-					horse.inventoryChest.setItem(0, horseDisguise.isSaddled() ? CraftItemStack.asNMSCopy(new ItemStack(Material.SADDLE)) : null);
+					horse.inventoryChest.setItem(0, horseDisguise.isSaddled() ? new ItemStack(Item.getById(329), 1, 0) : null);
 					horse.inventoryChest.setItem(1, CraftItemStack.asNMSCopy(horseDisguise.getArmor().getItem()));
 					horse.setHasChest(horseDisguise.hasChest());
 				}
@@ -165,15 +177,15 @@ public class PacketHelperImpl extends PacketHelper {
 				entity.setCustomName(player.getName());
 				entity.setCustomNameVisible(true);
 			}
-			packet = new PacketPlayOutSpawnEntityLiving(entity);
+			packets.add(new PacketPlayOutSpawnEntityLiving(entity));
 		} else if(disguise instanceof PlayerDisguise) {
-			packet = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());
+			packets.add(new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle()));
 			try {
-				fieldUUID.set(packet, PlayerHelper.instance.getUniqueId(((PlayerDisguise)disguise).getName()));
+				fieldUUID.set(packets.get(0), PlayerHelper.instance.getUniqueId(((PlayerDisguise)disguise).getName()));
 			} catch(Exception e) {
 			}
 		}
-		return packet;
+		return packets.toArray();
 	}
 	
 }
