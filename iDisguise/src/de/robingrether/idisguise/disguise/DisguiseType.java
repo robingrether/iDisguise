@@ -50,11 +50,13 @@ public enum DisguiseType {
 	ZOMBIE(Type.MOB, "EntityZombie"),
 	
 	GHOST(Type.PLAYER, "EntityPlayer"),
-	PLAYER(Type.PLAYER, "EntityPlayer");
+	PLAYER(Type.PLAYER, "EntityPlayer"),
 	
-	//BLOCK(Type.OBJECT),
-	//ENDER_CRYSTAL(Type.OBJECT),
-	//PRIMED_TNT(Type.OBJECT);
+	BOAT(Type.OBJECT, "EntityBoat"),
+	ENDER_CRYSTAL(Type.OBJECT, "EntityEnderCrystal"),
+	FALLING_BLOCK(Type.OBJECT, "EntityFallingBlock"),
+	ITEM(Type.OBJECT, "EntityItem"),
+	MINECART(Type.OBJECT, "EntityMinecartRideable");
 	
 	private Type type;
 	private String className;
