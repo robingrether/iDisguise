@@ -184,6 +184,40 @@ public class PacketHelperImpl extends PacketHelper {
 				fieldUUID.set(packets.get(0), PlayerHelper.instance.getUniqueId(((PlayerDisguise)disguise).getName()));
 			} catch(Exception e) {
 			}
+		} else if(disguise instanceof ObjectDisguise) {
+			ObjectDisguise objectDisguise = (ObjectDisguise)disguise;
+			Entity entity;
+			try {
+				entity = (Entity)type.getClass(VersionHelper.getNMSPackage()).getConstructor(World.class).newInstance(entityPlayer.getWorld());
+			} catch(Exception e) {
+				entity = null;
+			}
+			Location location = player.getLocation();
+			entity.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+			entity.d(entityPlayer.getId());
+			if(entity instanceof EntityFallingBlock) {
+				packets.add(new PacketPlayOutSpawnEntity(entity, objectDisguise.getTypeId(), objectDisguise instanceof FallingBlockDisguise ? ((FallingBlockDisguise)objectDisguise).getMaterial().getId() : 1));
+			} else if(entity instanceof EntityItem) {
+				if(objectDisguise instanceof ItemDisguise) {
+					ItemDisguise itemDisguise = (ItemDisguise)objectDisguise;
+					if(itemDisguise.getItemStack().getType().isBlock()) {
+						((EntityItem)entity).setItemStack(new ItemStack(Block.getById(itemDisguise.getItemStack().getTypeId()), itemDisguise.getItemStack().getAmount(), itemDisguise.getItemStack().getDurability()));
+					} else {
+						((EntityItem)entity).setItemStack(new ItemStack(Item.getById(itemDisguise.getItemStack().getTypeId()), itemDisguise.getItemStack().getAmount(), itemDisguise.getItemStack().getDurability()));
+					}
+				}
+				packets.add(new PacketPlayOutSpawnEntity(entity, objectDisguise.getTypeId()));
+				packets.add(new PacketPlayOutEntityMetadata(entity.getId(), entity.getDataWatcher(), true));
+			} else if(entity instanceof EntityMinecartRideable) {
+				if(objectDisguise instanceof MinecartDisguise) {
+					MinecartDisguise minecartDisguise = (MinecartDisguise)objectDisguise;
+					((EntityMinecartRideable)entity).setDisplayBlock(Block.getById(minecartDisguise.getDisplayedBlock().getId()).fromLegacyData(minecartDisguise.getDisplayedBlockData()));
+				}
+				packets.add(new PacketPlayOutSpawnEntity(entity, objectDisguise.getTypeId()));
+				packets.add(new PacketPlayOutEntityMetadata(entity.getId(), entity.getDataWatcher(), true));
+			} else {
+				packets.add(new PacketPlayOutSpawnEntity(entity, objectDisguise.getTypeId()));
+			}
 		}
 		return packets.toArray();
 	}
