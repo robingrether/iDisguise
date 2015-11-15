@@ -77,7 +77,7 @@ public class PacketHelperImpl extends PacketHelper {
 		}
 	}
 	
-	public Object[] getPackets(Player player, Disguise disguise) {
+	public Packet<?>[] getPackets(Player player, Disguise disguise) {
 		if(disguise == null) {
 			return null;
 		}
@@ -219,7 +219,7 @@ public class PacketHelperImpl extends PacketHelper {
 				packets.add(new PacketPlayOutSpawnEntity(entity, objectDisguise.getTypeId()));
 			}
 		}
-		return packets.toArray();
+		return packets.toArray(new Packet<?>[0]);
 	}
 	
 }
