@@ -218,7 +218,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 					PacketPlayOutEntityMetadata packet = clonerEntityMetadata.clone((PacketPlayOutEntityMetadata)object);
 					Player player = PlayerHelper.instance.getPlayerByEntityId(fieldEntityIdMetadata.getInt(packet));
 					if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player)) {
-						if(DisguiseManager.instance.getDisguise(player) instanceof MobDisguise) {
+						if(!(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise)) {
 							List<WatchableObject> list = (List<WatchableObject>)fieldListMetadata.get(packet);
 							List<WatchableObject> remove = new ArrayList<WatchableObject>();
 							for(WatchableObject metadata : list) {
@@ -280,7 +280,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 						EntityHuman nearestHuman = ((CraftPlayer)this.player).getHandle().world.findNearbyPlayer(fieldX.getInt(packet) / 8.0, fieldY.getInt(packet) / 8.0, fieldZ.getInt(packet) / 8.0, 1.0);
 						if(nearestHuman instanceof EntityPlayer) {
 							Player player = ((EntityPlayer)nearestHuman).getBukkitEntity();
-							if(player != null && player != this.player && DisguiseManager.instance.getDisguise(player) instanceof MobDisguise) {
+							if(player != null && player != this.player && !(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise)) {
 								MobDisguise disguise = (MobDisguise)DisguiseManager.instance.getDisguise(player);
 								String replacementSoundEffect = null;
 								switch(soundEffect) {
