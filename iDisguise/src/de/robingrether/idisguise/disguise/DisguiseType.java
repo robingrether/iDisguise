@@ -38,7 +38,7 @@ public enum DisguiseType {
 	PIG(Type.MOB, PigDisguise.class, "EntityPig", "pig"),
 	PIG_ZOMBIE(Type.MOB, MobDisguise.class, "EntityPigZombie", "pig_zombie", "pig-zombie", "pigzombie", "pigman", "zombie_pigman", "zombie-pigman", "zombiepigman"),
 	RABBIT(Type.MOB, RabbitDisguise.class, "EntityRabbit", "rabbit", "bunny"),
-	SHEEP(Type.MOB, ColoredDisguise.class, "EntitySheep", "sheep"),
+	SHEEP(Type.MOB, SheepDisguise.class, "EntitySheep", "sheep"),
 	SILVERFISH(Type.MOB, MobDisguise.class, "EntitySilverfish", "silverfish"),
 	SKELETON(Type.MOB, SkeletonDisguise.class, "EntitySkeleton", "skeleton"),
 	SLIME(Type.MOB, SizedDisguise.class, "EntitySlime", "slime", "cube"),

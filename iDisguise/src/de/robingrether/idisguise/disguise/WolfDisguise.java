@@ -10,9 +10,10 @@ import org.bukkit.DyeColor;
  * @since 3.0.1
  * @author RobinGrether
  */
-public class WolfDisguise extends ColoredDisguise {
+public class WolfDisguise extends MobDisguise {
 	
-	private static final long serialVersionUID = -6959472065307897736L;
+	private static final long serialVersionUID = -2279695225712768959L;
+	private DyeColor collarColor;
 	private boolean tamed;
 	private boolean angry;
 	
@@ -35,9 +36,30 @@ public class WolfDisguise extends ColoredDisguise {
 	 * @param angry should the wolf be angry
 	 */
 	public WolfDisguise(boolean adult, DyeColor collarColor, boolean tamed, boolean angry) {
-		super(DisguiseType.WOLF, adult, collarColor);
+		super(DisguiseType.WOLF, adult);
+		this.collarColor = collarColor;
 		this.tamed = tamed;
 		this.angry = angry;
+	}
+	
+	/**
+	 * Returns the collar color.
+	 * 
+	 * @since 5.1.1
+	 * @return the collar color
+	 */
+	public DyeColor getCollarColor() {
+		return collarColor;
+	}
+	
+	/**
+	 * Sets the collar color.
+	 * 
+	 * @since 5.1.1
+	 * @param collarColor the collar color
+	 */
+	public void setCollarColor(DyeColor collarColor) {
+		this.collarColor = collarColor;
 	}
 	
 	/**
@@ -84,7 +106,7 @@ public class WolfDisguise extends ColoredDisguise {
 	 * {@inheritDoc}
 	 */
 	public WolfDisguise clone() {
-		WolfDisguise clone = new WolfDisguise(adult, getColor(), tamed, angry);
+		WolfDisguise clone = new WolfDisguise(adult, collarColor, tamed, angry);
 		clone.setCustomName(customName);
 		return clone;
 	}
@@ -93,7 +115,7 @@ public class WolfDisguise extends ColoredDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof WolfDisguise && ((WolfDisguise)object).angry == angry && ((WolfDisguise)object).tamed == tamed;
+		return super.equals(object) && object instanceof WolfDisguise && ((WolfDisguise)object).collarColor.equals(collarColor) && ((WolfDisguise)object).angry == angry && ((WolfDisguise)object).tamed == tamed;
 	}
 	
 	/**
@@ -103,6 +125,12 @@ public class WolfDisguise extends ColoredDisguise {
 		if(super.applySubtype(argument)) {
 			return true;
 		} else {
+			try {
+				DyeColor collarColor = DyeColor.valueOf(argument.replace('-', '_').toUpperCase(Locale.ENGLISH));
+				setCollarColor(collarColor);
+				return true;
+			} catch(IllegalArgumentException e) {
+			}
 			switch(argument.replace('-', '_').toLowerCase(Locale.ENGLISH)) {
 				case "tamed":
 				case "tame":

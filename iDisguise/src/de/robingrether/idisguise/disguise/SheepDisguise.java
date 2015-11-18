@@ -5,54 +5,51 @@ import java.util.Locale;
 import org.bukkit.DyeColor;
 
 /**
- * Represents a disguise as a colored mob (e.g. sheep, dog).
+ * Represents a disguise as a sheep.
  * 
- * @since 3.0.1
+ * @since 5.1.1
  * @author RobinGrether
  */
-public class ColoredDisguise extends MobDisguise {
+public class SheepDisguise extends MobDisguise {
 	
-	private static final long serialVersionUID = -3226061055696087907L;
+	private static final long serialVersionUID = 5169650213986968003L;
 	private DyeColor color;
 	
 	/**
 	 * Creates an instance.
 	 * 
-	 * @since 4.0.1
-	 * @param type the type to disguise as
+	 * @since 5.1.1
 	 */
-	public ColoredDisguise(DisguiseType type) {
-		this(type, true, DyeColor.WHITE);
+	public SheepDisguise() {
+		this(true, DyeColor.WHITE);
 	}
 	
 	/**
 	 * Creates an instance.
 	 * 
-	 * @since 3.0.1
-	 * @param type the type to disguise as
+	 * @since 5.1.1
 	 * @param adult should the disguise be an adult
-	 * @param color the color of the disguise
+	 * @param color the color of the wool
 	 */
-	public ColoredDisguise(DisguiseType type, boolean adult, DyeColor color) {
-		super(type, adult);
+	public SheepDisguise(boolean adult, DyeColor color) {
+		super(DisguiseType.SHEEP, adult);
 		this.color = color;
 	}
 	
 	/**
 	 * Returns the color.
 	 * 
-	 * @since 3.0.1
-	 * @return the color
+	 * @since 5.1.1
+	 * @return the wool color
 	 */
 	public DyeColor getColor() {
 		return color;
 	}
 	
 	/**
-	 * Changes the color.
+	 * Sets the color.
 	 * 
-	 * @since 3.0.1
-	 * @param color the color
+	 * @param color the wool color
 	 */
 	public void setColor(DyeColor color) {
 		this.color = color;
@@ -61,8 +58,8 @@ public class ColoredDisguise extends MobDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public ColoredDisguise clone() {
-		ColoredDisguise clone = new ColoredDisguise(type, adult, color);
+	public SheepDisguise clone() {
+		SheepDisguise clone = new SheepDisguise(adult, color);
 		clone.setCustomName(customName);
 		return clone;
 	}
@@ -71,7 +68,7 @@ public class ColoredDisguise extends MobDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof ColoredDisguise && ((ColoredDisguise)object).getColor().equals(color);
+		return super.equals(object) && object instanceof SheepDisguise && ((SheepDisguise)object).color.equals(color);
 	}
 	
 	/**
@@ -86,9 +83,9 @@ public class ColoredDisguise extends MobDisguise {
 				setColor(color);
 				return true;
 			} catch(IllegalArgumentException e) {
+				return false;
 			}
 		}
-		return false;
 	}
 	
 }
