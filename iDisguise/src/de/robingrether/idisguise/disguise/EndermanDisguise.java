@@ -1,5 +1,7 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Locale;
+
 import org.bukkit.Material;
 
 /**
@@ -116,6 +118,33 @@ public class EndermanDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof EndermanDisguise && ((EndermanDisguise)object).blockInHand.equals(blockInHand) && ((EndermanDisguise)object).blockInHandData == blockInHandData;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean applySubtype(String argument) {
+		if(super.applySubtype(argument)) {
+			return true;
+		} else {
+			try {
+				Material blockInHand = Material.valueOf(argument.replace('-', '_').toUpperCase(Locale.ENGLISH));
+				if(blockInHand.isBlock()) {
+					setBlockInHand(blockInHand);
+					return true;
+				}
+			} catch(IllegalArgumentException e) {
+			}
+			try {
+				int blockInHandData = Integer.parseInt(argument);
+				if(blockInHandData < 256) {
+					setBlockInHandData(blockInHandData);
+					return true;
+				}
+			} catch(NumberFormatException e) {
+			}
+		}
+		return false;
 	}
 	
 }

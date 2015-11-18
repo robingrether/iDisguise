@@ -1,5 +1,7 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Locale;
+
 import org.bukkit.DyeColor;
 
 /**
@@ -92,6 +94,40 @@ public class WolfDisguise extends ColoredDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof WolfDisguise && ((WolfDisguise)object).angry == angry && ((WolfDisguise)object).tamed == tamed;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean applySubtype(String argument) {
+		if(super.applySubtype(argument)) {
+			return true;
+		} else {
+			switch(argument.replace('-', '_').toLowerCase(Locale.ENGLISH)) {
+				case "tamed":
+				case "tame":
+					setTamed(true);
+					return true;
+				case "not_tamed":
+				case "nottamed":
+				case "not_tame":
+				case "nottame":
+					setTamed(false);
+					return true;
+				case "angry":
+				case "aggressive":
+					setAngry(true);
+					return true;
+				case "not_angry":
+				case "notangry":
+				case "not_aggressive":
+				case "notaggressive":
+					setAngry(false);
+					return true;
+				default:
+					return false;
+			}
+		}
 	}
 	
 }

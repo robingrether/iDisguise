@@ -1,5 +1,7 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Locale;
+
 import org.bukkit.entity.Ocelot.Type;
 
 /**
@@ -68,6 +70,32 @@ public class OcelotDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof OcelotDisguise && ((OcelotDisguise)object).catType.equals(catType);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean applySubtype(String argument) {
+		if(super.applySubtype(argument)) {
+			return true;
+		} else {
+			switch(argument.toLowerCase(Locale.ENGLISH)) {
+				case "black":
+					setCatType(Type.BLACK_CAT);
+					return true;
+				case "red":
+					setCatType(Type.RED_CAT);
+					return true;
+				case "siamese":
+					setCatType(Type.SIAMESE_CAT);
+					return true;
+				case "wild":
+					setCatType(Type.WILD_OCELOT);
+					return true;
+				default:
+					return false;
+			}
+		}
 	}
 	
 }

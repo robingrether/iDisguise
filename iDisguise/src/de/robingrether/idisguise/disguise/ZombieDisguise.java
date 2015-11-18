@@ -1,5 +1,7 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Locale;
+
 /**
  * Represents a disguise as a zombie.
  * 
@@ -76,6 +78,26 @@ public class ZombieDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof ZombieDisguise && ((ZombieDisguise)object).isVillager == isVillager;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean applySubtype(String argument) {
+		if(super.applySubtype(argument)) {
+			return true;
+		} else {
+			switch(argument.toLowerCase(Locale.ENGLISH)) {
+				case "normal":
+					setVillager(false);
+					return true;
+				case "infected":
+					setVillager(true);
+					return true;
+				default:
+					return false;
+			}
+		}
 	}
 	
 }

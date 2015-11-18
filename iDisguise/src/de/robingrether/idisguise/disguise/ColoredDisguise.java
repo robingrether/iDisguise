@@ -1,5 +1,7 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Locale;
+
 import org.bukkit.DyeColor;
 
 /**
@@ -70,6 +72,23 @@ public class ColoredDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof ColoredDisguise && ((ColoredDisguise)object).getColor().equals(color);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean applySubtype(String argument) {
+		if(super.applySubtype(argument)) {
+			return true;
+		} else {
+			try {
+				DyeColor color = DyeColor.valueOf(argument.replace('-', '_').toUpperCase(Locale.ENGLISH));
+				setColor(color);
+				return true;
+			} catch(IllegalArgumentException e) {
+			}
+		}
+		return false;
 	}
 	
 }

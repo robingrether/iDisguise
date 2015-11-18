@@ -76,4 +76,11 @@ public class PlayerDisguise extends Disguise {
 		return super.equals(object) && object instanceof PlayerDisguise && ((PlayerDisguise)object).name.equalsIgnoreCase(name);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean applySubtype(String argument) {
+		return false;
+	}
+	
 }

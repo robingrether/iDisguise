@@ -1,5 +1,7 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Locale;
+
 /**
  * Represents a disguise as a guardian.
  * 
@@ -65,6 +67,30 @@ public class GuardianDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof GuardianDisguise && ((GuardianDisguise)object).isElder == isElder;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean applySubtype(String argument) {
+		if(super.applySubtype(argument)) {
+			return true;
+		} else {
+			switch(argument.replace('-', '_').toLowerCase(Locale.ENGLISH)) {
+				case "elder":
+				case "big":
+					setElder(true);
+					return true;
+				case "not_elder":
+				case "notelder":
+				case "normal":
+				case "small":
+					setElder(false);
+					return true;
+				default:
+					return false;
+			}
+		}
 	}
 	
 }

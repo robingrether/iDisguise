@@ -1,5 +1,7 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Locale;
+
 import org.bukkit.entity.Skeleton.SkeletonType;
 
 /**
@@ -67,6 +69,23 @@ public class SkeletonDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof SkeletonDisguise && ((SkeletonDisguise)object).skeletonType == skeletonType;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean applySubtype(String argument) {
+		if(super.applySubtype(argument)) {
+			return true;
+		} else {
+			try {
+				SkeletonType skeletonType = SkeletonType.valueOf(argument.toUpperCase(Locale.ENGLISH));
+				setSkeletonType(skeletonType);
+				return true;
+			} catch(IllegalArgumentException e) {
+				return false;
+			}
+		}
 	}
 	
 }

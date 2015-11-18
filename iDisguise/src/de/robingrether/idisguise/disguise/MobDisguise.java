@@ -1,5 +1,7 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Locale;
+
 /**
  * Represents a disguise as a mob.
  * 
@@ -97,6 +99,26 @@ public class MobDisguise extends Disguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof MobDisguise && ((MobDisguise)object).adult == adult;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean applySubtype(String argument) {
+		switch(argument.toLowerCase(Locale.ENGLISH)) {
+			case "adult":
+			case "senior":
+				setAdult(true);
+				return true;
+			case "baby":
+			case "child":
+			case "kid":
+			case "junior":
+				setAdult(false);
+				return true;
+			default:
+				return false;
+		}
 	}
 	
 }

@@ -31,6 +31,10 @@ public class ObjectDisguise extends Disguise {
 		return typeId;
 	}
 	
+	public boolean applySubtype(String argument) {
+		return false;
+	}
+	
 	public static int getTypeId(DisguiseType type) {
 		if(!type.isObject()) {
 			throw new IllegalArgumentException("DisguiseType must be an object");

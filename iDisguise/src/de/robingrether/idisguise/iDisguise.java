@@ -17,6 +17,7 @@ import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.entity.Villager.Profession;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -29,16 +30,19 @@ import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.DisguiseType.Type;
 import de.robingrether.idisguise.disguise.EndermanDisguise;
+import de.robingrether.idisguise.disguise.FallingBlockDisguise;
 import de.robingrether.idisguise.disguise.GuardianDisguise;
 import de.robingrether.idisguise.disguise.HorseDisguise;
 import de.robingrether.idisguise.disguise.HorseDisguise.Armor;
 import de.robingrether.idisguise.disguise.HorseDisguise.Color;
 import de.robingrether.idisguise.disguise.HorseDisguise.Style;
 import de.robingrether.idisguise.disguise.HorseDisguise.Variant;
+import de.robingrether.idisguise.disguise.ItemDisguise;
+import de.robingrether.idisguise.disguise.MinecartDisguise;
 import de.robingrether.idisguise.disguise.RabbitDisguise.RabbitType;
 import de.robingrether.idisguise.disguise.MobDisguise;
+import de.robingrether.idisguise.disguise.ObjectDisguise;
 import de.robingrether.idisguise.disguise.OcelotDisguise;
-import de.robingrether.idisguise.disguise.OutdatedServerException;
 import de.robingrether.idisguise.disguise.PigDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.disguise.RabbitDisguise;
@@ -325,7 +329,7 @@ public class iDisguise extends JavaPlugin {
 				}
 			} else if(args[0].equalsIgnoreCase("random")) {
 				if(player.hasPermission("iDisguise.random")) {
-					DisguiseType type = DisguiseType.random(Type.MOB);
+					DisguiseType type = RandomUtil.nextBoolean() ? DisguiseType.random(Type.MOB) : DisguiseType.random(Type.OBJECT);
 					Disguise disguise;
 					switch(type) {
 						case CREEPER:
@@ -368,6 +372,19 @@ public class iDisguise extends JavaPlugin {
 						case ZOMBIE:
 							disguise = new ZombieDisguise(RandomUtil.nextBoolean(), RandomUtil.nextBoolean());
 							break;
+						case BOAT:
+						case ENDER_CRYSTAL:
+							disguise = new ObjectDisguise(type);
+							break;
+						case FALLING_BLOCK:
+							disguise = new FallingBlockDisguise(Material.getMaterial(RandomUtil.nextInt(95) + 1));
+							break;
+						case ITEM:
+							disguise = new ItemDisguise(new ItemStack(RandomUtil.nextEnumValue(Material.class), RandomUtil.nextInt(64) + 1));
+							break;
+						case MINECART:
+							disguise = new MinecartDisguise(Material.getMaterial(RandomUtil.nextInt(95) + 1));
+							break;
 						default:
 							disguise = new MobDisguise(type, RandomUtil.nextBoolean());
 							break;
@@ -392,372 +409,25 @@ public class iDisguise extends JavaPlugin {
 				}
 			} else {
 				Disguise disguise = DisguiseManager.instance.isDisguised(player) ? DisguiseManager.instance.getDisguise(player).clone() : null;
+				boolean changed = false;
 				for(String argument : args) {
-					if(argument.equalsIgnoreCase("bat")) {
-						disguise = new MobDisguise(DisguiseType.BAT);
-					} else if(argument.equalsIgnoreCase("blaze")) {
-						disguise = new MobDisguise(DisguiseType.BLAZE);
-					} else if(StringUtil.equalsIgnoreCase(argument, "cave_spider", "cave-spider", "cavespider", "blue_spider", "blue-spider", "bluespider", "cave")) {
-						disguise = new MobDisguise(DisguiseType.CAVE_SPIDER);
-					} else if(StringUtil.equalsIgnoreCase(argument, "chicken", "chick")) {
-						disguise = new MobDisguise(DisguiseType.CHICKEN);
-					} else if(StringUtil.equalsIgnoreCase(argument, "cow", "cattle", "ox")) {
-						disguise = new MobDisguise(DisguiseType.COW);
-					} else if(argument.equalsIgnoreCase("creeper")) {
-						disguise = new CreeperDisguise();
-					} else if(StringUtil.equalsIgnoreCase(argument, "dragon", "ender_dragon", "ender-dragon", "enderdragon")) {
-						disguise = new MobDisguise(DisguiseType.ENDER_DRAGON);
-					} else if(StringUtil.equalsIgnoreCase(argument, "enderman", "endermen")) {
-						disguise = new EndermanDisguise();
-					} else if(StringUtil.equalsIgnoreCase(argument, "endermite", "mite")) {
-						try {
-							disguise = new MobDisguise(DisguiseType.ENDERMITE);
-						} catch(OutdatedServerException e) {
-							sender.sendMessage(ChatColor.RED + "Endermites are not supported by this minecraft version.");
-							return true;
+					DisguiseType type = DisguiseType.Matcher.match(argument.toLowerCase(Locale.ENGLISH));
+					if(type != null) {
+						disguise = type.newInstance();
+						if(disguise == null) {
+							
+						} else {
+							changed = true;
+							break;
 						}
-					} else if(argument.equalsIgnoreCase("ghast")) {
-						disguise = new MobDisguise(DisguiseType.GHAST);
-					} else if(StringUtil.equalsIgnoreCase(argument, "giant", "giant_zombie", "giant-zombie", "giantzombie")) {
-						disguise = new MobDisguise(DisguiseType.GIANT);
-					} else if(argument.equalsIgnoreCase("guardian")) {
-						try {
-							disguise = new GuardianDisguise();
-						} catch(OutdatedServerException e) {
-							sender.sendMessage(ChatColor.RED + "Guardians are not supported by this minecraft version.");
-							return true;
-						}
-					} else if(argument.equalsIgnoreCase("horse")) {
-						try {
-							disguise = new HorseDisguise();
-						} catch(OutdatedServerException e) {
-							sender.sendMessage(ChatColor.RED + "Horses are not supported by this minecraft version.");
-							return true;
-						}
-					} else if(StringUtil.equalsIgnoreCase(argument, "iron_golem", "iron-golem", "irongolem", "golem")) {
-						disguise = new MobDisguise(DisguiseType.IRON_GOLEM);
-					} else if(StringUtil.equalsIgnoreCase(argument, "magma_cube", "magma-cube", "magmacube", "magma", "lava_cube", "lava-cube", "lavacube", "lava", "magma_slime", "magma-slime", "magmaslime", "lava_slime", "lava-slime", "lavaslime")) {
-						disguise = new SizedDisguise(DisguiseType.MAGMA_CUBE);
-					} else if(StringUtil.equalsIgnoreCase(argument, "mushroom_cow", "mushroom-cow", "mushroomcow", "mushroom", "mooshroom")) {
-						disguise = new MobDisguise(DisguiseType.MUSHROOM_COW);
-					} else if(StringUtil.equalsIgnoreCase(argument, "ocelot", "cat")) {
-						disguise = new OcelotDisguise();
-					} else if(argument.equalsIgnoreCase("pig")) {
-						disguise = new PigDisguise();
-					} else if(StringUtil.equalsIgnoreCase(argument, "pig_zombie", "pig-zombie", "pigzombie", "pigman", "zombie_pigman", "zombie-pigman", "zombiepigman")) {
-						disguise = new MobDisguise(DisguiseType.PIG_ZOMBIE);
-					} else if(StringUtil.equalsIgnoreCase(argument, "rabbit", "bunny")) {
-						try {
-							disguise = new RabbitDisguise();
-						} catch(OutdatedServerException e) {
-							sender.sendMessage(ChatColor.RED + "Rabbits are not supported by this minecraft version.");
-							return true;
-						}
-					} else if(argument.equalsIgnoreCase("sheep")) {
-						disguise = new ColoredDisguise(DisguiseType.SHEEP);
-					} else if(argument.equalsIgnoreCase("silverfish")) {
-						disguise = new MobDisguise(DisguiseType.SILVERFISH);
-					} else if(argument.equalsIgnoreCase("skeleton")) {
-						disguise = new SkeletonDisguise();
-					} else if(StringUtil.equalsIgnoreCase(argument, "slime", "cube")) {
-						disguise = new SizedDisguise(DisguiseType.SLIME);
-					} else if(StringUtil.equalsIgnoreCase(argument, "snowman", "snow-man", "snow_man", "snow_golem", "snow-golem", "snowgolem")) {
-						disguise = new MobDisguise(DisguiseType.SNOWMAN);
-					} else if(argument.equalsIgnoreCase("spider")) {
-						disguise = new MobDisguise(DisguiseType.SPIDER);
-					} else if(argument.equalsIgnoreCase("squid")) {
-						disguise = new MobDisguise(DisguiseType.SQUID);
-					} else if(argument.equalsIgnoreCase("villager")) {
-						disguise = new VillagerDisguise();
-					} else if(argument.equalsIgnoreCase("witch")) {
-						disguise = new MobDisguise(DisguiseType.WITCH);
-					} else if(StringUtil.equalsIgnoreCase(argument, "witherboss", "wither-boss", "wither_boss") || (argument.equalsIgnoreCase("wither") && (disguise == null || disguise.getType() != DisguiseType.SKELETON))) {
-						disguise = new MobDisguise(DisguiseType.WITHER);
-					} else if(StringUtil.equalsIgnoreCase(argument, "wolf", "dog")) {
-						disguise = new WolfDisguise();
-					} else if(argument.equalsIgnoreCase("zombie")) {
-						disguise = new ZombieDisguise();
 					}
 				}
-				if(disguise instanceof MobDisguise) {
+				if(disguise != null) {
 					for(String argument : args) {
-						if(StringUtil.equalsIgnoreCase(argument, "adult", "senior")) {
-							((MobDisguise)disguise).setAdult(true);
-						} else if(StringUtil.equalsIgnoreCase(argument, "baby", "child", "kid", "junior")) {
-							((MobDisguise)disguise).setAdult(false);
-						}
-					}
-					if(disguise instanceof ColoredDisguise) {
-						for(String argument : args) {
-							try {
-								DyeColor color = DyeColor.valueOf(argument.replace('-', '_').toUpperCase(Locale.ENGLISH));
-								((ColoredDisguise)disguise).setColor(color);
-							} catch(IllegalArgumentException e) {
-							}
-						}
-						if(disguise instanceof WolfDisguise) {
-							for(String argument : args) {
-								if(StringUtil.equalsIgnoreCase(argument, "tamed", "tame")) {
-									((WolfDisguise)disguise).setTamed(true);
-								} else if(StringUtil.equalsIgnoreCase(argument, "not-tamed", "not_tamed", "nottamed", "not-tame", "not_tame", "nottame")) {
-									((WolfDisguise)disguise).setTamed(false);
-								} else if(StringUtil.equalsIgnoreCase(argument, "angry", "aggressive")) {
-									((WolfDisguise)disguise).setAngry(true);
-								} else if(StringUtil.equalsIgnoreCase(argument, "not-angry", "not_angry", "notangry", "not-aggressive", "not_aggressive", "notaggressive")) {
-									((WolfDisguise)disguise).setAngry(false);
-								}
-							}
-						}
-					} else if(disguise instanceof CreeperDisguise) {
-						for(String argument : args) {
-							if(StringUtil.equalsIgnoreCase(argument, "powered", "charged")) {
-								((CreeperDisguise)disguise).setPowered(true);
-							} else if(StringUtil.equalsIgnoreCase(argument, "normal", "not-powered", "not_powered", "notpowered", "not-charged", "not_charged", "notcharged")) {
-								((CreeperDisguise)disguise).setPowered(false);
-							}
-						}
-					} else if(disguise instanceof EndermanDisguise) {
-						for(String argument : args) {
-							try {
-								Material blockInHand = Material.valueOf(argument.replace('-', '_').toUpperCase(Locale.ENGLISH));
-								((EndermanDisguise)disguise).setBlockInHand(blockInHand);
-							} catch(IllegalArgumentException e) {
-							}
-							try {
-								int blockInHandData = Integer.valueOf(argument);
-								((EndermanDisguise)disguise).setBlockInHandData(blockInHandData);
-							} catch(NumberFormatException e) {
-							}
-						}
-					} else if(disguise instanceof GuardianDisguise) {
-						for(String argument : args) {
-							if(StringUtil.equalsIgnoreCase(argument, "elder", "big")) {
-								((GuardianDisguise)disguise).setElder(true);
-							} else if(StringUtil.equalsIgnoreCase(argument, "not-elder", "not_elder", "notelder", "normal", "small")) {
-								((GuardianDisguise)disguise).setElder(false);
-							}
-						}
-					} else if(disguise instanceof HorseDisguise) {
-						for(String argument : args) {
-							switch(argument.toLowerCase(Locale.ENGLISH)) {
-								case "donkey":
-									((HorseDisguise)disguise).setVariant(Variant.DONKEY);
-									break;
-								case "normal":
-									((HorseDisguise)disguise).setVariant(Variant.HORSE);
-									break;
-								case "mule":
-									((HorseDisguise)disguise).setVariant(Variant.MULE);
-									break;
-								case "skeleton":
-								case "skeletal":
-									((HorseDisguise)disguise).setVariant(Variant.SKELETON_HORSE);
-									break;
-								case "undead":
-								case "zombie":
-									((HorseDisguise)disguise).setVariant(Variant.UNDEAD_HORSE);
-									break;
-								case "black-dots":
-								case "blackdots":
-								case "black_dots":
-									((HorseDisguise)disguise).setStyle(Style.BLACK_DOTS);
-									break;
-								case "no-markings":
-								case "nomarkings":
-								case "no_markings":
-									((HorseDisguise)disguise).setStyle(Style.NONE);
-									break;
-								case "white-stripes":
-								case "whitestripes":
-								case "white_stripes":
-									((HorseDisguise)disguise).setStyle(Style.WHITE);
-									break;
-								case "white-dots":
-								case "whitedots":
-								case "white_dots":
-									((HorseDisguise)disguise).setStyle(Style.WHITE_DOTS);
-									break;
-								case "whitefield":
-									((HorseDisguise)disguise).setStyle(Style.WHITEFIELD);
-									break;
-								case "black":
-									((HorseDisguise)disguise).setColor(Color.BLACK);
-									break;
-								case "brown":
-									((HorseDisguise)disguise).setColor(Color.BROWN);
-									break;
-								case "chestnut":
-									((HorseDisguise)disguise).setColor(Color.CHESTNUT);
-									break;
-								case "creamy":
-								case "cream":
-									((HorseDisguise)disguise).setColor(Color.CREAMY);
-									break;
-								case "dark-brown":
-								case "darkbrown":
-								case "dark_brown":
-									((HorseDisguise)disguise).setColor(Color.DARK_BROWN);
-									break;
-								case "gray":
-								case "grey":
-									((HorseDisguise)disguise).setColor(Color.GRAY);
-									break;
-								case "white":
-									((HorseDisguise)disguise).setColor(Color.WHITE);
-									break;
-								case "saddled":
-								case "saddle":
-									((HorseDisguise)disguise).setSaddled(true);
-									break;
-								case "not-saddled":
-								case "notsattled":
-								case "not_saddled":
-								case "no-saddle":
-								case "nosaddle":
-								case "no_saddle":
-									((HorseDisguise)disguise).setSaddled(false);
-									break;
-								case "chest":
-									((HorseDisguise)disguise).setHasChest(true);
-									break;
-								case "no-chest":
-								case "nochest":
-								case "no_chest":
-									((HorseDisguise)disguise).setHasChest(false);
-									break;
-								case "no-armor":
-								case "noarmor":
-								case "no_armor":
-									((HorseDisguise)disguise).setArmor(Armor.NONE);
-									break;
-								case "iron":
-									((HorseDisguise)disguise).setArmor(Armor.IRON);
-									break;
-								case "gold":
-									((HorseDisguise)disguise).setArmor(Armor.GOLD);
-									break;
-								case "diamond":
-									((HorseDisguise)disguise).setArmor(Armor.DIAMOND);
-									break;
-							}
-						}
-					} else if(disguise instanceof OcelotDisguise) {
-						for(String argument : args) {
-							switch(argument.toLowerCase(Locale.ENGLISH)) {
-								case "black":
-									((OcelotDisguise)disguise).setCatType(Ocelot.Type.BLACK_CAT);
-									break;
-								case "red":
-									((OcelotDisguise)disguise).setCatType(Ocelot.Type.RED_CAT);
-									break;
-								case "siamese":
-									((OcelotDisguise)disguise).setCatType(Ocelot.Type.SIAMESE_CAT);
-									break;
-								case "wild":
-									((OcelotDisguise)disguise).setCatType(Ocelot.Type.WILD_OCELOT);
-									break;
-							}
-						}
-					} else if(disguise instanceof PigDisguise) {
-						for(String argument : args) {
-							if(StringUtil.equalsIgnoreCase(argument, "saddled", "saddle")) {
-								((PigDisguise)disguise).setSaddled(true);
-							} else if(StringUtil.equalsIgnoreCase(argument, "not-saddled", "notsaddled", "not_saddled", "no-saddle", "nosaddle", "no_saddle")) {
-								((PigDisguise)disguise).setSaddled(false);
-							}
-						}
-					} else if(disguise instanceof RabbitDisguise) {
-						for(String argument : args) {
-							switch(argument.toLowerCase(Locale.ENGLISH)) {
-								case "black":
-									((RabbitDisguise)disguise).setRabbitType(RabbitType.BLACK);
-									break;
-								case "black-white":
-								case "blackwhite":
-								case "black_white":
-								case "blackandwhite":
-								case "black-and-white":
-								case "black_and_white":
-									((RabbitDisguise)disguise).setRabbitType(RabbitType.BLACK_AND_WHITE);
-									break;
-								case "brown":
-									((RabbitDisguise)disguise).setRabbitType(RabbitType.BROWN);
-									break;
-								case "gold":
-									((RabbitDisguise)disguise).setRabbitType(RabbitType.GOLD);
-									break;
-								case "salt-pepper":
-								case "saltpepper":
-								case "salt_pepper":
-								case "saltandpepper":
-								case "salt-and-pepper":
-								case "salt_and_pepper":
-									((RabbitDisguise)disguise).setRabbitType(RabbitType.SALT_AND_PEPPER);
-									break;
-								case "killer":
-								case "killer-bunny":
-								case "killer_bunny":
-								case "killerbunny":
-								case "thekillerbunny":
-								case "the-killer-bunny":
-								case "the_killer_bunny":
-									((RabbitDisguise)disguise).setRabbitType(RabbitType.THE_KILLER_BUNNY);
-									break;
-								case "white":
-									((RabbitDisguise)disguise).setRabbitType(RabbitType.WHITE);
-									break;
-							}
-						}
-					} else if(disguise instanceof SkeletonDisguise) {
-						for(String argument : args) {
-							if(argument.equalsIgnoreCase("normal")) {
-								((SkeletonDisguise)disguise).setSkeletonType(SkeletonType.NORMAL);
-							} else if(argument.equalsIgnoreCase("wither")) {
-								((SkeletonDisguise)disguise).setSkeletonType(SkeletonType.WITHER);
-							}
-						}
-					} else if(disguise instanceof SizedDisguise) {
-						for(String argument : args) {
-							if(StringUtil.equalsIgnoreCase(argument, "tiny", "small")) {
-								((SizedDisguise)disguise).setSize(1);
-							} else if(StringUtil.equalsIgnoreCase(argument, "normal", "medium")) {
-								((SizedDisguise)disguise).setSize(2);
-							} else if(argument.equalsIgnoreCase("big")) {
-								((SizedDisguise)disguise).setSize(4);
-							} else {
-								try {
-									int size = Integer.valueOf(argument);
-									if(size > 1000) {
-										size = 1000;
-									} else if(size < 1) {
-										size = 1;
-									}
-									((SizedDisguise)disguise).setSize(size);
-								} catch(NumberFormatException e) {
-								}
-							}
-						}
-					} else if(disguise instanceof VillagerDisguise) {
-						for(String argument : args) {
-							try {
-								Profession profession = Profession.valueOf(argument.toUpperCase(Locale.ENGLISH));
-								((VillagerDisguise)disguise).setProfession(profession);
-							} catch(IllegalArgumentException e) {
-							}
-						}
-					} else if(disguise instanceof ZombieDisguise) {
-						for(String argument : args) {
-							if(argument.equalsIgnoreCase("normal")) {
-								((ZombieDisguise)disguise).setVillager(false);
-							} else if(argument.equalsIgnoreCase("infected")) {
-								((ZombieDisguise)disguise).setVillager(true);
-							}
-						}
+						changed |= disguise.applySubtype(argument);
 					}
 				}
-				if(disguise == null) {
-					sender.sendMessage(ChatColor.RED + "Wrong usage. Type " + ChatColor.ITALIC + "/" + cmd.getName() + " help" + ChatColor.RESET + ChatColor.RED + " for additional information.");
-				} else if(!disguise.equals(DisguiseManager.instance.getDisguise(player))) {
+				if(changed) {
 					if(hasPermission(player, disguise)) {
 						DisguiseEvent event = new DisguiseEvent(player, disguise);
 						getServer().getPluginManager().callEvent(event);
@@ -1023,7 +693,7 @@ public class iDisguise extends JavaPlugin {
 					sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " is not disguised.");
 				}
 			} else if(args[1].equalsIgnoreCase("random")) {
-				DisguiseType type = DisguiseType.random(Type.MOB);
+				DisguiseType type = RandomUtil.nextBoolean() ? DisguiseType.random(Type.MOB) : DisguiseType.random(Type.OBJECT);
 				Disguise disguise;
 				switch(type) {
 					case CREEPER:
@@ -1066,6 +736,19 @@ public class iDisguise extends JavaPlugin {
 					case ZOMBIE:
 						disguise = new ZombieDisguise(RandomUtil.nextBoolean(), RandomUtil.nextBoolean());
 						break;
+					case BOAT:
+					case ENDER_CRYSTAL:
+						disguise = new ObjectDisguise(type);
+						break;
+					case FALLING_BLOCK:
+						disguise = new FallingBlockDisguise(Material.getMaterial(RandomUtil.nextInt(95) + 1));
+						break;
+					case ITEM:
+						disguise = new ItemDisguise(new ItemStack(RandomUtil.nextEnumValue(Material.class), RandomUtil.nextInt(64) + 1));
+						break;
+					case MINECART:
+						disguise = new MinecartDisguise(Material.getMaterial(RandomUtil.nextInt(95) + 1));
+						break;
 					default:
 						disguise = new MobDisguise(type, RandomUtil.nextBoolean());
 						break;
@@ -1080,372 +763,25 @@ public class iDisguise extends JavaPlugin {
 				}
 			} else {
 				Disguise disguise = DisguiseManager.instance.isDisguised(player) ? DisguiseManager.instance.getDisguise(player).clone() : null;
+				boolean changed = false;
 				for(String argument : Arrays.copyOfRange(args, 1, args.length)) {
-					if(argument.equalsIgnoreCase("bat")) {
-						disguise = new MobDisguise(DisguiseType.BAT);
-					} else if(argument.equalsIgnoreCase("blaze")) {
-						disguise = new MobDisguise(DisguiseType.BLAZE);
-					} else if(StringUtil.equalsIgnoreCase(argument, "cave_spider", "cave-spider", "cavespider", "blue_spider", "blue-spider", "bluespider", "cave")) {
-						disguise = new MobDisguise(DisguiseType.CAVE_SPIDER);
-					} else if(StringUtil.equalsIgnoreCase(argument, "chicken", "chick")) {
-						disguise = new MobDisguise(DisguiseType.CHICKEN);
-					} else if(StringUtil.equalsIgnoreCase(argument, "cow", "cattle", "ox")) {
-						disguise = new MobDisguise(DisguiseType.COW);
-					} else if(argument.equalsIgnoreCase("creeper")) {
-						disguise = new CreeperDisguise();
-					} else if(StringUtil.equalsIgnoreCase(argument, "dragon", "ender_dragon", "ender-dragon", "enderdragon")) {
-						disguise = new MobDisguise(DisguiseType.ENDER_DRAGON);
-					} else if(StringUtil.equalsIgnoreCase(argument, "enderman", "endermen")) {
-						disguise = new EndermanDisguise();
-					} else if(StringUtil.equalsIgnoreCase(argument, "endermite", "mite")) {
-						try {
-							disguise = new MobDisguise(DisguiseType.ENDERMITE);
-						} catch(OutdatedServerException e) {
-							sender.sendMessage(ChatColor.RED + "Endermites are not supported by this minecraft version.");
-							return true;
+					DisguiseType type = DisguiseType.Matcher.match(argument.toLowerCase(Locale.ENGLISH));
+					if(type != null) {
+						disguise = type.newInstance();
+						if(disguise == null) {
+							
+						} else {
+							changed = true;
+							break;
 						}
-					} else if(argument.equalsIgnoreCase("ghast")) {
-						disguise = new MobDisguise(DisguiseType.GHAST);
-					} else if(StringUtil.equalsIgnoreCase(argument, "giant", "giant_zombie", "giant-zombie", "giantzombie")) {
-						disguise = new MobDisguise(DisguiseType.GIANT);
-					} else if(argument.equalsIgnoreCase("guardian")) {
-						try {
-							disguise = new GuardianDisguise();
-						} catch(OutdatedServerException e) {
-							sender.sendMessage(ChatColor.RED + "Guardians are not supported by this minecraft version.");
-							return true;
-						}
-					} else if(argument.equalsIgnoreCase("horse")) {
-						try {
-							disguise = new HorseDisguise();
-						} catch(OutdatedServerException e) {
-							sender.sendMessage(ChatColor.RED + "Horses are not supported by this minecraft version.");
-							return true;
-						}
-					} else if(StringUtil.equalsIgnoreCase(argument, "iron_golem", "iron-golem", "irongolem", "golem")) {
-						disguise = new MobDisguise(DisguiseType.IRON_GOLEM);
-					} else if(StringUtil.equalsIgnoreCase(argument, "magma_cube", "magma-cube", "magmacube", "magma", "lava_cube", "lava-cube", "lavacube", "lava", "magma_slime", "magma-slime", "magmaslime", "lava_slime", "lava-slime", "lavaslime")) {
-						disguise = new SizedDisguise(DisguiseType.MAGMA_CUBE);
-					} else if(StringUtil.equalsIgnoreCase(argument, "mushroom_cow", "mushroom-cow", "mushroomcow", "mushroom", "mooshroom")) {
-						disguise = new MobDisguise(DisguiseType.MUSHROOM_COW);
-					} else if(StringUtil.equalsIgnoreCase(argument, "ocelot", "cat")) {
-						disguise = new OcelotDisguise();
-					} else if(argument.equalsIgnoreCase("pig")) {
-						disguise = new PigDisguise();
-					} else if(StringUtil.equalsIgnoreCase(argument, "pig_zombie", "pig-zombie", "pigzombie", "pigman", "zombie_pigman", "zombie-pigman", "zombiepigman")) {
-						disguise = new MobDisguise(DisguiseType.PIG_ZOMBIE);
-					} else if(StringUtil.equalsIgnoreCase(argument, "rabbit", "bunny")) {
-						try {
-							disguise = new RabbitDisguise();
-						} catch(OutdatedServerException e) {
-							sender.sendMessage(ChatColor.RED + "Rabbits are not supported by this minecraft version.");
-							return true;
-						}
-					} else if(argument.equalsIgnoreCase("sheep")) {
-						disguise = new ColoredDisguise(DisguiseType.SHEEP);
-					} else if(argument.equalsIgnoreCase("silverfish")) {
-						disguise = new MobDisguise(DisguiseType.SILVERFISH);
-					} else if(argument.equalsIgnoreCase("skeleton")) {
-						disguise = new SkeletonDisguise();
-					} else if(StringUtil.equalsIgnoreCase(argument, "slime", "cube")) {
-						disguise = new SizedDisguise(DisguiseType.SLIME);
-					} else if(StringUtil.equalsIgnoreCase(argument, "snowman", "snow-man", "snow_man", "snow_golem", "snow-golem", "snowgolem")) {
-						disguise = new MobDisguise(DisguiseType.SNOWMAN);
-					} else if(argument.equalsIgnoreCase("spider")) {
-						disguise = new MobDisguise(DisguiseType.SPIDER);
-					} else if(argument.equalsIgnoreCase("squid")) {
-						disguise = new MobDisguise(DisguiseType.SQUID);
-					} else if(argument.equalsIgnoreCase("villager")) {
-						disguise = new VillagerDisguise();
-					} else if(argument.equalsIgnoreCase("witch")) {
-						disguise = new MobDisguise(DisguiseType.WITCH);
-					} else if(StringUtil.equalsIgnoreCase(argument, "witherboss", "wither-boss", "wither_boss") || (argument.equalsIgnoreCase("wither") && (disguise == null || disguise.getType() != DisguiseType.SKELETON))) {
-						disguise = new MobDisguise(DisguiseType.WITHER);
-					} else if(StringUtil.equalsIgnoreCase(argument, "wolf", "dog")) {
-						disguise = new WolfDisguise();
-					} else if(argument.equalsIgnoreCase("zombie")) {
-						disguise = new ZombieDisguise();
 					}
 				}
-				if(disguise instanceof MobDisguise) {
+				if(disguise != null) {
 					for(String argument : args) {
-						if(StringUtil.equalsIgnoreCase(argument, "adult", "senior")) {
-							((MobDisguise)disguise).setAdult(true);
-						} else if(StringUtil.equalsIgnoreCase(argument, "baby", "child", "kid", "junior")) {
-							((MobDisguise)disguise).setAdult(false);
-						}
-					}
-					if(disguise instanceof ColoredDisguise) {
-						for(String argument : args) {
-							try {
-								DyeColor color = DyeColor.valueOf(argument.replace('-', '_').toUpperCase(Locale.ENGLISH));
-								((ColoredDisguise)disguise).setColor(color);
-							} catch(IllegalArgumentException e) {
-							}
-						}
-						if(disguise instanceof WolfDisguise) {
-							for(String argument : args) {
-								if(StringUtil.equalsIgnoreCase(argument, "tamed", "tame")) {
-									((WolfDisguise)disguise).setTamed(true);
-								} else if(StringUtil.equalsIgnoreCase(argument, "not-tamed", "not_tamed", "nottamed", "not-tame", "not_tame", "nottame")) {
-									((WolfDisguise)disguise).setTamed(false);
-								} else if(StringUtil.equalsIgnoreCase(argument, "angry", "aggressive")) {
-									((WolfDisguise)disguise).setAngry(true);
-								} else if(StringUtil.equalsIgnoreCase(argument, "not-angry", "not_angry", "notangry", "not-aggressive", "not_aggressive", "notaggressive")) {
-									((WolfDisguise)disguise).setAngry(false);
-								}
-							}
-						}
-					} else if(disguise instanceof CreeperDisguise) {
-						for(String argument : args) {
-							if(StringUtil.equalsIgnoreCase(argument, "powered", "charged")) {
-								((CreeperDisguise)disguise).setPowered(true);
-							} else if(StringUtil.equalsIgnoreCase(argument, "normal", "not-powered", "not_powered", "notpowered", "not-charged", "not_charged", "notcharged")) {
-								((CreeperDisguise)disguise).setPowered(false);
-							}
-						}
-					} else if(disguise instanceof EndermanDisguise) {
-						for(String argument : args) {
-							try {
-								Material blockInHand = Material.valueOf(argument.replace('-', '_').toUpperCase(Locale.ENGLISH));
-								((EndermanDisguise)disguise).setBlockInHand(blockInHand);
-							} catch(IllegalArgumentException e) {
-							}
-							try {
-								int blockInHandData = Integer.valueOf(argument);
-								((EndermanDisguise)disguise).setBlockInHandData(blockInHandData);
-							} catch(NumberFormatException e) {
-							}
-						}
-					} else if(disguise instanceof GuardianDisguise) {
-						for(String argument : args) {
-							if(StringUtil.equalsIgnoreCase(argument, "elder", "big")) {
-								((GuardianDisguise)disguise).setElder(true);
-							} else if(StringUtil.equalsIgnoreCase(argument, "not-elder", "not_elder", "notelder", "normal", "small")) {
-								((GuardianDisguise)disguise).setElder(false);
-							}
-						}
-					} else if(disguise instanceof HorseDisguise) {
-						for(String argument : args) {
-							switch(argument.toLowerCase(Locale.ENGLISH)) {
-								case "donkey":
-									((HorseDisguise)disguise).setVariant(Variant.DONKEY);
-									break;
-								case "normal":
-									((HorseDisguise)disguise).setVariant(Variant.HORSE);
-									break;
-								case "mule":
-									((HorseDisguise)disguise).setVariant(Variant.MULE);
-									break;
-								case "skeleton":
-								case "skeletal":
-									((HorseDisguise)disguise).setVariant(Variant.SKELETON_HORSE);
-									break;
-								case "undead":
-								case "zombie":
-									((HorseDisguise)disguise).setVariant(Variant.UNDEAD_HORSE);
-									break;
-								case "black-dots":
-								case "blackdots":
-								case "black_dots":
-									((HorseDisguise)disguise).setStyle(Style.BLACK_DOTS);
-									break;
-								case "no-markings":
-								case "nomarkings":
-								case "no_markings":
-									((HorseDisguise)disguise).setStyle(Style.NONE);
-									break;
-								case "white-stripes":
-								case "whitestripes":
-								case "white_stripes":
-									((HorseDisguise)disguise).setStyle(Style.WHITE);
-									break;
-								case "white-dots":
-								case "whitedots":
-								case "white_dots":
-									((HorseDisguise)disguise).setStyle(Style.WHITE_DOTS);
-									break;
-								case "whitefield":
-									((HorseDisguise)disguise).setStyle(Style.WHITEFIELD);
-									break;
-								case "black":
-									((HorseDisguise)disguise).setColor(Color.BLACK);
-									break;
-								case "brown":
-									((HorseDisguise)disguise).setColor(Color.BROWN);
-									break;
-								case "chestnut":
-									((HorseDisguise)disguise).setColor(Color.CHESTNUT);
-									break;
-								case "creamy":
-								case "cream":
-									((HorseDisguise)disguise).setColor(Color.CREAMY);
-									break;
-								case "dark-brown":
-								case "darkbrown":
-								case "dark_brown":
-									((HorseDisguise)disguise).setColor(Color.DARK_BROWN);
-									break;
-								case "gray":
-								case "grey":
-									((HorseDisguise)disguise).setColor(Color.GRAY);
-									break;
-								case "white":
-									((HorseDisguise)disguise).setColor(Color.WHITE);
-									break;
-								case "saddled":
-								case "saddle":
-									((HorseDisguise)disguise).setSaddled(true);
-									break;
-								case "not-saddled":
-								case "notsattled":
-								case "not_saddled":
-								case "no-saddle":
-								case "nosaddle":
-								case "no_saddle":
-									((HorseDisguise)disguise).setSaddled(false);
-									break;
-								case "chest":
-									((HorseDisguise)disguise).setHasChest(true);
-									break;
-								case "no-chest":
-								case "nochest":
-								case "no_chest":
-									((HorseDisguise)disguise).setHasChest(false);
-									break;
-								case "no-armor":
-								case "noarmor":
-								case "no_armor":
-									((HorseDisguise)disguise).setArmor(Armor.NONE);
-									break;
-								case "iron":
-									((HorseDisguise)disguise).setArmor(Armor.IRON);
-									break;
-								case "gold":
-									((HorseDisguise)disguise).setArmor(Armor.GOLD);
-									break;
-								case "diamond":
-									((HorseDisguise)disguise).setArmor(Armor.DIAMOND);
-									break;
-							}
-						}
-					} else if(disguise instanceof OcelotDisguise) {
-						for(String argument : args) {
-							switch(argument.toLowerCase(Locale.ENGLISH)) {
-								case "black":
-									((OcelotDisguise)disguise).setCatType(Ocelot.Type.BLACK_CAT);
-									break;
-								case "red":
-									((OcelotDisguise)disguise).setCatType(Ocelot.Type.RED_CAT);
-									break;
-								case "siamese":
-									((OcelotDisguise)disguise).setCatType(Ocelot.Type.SIAMESE_CAT);
-									break;
-								case "wild":
-									((OcelotDisguise)disguise).setCatType(Ocelot.Type.WILD_OCELOT);
-									break;
-							}
-						}
-					} else if(disguise instanceof PigDisguise) {
-						for(String argument : args) {
-							if(StringUtil.equalsIgnoreCase(argument, "saddled", "saddle")) {
-								((PigDisguise)disguise).setSaddled(true);
-							} else if(StringUtil.equalsIgnoreCase(argument, "not-saddled", "notsaddled", "not_saddled", "no-saddle", "nosaddle", "no_saddle")) {
-								((PigDisguise)disguise).setSaddled(false);
-							}
-						}
-					} else if(disguise instanceof RabbitDisguise) {
-						for(String argument : args) {
-							switch(argument.toLowerCase(Locale.ENGLISH)) {
-								case "black":
-									((RabbitDisguise)disguise).setRabbitType(RabbitType.BLACK);
-									break;
-								case "black-white":
-								case "blackwhite":
-								case "black_white":
-								case "blackandwhite":
-								case "black-and-white":
-								case "black_and_white":
-									((RabbitDisguise)disguise).setRabbitType(RabbitType.BLACK_AND_WHITE);
-									break;
-								case "brown":
-									((RabbitDisguise)disguise).setRabbitType(RabbitType.BROWN);
-									break;
-								case "gold":
-									((RabbitDisguise)disguise).setRabbitType(RabbitType.GOLD);
-									break;
-								case "salt-pepper":
-								case "saltpepper":
-								case "salt_pepper":
-								case "saltandpepper":
-								case "salt-and-pepper":
-								case "salt_and_pepper":
-									((RabbitDisguise)disguise).setRabbitType(RabbitType.SALT_AND_PEPPER);
-									break;
-								case "killer":
-								case "killer-bunny":
-								case "killer_bunny":
-								case "killerbunny":
-								case "thekillerbunny":
-								case "the-killer-bunny":
-								case "the_killer_bunny":
-									((RabbitDisguise)disguise).setRabbitType(RabbitType.THE_KILLER_BUNNY);
-									break;
-								case "white":
-									((RabbitDisguise)disguise).setRabbitType(RabbitType.WHITE);
-									break;
-							}
-						}
-					} else if(disguise instanceof SkeletonDisguise) {
-						for(String argument : args) {
-							if(argument.equalsIgnoreCase("normal")) {
-								((SkeletonDisguise)disguise).setSkeletonType(SkeletonType.NORMAL);
-							} else if(argument.equalsIgnoreCase("wither")) {
-								((SkeletonDisguise)disguise).setSkeletonType(SkeletonType.WITHER);
-							}
-						}
-					} else if(disguise instanceof SizedDisguise) {
-						for(String argument : args) {
-							if(StringUtil.equalsIgnoreCase(argument, "tiny", "small")) {
-								((SizedDisguise)disguise).setSize(1);
-							} else if(StringUtil.equalsIgnoreCase(argument, "normal", "medium")) {
-								((SizedDisguise)disguise).setSize(2);
-							} else if(argument.equalsIgnoreCase("big")) {
-								((SizedDisguise)disguise).setSize(4);
-							} else {
-								try {
-									int size = Integer.valueOf(argument);
-									if(size > 1000) {
-										size = 1000;
-									} else if(size < 1) {
-										size = 1;
-									}
-									((SizedDisguise)disguise).setSize(size);
-								} catch(NumberFormatException e) {
-								}
-							}
-						}
-					} else if(disguise instanceof VillagerDisguise) {
-						for(String argument : args) {
-							try {
-								Profession profession = Profession.valueOf(argument.toUpperCase(Locale.ENGLISH));
-								((VillagerDisguise)disguise).setProfession(profession);
-							} catch(IllegalArgumentException e) {
-							}
-						}
-					} else if(disguise instanceof ZombieDisguise) {
-						for(String argument : args) {
-							if(argument.equalsIgnoreCase("normal")) {
-								((ZombieDisguise)disguise).setVillager(false);
-							} else if(argument.equalsIgnoreCase("infected")) {
-								((ZombieDisguise)disguise).setVillager(true);
-							}
-						}
+						changed |= disguise.applySubtype(argument);
 					}
 				}
-				if(disguise == null) {
-					sender.sendMessage(ChatColor.RED + "Wrong usage. Type " + ChatColor.ITALIC + "/" + cmd.getName() + " " + player.getName() + " help" + ChatColor.RESET + ChatColor.RED + " for additional information.");
-				} else if(!disguise.equals(DisguiseManager.instance.getDisguise(player))) {
+				if(changed) {
 					DisguiseEvent event = new DisguiseEvent(player, disguise);
 					getServer().getPluginManager().callEvent(event);
 					if(event.isCancelled()) {
@@ -1589,6 +925,12 @@ public class iDisguise extends JavaPlugin {
 				return player.hasPermission("iDisguise.mob.wolf") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.wolf.collar." + ((ColoredDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-')) && (!((WolfDisguise)disguise).isTamed() || player.hasPermission("iDisguise.mob.wolf.tamed")) && (!((WolfDisguise)disguise).isAngry() || player.hasPermission("iDisguise.mob.wolf.angry"));
 			case ZOMBIE:
 				return player.hasPermission("iDisguise.mob.zombie") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && (!((ZombieDisguise)disguise).isVillager() || player.hasPermission("iDisguise.mob.zombie.infected"));
+			case BOAT:
+			case ENDER_CRYSTAL:
+			case FALLING_BLOCK:
+			case ITEM:
+			case MINECART:
+				return true;
 			default:
 				return false;
 		}

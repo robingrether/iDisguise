@@ -1,5 +1,7 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Locale;
+
 import org.bukkit.entity.Villager.Profession;
 
 /**
@@ -68,6 +70,23 @@ public class VillagerDisguise extends MobDisguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof VillagerDisguise && ((VillagerDisguise)object).profession.equals(profession);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean applySubtype(String argument) {
+		if(super.applySubtype(argument)) {
+			return true;
+		} else {
+			try {
+				Profession profession = Profession.valueOf(argument.toUpperCase(Locale.ENGLISH));
+				setProfession(profession);
+				return true;
+			} catch(IllegalArgumentException e) {
+				return false;
+			}
+		}
 	}
 	
 }

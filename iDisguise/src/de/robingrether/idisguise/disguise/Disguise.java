@@ -51,4 +51,13 @@ public abstract class Disguise implements Serializable, Cloneable {
 		return object instanceof Disguise && ((Disguise)object).getType().equals(type);
 	}
 	
+	/**
+	 * Applies subtype updates based on command arguments.
+	 * 
+	 * @since 5.1.1
+	 * @param argument the command argument
+	 * @return <code>true</code>, if an update has been applied, <code>false</code> otherwise
+	 */
+	public abstract boolean applySubtype(String argument);
+	
 }
