@@ -330,65 +330,7 @@ public class iDisguise extends JavaPlugin {
 			} else if(args[0].equalsIgnoreCase("random")) {
 				if(player.hasPermission("iDisguise.random")) {
 					DisguiseType type = RandomUtil.nextBoolean() ? DisguiseType.random(Type.MOB) : DisguiseType.random(Type.OBJECT);
-					Disguise disguise;
-					switch(type) {
-						case CREEPER:
-							disguise = new CreeperDisguise(RandomUtil.nextBoolean());
-							break;
-						case ENDERMAN:
-							disguise = new EndermanDisguise(Material.getMaterial(RandomUtil.nextInt(198)), RandomUtil.nextInt(16));
-							break;
-						case GUARDIAN:
-							disguise = new GuardianDisguise(RandomUtil.nextBoolean());
-							break;
-						case HORSE:
-							disguise = new HorseDisguise(RandomUtil.nextBoolean(), RandomUtil.nextEnumValue(Variant.class), RandomUtil.nextEnumValue(Style.class), RandomUtil.nextEnumValue(Color.class), RandomUtil.nextBoolean(), RandomUtil.nextBoolean(), RandomUtil.nextEnumValue(Armor.class));
-							break;
-						case OCELOT:
-							disguise = new OcelotDisguise(RandomUtil.nextEnumValue(Ocelot.Type.class), RandomUtil.nextBoolean());
-							break;
-						case PIG:
-							disguise = new PigDisguise(RandomUtil.nextBoolean(), RandomUtil.nextBoolean());
-							break;
-						case RABBIT:
-							disguise = new RabbitDisguise(RandomUtil.nextBoolean(), RandomUtil.nextEnumValue(RabbitType.class));
-							break;
-						case SHEEP:
-							disguise = new SheepDisguise(RandomUtil.nextBoolean(), RandomUtil.nextEnumValue(DyeColor.class));
-							break;
-						case SKELETON:
-							disguise = new SkeletonDisguise(RandomUtil.nextEnumValue(SkeletonType.class));
-							break;
-						case MAGMA_CUBE:
-						case SLIME:
-							disguise = new SizedDisguise(type, RandomUtil.nextInt(1000) + 1);
-							break;
-						case VILLAGER:
-							disguise = new VillagerDisguise(RandomUtil.nextBoolean(), RandomUtil.nextEnumValue(Profession.class));
-							break;
-						case WOLF:
-							disguise = new WolfDisguise(RandomUtil.nextBoolean(), RandomUtil.nextEnumValue(DyeColor.class), RandomUtil.nextBoolean(), RandomUtil.nextBoolean());
-							break;
-						case ZOMBIE:
-							disguise = new ZombieDisguise(RandomUtil.nextBoolean(), RandomUtil.nextBoolean());
-							break;
-						case BOAT:
-						case ENDER_CRYSTAL:
-							disguise = new ObjectDisguise(type);
-							break;
-						case FALLING_BLOCK:
-							disguise = new FallingBlockDisguise(Material.getMaterial(RandomUtil.nextInt(95) + 1));
-							break;
-						case ITEM:
-							disguise = new ItemDisguise(new ItemStack(RandomUtil.nextEnumValue(Material.class), RandomUtil.nextInt(64) + 1));
-							break;
-						case MINECART:
-							disguise = new MinecartDisguise(Material.getMaterial(RandomUtil.nextInt(95) + 1));
-							break;
-						default:
-							disguise = new MobDisguise(type, RandomUtil.nextBoolean());
-							break;
-					}
+					Disguise disguise = type.newInstance();
 					DisguiseEvent event = new DisguiseEvent(player, disguise);
 					getServer().getPluginManager().callEvent(event);
 					if(event.isCancelled()) {
@@ -694,65 +636,7 @@ public class iDisguise extends JavaPlugin {
 				}
 			} else if(args[1].equalsIgnoreCase("random")) {
 				DisguiseType type = RandomUtil.nextBoolean() ? DisguiseType.random(Type.MOB) : DisguiseType.random(Type.OBJECT);
-				Disguise disguise;
-				switch(type) {
-					case CREEPER:
-						disguise = new CreeperDisguise(RandomUtil.nextBoolean());
-						break;
-					case ENDERMAN:
-						disguise = new EndermanDisguise(Material.getMaterial(RandomUtil.nextInt(198)), RandomUtil.nextInt(16));
-						break;
-					case GUARDIAN:
-						disguise = new GuardianDisguise(RandomUtil.nextBoolean());
-						break;
-					case HORSE:
-						disguise = new HorseDisguise(RandomUtil.nextBoolean(), RandomUtil.nextEnumValue(Variant.class), RandomUtil.nextEnumValue(Style.class), RandomUtil.nextEnumValue(Color.class), RandomUtil.nextBoolean(), RandomUtil.nextBoolean(), RandomUtil.nextEnumValue(Armor.class));
-						break;
-					case OCELOT:
-						disguise = new OcelotDisguise(RandomUtil.nextEnumValue(Ocelot.Type.class), RandomUtil.nextBoolean());
-						break;
-					case PIG:
-						disguise = new PigDisguise(RandomUtil.nextBoolean(), RandomUtil.nextBoolean());
-						break;
-					case RABBIT:
-						disguise = new RabbitDisguise(RandomUtil.nextBoolean(), RandomUtil.nextEnumValue(RabbitType.class));
-						break;
-					case SHEEP:
-						disguise = new SheepDisguise(RandomUtil.nextBoolean(), RandomUtil.nextEnumValue(DyeColor.class));
-						break;
-					case SKELETON:
-						disguise = new SkeletonDisguise(RandomUtil.nextEnumValue(SkeletonType.class));
-						break;
-					case MAGMA_CUBE:
-					case SLIME:
-						disguise = new SizedDisguise(type, RandomUtil.nextInt(1000) + 1);
-						break;
-					case VILLAGER:
-						disguise = new VillagerDisguise(RandomUtil.nextBoolean(), RandomUtil.nextEnumValue(Profession.class));
-						break;
-					case WOLF:
-						disguise = new WolfDisguise(RandomUtil.nextBoolean(), RandomUtil.nextEnumValue(DyeColor.class), RandomUtil.nextBoolean(), RandomUtil.nextBoolean());
-						break;
-					case ZOMBIE:
-						disguise = new ZombieDisguise(RandomUtil.nextBoolean(), RandomUtil.nextBoolean());
-						break;
-					case BOAT:
-					case ENDER_CRYSTAL:
-						disguise = new ObjectDisguise(type);
-						break;
-					case FALLING_BLOCK:
-						disguise = new FallingBlockDisguise(Material.getMaterial(RandomUtil.nextInt(95) + 1));
-						break;
-					case ITEM:
-						disguise = new ItemDisguise(new ItemStack(RandomUtil.nextEnumValue(Material.class), RandomUtil.nextInt(64) + 1));
-						break;
-					case MINECART:
-						disguise = new MinecartDisguise(Material.getMaterial(RandomUtil.nextInt(95) + 1));
-						break;
-					default:
-						disguise = new MobDisguise(type, RandomUtil.nextBoolean());
-						break;
-				}
+				Disguise disguise = type.newInstance();
 				DisguiseEvent event = new DisguiseEvent(player, disguise);
 				getServer().getPluginManager().callEvent(event);
 				if(event.isCancelled()) {
