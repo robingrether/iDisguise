@@ -2,68 +2,77 @@ package de.robingrether.idisguise.disguise;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 import de.robingrether.idisguise.management.VersionHelper;
 import de.robingrether.util.ObjectUtil;
 
 /**
- * This enum contains all types, you can disguise as.<br>
- * From time to time (and from minecraft version to minecraft version), new enum constants may be added.
+ * This enum contains all types, you can disguise as.
  * 
  * @since 2.1.3
  * @author RobinGrether
  */
 public enum DisguiseType {
 	
-	BAT(Type.MOB, "EntityBat"),
-	BLAZE(Type.MOB, "EntityBlaze"),
-	CAVE_SPIDER(Type.MOB, "EntityCaveSpider"),
-	CHICKEN(Type.MOB, "EntityChicken"),
-	COW(Type.MOB, "EntityCow"),
-	CREEPER(Type.MOB, "EntityCreeper"),
-	ENDER_DRAGON(Type.MOB, "EntityEnderDragon"),
-	ENDERMAN(Type.MOB, "EntityEnderman"),
-	ENDERMITE(Type.MOB, "EntityEndermite"),
-	GHAST(Type.MOB, "EntityGhast"),
-	GIANT(Type.MOB, "EntityGiantZombie"),
-	GUARDIAN(Type.MOB, "EntityGuardian"),
-	HORSE(Type.MOB, "EntityHorse"),
-	IRON_GOLEM(Type.MOB, "EntityIronGolem"),
-	MAGMA_CUBE(Type.MOB, "EntityMagmaCube"),
-	MUSHROOM_COW(Type.MOB, "EntityMushroomCow"),
-	OCELOT(Type.MOB, "EntityOcelot"),
-	PIG(Type.MOB, "EntityPig"),
-	PIG_ZOMBIE(Type.MOB, "EntityPigZombie"),
-	RABBIT(Type.MOB, "EntityRabbit"),
-	SHEEP(Type.MOB, "EntitySheep"),
-	SILVERFISH(Type.MOB, "EntitySilverfish"),
-	SKELETON(Type.MOB, "EntitySkeleton"),
-	SLIME(Type.MOB, "EntitySlime"),
-	SNOWMAN(Type.MOB, "EntitySnowman"),
-	SPIDER(Type.MOB, "EntitySpider"),
-	SQUID(Type.MOB, "EntitySquid"),
-	VILLAGER(Type.MOB, "EntityVillager"),
-	WITCH(Type.MOB, "EntityWitch"),
-	WITHER(Type.MOB, "EntityWither"),
-	WOLF(Type.MOB, "EntityWolf"),
-	ZOMBIE(Type.MOB, "EntityZombie"),
+	BAT(Type.MOB, MobDisguise.class, "EntityBat", "bat"),
+	BLAZE(Type.MOB, MobDisguise.class, "EntityBlaze", "blaze"),
+	CAVE_SPIDER(Type.MOB, MobDisguise.class, "EntityCaveSpider", "cave_spider", "cave-spider", "cavespider", "blue_spider", "blue-spider", "bluespider", "cave"),
+	CHICKEN(Type.MOB, MobDisguise.class, "EntityChicken", "chicken", "chick"),
+	COW(Type.MOB, MobDisguise.class, "EntityCow", "cow", "cattle", "ox"),
+	CREEPER(Type.MOB, CreeperDisguise.class, "EntityCreeper", "creeper"),
+	ENDER_DRAGON(Type.MOB, MobDisguise.class, "EntityEnderDragon", "dragon", "ender_dragon", "ender-dragon", "enderdragon"),
+	ENDERMAN(Type.MOB, EndermanDisguise.class, "EntityEnderman", "enderman", "endermen"),
+	ENDERMITE(Type.MOB, MobDisguise.class, "EntityEndermite", "endermite", "mite"),
+	GHAST(Type.MOB, MobDisguise.class, "EntityGhast", "ghast"),
+	GIANT(Type.MOB, MobDisguise.class, "EntityGiantZombie", "giant", "giant_zombie", "giant-zombie", "giantzombie"),
+	GUARDIAN(Type.MOB, GuardianDisguise.class, "EntityGuardian", "guardian"),
+	HORSE(Type.MOB, HorseDisguise.class, "EntityHorse", "horse"),
+	IRON_GOLEM(Type.MOB, MobDisguise.class, "EntityIronGolem", "iron_golem", "iron-golem", "irongolem", "golem"),
+	MAGMA_CUBE(Type.MOB, SizedDisguise.class, "EntityMagmaCube", "magma_cube", "magma-cube", "magmacube", "magma", "lava_cube", "lava-cube", "lavacube", "lava", "magma_slime", "magma-slime", "magmaslime", "lava_slime", "lava-slime", "lavaslime"),
+	MUSHROOM_COW(Type.MOB, MobDisguise.class, "EntityMushroomCow", "mushroom_cow", "mushroom-cow", "mushroomcow", "mushroom", "mooshroom"),
+	OCELOT(Type.MOB, OcelotDisguise.class, "EntityOcelot", "ocelot", "cat"),
+	PIG(Type.MOB, PigDisguise.class, "EntityPig", "pig"),
+	PIG_ZOMBIE(Type.MOB, MobDisguise.class, "EntityPigZombie", "pig_zombie", "pig-zombie", "pigzombie", "pigman", "zombie_pigman", "zombie-pigman", "zombiepigman"),
+	RABBIT(Type.MOB, RabbitDisguise.class, "EntityRabbit", "rabbit", "bunny"),
+	SHEEP(Type.MOB, ColoredDisguise.class, "EntitySheep", "sheep"),
+	SILVERFISH(Type.MOB, MobDisguise.class, "EntitySilverfish", "silverfish"),
+	SKELETON(Type.MOB, SkeletonDisguise.class, "EntitySkeleton", "skeleton"),
+	SLIME(Type.MOB, SizedDisguise.class, "EntitySlime", "slime", "cube"),
+	SNOWMAN(Type.MOB, MobDisguise.class, "EntitySnowman", "snowman", "snow-man", "snow_man", "snow_golem", "snow-golem", "snowgolem"),
+	SPIDER(Type.MOB, MobDisguise.class, "EntitySpider", "spider"),
+	SQUID(Type.MOB, MobDisguise.class, "EntitySquid", "squid"),
+	VILLAGER(Type.MOB, VillagerDisguise.class, "EntityVillager", "villager"),
+	WITCH(Type.MOB, MobDisguise.class, "EntityWitch", "witch"),
+	WITHER(Type.MOB, MobDisguise.class, "EntityWither", "witherboss", "wither-boss", "wither_boss"),
+	WOLF(Type.MOB, WolfDisguise.class, "EntityWolf", "wolf", "dog"),
+	ZOMBIE(Type.MOB, ZombieDisguise.class, "EntityZombie", "zombie"),
 	
-	GHOST(Type.PLAYER, "EntityPlayer"),
-	PLAYER(Type.PLAYER, "EntityPlayer"),
+	GHOST(Type.PLAYER, PlayerDisguise.class, "EntityPlayer"),
+	PLAYER(Type.PLAYER, PlayerDisguise.class, "EntityPlayer"),
 	
-	BOAT(Type.OBJECT, "EntityBoat"),
-	ENDER_CRYSTAL(Type.OBJECT, "EntityEnderCrystal"),
-	FALLING_BLOCK(Type.OBJECT, "EntityFallingBlock"),
-	ITEM(Type.OBJECT, "EntityItem"),
-	MINECART(Type.OBJECT, "EntityMinecartRideable");
+	BOAT(Type.OBJECT, ObjectDisguise.class, "EntityBoat", "boat"),
+	ENDER_CRYSTAL(Type.OBJECT, ObjectDisguise.class, "EntityEnderCrystal", "endercrystal"),
+	FALLING_BLOCK(Type.OBJECT, FallingBlockDisguise.class, "EntityFallingBlock", "fallingblock"),
+	ITEM(Type.OBJECT, ItemDisguise.class, "EntityItem", "item"),
+	MINECART(Type.OBJECT, MinecartDisguise.class, "EntityMinecartRideable", "minecart");
 	
-	private Type type;
-	private String className;
+	private final Type type;
+	private final Class<? extends Disguise> disguiseClass;
+	private final String nmsClass;
 	
-	private DisguiseType(Type type, String className) {
+	private DisguiseType(Type type, Class<? extends Disguise> disguiseClass, String nmsClass, String... commandArgs) {
 		this.type = type;
-		this.className = className;
+		this.disguiseClass = disguiseClass;
+		this.nmsClass = nmsClass;
+		if(commandArgs != null) {
+			for(String argument : commandArgs) {
+				Matcher.matcher.put(argument, this);
+			}
+		}
 	}
 	
 	/**
@@ -115,10 +124,34 @@ public enum DisguiseType {
 	 * @since 5.0.1
 	 */
 	public Class<?> getClass(String packageName) throws ClassNotFoundException {
-		return Class.forName(packageName + "." + className);
+		return Class.forName(packageName + "." + nmsClass);
 	}
 	
-	private static Random random = new Random();
+	/**
+	 * Creates and returns a new instance of the correspondent disguise class.<br>
+	 * This is not supported for {@link DisguiseType#PLAYER} and {@link DisguiseType#GHOST}.
+	 * 
+	 * @since 5.1.1
+	 * @throws UnsupportedOperationException if the type is {@link DisguiseType#PLAYER} and {@link DisguiseType#GHOST}
+	 * @return the new instance or <code>null</code>, if the instantiation failed
+	 */
+	public Disguise newInstance() {
+		try {
+			return disguiseClass.getDeclaredConstructor(new Class<?>[0]).newInstance(new Object[0]);
+		} catch(NoSuchMethodException e) {
+			try {
+				return disguiseClass.getDeclaredConstructor(DisguiseType.class).newInstance(this);
+			} catch(NoSuchMethodException e2) {
+				throw new UnsupportedOperationException();
+			} catch(Exception e2) {
+				return null;
+			}
+		} catch(Exception e) {
+			return null;
+		}
+	}
+	
+	private static final Random random = new Random();
 	
 	/**
 	 * Creates a random disguise type.
@@ -157,6 +190,16 @@ public enum DisguiseType {
 		MOB,
 		PLAYER,
 		OBJECT
+		
+	}
+	
+	public static class Matcher {
+		
+		private static final Map<String, DisguiseType> matcher = new ConcurrentHashMap<String, DisguiseType>();
+		
+		public static DisguiseType match(String string) {
+			return matcher.get(string.toLowerCase(Locale.ENGLISH));
+		}
 		
 	}
 	
