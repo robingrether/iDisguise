@@ -15,24 +15,23 @@ public class PlayerDisguise extends Disguise {
 	private final String name;
 	
 	/**
-	 * Creates an instance which can be used in the API.
+	 * Creates an instance.
 	 * 
 	 * @since 2.1.3
-	 * @param name the player's name to disguise as
-	 * @deprecated new constructor
+	 * @param name the player to disguise as
+	 * @throws IllegalArgumentException the given name is not valid.
 	 */
-	@Deprecated
 	public PlayerDisguise(String name) {
 		this(name, false);
 	}
 	
 	/**
-	 * Creates a new instance that can be used in the API.
+	 * Creates an instance.
 	 * 
 	 * @since 2.3.1
-	 * @param name the player's name to disguise as
+	 * @param name the player to disguise as
 	 * @param ghost whether the disguise should be a ghost or not
-	 * @throws IllegalArgumentException The given name is not valid.
+	 * @throws IllegalArgumentException the given name is not valid.
 	 */
 	public PlayerDisguise(String name, boolean ghost) {
 		super(ghost ? DisguiseType.GHOST : DisguiseType.PLAYER);
