@@ -63,15 +63,19 @@ public enum DisguiseType {
 	private final Type type;
 	private final Class<? extends Disguise> disguiseClass;
 	private final String nmsClass;
+	private final String commandArgument;
 	
 	private DisguiseType(Type type, Class<? extends Disguise> disguiseClass, String nmsClass, String... commandArgs) {
 		this.type = type;
 		this.disguiseClass = disguiseClass;
 		this.nmsClass = nmsClass;
 		if(commandArgs != null) {
+			this.commandArgument = commandArgs[0];
 			for(String argument : commandArgs) {
 				Matcher.matcher.put(argument, this);
 			}
+		} else {
+			this.commandArgument = null;
 		}
 	}
 	
@@ -149,6 +153,17 @@ public enum DisguiseType {
 		} catch(Exception e) {
 			return null;
 		}
+	}
+	
+	/**
+	 * Gets the default command argument.<br>
+	 * This is printed for every disguise type when you type <em>/disguise help</em>.
+	 * 
+	 * @since 5.1.1
+	 * @return the default command argument or <code>null</code> for player and ghost
+	 */
+	public String getDefaultCommandArgument() {
+		return commandArgument;
 	}
 	
 	private static final Random random = new Random();

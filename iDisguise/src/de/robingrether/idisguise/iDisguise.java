@@ -7,17 +7,13 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton.SkeletonType;
-import org.bukkit.entity.Villager.Profession;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -29,19 +25,10 @@ import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.DisguiseType.Type;
 import de.robingrether.idisguise.disguise.EndermanDisguise;
-import de.robingrether.idisguise.disguise.FallingBlockDisguise;
 import de.robingrether.idisguise.disguise.GuardianDisguise;
 import de.robingrether.idisguise.disguise.HorseDisguise;
-import de.robingrether.idisguise.disguise.HorseDisguise.Armor;
-import de.robingrether.idisguise.disguise.HorseDisguise.Color;
-import de.robingrether.idisguise.disguise.HorseDisguise.Style;
-import de.robingrether.idisguise.disguise.HorseDisguise.Variant;
-import de.robingrether.idisguise.disguise.ItemDisguise;
-import de.robingrether.idisguise.disguise.MinecartDisguise;
-import de.robingrether.idisguise.disguise.RabbitDisguise.RabbitType;
 import de.robingrether.idisguise.disguise.SheepDisguise;
 import de.robingrether.idisguise.disguise.MobDisguise;
-import de.robingrether.idisguise.disguise.ObjectDisguise;
 import de.robingrether.idisguise.disguise.OcelotDisguise;
 import de.robingrether.idisguise.disguise.PigDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
@@ -176,35 +163,7 @@ public class iDisguise extends JavaPlugin {
 				return true;
 			}
 			if(args.length == 0 || StringUtil.equalsIgnoreCase(args[0], "?", "help")) {
-				sender.sendMessage(ChatColor.GREEN + getFullName() + " - Help");
-				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " help - Shows this");
-				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " player <name> - Disguise as a player");
-				if(getConfiguration().getBoolean(Configuration.GHOST_DISGUISES) && player.hasPermission("iDisguise.ghost")) {
-					sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " ghost <name> - Disguise as a ghost player");
-				}
-				if(player.hasPermission("iDisguise.random")) {
-					sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " random - Disguise as a random mob");
-				}
-				if(player.hasPermission("iDisguise.reload")) {
-					sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " reload - Reloads the config file");
-				}
-				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " status - Shows what you are currently disguised as");
-				if(!getConfiguration().getBoolean(Configuration.UNDISGUISE_PERMISSION) || player.hasPermission("iDisguise.undisguise")) {
-					sender.sendMessage(ChatColor.GOLD + "/u" + (cmd.getName().equalsIgnoreCase("d") ? "" : "n") + cmd.getName() + " - Undisguise");
-				}
-				if(player.hasPermission("iDisguise.undisguise.all")) {
-					sender.sendMessage(ChatColor.GOLD + "/u" + (cmd.getName().equalsIgnoreCase("d") ? "" : "n") + cmd.getName() + " * - Undisguise everyone");
-				}
-				if(player.hasPermission("iDisguise.undisguise.others")) {
-					sender.sendMessage(ChatColor.GOLD + "/u" + (cmd.getName().equalsIgnoreCase("d") ? "" : "n") + cmd.getName() + " <player> - Undisguise another player");
-				}
-				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " [subtype] <mobtype> [subtype] - Disguise as a mob with optional subtypes");
-				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <subtype> - Change your current subtypes");
-				sender.sendMessage(ChatColor.GOLD + "Mobtypes:");
-				sender.sendMessage(ChatColor.GRAY + " bat, blaze, cave_spider, chicken, cow, creeper, ender_dragon, enderman, endermite, ghast, giant, guardian, horse, iron_golem, magma_cube, mushroom_cow, ocelot, pig, pig_zombie, rabbit, sheep, silverfish, skeleton, slime, snowman, spider, squid, villager, witch, witherboss, wolf, zombie");
-				if(DisguiseManager.instance.isDisguised(player)) {
-					sendSubtypeInformation(sender, DisguiseManager.instance.getDisguise(player).getType());
-				}
+				sendHelpMessage(sender, cmd, true, DisguiseManager.instance.getDisguise(player));
 			} else if(StringUtil.equalsIgnoreCase(args[0], "player", "p")) {
 				if(args.length == 1) {
 					sender.sendMessage(ChatColor.RED + "Wrong usage: " + ChatColor.ITALIC + "/" + cmd.getName() + " " + args[0] + " <name>");
@@ -467,29 +426,21 @@ public class iDisguise extends JavaPlugin {
 				}
 			}
 		} else if(StringUtil.equalsIgnoreCase(cmd.getName(), "od", "odis", "odisguise")) {
+			if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+				if(sender instanceof Player && !((Player)sender).hasPermission("iDisguise.reload")) {
+					sender.sendMessage(ChatColor.RED + "You are not allowed to do this.");
+				} else {
+					onReload();
+					sender.sendMessage(ChatColor.GOLD + "Reloaded config file.");
+				}
+				return true;
+			}
 			if(sender instanceof Player && !((Player)sender).hasPermission("iDisguise.others")) {
 				sender.sendMessage(ChatColor.RED + "You are not allowed to do this.");
 				return true;
 			}
 			if(args.length < 2) {
-				sender.sendMessage(ChatColor.GREEN + getFullName() + " - Help");
-				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> help - Shows this");
-				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> player <name> - Disguise as a player");
-				if(getConfiguration().getBoolean(Configuration.GHOST_DISGUISES)) {
-					sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> ghost <name> - Disguise as a ghost player");
-				}
-				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> random - Disguise as a random mob");
-				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> status - Shows what the player is currently disguised as");
-				if(!(sender instanceof Player) || ((Player)sender).hasPermission("iDisguise.undisguise.all")) {
-					sender.sendMessage(ChatColor.GOLD + "/u" + (cmd.getName().equalsIgnoreCase("od") ? "" : "n") + cmd.getName().substring(1) + " * - Undisguise everyone");
-				}
-				if(!(sender instanceof Player) || ((Player)sender).hasPermission("iDisguise.undisguise.others")) {
-					sender.sendMessage(ChatColor.GOLD + "/u" + (cmd.getName().equalsIgnoreCase("od") ? "" : "n") + cmd.getName().substring(1) + " <player> - Undisguise another player");
-				}
-				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> [subtype] <mobtype> [subtype] - Disguise as a mob with optional subtypes");
-				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> <subtype> - Change the current subtypes");
-				sender.sendMessage(ChatColor.GOLD + "Mobtypes:");
-				sender.sendMessage(ChatColor.GRAY + " bat, blaze, cave_spider, chicken, cow, creeper, ender_dragon, enderman, endermite, ghast, giant, guardian, horse, iron_golem, magma_cube, mushroom_cow, ocelot, pig, pig_zombie, rabbit, sheep, silverfish, skeleton, slime, snowman, spider, squid, villager, witch, witherboss, wolf, zombie");
+				sendHelpMessage(sender, cmd, false, null);
 				return true;
 			} else {
 				if(getServer().matchPlayer(args[0]).isEmpty()) {
@@ -503,27 +454,7 @@ public class iDisguise extends JavaPlugin {
 				sender.sendMessage(ChatColor.RED + "Using this plugin is prohibited in this world.");
 			}
 			if(StringUtil.equalsIgnoreCase(args[1], "?", "help")) {
-				sender.sendMessage(ChatColor.GREEN + getFullName() + " - Help");
-				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> help - Shows this");
-				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> player <name> - Disguise as a player");
-				if(getConfiguration().getBoolean(Configuration.GHOST_DISGUISES)) {
-					sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> ghost <name> - Disguise as a ghost player");
-				}
-				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> random - Disguise as a random mob");
-				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> status - Shows what the player is currently disguised as");
-				if(!(sender instanceof Player) || ((Player)sender).hasPermission("iDisguise.undisguise.all")) {
-					sender.sendMessage(ChatColor.GOLD + "/u" + (cmd.getName().equalsIgnoreCase("od") ? "" : "n") + cmd.getName().substring(1) + " * - Undisguise everyone");
-				}
-				if(!(sender instanceof Player) || ((Player)sender).hasPermission("iDisguise.undisguise.others")) {
-					sender.sendMessage(ChatColor.GOLD + "/u" + (cmd.getName().equalsIgnoreCase("od") ? "" : "n") + cmd.getName().substring(1) + " <player> - Undisguise another player");
-				}
-				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> [subtype] <mobtype> [subtype] - Disguise as a mob with optional subtypes");
-				sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " <player> <subtype> - Change the current subtypes");
-				sender.sendMessage(ChatColor.GOLD + "Mobtypes:");
-				sender.sendMessage(ChatColor.GRAY + " bat, blaze, cave_spider, chicken, cow, creeper, ender_dragon, enderman, endermite, ghast, giant, guardian, horse, iron_golem, magma_cube, mushroom_cow, ocelot, pig, pig_zombie, rabbit, sheep, silverfish, skeleton, slime, snowman, spider, squid, villager, witch, witherboss, wolf, zombie");
-				if(DisguiseManager.instance.isDisguised(player)) {
-					sendSubtypeInformation(sender, DisguiseManager.instance.getDisguise(player).getType());
-				}
+				sendHelpMessage(sender, cmd, false, DisguiseManager.instance.getDisguise(player));
 			} else if(StringUtil.equalsIgnoreCase(args[1], "player", "p")) {
 				if(args.length == 2) {
 					sender.sendMessage(ChatColor.RED + "Wrong usage: " + ChatColor.ITALIC + "/" + cmd.getName() + " " + player.getName() + " " + args[1] + " <name>");
@@ -681,6 +612,48 @@ public class iDisguise extends JavaPlugin {
 			return true;
 		}
 		return true;
+	}
+	
+	private void sendHelpMessage(CommandSender sender, Command cmd, boolean self, Disguise disguise) {
+		String disguiseCommand = ChatColor.GOLD + "/" + cmd.getName() + (self ? "" : " <player>");
+		String undisguiseCommand = ChatColor.GOLD + "/u" + (cmd.getName().length() < 3 ? "" : "n") + cmd.getName().substring(1);
+		boolean console = !(sender instanceof Player);
+		sender.sendMessage(ChatColor.GREEN + getFullName() + " - Help");
+		sender.sendMessage(disguiseCommand + " help - Shows this help");
+		sender.sendMessage(disguiseCommand + " player <name> - Disguise as a player");
+		if(configuration.getBoolean(Configuration.GHOST_DISGUISES)) {
+			sender.sendMessage(disguiseCommand + " ghost <name> - Disguise as a ghost player");
+		}
+		if(!self || sender.hasPermission("iDisguise.random")) {
+			sender.sendMessage(disguiseCommand + " random - Disguise as a randomly chosen mob");
+		}
+		if(console || sender.hasPermission("iDisguise.reload")) {
+			sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " reload - Reload the config file");
+		}
+		sender.sendMessage(disguiseCommand + " status - Show the current disguise");
+		if(self) {
+			sender.sendMessage(undisguiseCommand + " - Undisguise");
+		}
+		if(console || sender.hasPermission("iDisguise.undisguise.all")) {
+			sender.sendMessage(undisguiseCommand + " * - Undisguise everyone");
+		}
+		if(console || sender.hasPermission("iDisguise.undisguise.others")) {
+			sender.sendMessage(undisguiseCommand + " <player> - Undisguise another player");
+		}
+		sender.sendMessage(disguiseCommand + " [subtype] <mobtype> [subtype] - Disguise with optional subtype");
+		sender.sendMessage(disguiseCommand + " <subtype> - Change subtype after disguising");
+		sender.sendMessage(ChatColor.GOLD + "Types:");
+		StringBuilder builder = new StringBuilder(" ");
+		for(DisguiseType type : DisguiseType.values()) {
+			if(!type.isPlayer()) {
+				builder.append(type.getDefaultCommandArgument() + ", ");
+			}
+		}
+		String types = builder.toString();
+		sender.sendMessage(ChatColor.GRAY + types.substring(0, types.length() - 2));
+		if(disguise != null) {
+			sendSubtypeInformation(sender, disguise.getType());
+		}
 	}
 	
 	private void sendSubtypeInformation(CommandSender sender, DisguiseType type) {
