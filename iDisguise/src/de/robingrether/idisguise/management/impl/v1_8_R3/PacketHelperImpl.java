@@ -9,7 +9,6 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
-import de.robingrether.idisguise.disguise.ColoredDisguise;
 import de.robingrether.idisguise.disguise.CreeperDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
@@ -25,6 +24,7 @@ import de.robingrether.idisguise.disguise.OcelotDisguise;
 import de.robingrether.idisguise.disguise.PigDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.disguise.RabbitDisguise;
+import de.robingrether.idisguise.disguise.SheepDisguise;
 import de.robingrether.idisguise.disguise.SizedDisguise;
 import de.robingrether.idisguise.disguise.SkeletonDisguise;
 import de.robingrether.idisguise.disguise.VillagerDisguise;
@@ -102,18 +102,17 @@ public class PacketHelperImpl extends PacketHelper {
 			Location location = player.getLocation();
 			entity.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 			entity.d(entityPlayer.getId());
-			if(mobDisguise instanceof ColoredDisguise) {
+			if(mobDisguise instanceof SheepDisguise) {
 				if(entity instanceof EntitySheep) {
-					((EntitySheep)entity).setColor(EnumColor.fromColorIndex(((ColoredDisguise)mobDisguise).getColor().getData()));
+					((EntitySheep)entity).setColor(EnumColor.fromColorIndex(((SheepDisguise)mobDisguise).getColor().getData()));
 				}
-				if(mobDisguise instanceof WolfDisguise) {
-					if(entity instanceof EntityWolf) {
-						WolfDisguise wolfDisguise = (WolfDisguise)mobDisguise;
-						EntityWolf wolf = (EntityWolf)entity;
-						wolf.setCollarColor(EnumColor.fromColorIndex(wolfDisguise.getColor().getData()));
-						wolf.setTamed(wolfDisguise.isTamed());
-						wolf.setAngry(wolfDisguise.isAngry());
-					}
+			} else if(mobDisguise instanceof WolfDisguise) {
+				if(entity instanceof EntityWolf) {
+					WolfDisguise wolfDisguise = (WolfDisguise)mobDisguise;
+					EntityWolf wolf = (EntityWolf)entity;
+					wolf.setCollarColor(EnumColor.fromColorIndex(wolfDisguise.getCollarColor().getData()));
+					wolf.setTamed(wolfDisguise.isTamed());
+					wolf.setAngry(wolfDisguise.isAngry());
 				}
 			} else if(mobDisguise instanceof CreeperDisguise) {
 				if(entity instanceof EntityCreeper) {
