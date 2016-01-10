@@ -316,7 +316,8 @@ public class iDisguise extends JavaPlugin {
 					if(type != null) {
 						disguise = type.newInstance();
 						if(disguise == null) {
-							
+							sender.sendMessage(ChatColor.RED + "An error occured. Maybe your Minecraft version does not support the chosen disguise type.");
+							return true;
 						} else {
 							changed = true;
 							break;
@@ -584,7 +585,8 @@ public class iDisguise extends JavaPlugin {
 					if(type != null) {
 						disguise = type.newInstance();
 						if(disguise == null) {
-							
+							sender.sendMessage(ChatColor.RED + "An error occured. Maybe your Minecraft version does not support the chosen disguise type.");
+							return true;
 						} else {
 							changed = true;
 							break;
