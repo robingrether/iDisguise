@@ -70,7 +70,7 @@ public enum DisguiseType {
 		this.disguiseClass = disguiseClass;
 		this.nmsClass = nmsClass;
 		if(commandArgs != null) {
-			this.commandArgument = commandArgs[0];
+			this.commandArgument = commandArgs.length > 0 ? commandArgs[0] : null;
 			for(String argument : commandArgs) {
 				Matcher.matcher.put(argument, this);
 			}
