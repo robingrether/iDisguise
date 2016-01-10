@@ -78,16 +78,36 @@ public class iDisguise extends JavaPlugin {
 		Sounds.setEnabled(configuration.getBoolean(Configuration.REPLACE_SOUNDS));
 		try {
 			metrics = new Metrics(this);
-			Graph graph1 = metrics.createGraph("Disguise Count");
-			graph1.addPlotter(new Plotter("Disguise Count") {
+			Graph graphDisguiseCount = metrics.createGraph("Disguise Count");
+			graphDisguiseCount.addPlotter(new Plotter("Disguise Count") {
 				public int getValue() {
 					return DisguiseManager.instance.getOnlineDisguiseCount();
 				}
 			});
-			Graph graph3 = metrics.createGraph("Sound System");
-			graph3.addPlotter(new Plotter(configuration.getBoolean(Configuration.REPLACE_SOUNDS) ? "enabled" : "disabled") {
+			Graph graphFeatures = metrics.createGraph("Used Features");
+			graphFeatures.addPlotter(new Plotter("store disguises") {
 				public int getValue() {
-					return 1;
+					return configuration.getBoolean(Configuration.STORE_DISGUISES) ? 1 : 0;
+				}
+			});
+			graphFeatures.addPlotter(new Plotter("update checking") {
+				public int getValue() {
+					return configuration.getBoolean(Configuration.CHECK_FOR_UPDATES) ? 1 : 0;
+				}
+			});
+			graphFeatures.addPlotter(new Plotter("realistic sounds") {
+				public int getValue() {
+					return configuration.getBoolean(Configuration.REPLACE_SOUNDS) ? 1 : 0;
+				}
+			});
+			graphFeatures.addPlotter(new Plotter("undisguise permission") {
+				public int getValue() {
+					return configuration.getBoolean(Configuration.UNDISGUISE_PERMISSION) ? 1 : 0;
+				}
+			});
+			graphFeatures.addPlotter(new Plotter("ghost disguises") {
+				public int getValue() {
+					return configuration.getBoolean(Configuration.GHOST_DISGUISES) ? 1 : 0;
 				}
 			});
 			metrics.start();
