@@ -831,11 +831,15 @@ public class iDisguise extends JavaPlugin {
 			case ZOMBIE:
 				return player.hasPermission("iDisguise.mob.zombie") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && (!((ZombieDisguise)disguise).isVillager() || player.hasPermission("iDisguise.mob.zombie.infected"));
 			case BOAT:
+				return player.hasPermission("iDisguise.object.boat");
 			case ENDER_CRYSTAL:
+				return player.hasPermission("iDisguise.object.ender_crystal");
 			case FALLING_BLOCK:
+				return player.hasPermission("iDisguise.object.falling_block");
 			case ITEM:
+				return player.hasPermission("iDisguise.object.item");
 			case MINECART:
-				return true;
+				return player.hasPermission("iDisguise.object.minecart");
 			default:
 				return false;
 		}
