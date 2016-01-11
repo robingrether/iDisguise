@@ -680,7 +680,6 @@ public class iDisguise extends JavaPlugin {
 	
 	private void sendSubtypeInformation(CommandSender sender, DisguiseType type) {
 		sender.sendMessage(ChatColor.GOLD + "Information about subtypes:");
-		sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
 		switch(type) {
 			case CREEPER:
 				sender.sendMessage(ChatColor.GRAY + " Creeper: powered, not-powered");
@@ -693,6 +692,7 @@ public class iDisguise extends JavaPlugin {
 				sender.sendMessage(ChatColor.GRAY + " Guardian type: elder, not-elder");
 				break;
 			case HORSE:
+				sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
 				sender.sendMessage(ChatColor.GRAY + " Variant: donkey, normal, mule, skeletal, undead");
 				sender.sendMessage(ChatColor.GRAY + " Style: black-dots, no-markings, white-stripes, white-dots, whitefield");
 				sender.sendMessage(ChatColor.GRAY + " Color: black, brown, chestnut, creamy, dark-brown, gray, white");
@@ -701,15 +701,19 @@ public class iDisguise extends JavaPlugin {
 				sender.sendMessage(ChatColor.GRAY + " Armor: no-armor, iron, gold, diamond");
 				break;
 			case OCELOT:
+				sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
 				sender.sendMessage(ChatColor.GRAY + " Cat type: black, red, siamese, wild");
 				break;
 			case PIG:
+				sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
 				sender.sendMessage(ChatColor.GRAY + " Saddle: saddled, not-saddled");
 				break;
 			case RABBIT:
+				sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
 				sender.sendMessage(ChatColor.GRAY + " Rabbit type: black, black-white, brown, gold, salt-pepper, killer, white");
 				break;
 			case SHEEP:
+				sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
 				sender.sendMessage(ChatColor.GRAY + " Color: black, blue, brown, cyan, gray, green, light-blue, lime, magenta, orange, pink, purple, red, silver, white, yellow");
 				break;
 			case SKELETON:
@@ -720,17 +724,39 @@ public class iDisguise extends JavaPlugin {
 				sender.sendMessage(ChatColor.GRAY + " Size: tiny, normal, big, <1-1000>");
 				break;
 			case VILLAGER:
+				sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
 				sender.sendMessage(ChatColor.GRAY + " Profession: blacksmith, butcher, farmer, librarian, priest");
 				break;
 			case WOLF:
+				sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
 				sender.sendMessage(ChatColor.GRAY + " Collar: black, blue, brown, cyan, gray, green, light-blue, lime, magenta, orange, pink, purple, red, silver, white, yellow");
 				sender.sendMessage(ChatColor.GRAY + " Tamed: tamed, not-tamed");
 				sender.sendMessage(ChatColor.GRAY + " Angry: angry, not-angry");
 				break;
 			case ZOMBIE:
+				sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
 				sender.sendMessage(ChatColor.GRAY + " Zombie type: normal, infected");
 				break;
-			default: break;
+			case CHICKEN:
+			case COW:
+			case MUSHROOM_COW:
+				sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
+				break;
+			case FALLING_BLOCK:
+				sender.sendMessage(ChatColor.GRAY + " Block type: <material-name>");
+				break;
+			case ITEM:
+				sender.sendMessage(ChatColor.GRAY + " Material: <material-name>");
+				sender.sendMessage(ChatColor.GRAY + " Material data: <0-255>");
+				sender.sendMessage(ChatColor.GRAY + " Stack size: single, double, triple, quadruple, quintuple");
+				break;
+			case MINECART:
+				sender.sendMessage(ChatColor.GRAY + " Block inside: <material-name>");
+				sender.sendMessage(ChatColor.GRAY + " Data: <0-255>");
+				break;
+			default:
+				sender.sendMessage(ChatColor.GRAY + " no subtypes available");
+				break;
 		}
 	}
 	
