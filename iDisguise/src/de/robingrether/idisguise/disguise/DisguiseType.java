@@ -24,7 +24,7 @@ public enum DisguiseType {
 	CHICKEN(Type.MOB, MobDisguise.class, "EntityChicken", "chicken", "chick"),
 	COW(Type.MOB, MobDisguise.class, "EntityCow", "cow", "cattle", "ox"),
 	CREEPER(Type.MOB, CreeperDisguise.class, "EntityCreeper", "creeper"),
-	ENDER_DRAGON(Type.MOB, MobDisguise.class, "EntityEnderDragon", "dragon", "ender_dragon", "ender-dragon", "enderdragon"),
+	ENDER_DRAGON(Type.MOB, MobDisguise.class, "EntityEnderDragon", "ender_dragon", "dragon", "ender-dragon", "enderdragon"),
 	ENDERMAN(Type.MOB, EndermanDisguise.class, "EntityEnderman", "enderman", "endermen"),
 	ENDERMITE(Type.MOB, MobDisguise.class, "EntityEndermite", "endermite", "mite"),
 	GHAST(Type.MOB, MobDisguise.class, "EntityGhast", "ghast"),
@@ -55,10 +55,10 @@ public enum DisguiseType {
 	PLAYER(Type.PLAYER, PlayerDisguise.class, "EntityPlayer"),
 	
 	BOAT(Type.OBJECT, ObjectDisguise.class, "EntityBoat", "boat"),
-	ENDER_CRYSTAL(Type.OBJECT, ObjectDisguise.class, "EntityEnderCrystal", "endercrystal"),
-	FALLING_BLOCK(Type.OBJECT, FallingBlockDisguise.class, "EntityFallingBlock", "fallingblock"),
-	ITEM(Type.OBJECT, ItemDisguise.class, "EntityItem", "item"),
-	MINECART(Type.OBJECT, MinecartDisguise.class, "EntityMinecartRideable", "minecart");
+	ENDER_CRYSTAL(Type.OBJECT, ObjectDisguise.class, "EntityEnderCrystal", "ender_crystal", "ender-crystal", "endercrystal", "crystal"),
+	FALLING_BLOCK(Type.OBJECT, FallingBlockDisguise.class, "EntityFallingBlock", "falling_block", "falling-block", "fallingblock", "block"),
+	ITEM(Type.OBJECT, ItemDisguise.class, "EntityItem", "item", "itemstack", "item-stack", "item_stack"),
+	MINECART(Type.OBJECT, MinecartDisguise.class, "EntityMinecartRideable", "minecart", "cart");
 	
 	private final Type type;
 	private final Class<? extends Disguise> disguiseClass;
