@@ -828,9 +828,9 @@ public class iDisguise extends JavaPlugin {
 			case CAVE_SPIDER:
 				return player.hasPermission("iDisguise.mob.cave_spider");
 			case CHICKEN:
-				return player.hasPermission("iDisguise.mob.chicken") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby"));
+				return player.hasPermission("iDisguise.mob.chicken") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby"));
 			case COW:
-				return player.hasPermission("iDisguise.mob.cow") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby"));
+				return player.hasPermission("iDisguise.mob.cow") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby"));
 			case CREEPER:
 				return player.hasPermission("iDisguise.mob.creeper") && (!((CreeperDisguise)disguise).isPowered() || player.hasPermission("iDisguise.mob.creeper.powered"));
 			case ENDER_DRAGON:
@@ -848,25 +848,25 @@ public class iDisguise extends JavaPlugin {
 			case GUARDIAN:
 				return player.hasPermission("iDisguise.mob.guardian") && (!((GuardianDisguise)disguise).isElder() || player.hasPermission("iDisguise.mob.guardian.elder"));
 			case HORSE:
-				return player.hasPermission("iDisguise.mob.horse") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.horse.variant." + ((HorseDisguise)disguise).getVariant().name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal").replace("skeleton", "skeletal"));
+				return player.hasPermission("iDisguise.mob.horse") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.horse.variant." + ((HorseDisguise)disguise).getVariant().name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal").replace("skeleton", "skeletal"));
 			case IRON_GOLEM:
 				return player.hasPermission("iDisguise.mob.iron_golem");
 			case MAGMA_CUBE:
 				return player.hasPermission("iDisguise.mob.magma_cube") && (((SizedDisguise)disguise).getSize() < 5 || player.hasPermission("iDisguise.mob.magma_cube.giant"));
 			case MUSHROOM_COW:
-				return player.hasPermission("iDisguise.mob.mushroom_cow") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby"));
+				return player.hasPermission("iDisguise.mob.mushroom_cow") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby"));
 			case OCELOT:
-				return player.hasPermission("iDisguise.mob.ocelot") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.ocelot.type." + ((OcelotDisguise)disguise).getCatType().name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", ""));
+				return player.hasPermission("iDisguise.mob.ocelot") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.ocelot.type." + ((OcelotDisguise)disguise).getCatType().name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", ""));
 			case PIG:
-				return player.hasPermission("iDisguise.mob.pig") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && (!((PigDisguise)disguise).isSaddled() || player.hasPermission("iDisguise.mob.pig.saddled"));
+				return player.hasPermission("iDisguise.mob.pig") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && (!((PigDisguise)disguise).isSaddled() || player.hasPermission("iDisguise.mob.pig.saddled"));
 			case PIG_ZOMBIE:
-				return player.hasPermission("iDisguise.mob.pig_zombie") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby"));
+				return player.hasPermission("iDisguise.mob.pig_zombie") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby"));
 			case PLAYER:
 				return (player.hasPermission("iDisguise.player.name.*") || player.hasPermission("iDisguise.player.name." + ((PlayerDisguise)disguise).getName().toLowerCase(Locale.ENGLISH))) && (isPlayerDisguisePermitted(((PlayerDisguise)disguise).getName().toLowerCase(Locale.ENGLISH)) || player.hasPermission("iDisguise.player.prohibited"));
 			case RABBIT:
-				return player.hasPermission("iDisguise.mob.rabbit") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.rabbit.type." + ((RabbitDisguise)disguise).getRabbitType().name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer"));
+				return player.hasPermission("iDisguise.mob.rabbit") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.rabbit.type." + ((RabbitDisguise)disguise).getRabbitType().name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer"));
 			case SHEEP:
-				return player.hasPermission("iDisguise.mob.sheep") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.sheep.color." + ((SheepDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+				return player.hasPermission("iDisguise.mob.sheep") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.sheep.color." + ((SheepDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 			case SILVERFISH:
 				return player.hasPermission("iDisguise.mob.silverfish");
 			case SKELETON:
@@ -880,15 +880,15 @@ public class iDisguise extends JavaPlugin {
 			case SQUID:
 				return player.hasPermission("iDisguise.mob.squid");
 			case VILLAGER:
-				return player.hasPermission("iDisguise.mob.villager") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.villager.profession." + ((VillagerDisguise)disguise).getProfession().name().toLowerCase(Locale.ENGLISH));
+				return player.hasPermission("iDisguise.mob.villager") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.villager.profession." + ((VillagerDisguise)disguise).getProfession().name().toLowerCase(Locale.ENGLISH));
 			case WITCH:
 				return player.hasPermission("iDisguise.mob.witch");
 			case WITHER:
 				return player.hasPermission("iDisguise.mob.witherboss");
 			case WOLF:
-				return player.hasPermission("iDisguise.mob.wolf") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.wolf.collar." + ((WolfDisguise)disguise).getCollarColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-')) && (!((WolfDisguise)disguise).isTamed() || player.hasPermission("iDisguise.mob.wolf.tamed")) && (!((WolfDisguise)disguise).isAngry() || player.hasPermission("iDisguise.mob.wolf.angry"));
+				return player.hasPermission("iDisguise.mob.wolf") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.wolf.collar." + ((WolfDisguise)disguise).getCollarColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-')) && (!((WolfDisguise)disguise).isTamed() || player.hasPermission("iDisguise.mob.wolf.tamed")) && (!((WolfDisguise)disguise).isAngry() || player.hasPermission("iDisguise.mob.wolf.angry"));
 			case ZOMBIE:
-				return player.hasPermission("iDisguise.mob.zombie") && (((MobDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && (!((ZombieDisguise)disguise).isVillager() || player.hasPermission("iDisguise.mob.zombie.infected"));
+				return player.hasPermission("iDisguise.mob.zombie") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && (!((ZombieDisguise)disguise).isVillager() || player.hasPermission("iDisguise.mob.zombie.infected"));
 			case BOAT:
 				return player.hasPermission("iDisguise.object.boat");
 			case ENDER_CRYSTAL:
