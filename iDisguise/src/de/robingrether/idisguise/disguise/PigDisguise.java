@@ -8,9 +8,9 @@ import java.util.Locale;
  * @since 3.0.1
  * @author RobinGrether
  */
-public class PigDisguise extends MobDisguise {
+public class PigDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = 7763610139408397729L;
+	private static final long serialVersionUID = 8040481135931636309L;
 	private boolean saddled;
 	
 	/**

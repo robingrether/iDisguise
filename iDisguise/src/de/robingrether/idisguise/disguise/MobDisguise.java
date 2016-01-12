@@ -1,7 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import java.util.Locale;
-
 /**
  * Represents a disguise as a mob.
  * 
@@ -10,8 +8,7 @@ import java.util.Locale;
  */
 public class MobDisguise extends Disguise {
 	
-	private static final long serialVersionUID = -8536172774722123370L;
-	protected boolean adult;
+	private static final long serialVersionUID = 7587147403290078928L;
 	protected String customName = null;
 	
 	/**
@@ -21,43 +18,53 @@ public class MobDisguise extends Disguise {
 	 * @param type the type to disguise as
 	 */
 	public MobDisguise(DisguiseType type) {
-		this(type, true);
+		super(type);
+		if(!type.isMob()) {
+			throw new IllegalArgumentException("DisguiseType must be a mob");
+		}
 	}
 	
 	/**
 	 * Creates an instance.
 	 * 
+	 * @deprecated Functionality moved to {@linkplain AgeableDisguise}.
 	 * @since 2.1.3
 	 * @param type the type to disguise as
 	 * @param adult should the disguise be an adult
 	 * @throws IllegalArgumentException DisguiseType is not a mob.
 	 */
+	@Deprecated
 	public MobDisguise(DisguiseType type, boolean adult) {
-		super(type);
-		if(!type.isMob()) {
-			throw new IllegalArgumentException("DisguiseType must be a mob");
-		}
-		this.adult = adult;
+		this(type);
 	}
 	
 	/**
 	 * Checks whether the disguise is an adult.
 	 * 
+	 * @deprecated Functionality moved to {@linkplain AgeableDisguise}.
 	 * @since 2.1.3
 	 * @return true if it's an adult, false if not
 	 */
+	@Deprecated
 	public boolean isAdult() {
-		return this.adult;
+		if(this instanceof AgeableDisguise) {
+			return ((AgeableDisguise)this).isAdult();
+		}
+		return true;
 	}
 	
 	/**
 	 * Sets if the disguise is an adult.
 	 * 
+	 * @deprecated Functionality moved to {@linkplain AgeableDisguise}.
 	 * @since 2.1.3
 	 * @param adult should the disguise be an adult
 	 */
+	@Deprecated
 	public void setAdult(boolean adult) {
-		this.adult = adult;
+		if(this instanceof AgeableDisguise) {
+			((AgeableDisguise)this).setAdult(adult);
+		}
 	}
 	
 	/**
@@ -89,7 +96,7 @@ public class MobDisguise extends Disguise {
 	 * {@inheritDoc}
 	 */
 	public MobDisguise clone() {
-		MobDisguise clone = new MobDisguise(type, adult);
+		MobDisguise clone = new MobDisguise(type);
 		clone.setCustomName(customName);
 		return clone;
 	}
@@ -98,27 +105,14 @@ public class MobDisguise extends Disguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof MobDisguise && ((MobDisguise)object).adult == adult;
+		return super.equals(object) && object instanceof MobDisguise;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public boolean applySubtype(String argument) {
-		switch(argument.toLowerCase(Locale.ENGLISH)) {
-			case "adult":
-			case "senior":
-				setAdult(true);
-				return true;
-			case "baby":
-			case "child":
-			case "kid":
-			case "junior":
-				setAdult(false);
-				return true;
-			default:
-				return false;
-		}
+		return false;
 	}
 	
 }

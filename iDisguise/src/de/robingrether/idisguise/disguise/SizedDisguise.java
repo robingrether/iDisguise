@@ -31,7 +31,7 @@ public class SizedDisguise extends MobDisguise {
 	 * @param size the size (must not be negative)
 	 */
 	public SizedDisguise(DisguiseType type, int size) {
-		super(type, true);
+		super(type);
 		this.size = size;
 	}
 	

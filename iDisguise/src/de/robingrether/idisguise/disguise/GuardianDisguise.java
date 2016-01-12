@@ -29,7 +29,7 @@ public class GuardianDisguise extends MobDisguise {
 	 * @param isElder whether the guardian should be elder
 	 */
 	public GuardianDisguise(boolean isElder) {
-		super(DisguiseType.GUARDIAN, true);
+		super(DisguiseType.GUARDIAN);
 		this.isElder = isElder;
 	}
 	

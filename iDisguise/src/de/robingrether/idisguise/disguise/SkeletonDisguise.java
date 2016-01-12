@@ -31,7 +31,7 @@ public class SkeletonDisguise extends MobDisguise {
 	 * @param skeletonType the skeleton type
 	 */
 	public SkeletonDisguise(SkeletonType skeletonType) {
-		super(DisguiseType.SKELETON, true);
+		super(DisguiseType.SKELETON);
 		this.skeletonType = skeletonType;
 	}
 	

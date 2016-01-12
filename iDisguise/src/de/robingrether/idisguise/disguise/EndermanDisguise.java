@@ -45,7 +45,7 @@ public class EndermanDisguise extends MobDisguise {
 	 * @throws IllegalArgumentException Material is not a block or data value is negative.
 	 */
 	public EndermanDisguise(Material blockInHand, int blockInHandData) {
-		super(DisguiseType.ENDERMAN, true);
+		super(DisguiseType.ENDERMAN);
 		if(!blockInHand.isBlock()) {
 			throw new IllegalArgumentException("Material must be a block!");
 		}

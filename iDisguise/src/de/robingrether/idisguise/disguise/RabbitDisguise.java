@@ -8,9 +8,9 @@ import java.util.Locale;
  * @since 4.0.1
  * @author RobinGrether
  */
-public class RabbitDisguise extends MobDisguise {
+public class RabbitDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = -2691206163684801474L;
+	private static final long serialVersionUID = 1540855063412621247L;
 	private RabbitType rabbitType;
 	
 	/**

@@ -10,9 +10,9 @@ import org.bukkit.entity.Villager.Profession;
  * @since 3.0.1
  * @author RobinGrether
  */
-public class VillagerDisguise extends MobDisguise {
+public class VillagerDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = 4811148064924974891L;
+	private static final long serialVersionUID = -8324476173444500691L;
 	private Profession profession;
 	
 	/**

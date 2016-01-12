@@ -11,9 +11,9 @@ import org.bukkit.inventory.ItemStack;
  * @since 3.0.1
  * @author RobinGrether
  */
-public class HorseDisguise extends MobDisguise {
+public class HorseDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = 5142532563549602969L;
+	private static final long serialVersionUID = -7022070447102161970L;
 	private Variant variant;
 	private Style style;
 	private Color color;

@@ -10,9 +10,9 @@ import org.bukkit.entity.Ocelot.Type;
  * @since 3.0.1
  * @author RobinGrether
  */
-public class OcelotDisguise extends MobDisguise {
+public class OcelotDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = -3590935781972579223L;
+	private static final long serialVersionUID = -1849874936924669239L;
 	private Type catType;
 	
 	/**

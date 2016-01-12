@@ -8,9 +8,9 @@ import java.util.Locale;
  * @since 4.0.1
  * @author RobinGrether
  */
-public class ZombieDisguise extends MobDisguise {
+public class ZombieDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = 3233813531511391233L;
+	private static final long serialVersionUID = 3705745561497458137L;
 	private boolean isVillager;
 	
 	/**

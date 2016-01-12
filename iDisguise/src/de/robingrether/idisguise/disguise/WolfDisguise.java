@@ -10,9 +10,9 @@ import org.bukkit.DyeColor;
  * @since 3.0.1
  * @author RobinGrether
  */
-public class WolfDisguise extends MobDisguise {
+public class WolfDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = -2279695225712768959L;
+	private static final long serialVersionUID = -6203460877408219137L;
 	private DyeColor collarColor;
 	private boolean tamed;
 	private boolean angry;

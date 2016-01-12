@@ -10,9 +10,9 @@ import org.bukkit.DyeColor;
  * @since 5.1.1
  * @author RobinGrether
  */
-public class SheepDisguise extends MobDisguise {
+public class SheepDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = 5169650213986968003L;
+	private static final long serialVersionUID = -8390096252207373283L;
 	private DyeColor color;
 	
 	/**

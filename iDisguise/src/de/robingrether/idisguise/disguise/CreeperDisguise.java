@@ -29,7 +29,7 @@ public class CreeperDisguise extends MobDisguise {
 	 * @param powered whether the creeper should be powered
 	 */
 	public CreeperDisguise(boolean powered) {
-		super(DisguiseType.CREEPER, true);
+		super(DisguiseType.CREEPER);
 		this.powered = powered;
 	}
 	
