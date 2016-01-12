@@ -73,23 +73,19 @@ public class GuardianDisguise extends MobDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean applySubtype(String argument) {
-		if(super.applySubtype(argument)) {
-			return true;
-		} else {
-			switch(argument.replace('-', '_').toLowerCase(Locale.ENGLISH)) {
-				case "elder":
-				case "big":
-					setElder(true);
-					return true;
-				case "not_elder":
-				case "notelder":
-				case "normal":
-				case "small":
-					setElder(false);
-					return true;
-				default:
-					return false;
-			}
+		switch(argument.replace('-', '_').toLowerCase(Locale.ENGLISH)) {
+			case "elder":
+			case "big":
+				setElder(true);
+				return true;
+			case "not_elder":
+			case "notelder":
+			case "normal":
+			case "small":
+				setElder(false);
+				return true;
+			default:
+				return false;
 		}
 	}
 	

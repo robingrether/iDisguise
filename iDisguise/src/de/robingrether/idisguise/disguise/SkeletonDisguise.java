@@ -75,16 +75,12 @@ public class SkeletonDisguise extends MobDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean applySubtype(String argument) {
-		if(super.applySubtype(argument)) {
+		try {
+			SkeletonType skeletonType = SkeletonType.valueOf(argument.toUpperCase(Locale.ENGLISH));
+			setSkeletonType(skeletonType);
 			return true;
-		} else {
-			try {
-				SkeletonType skeletonType = SkeletonType.valueOf(argument.toUpperCase(Locale.ENGLISH));
-				setSkeletonType(skeletonType);
-				return true;
-			} catch(IllegalArgumentException e) {
-				return false;
-			}
+		} catch(IllegalArgumentException e) {
+			return false;
 		}
 	}
 	

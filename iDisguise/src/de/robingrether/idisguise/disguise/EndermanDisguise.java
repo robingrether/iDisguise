@@ -124,25 +124,21 @@ public class EndermanDisguise extends MobDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean applySubtype(String argument) {
-		if(super.applySubtype(argument)) {
-			return true;
-		} else {
-			try {
-				Material blockInHand = Material.valueOf(argument.replace('-', '_').toUpperCase(Locale.ENGLISH));
-				if(blockInHand.isBlock()) {
-					setBlockInHand(blockInHand);
-					return true;
-				}
-			} catch(IllegalArgumentException e) {
+		try {
+			Material blockInHand = Material.valueOf(argument.replace('-', '_').toUpperCase(Locale.ENGLISH));
+			if(blockInHand.isBlock()) {
+				setBlockInHand(blockInHand);
+				return true;
 			}
-			try {
-				int blockInHandData = Integer.parseInt(argument);
-				if(blockInHandData < 256) {
-					setBlockInHandData(blockInHandData);
-					return true;
-				}
-			} catch(NumberFormatException e) {
+		} catch(IllegalArgumentException e) {
+		}
+		try {
+			int blockInHandData = Integer.parseInt(argument);
+			if(blockInHandData < 256) {
+				setBlockInHandData(blockInHandData);
+				return true;
 			}
+		} catch(NumberFormatException e) {
 		}
 		return false;
 	}

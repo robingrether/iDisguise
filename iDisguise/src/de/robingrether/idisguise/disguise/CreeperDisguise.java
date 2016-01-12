@@ -73,24 +73,20 @@ public class CreeperDisguise extends MobDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean applySubtype(String argument) {
-		if(super.applySubtype(argument)) {
-			return true;
-		} else {
-			switch(argument.replace('-', '_').toLowerCase(Locale.ENGLISH)) {
-				case "powered":
-				case "charged":
-					setPowered(true);
-					return true;
-				case "normal":
-				case "not_powered":
-				case "notpowered":
-				case "not_charged":
-				case "notcharged":
-					setPowered(false);
-					return true;
-				default:
-					return false;
-			}
+		switch(argument.replace('-', '_').toLowerCase(Locale.ENGLISH)) {
+			case "powered":
+			case "charged":
+				setPowered(true);
+				return true;
+			case "normal":
+			case "not_powered":
+			case "notpowered":
+			case "not_charged":
+			case "notcharged":
+				setPowered(false);
+				return true;
+			default:
+				return false;
 		}
 	}
 	

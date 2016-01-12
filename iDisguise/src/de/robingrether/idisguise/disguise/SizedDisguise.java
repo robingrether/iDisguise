@@ -75,32 +75,28 @@ public class SizedDisguise extends MobDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean applySubtype(String argument) {
-		if(super.applySubtype(argument)) {
-			return true;
-		} else {
-			switch(argument.toLowerCase(Locale.ENGLISH)) {
-				case "tiny":
-				case "small":
-					setSize(1);
-					return true;
-				case "normal":
-				case "medium":
-					setSize(2);
-					return true;
-				case "big":
-				case "tall":
-				case "massive":
-					setSize(4);
-					return true;
+		switch(argument.toLowerCase(Locale.ENGLISH)) {
+			case "tiny":
+			case "small":
+				setSize(1);
+				return true;
+			case "normal":
+			case "medium":
+				setSize(2);
+				return true;
+			case "big":
+			case "tall":
+			case "massive":
+				setSize(4);
+				return true;
+		}
+		try {
+			int size = Integer.parseInt(argument);
+			if(size <= 100 && size > 0) {
+				setSize(size);
+				return true;
 			}
-			try {
-				int size = Integer.parseInt(argument);
-				if(size <= 100 && size > 0) {
-					setSize(size);
-					return true;
-				}
-			} catch(NumberFormatException e) {
-			}
+		} catch(NumberFormatException e) {
 		}
 		return false;
 	}
