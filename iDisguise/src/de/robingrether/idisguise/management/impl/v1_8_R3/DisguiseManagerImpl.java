@@ -120,6 +120,7 @@ public class DisguiseManagerImpl extends DisguiseManager {
 				list.add(packetPlayerInfoRemove.new PlayerInfoData((GameProfile)PlayerHelper.instance.getGameProfile(((PlayerDisguise)oldDisguise).getName()), ((CraftPlayer)player).getHandle().ping, ((CraftPlayer)player).getHandle().playerInteractManager.getGameMode(), null));
 			} catch(Exception e) {
 			}
+			player.setDisplayName(player.getName());
 			for(Player observer : Bukkit.getOnlinePlayers()) {
 				if(observer == player) {
 					continue;
