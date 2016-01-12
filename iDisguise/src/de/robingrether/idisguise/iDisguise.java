@@ -20,15 +20,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 import de.robingrether.idisguise.api.DisguiseAPI;
 import de.robingrether.idisguise.api.DisguiseEvent;
 import de.robingrether.idisguise.api.UndisguiseEvent;
+import de.robingrether.idisguise.disguise.AgeableDisguise;
 import de.robingrether.idisguise.disguise.CreeperDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.DisguiseType.Type;
 import de.robingrether.idisguise.disguise.EndermanDisguise;
+import de.robingrether.idisguise.disguise.FallingBlockDisguise;
 import de.robingrether.idisguise.disguise.GuardianDisguise;
 import de.robingrether.idisguise.disguise.HorseDisguise;
+import de.robingrether.idisguise.disguise.ItemDisguise;
+import de.robingrether.idisguise.disguise.MinecartDisguise;
 import de.robingrether.idisguise.disguise.SheepDisguise;
 import de.robingrether.idisguise.disguise.MobDisguise;
+import de.robingrether.idisguise.disguise.ObjectDisguise;
 import de.robingrether.idisguise.disguise.OcelotDisguise;
 import de.robingrether.idisguise.disguise.PigDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
@@ -249,58 +254,85 @@ public class iDisguise extends JavaPlugin {
 						sender.sendMessage(ChatColor.GOLD + "You are disguised as a " + (((PlayerDisguise)disguise).isGhost() ? "ghost" : "player") + " called " + ChatColor.ITALIC + ((PlayerDisguise)disguise).getName());
 					} else if(disguise instanceof MobDisguise) {
 						sender.sendMessage(ChatColor.GOLD + "You are disguised as a " + disguise.getType().name().toLowerCase(Locale.ENGLISH));
-						sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
-						sender.sendMessage(ChatColor.GRAY + " Age: " + (((MobDisguise)disguise).isAdult() ? "adult" : "baby"));
-						switch(disguise.getType()) {
-							case CREEPER:
-								sender.sendMessage(ChatColor.GRAY + " Creeper: " + (((CreeperDisguise)disguise).isPowered() ? "powered" : "not-powered"));
-								break;
-							case ENDERMAN:
-								sender.sendMessage(ChatColor.GRAY + " Block in Hand: " + ((EndermanDisguise)disguise).getBlockInHand().name().toLowerCase(Locale.ENGLISH));
-								sender.sendMessage(ChatColor.GRAY + " Data: " + ((EndermanDisguise)disguise).getBlockInHandData());
-								break;
-							case GUARDIAN:
-								sender.sendMessage(ChatColor.GRAY + " Guardian type: " + (((GuardianDisguise)disguise).isElder() ? "elder" : "not-elder"));
-								break;
-							case HORSE:
-								sender.sendMessage(ChatColor.GRAY + " Variant: " + ((HorseDisguise)disguise).getVariant().name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal").replace("skeleton", "skeletal"));
-								sender.sendMessage(ChatColor.GRAY + " Style: " + ((HorseDisguise)disguise).getStyle().name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings"));
-								sender.sendMessage(ChatColor.GRAY + " Color: " + ((HorseDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-								sender.sendMessage(ChatColor.GRAY + " Saddle: " + (((HorseDisguise)disguise).isSaddled() ? "saddled" : "not-saddled"));
-								sender.sendMessage(ChatColor.GRAY + " Chest: " + (((HorseDisguise)disguise).hasChest() ? "chest" : "no-chest"));
-								sender.sendMessage(ChatColor.GRAY + " Armor: " + ((HorseDisguise)disguise).getArmor().name().toLowerCase(Locale.ENGLISH).replace("none", "no-armor"));
-								break;
-							case OCELOT:
-								sender.sendMessage(ChatColor.GRAY + " Cat type: " + ((OcelotDisguise)disguise).getCatType().name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", ""));
-								break;
-							case PIG:
-								sender.sendMessage(ChatColor.GRAY + " Saddle: " + (((PigDisguise)disguise).isSaddled() ? "saddled" : "not-saddled"));
-								break;
-							case RABBIT:
-								sender.sendMessage(ChatColor.GRAY + " Rabbit type: " + ((RabbitDisguise)disguise).getRabbitType().name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer"));
-								break;
-							case SHEEP:
-								sender.sendMessage(ChatColor.GRAY + " Color: " + ((SheepDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-								break;
-							case SKELETON:
-								sender.sendMessage(ChatColor.GRAY + " Skeleton type: " + (((SkeletonDisguise)disguise).getSkeletonType().equals(SkeletonType.NORMAL) ? "normal" : "wither"));
-								break;
-							case MAGMA_CUBE:
-							case SLIME:
-								sender.sendMessage(ChatColor.GRAY + " Size: " + ((SizedDisguise)disguise).getSize() + (((SizedDisguise)disguise).getSize() == 1 ? " (tiny)" : (((SizedDisguise)disguise).getSize() == 2 ? " (normal)" : (((SizedDisguise)disguise).getSize() == 4 ? " (big)" : ""))));
-								break;
-							case VILLAGER:
-								sender.sendMessage(ChatColor.GRAY + " Profession: " + ((VillagerDisguise)disguise).getProfession().name().toLowerCase(Locale.ENGLISH));
-								break;
-							case WOLF:
-								sender.sendMessage(ChatColor.GRAY + " Collar: " + ((WolfDisguise)disguise).getCollarColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-								sender.sendMessage(ChatColor.GRAY + " Tamed: " + (((WolfDisguise)disguise).isTamed() ? "tamed" : "not-tamed"));
-								sender.sendMessage(ChatColor.GRAY + " Angry: " + (((WolfDisguise)disguise).isAngry() ? "angry" : "not-angry"));
-								break;
-							case ZOMBIE:
-								sender.sendMessage(ChatColor.GRAY + " Zombie type: " + (((ZombieDisguise)disguise).isVillager() ? "infected" : "normal"));
-								break;
-							default: break;
+						if(disguise instanceof AgeableDisguise) {
+							sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
+							sender.sendMessage(ChatColor.GRAY + " Age: " + (((AgeableDisguise)disguise).isAdult() ? "adult" : "baby"));
+							switch(disguise.getType()) {
+								case HORSE:
+									sender.sendMessage(ChatColor.GRAY + " Variant: " + ((HorseDisguise)disguise).getVariant().name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal").replace("skeleton", "skeletal"));
+									sender.sendMessage(ChatColor.GRAY + " Style: " + ((HorseDisguise)disguise).getStyle().name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings"));
+									sender.sendMessage(ChatColor.GRAY + " Color: " + ((HorseDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+									sender.sendMessage(ChatColor.GRAY + " Saddle: " + (((HorseDisguise)disguise).isSaddled() ? "saddled" : "not-saddled"));
+									sender.sendMessage(ChatColor.GRAY + " Chest: " + (((HorseDisguise)disguise).hasChest() ? "chest" : "no-chest"));
+									sender.sendMessage(ChatColor.GRAY + " Armor: " + ((HorseDisguise)disguise).getArmor().name().toLowerCase(Locale.ENGLISH).replace("none", "no-armor"));
+									break;
+								case OCELOT:
+									sender.sendMessage(ChatColor.GRAY + " Cat type: " + ((OcelotDisguise)disguise).getCatType().name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", ""));
+									break;
+								case PIG:
+									sender.sendMessage(ChatColor.GRAY + " Saddle: " + (((PigDisguise)disguise).isSaddled() ? "saddled" : "not-saddled"));
+									break;
+								case RABBIT:
+									sender.sendMessage(ChatColor.GRAY + " Rabbit type: " + ((RabbitDisguise)disguise).getRabbitType().name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer"));
+									break;
+								case SHEEP:
+									sender.sendMessage(ChatColor.GRAY + " Color: " + ((SheepDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+									break;
+								case VILLAGER:
+									sender.sendMessage(ChatColor.GRAY + " Profession: " + ((VillagerDisguise)disguise).getProfession().name().toLowerCase(Locale.ENGLISH));
+									break;
+								case WOLF:
+									sender.sendMessage(ChatColor.GRAY + " Collar: " + ((WolfDisguise)disguise).getCollarColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+									sender.sendMessage(ChatColor.GRAY + " Tamed: " + (((WolfDisguise)disguise).isTamed() ? "tamed" : "not-tamed"));
+									sender.sendMessage(ChatColor.GRAY + " Angry: " + (((WolfDisguise)disguise).isAngry() ? "angry" : "not-angry"));
+									break;
+								case ZOMBIE:
+									sender.sendMessage(ChatColor.GRAY + " Zombie type: " + (((ZombieDisguise)disguise).isVillager() ? "infected" : "normal"));
+									break;
+								default: break;
+							}
+						} else {
+							switch(disguise.getType()) {
+								case CREEPER:
+									sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
+									sender.sendMessage(ChatColor.GRAY + " Creeper: " + (((CreeperDisguise)disguise).isPowered() ? "powered" : "not-powered"));
+									break;
+								case ENDERMAN:
+									sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
+									sender.sendMessage(ChatColor.GRAY + " Block in Hand: " + ((EndermanDisguise)disguise).getBlockInHand().name().toLowerCase(Locale.ENGLISH));
+									sender.sendMessage(ChatColor.GRAY + " Data: " + ((EndermanDisguise)disguise).getBlockInHandData());
+									break;
+								case GUARDIAN:
+									sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
+									sender.sendMessage(ChatColor.GRAY + " Guardian type: " + (((GuardianDisguise)disguise).isElder() ? "elder" : "not-elder"));
+									break;
+								case SKELETON:
+									sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
+									sender.sendMessage(ChatColor.GRAY + " Skeleton type: " + (((SkeletonDisguise)disguise).getSkeletonType().equals(SkeletonType.NORMAL) ? "normal" : "wither"));
+									break;
+								case MAGMA_CUBE:
+								case SLIME:
+									sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
+									sender.sendMessage(ChatColor.GRAY + " Size: " + ((SizedDisguise)disguise).getSize() + (((SizedDisguise)disguise).getSize() == 1 ? " (tiny)" : (((SizedDisguise)disguise).getSize() == 2 ? " (normal)" : (((SizedDisguise)disguise).getSize() == 4 ? " (big)" : ""))));
+									break;
+								default: break;
+							}
+						}
+					} else if(disguise instanceof ObjectDisguise) {
+						sender.sendMessage(ChatColor.GOLD + "You are disguised as a " + disguise.getType().name().toLowerCase(Locale.ENGLISH));
+						if(disguise instanceof FallingBlockDisguise) {
+							sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
+							sender.sendMessage(ChatColor.GRAY + " Block type: " + ((FallingBlockDisguise)disguise).getMaterial().name().toLowerCase(Locale.ENGLISH));
+						} else if(disguise instanceof ItemDisguise) {
+							sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
+							sender.sendMessage(ChatColor.GRAY + " Material: " + ((ItemDisguise)disguise).getItemStack().getType().name().toLowerCase(Locale.ENGLISH));
+							sender.sendMessage(ChatColor.GRAY + " Material data: " + ((ItemDisguise)disguise).getItemStack().getDurability());
+							int stackSize = ((ItemDisguise)disguise).getItemStack().getAmount();
+							sender.sendMessage(ChatColor.GRAY + " Stack size: " + (stackSize < 2 ? "single" : stackSize < 6 ? "double" : stackSize < 21 ? "triple" : stackSize < 41 ? "quadruple" : "quintuple"));
+						} else if(disguise instanceof MinecartDisguise) {
+							sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
+							sender.sendMessage(ChatColor.GRAY + " Block inside: " + ((MinecartDisguise)disguise).getDisplayedBlock().name().toLowerCase(Locale.ENGLISH));
+							sender.sendMessage(ChatColor.GRAY + " Data: " + ((MinecartDisguise)disguise).getDisplayedBlockData());
 						}
 					}
 				} else {
@@ -529,58 +561,85 @@ public class iDisguise extends JavaPlugin {
 						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " is disguised as a " + (((PlayerDisguise)disguise).isGhost() ? "ghost" : "player") + " called " + ChatColor.ITALIC + ((PlayerDisguise)disguise).getName());
 					} else if(disguise instanceof MobDisguise) {
 						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " is disguised as a " + disguise.getType().name().toLowerCase(Locale.ENGLISH));
-						sender.sendMessage(ChatColor.GRAY + "Subtypes:");
-						sender.sendMessage(ChatColor.GRAY + " Age: " + (((MobDisguise)disguise).isAdult() ? "adult" : "baby"));
-						switch(disguise.getType()) {
-							case CREEPER:
-								sender.sendMessage(ChatColor.GRAY + " Creeper: " + (((CreeperDisguise)disguise).isPowered() ? "powered" : "not-powered"));
-								break;
-							case ENDERMAN:
-								sender.sendMessage(ChatColor.GRAY + " Block in Hand: " + ((EndermanDisguise)disguise).getBlockInHand().name().toLowerCase(Locale.ENGLISH));
-								sender.sendMessage(ChatColor.GRAY + " Data: " + ((EndermanDisguise)disguise).getBlockInHandData());
-								break;
-							case GUARDIAN:
-								sender.sendMessage(ChatColor.GRAY + " Guardian type: " + (((GuardianDisguise)disguise).isElder() ? "elder" : "not-elder"));
-								break;
-							case HORSE:
-								sender.sendMessage(ChatColor.GRAY + " Variant: " + ((HorseDisguise)disguise).getVariant().name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal").replace("skeleton", "skeletal"));
-								sender.sendMessage(ChatColor.GRAY + " Style: " + ((HorseDisguise)disguise).getStyle().name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings"));
-								sender.sendMessage(ChatColor.GRAY + " Color: " + ((HorseDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-								sender.sendMessage(ChatColor.GRAY + " Saddle: " + (((HorseDisguise)disguise).isSaddled() ? "saddled" : "not-saddled"));
-								sender.sendMessage(ChatColor.GRAY + " Chest: " + (((HorseDisguise)disguise).hasChest() ? "chest" : "no-chest"));
-								sender.sendMessage(ChatColor.GRAY + " Armor: " + ((HorseDisguise)disguise).getArmor().name().toLowerCase(Locale.ENGLISH).replace("none", "no-armor"));
-								break;
-							case OCELOT:
-								sender.sendMessage(ChatColor.GRAY + " Cat type: " + ((OcelotDisguise)disguise).getCatType().name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", ""));
-								break;
-							case PIG:
-								sender.sendMessage(ChatColor.GRAY + " Saddle: " + (((PigDisguise)disguise).isSaddled() ? "saddled" : "not-saddled"));
-								break;
-							case RABBIT:
-								sender.sendMessage(ChatColor.GRAY + " Rabbit type: " + ((RabbitDisguise)disguise).getRabbitType().name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer"));
-								break;
-							case SHEEP:
-								sender.sendMessage(ChatColor.GRAY + " Color: " + ((SheepDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-								break;
-							case SKELETON:
-								sender.sendMessage(ChatColor.GRAY + " Skeleton type: " + (((SkeletonDisguise)disguise).getSkeletonType().equals(SkeletonType.NORMAL) ? "normal" : "wither"));
-								break;
-							case MAGMA_CUBE:
-							case SLIME:
-								sender.sendMessage(ChatColor.GRAY + " Size: " + ((SizedDisguise)disguise).getSize() + (((SizedDisguise)disguise).getSize() == 1 ? " (tiny)" : (((SizedDisguise)disguise).getSize() == 2 ? " (normal)" : (((SizedDisguise)disguise).getSize() == 4 ? " (big)" : ""))));
-								break;
-							case VILLAGER:
-								sender.sendMessage(ChatColor.GRAY + " Profession: " + ((VillagerDisguise)disguise).getProfession().name().toLowerCase(Locale.ENGLISH));
-								break;
-							case WOLF:
-								sender.sendMessage(ChatColor.GRAY + " Collar: " + ((WolfDisguise)disguise).getCollarColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-								sender.sendMessage(ChatColor.GRAY + " Tamed: " + (((WolfDisguise)disguise).isTamed() ? "tamed" : "not-tamed"));
-								sender.sendMessage(ChatColor.GRAY + " Angry: " + (((WolfDisguise)disguise).isAngry() ? "angry" : "not-angry"));
-								break;
-							case ZOMBIE:
-								sender.sendMessage(ChatColor.GRAY + " Zombie type: " + (((ZombieDisguise)disguise).isVillager() ? "infected" : "normal"));
-								break;
-							default: break;
+						if(disguise instanceof AgeableDisguise) {
+							sender.sendMessage(ChatColor.GRAY + "Subtypes:");
+							sender.sendMessage(ChatColor.GRAY + " Age: " + (((AgeableDisguise)disguise).isAdult() ? "adult" : "baby"));
+							switch(disguise.getType()) {
+								case HORSE:
+									sender.sendMessage(ChatColor.GRAY + " Variant: " + ((HorseDisguise)disguise).getVariant().name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal").replace("skeleton", "skeletal"));
+									sender.sendMessage(ChatColor.GRAY + " Style: " + ((HorseDisguise)disguise).getStyle().name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings"));
+									sender.sendMessage(ChatColor.GRAY + " Color: " + ((HorseDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+									sender.sendMessage(ChatColor.GRAY + " Saddle: " + (((HorseDisguise)disguise).isSaddled() ? "saddled" : "not-saddled"));
+									sender.sendMessage(ChatColor.GRAY + " Chest: " + (((HorseDisguise)disguise).hasChest() ? "chest" : "no-chest"));
+									sender.sendMessage(ChatColor.GRAY + " Armor: " + ((HorseDisguise)disguise).getArmor().name().toLowerCase(Locale.ENGLISH).replace("none", "no-armor"));
+									break;
+								case OCELOT:
+									sender.sendMessage(ChatColor.GRAY + " Cat type: " + ((OcelotDisguise)disguise).getCatType().name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", ""));
+									break;
+								case PIG:
+									sender.sendMessage(ChatColor.GRAY + " Saddle: " + (((PigDisguise)disguise).isSaddled() ? "saddled" : "not-saddled"));
+									break;
+								case RABBIT:
+									sender.sendMessage(ChatColor.GRAY + " Rabbit type: " + ((RabbitDisguise)disguise).getRabbitType().name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer"));
+									break;
+								case SHEEP:
+									sender.sendMessage(ChatColor.GRAY + " Color: " + ((SheepDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+									break;
+								case VILLAGER:
+									sender.sendMessage(ChatColor.GRAY + " Profession: " + ((VillagerDisguise)disguise).getProfession().name().toLowerCase(Locale.ENGLISH));
+									break;
+								case WOLF:
+									sender.sendMessage(ChatColor.GRAY + " Collar: " + ((WolfDisguise)disguise).getCollarColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+									sender.sendMessage(ChatColor.GRAY + " Tamed: " + (((WolfDisguise)disguise).isTamed() ? "tamed" : "not-tamed"));
+									sender.sendMessage(ChatColor.GRAY + " Angry: " + (((WolfDisguise)disguise).isAngry() ? "angry" : "not-angry"));
+									break;
+								case ZOMBIE:
+									sender.sendMessage(ChatColor.GRAY + " Zombie type: " + (((ZombieDisguise)disguise).isVillager() ? "infected" : "normal"));
+									break;
+								default: break;
+							}
+						} else {
+							switch(disguise.getType()) {
+								case CREEPER:
+									sender.sendMessage(ChatColor.GRAY + "Subtypes:");
+									sender.sendMessage(ChatColor.GRAY + " Creeper: " + (((CreeperDisguise)disguise).isPowered() ? "powered" : "not-powered"));
+									break;
+								case ENDERMAN:
+									sender.sendMessage(ChatColor.GRAY + "Subtypes:");
+									sender.sendMessage(ChatColor.GRAY + " Block in Hand: " + ((EndermanDisguise)disguise).getBlockInHand().name().toLowerCase(Locale.ENGLISH));
+									sender.sendMessage(ChatColor.GRAY + " Data: " + ((EndermanDisguise)disguise).getBlockInHandData());
+									break;
+								case GUARDIAN:
+									sender.sendMessage(ChatColor.GRAY + "Subtypes:");
+									sender.sendMessage(ChatColor.GRAY + " Guardian type: " + (((GuardianDisguise)disguise).isElder() ? "elder" : "not-elder"));
+									break;
+								case SKELETON:
+									sender.sendMessage(ChatColor.GRAY + "Subtypes:");
+									sender.sendMessage(ChatColor.GRAY + " Skeleton type: " + (((SkeletonDisguise)disguise).getSkeletonType().equals(SkeletonType.NORMAL) ? "normal" : "wither"));
+									break;
+								case MAGMA_CUBE:
+								case SLIME:
+									sender.sendMessage(ChatColor.GRAY + "Subtypes:");
+									sender.sendMessage(ChatColor.GRAY + " Size: " + ((SizedDisguise)disguise).getSize() + (((SizedDisguise)disguise).getSize() == 1 ? " (tiny)" : (((SizedDisguise)disguise).getSize() == 2 ? " (normal)" : (((SizedDisguise)disguise).getSize() == 4 ? " (big)" : ""))));
+									break;
+								default: break;
+							}
+						}
+					} else if(disguise instanceof ObjectDisguise) {
+						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " is disguised as a " + disguise.getType().name().toLowerCase(Locale.ENGLISH));
+						if(disguise instanceof FallingBlockDisguise) {
+							sender.sendMessage(ChatColor.GRAY + "Subtypes:");
+							sender.sendMessage(ChatColor.GRAY + " Block type: " + ((FallingBlockDisguise)disguise).getMaterial().name().toLowerCase(Locale.ENGLISH));
+						} else if(disguise instanceof ItemDisguise) {
+							sender.sendMessage(ChatColor.GRAY + "Subtypes:");
+							sender.sendMessage(ChatColor.GRAY + " Material: " + ((ItemDisguise)disguise).getItemStack().getType().name().toLowerCase(Locale.ENGLISH));
+							sender.sendMessage(ChatColor.GRAY + " Material data: " + ((ItemDisguise)disguise).getItemStack().getDurability());
+							int stackSize = ((ItemDisguise)disguise).getItemStack().getAmount();
+							sender.sendMessage(ChatColor.GRAY + " Stack size: " + (stackSize < 2 ? "single" : stackSize < 6 ? "double" : stackSize < 21 ? "triple" : stackSize < 41 ? "quadruple" : "quintuple"));
+						} else if(disguise instanceof MinecartDisguise) {
+							sender.sendMessage(ChatColor.GRAY + "Subtypes:");
+							sender.sendMessage(ChatColor.GRAY + " Block inside: " + ((MinecartDisguise)disguise).getDisplayedBlock().name().toLowerCase(Locale.ENGLISH));
+							sender.sendMessage(ChatColor.GRAY + " Data: " + ((MinecartDisguise)disguise).getDisplayedBlockData());
 						}
 					}
 				} else {
