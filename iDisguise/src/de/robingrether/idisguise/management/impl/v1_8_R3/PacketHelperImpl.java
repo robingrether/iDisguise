@@ -98,7 +98,7 @@ public class PacketHelperImpl extends PacketHelper {
 				entity.setCustomNameVisible(true);
 			}
 			if(entity instanceof EntityAgeable) {
-				if(mobDisguise instanceof AgeableDisguise && ((AgeableDisguise)disguise).isAdult()) {
+				if(mobDisguise instanceof AgeableDisguise && !((AgeableDisguise)disguise).isAdult()) {
 					((EntityAgeable)entity).setAge(-24000);
 				}
 			}
