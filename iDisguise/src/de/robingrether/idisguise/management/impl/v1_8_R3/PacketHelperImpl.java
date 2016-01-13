@@ -9,6 +9,7 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
+import de.robingrether.idisguise.disguise.AgeableDisguise;
 import de.robingrether.idisguise.disguise.CreeperDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
@@ -96,8 +97,10 @@ public class PacketHelperImpl extends PacketHelper {
 				entity.setCustomName(mobDisguise.getCustomName());
 				entity.setCustomNameVisible(true);
 			}
-			if(entity instanceof EntityAgeable && !mobDisguise.isAdult()) {
-				((EntityAgeable)entity).setAge(-24000);
+			if(entity instanceof EntityAgeable) {
+				if(mobDisguise instanceof AgeableDisguise && ((AgeableDisguise)disguise).isAdult()) {
+					((EntityAgeable)entity).setAge(-24000);
+				}
 			}
 			Location location = player.getLocation();
 			entity.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
