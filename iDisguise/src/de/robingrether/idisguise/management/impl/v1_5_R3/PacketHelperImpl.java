@@ -14,6 +14,7 @@ import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.EndermanDisguise;
 import de.robingrether.idisguise.disguise.FallingBlockDisguise;
 import de.robingrether.idisguise.disguise.ItemDisguise;
+import de.robingrether.idisguise.disguise.MinecartDisguise;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.ObjectDisguise;
 import de.robingrether.idisguise.disguise.OcelotDisguise;
@@ -36,6 +37,7 @@ import net.minecraft.server.v1_5_R3.EntityEnderman;
 import net.minecraft.server.v1_5_R3.EntityFallingBlock;
 import net.minecraft.server.v1_5_R3.EntityItem;
 import net.minecraft.server.v1_5_R3.EntityLiving;
+import net.minecraft.server.v1_5_R3.EntityMinecartRideable;
 import net.minecraft.server.v1_5_R3.EntityOcelot;
 import net.minecraft.server.v1_5_R3.EntityPig;
 import net.minecraft.server.v1_5_R3.EntityPlayer;
@@ -166,6 +168,14 @@ public class PacketHelperImpl extends PacketHelper {
 					} else {
 						((EntityItem)entity).setItemStack(new ItemStack(Item.byId[itemDisguise.getItemStack().getTypeId()], itemDisguise.getItemStack().getAmount(), itemDisguise.getItemStack().getDurability()));
 					}
+				}
+				packets.add(new Packet23VehicleSpawn(entity, objectDisguise.getTypeId()));
+				packets.add(new Packet40EntityMetadata(entity.id, entity.getDataWatcher(), true));
+			} else if(entity instanceof EntityMinecartRideable) {
+				if(objectDisguise instanceof MinecartDisguise) {
+					MinecartDisguise minecartDisguise = (MinecartDisguise)objectDisguise;
+					((EntityMinecartRideable)entity).k(minecartDisguise.getDisplayedBlock().getId());
+					((EntityMinecartRideable)entity).l(minecartDisguise.getDisplayedBlockData());
 				}
 				packets.add(new Packet23VehicleSpawn(entity, objectDisguise.getTypeId()));
 				packets.add(new Packet40EntityMetadata(entity.id, entity.getDataWatcher(), true));
