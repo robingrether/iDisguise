@@ -35,13 +35,14 @@ public class DisguiseManagerImpl extends DisguiseManager {
 	
 	private DisguiseMapLegacy disguiseMap = new DisguiseMapLegacy();
 	
-	public Packet getSpawnPacket(Player player) {
-		Packet packetSpawn;
+	public Packet[] getSpawnPacket(Player player) {
+		Packet[] packetSpawn;
 		Disguise disguise = getDisguise(player);
 		if(disguise == null) {
-			packetSpawn = new Packet20NamedEntitySpawn(((CraftPlayer)player).getHandle());
+			packetSpawn = new Packet[1];
+			packetSpawn[0] = new Packet20NamedEntitySpawn(((CraftPlayer)player).getHandle());
 		} else {
-			packetSpawn = (Packet)PacketHelper.instance.getPacket(player, disguise);
+			packetSpawn = (Packet[])PacketHelper.instance.getPackets(player, disguise);
 		}
 		return packetSpawn;
 	}
@@ -61,17 +62,19 @@ public class DisguiseManagerImpl extends DisguiseManager {
 		return new Packet29DestroyEntity(player.getEntityId());
 	}
 	
-	private synchronized void sendPacket(Player player, Object packet) {
-		if(packet == null) {
+	private synchronized void sendPacket(Player player, Packet... packets) {
+		if(packets == null) {
 			return;
 		}
-		((PlayerConnectionInjected)((CraftPlayer)player).getHandle().playerConnection).sendPacketFromPlugin((Packet)packet);
+		for(Packet packet : packets) {
+			((PlayerConnectionInjected)((CraftPlayer)player).getHandle().playerConnection).sendPacketFromPlugin((Packet)packet);
+		}
 	}
 	
 	public void sendPacketLater(final Player player, final Object packet, long delay) {
 		BukkitRunnable runnable = new BukkitRunnable() {
 			public void run() {
-				sendPacket(player, packet);
+				sendPacket(player, (Packet)packet);
 			}
 		};
 		runnable.runTaskLater(Bukkit.getPluginManager().getPlugin("iDisguise"), delay);
@@ -89,6 +92,7 @@ public class DisguiseManagerImpl extends DisguiseManager {
 			}
 		} else if(oldDisguise instanceof PlayerDisguise) {
 			Packet201PlayerInfo packetPlayerInfoRemove = new Packet201PlayerInfo(((PlayerDisguise)oldDisguise).getName(), false, ((CraftPlayer)player).getHandle().ping);
+			player.setDisplayName(player.getName());
 			for(Player observer : Bukkit.getOnlinePlayers()) {
 				if(observer == player) {
 					continue;
@@ -115,7 +119,7 @@ public class DisguiseManagerImpl extends DisguiseManager {
 			}
 		}
 		Packet packetDestroy = getDestroyPacket(player);
-		Packet packetSpawn = getSpawnPacket(player);
+		Packet[] packetSpawn = getSpawnPacket(player);
 		for(Player observer : player.getWorld().getPlayers()) {
 			if(observer == player) {
 				continue;
@@ -153,7 +157,7 @@ public class DisguiseManagerImpl extends DisguiseManager {
 			}
 		}
 		Packet packetDestroy = getDestroyPacket(player);
-		Packet packetSpawn = getSpawnPacket(player);
+		Packet[] packetSpawn = getSpawnPacket(player);
 		if(disguise instanceof PlayerDisguise) {
 			player.setDisplayName(player.getName());
 		}
