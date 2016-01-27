@@ -202,8 +202,8 @@ public class PacketHelperImpl extends PacketHelper {
 			} else if(entity instanceof EntityMinecartRideable) {
 				if(objectDisguise instanceof MinecartDisguise) {
 					MinecartDisguise minecartDisguise = (MinecartDisguise)objectDisguise;
-					((EntityMinecartRideable)entity).i(minecartDisguise.getDisplayedBlock().getId());
-					((EntityMinecartRideable)entity).j(minecartDisguise.getDisplayedBlockData());
+					((EntityMinecartRideable)entity).k(minecartDisguise.getDisplayedBlock().getId());
+					((EntityMinecartRideable)entity).l(minecartDisguise.getDisplayedBlockData());
 				}
 				packets.add(new PacketPlayOutSpawnEntity(entity, objectDisguise.getTypeId()));
 				packets.add(new PacketPlayOutEntityMetadata(entity.getId(), entity.getDataWatcher(), true));
