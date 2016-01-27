@@ -1,24 +1,29 @@
 package de.robingrether.idisguise.management.impl.v1_7_R3;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_7_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
-import de.robingrether.idisguise.disguise.ColoredDisguise;
+import de.robingrether.idisguise.disguise.AgeableDisguise;
 import de.robingrether.idisguise.disguise.CreeperDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.EndermanDisguise;
+import de.robingrether.idisguise.disguise.FallingBlockDisguise;
 import de.robingrether.idisguise.disguise.HorseDisguise;
+import de.robingrether.idisguise.disguise.ItemDisguise;
+import de.robingrether.idisguise.disguise.MinecartDisguise;
 import de.robingrether.idisguise.disguise.MobDisguise;
+import de.robingrether.idisguise.disguise.ObjectDisguise;
 import de.robingrether.idisguise.disguise.OcelotDisguise;
 import de.robingrether.idisguise.disguise.PigDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
+import de.robingrether.idisguise.disguise.SheepDisguise;
 import de.robingrether.idisguise.disguise.SizedDisguise;
 import de.robingrether.idisguise.disguise.SkeletonDisguise;
 import de.robingrether.idisguise.disguise.VillagerDisguise;
@@ -28,12 +33,16 @@ import de.robingrether.idisguise.management.PacketHelper;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.VersionHelper;
 import net.minecraft.server.v1_7_R3.Block;
+import net.minecraft.server.v1_7_R3.Entity;
 import net.minecraft.server.v1_7_R3.EntityAgeable;
 import net.minecraft.server.v1_7_R3.EntityBat;
 import net.minecraft.server.v1_7_R3.EntityCreeper;
 import net.minecraft.server.v1_7_R3.EntityEnderman;
+import net.minecraft.server.v1_7_R3.EntityFallingBlock;
 import net.minecraft.server.v1_7_R3.EntityHorse;
 import net.minecraft.server.v1_7_R3.EntityInsentient;
+import net.minecraft.server.v1_7_R3.EntityItem;
+import net.minecraft.server.v1_7_R3.EntityMinecartRideable;
 import net.minecraft.server.v1_7_R3.EntityOcelot;
 import net.minecraft.server.v1_7_R3.EntityPig;
 import net.minecraft.server.v1_7_R3.EntityPlayer;
@@ -43,8 +52,12 @@ import net.minecraft.server.v1_7_R3.EntitySlime;
 import net.minecraft.server.v1_7_R3.EntityVillager;
 import net.minecraft.server.v1_7_R3.EntityWolf;
 import net.minecraft.server.v1_7_R3.EntityZombie;
+import net.minecraft.server.v1_7_R3.Item;
+import net.minecraft.server.v1_7_R3.ItemStack;
 import net.minecraft.server.v1_7_R3.Packet;
+import net.minecraft.server.v1_7_R3.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_7_R3.PacketPlayOutNamedEntitySpawn;
+import net.minecraft.server.v1_7_R3.PacketPlayOutSpawnEntity;
 import net.minecraft.server.v1_7_R3.PacketPlayOutSpawnEntityLiving;
 import net.minecraft.server.v1_7_R3.World;
 
@@ -60,13 +73,13 @@ public class PacketHelperImpl extends PacketHelper {
 		}
 	}
 	
-	public Packet getPacket(Player player, Disguise disguise) {
+	public Packet[] getPackets(Player player, Disguise disguise) {
 		if(disguise == null) {
 			return null;
 		}
 		EntityPlayer entityPlayer = ((CraftPlayer)player).getHandle();
 		DisguiseType type = disguise.getType();
-		Packet packet = null;
+		List<Packet> packets = new ArrayList<Packet>();
 		if(disguise instanceof MobDisguise) {
 			MobDisguise mobDisguise = (MobDisguise)disguise;
 			EntityInsentient entity;
@@ -79,24 +92,25 @@ public class PacketHelperImpl extends PacketHelper {
 				entity.setCustomName(mobDisguise.getCustomName());
 				entity.setCustomNameVisible(true);
 			}
-			if(entity instanceof EntityAgeable && !mobDisguise.isAdult()) {
-				((EntityAgeable)entity).setAge(-24000);
+			if(entity instanceof EntityAgeable) {
+				if(mobDisguise instanceof AgeableDisguise && !((AgeableDisguise)mobDisguise).isAdult()) {
+					((EntityAgeable)entity).setAge(-24000);
+				}
 			}
 			Location location = player.getLocation();
 			entity.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 			entity.d(entityPlayer.getId());
-			if(mobDisguise instanceof ColoredDisguise) {
+			if(mobDisguise instanceof SheepDisguise) {
 				if(entity instanceof EntitySheep) {
-					((EntitySheep)entity).setColor(((ColoredDisguise)mobDisguise).getColor().getData());
+					((EntitySheep)entity).setColor(((SheepDisguise)mobDisguise).getColor().getData());
 				}
-				if(mobDisguise instanceof WolfDisguise) {
-					if(entity instanceof EntityWolf) {
-						WolfDisguise wolfDisguise = (WolfDisguise)mobDisguise;
-						EntityWolf wolf = (EntityWolf)entity;
-						wolf.setCollarColor(wolfDisguise.getColor().getData());
-						wolf.setTamed(wolfDisguise.isTamed());
-						wolf.setAngry(wolfDisguise.isAngry());
-					}
+			} else if(mobDisguise instanceof WolfDisguise) {
+				if(entity instanceof EntityWolf) {
+					WolfDisguise wolfDisguise = (WolfDisguise)mobDisguise;
+					EntityWolf wolf = (EntityWolf)entity;
+					wolf.setCollarColor(wolfDisguise.getCollarColor().getData());
+					wolf.setTamed(wolfDisguise.isTamed());
+					wolf.setAngry(wolfDisguise.isAngry());
 				}
 			} else if(mobDisguise instanceof CreeperDisguise) {
 				if(entity instanceof EntityCreeper) {
@@ -115,7 +129,7 @@ public class PacketHelperImpl extends PacketHelper {
 					EntityHorse horse = (EntityHorse)entity;
 					horse.setType(horseDisguise.getVariant().ordinal());
 					horse.setVariant(horseDisguise.getColor().ordinal() & 0xFF | horseDisguise.getStyle().ordinal() << 8);
-					horse.inventoryChest.setItem(0, horseDisguise.isSaddled() ? CraftItemStack.asNMSCopy(new ItemStack(Material.SADDLE)) : null);
+					horse.inventoryChest.setItem(0, horseDisguise.isSaddled() ? new ItemStack(Item.d(329), 1, 0) : null);
 					horse.inventoryChest.setItem(1, CraftItemStack.asNMSCopy(horseDisguise.getArmor().getItem()));
 					horse.setHasChest(horseDisguise.hasChest());
 				}
@@ -154,15 +168,50 @@ public class PacketHelperImpl extends PacketHelper {
 				entity.setCustomName(player.getName());
 				entity.setCustomNameVisible(true);
 			}
-			packet = new PacketPlayOutSpawnEntityLiving(entity);
+			packets.add(new PacketPlayOutSpawnEntityLiving(entity));
 		} else if(disguise instanceof PlayerDisguise) {
-			packet = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());
+			packets.add(new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle()));
 			try {
-				fieldProfile.set(packet, PlayerHelper.instance.getGameProfile(((PlayerDisguise)disguise).getName()));
+				fieldProfile.set(packets.get(0), PlayerHelper.instance.getGameProfile(((PlayerDisguise)disguise).getName()));
 			} catch(Exception e) {
 			}
+		} else if(disguise instanceof ObjectDisguise) {
+			ObjectDisguise objectDisguise = (ObjectDisguise)disguise;
+			Entity entity;
+			try {
+				entity = (Entity)type.getClass(VersionHelper.getNMSPackage()).getConstructor(World.class).newInstance(entityPlayer.world);
+			} catch(Exception e) {
+				entity = null;
+			}
+			Location location = player.getLocation();
+			entity.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+			entity.d(entityPlayer.getId());
+			if(entity instanceof EntityFallingBlock) {
+				packets.add(new PacketPlayOutSpawnEntity(entity, objectDisguise.getTypeId(), objectDisguise instanceof FallingBlockDisguise ? ((FallingBlockDisguise)objectDisguise).getMaterial().getId() : 1));
+			} else if(entity instanceof EntityItem) {
+				if(objectDisguise instanceof ItemDisguise) {
+					ItemDisguise itemDisguise = (ItemDisguise)objectDisguise;
+					if(itemDisguise.getItemStack().getType().isBlock()) {
+						((EntityItem)entity).setItemStack(new ItemStack(Block.e(itemDisguise.getItemStack().getTypeId()), itemDisguise.getItemStack().getAmount(), itemDisguise.getItemStack().getDurability()));
+					} else {
+						((EntityItem)entity).setItemStack(new ItemStack(Item.d(itemDisguise.getItemStack().getTypeId()), itemDisguise.getItemStack().getAmount(), itemDisguise.getItemStack().getDurability()));
+					}
+				}
+				packets.add(new PacketPlayOutSpawnEntity(entity, objectDisguise.getTypeId()));
+				packets.add(new PacketPlayOutEntityMetadata(entity.getId(), entity.getDataWatcher(), true));
+			} else if(entity instanceof EntityMinecartRideable) {
+				if(objectDisguise instanceof MinecartDisguise) {
+					MinecartDisguise minecartDisguise = (MinecartDisguise)objectDisguise;
+					((EntityMinecartRideable)entity).k(minecartDisguise.getDisplayedBlock().getId());
+					((EntityMinecartRideable)entity).l(minecartDisguise.getDisplayedBlockData());
+				}
+				packets.add(new PacketPlayOutSpawnEntity(entity, objectDisguise.getTypeId()));
+				packets.add(new PacketPlayOutEntityMetadata(entity.getId(), entity.getDataWatcher(), true));
+			} else {
+				packets.add(new PacketPlayOutSpawnEntity(entity, objectDisguise.getTypeId()));
+			}
 		}
-		return packet;
+		return packets.toArray(new Packet[0]);
 	}
 	
 }
