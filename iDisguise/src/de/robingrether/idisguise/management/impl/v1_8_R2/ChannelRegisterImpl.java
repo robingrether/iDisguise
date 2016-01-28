@@ -38,6 +38,7 @@ import com.mojang.authlib.GameProfile;
 
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.MobDisguise;
+import de.robingrether.idisguise.disguise.ObjectDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.management.ChannelRegister;
 import de.robingrether.idisguise.management.DisguiseManager;
@@ -164,17 +165,19 @@ public class ChannelRegisterImpl extends ChannelRegister {
 					PacketPlayOutNamedEntitySpawn packet = (PacketPlayOutNamedEntitySpawn)object;
 					Player player = PlayerHelper.instance.getPlayerByEntityId(fieldEntityIdNamedSpawn.getInt(packet));
 					if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player)) {
-						Packet<?> packetSpawn = (Packet<?>)DisguiseManager.instance.getSpawnPacket(player);
-						if(packetSpawn instanceof PacketPlayOutSpawnEntityLiving && DisguiseManager.instance.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
-							byte yaw = fieldYawSpawnEntityLiving.getByte(packetSpawn);
+						Packet<?>[] packetSpawn = (Packet<?>[])DisguiseManager.instance.getSpawnPacket(player);
+						if(packetSpawn[0] instanceof PacketPlayOutSpawnEntityLiving && DisguiseManager.instance.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
+							byte yaw = fieldYawSpawnEntityLiving.getByte(packetSpawn[0]);
 							if(yaw < 0) {
 								yaw += 128;
 							} else {
 								yaw -= 128;
 							}
-							fieldYawSpawnEntityLiving.set(packetSpawn, yaw);
+							fieldYawSpawnEntityLiving.set(packetSpawn[0], yaw);
 						}
-						super.sendPacket(packetSpawn);
+						for(Packet<?> p : packetSpawn) {
+							super.sendPacket(p);
+						}
 						DisguiseManager.instance.updateAttributes(player, this.player);
 						return;
 					}
@@ -218,7 +221,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 					PacketPlayOutEntityMetadata packet = clonerEntityMetadata.clone((PacketPlayOutEntityMetadata)object);
 					Player player = PlayerHelper.instance.getPlayerByEntityId(fieldEntityIdMetadata.getInt(packet));
 					if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player)) {
-						if(DisguiseManager.instance.getDisguise(player) instanceof MobDisguise) {
+						if(!(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise)) {
 							List<WatchableObject> list = (List<WatchableObject>)fieldListMetadata.get(packet);
 							List<WatchableObject> remove = new ArrayList<WatchableObject>();
 							for(WatchableObject metadata : list) {
@@ -280,34 +283,38 @@ public class ChannelRegisterImpl extends ChannelRegister {
 						EntityHuman nearestHuman = ((CraftPlayer)this.player).getHandle().world.findNearbyPlayer(fieldX.getInt(packet) / 8.0, fieldY.getInt(packet) / 8.0, fieldZ.getInt(packet) / 8.0, 1.0);
 						if(nearestHuman instanceof EntityPlayer) {
 							Player player = ((EntityPlayer)nearestHuman).getBukkitEntity();
-							if(player != null && player != this.player && DisguiseManager.instance.getDisguise(player) instanceof MobDisguise) {
-								MobDisguise disguise = (MobDisguise)DisguiseManager.instance.getDisguise(player);
-								String replacementSoundEffect = null;
-								switch(soundEffect) {
-									case "game.player.die":
-										replacementSoundEffect = Sounds.getDeath(disguise);
-										break;
-									case "game.player.hurt.fall.big":
-										replacementSoundEffect = Sounds.getFallBig(disguise);
-										break;
-									case "game.player.hurt.fall.small":
-										replacementSoundEffect = Sounds.getFallSmall(disguise);
-										break;
-									case "game.player.hurt":
-										replacementSoundEffect = Sounds.getHit(disguise);
-										break;
-									case "game.player.swim.splash":
-										replacementSoundEffect = Sounds.getSplash(disguise);
-										break;
-									case "game.player.swim":
-										replacementSoundEffect = Sounds.getSwim(disguise);
-										break;
+							if(player != null && player != this.player) {
+								if(DisguiseManager.instance.getDisguise(player) instanceof MobDisguise) {
+									MobDisguise disguise = (MobDisguise)DisguiseManager.instance.getDisguise(player);
+									String replacementSoundEffect = null;
+									switch(soundEffect) {
+										case "game.player.die":
+											replacementSoundEffect = Sounds.getDeath(disguise);
+											break;
+										case "game.player.hurt.fall.big":
+											replacementSoundEffect = Sounds.getFallBig(disguise);
+											break;
+										case "game.player.hurt.fall.small":
+											replacementSoundEffect = Sounds.getFallSmall(disguise);
+											break;
+										case "game.player.hurt":
+											replacementSoundEffect = Sounds.getHit(disguise);
+											break;
+										case "game.player.swim.splash":
+											replacementSoundEffect = Sounds.getSplash(disguise);
+											break;
+										case "game.player.swim":
+											replacementSoundEffect = Sounds.getSwim(disguise);
+											break;
+									}
+									if(replacementSoundEffect != null) {
+										fieldSoundEffect.set(packet, replacementSoundEffect);
+										super.sendPacket(packet);
+									}
+									return;
+								} else if(DisguiseManager.instance.getDisguise(player) instanceof ObjectDisguise) {
+									return;
 								}
-								if(replacementSoundEffect != null) {
-									fieldSoundEffect.set(packet, replacementSoundEffect);
-									super.sendPacket(packet);
-								}
-								return;
 							}
 						}
 					}
