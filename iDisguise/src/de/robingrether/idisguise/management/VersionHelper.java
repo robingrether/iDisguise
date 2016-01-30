@@ -92,7 +92,7 @@ public class VersionHelper {
 				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_7_R2.DisguiseManagerImpl();
 				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.GhostFactoryImpl();
 				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_7_R2.PacketHelperImpl();
-				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_7_R2.PlayerHelperImpl();
+				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_7_R1.PlayerHelperImpl();
 				break;
 			case "v1_7_R1":
 				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_7_R1.ChannelRegisterImpl();
@@ -106,28 +106,28 @@ public class VersionHelper {
 				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_6_R3.DisguiseManagerImpl();
 				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.GhostFactoryImpl();
 				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_6_R3.PacketHelperImpl();
-				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_6_R3.PlayerHelperImpl();
+				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.PlayerHelperImpl();
 				break;
 			case "v1_6_R2":
 				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_6_R2.ChannelRegisterImpl();
 				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_6_R2.DisguiseManagerImpl();
 				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.GhostFactoryImpl();
 				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_6_R2.PacketHelperImpl();
-				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_6_R2.PlayerHelperImpl();
+				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.PlayerHelperImpl();
 				break;
 			case "v1_6_R1":
 				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_6_R1.ChannelRegisterImpl();
 				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_6_R1.DisguiseManagerImpl();
 				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.GhostFactoryImpl();
 				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_6_R1.PacketHelperImpl();
-				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_6_R1.PlayerHelperImpl();
+				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.PlayerHelperImpl();
 				break;
 			case "v1_5_R3":
 				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_5_R3.ChannelRegisterImpl();
 				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_5_R3.DisguiseManagerImpl();
 				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.GhostFactoryImpl();
 				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_5_R3.PacketHelperImpl();
-				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_5_R3.PlayerHelperImpl();
+				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.PlayerHelperImpl();
 				break;
 			case "v1_5_R2":
 				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.ChannelRegisterImpl();
