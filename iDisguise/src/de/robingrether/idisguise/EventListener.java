@@ -167,7 +167,6 @@ public class EventListener implements Listener {
 				}
 			}
 		}
-		Player player = event.getEntity();
 	}
 	
 }
