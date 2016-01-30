@@ -208,10 +208,23 @@ public enum DisguiseType {
 		
 	}
 	
+	/**
+	 * This class provides the capability to match a {@linkplain DisguiseType} from one of its command arguments.
+	 * 
+	 * @since 5.1.1
+	 * @author RobinGrether
+	 */
 	public static class Matcher {
 		
 		private static final Map<String, DisguiseType> matcher = new ConcurrentHashMap<String, DisguiseType>();
 		
+		/**
+		 * Find a matching {@linkplain DisguiseType} from one of its command arguments.
+		 * 
+		 * @since 5.1.1
+		 * @param string the command argument
+		 * @return the matching {@linkplain DisguiseType}, if one is found
+		 */
 		public static DisguiseType match(String string) {
 			return matcher.get(string.toLowerCase(Locale.ENGLISH));
 		}
