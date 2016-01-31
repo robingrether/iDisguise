@@ -99,19 +99,19 @@ public class ItemDisguise extends ObjectDisguise {
 		}
 		switch(argument.toLowerCase(Locale.ENGLISH)) {
 			case "single":
-				itemStack.setAmount(1);
+				itemStack.setAmount(1); //   1     1
 				return true;
 			case "double":
-				itemStack.setAmount(2);
+				itemStack.setAmount(2); //   2     2
 				return true;
 			case "triple":
-				itemStack.setAmount(6);
+				itemStack.setAmount(17); //  17    16
 				return true;
 			case "quadruple":
-				itemStack.setAmount(21);
+				itemStack.setAmount(33); // 33    33
 				return true;
 			case "quintuple":
-				itemStack.setAmount(41);
+				itemStack.setAmount(49); // 49    --
 				return true;
 			default:
 				return false;

@@ -328,7 +328,7 @@ public class iDisguise extends JavaPlugin {
 							sender.sendMessage(ChatColor.GRAY + " Material: " + ((ItemDisguise)disguise).getItemStack().getType().name().toLowerCase(Locale.ENGLISH));
 							sender.sendMessage(ChatColor.GRAY + " Material data: " + ((ItemDisguise)disguise).getItemStack().getDurability());
 							int stackSize = ((ItemDisguise)disguise).getItemStack().getAmount();
-							sender.sendMessage(ChatColor.GRAY + " Stack size: " + (stackSize < 2 ? "single" : stackSize < 6 ? "double" : stackSize < 21 ? "triple" : stackSize < 41 ? "quadruple" : "quintuple"));
+							sender.sendMessage(ChatColor.GRAY + " Stack size: " + (stackSize < 2 ? "single" : stackSize < 17 ? "double" : stackSize < 33 ? "triple" : stackSize < 49 ? "quadruple" : "quintuple"));
 						} else if(disguise instanceof MinecartDisguise) {
 							sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
 							sender.sendMessage(ChatColor.GRAY + " Block inside: " + ((MinecartDisguise)disguise).getDisplayedBlock().name().toLowerCase(Locale.ENGLISH));
@@ -635,7 +635,7 @@ public class iDisguise extends JavaPlugin {
 							sender.sendMessage(ChatColor.GRAY + " Material: " + ((ItemDisguise)disguise).getItemStack().getType().name().toLowerCase(Locale.ENGLISH));
 							sender.sendMessage(ChatColor.GRAY + " Material data: " + ((ItemDisguise)disguise).getItemStack().getDurability());
 							int stackSize = ((ItemDisguise)disguise).getItemStack().getAmount();
-							sender.sendMessage(ChatColor.GRAY + " Stack size: " + (stackSize < 2 ? "single" : stackSize < 6 ? "double" : stackSize < 21 ? "triple" : stackSize < 41 ? "quadruple" : "quintuple"));
+							sender.sendMessage(ChatColor.GRAY + " Stack size: " + (stackSize < 2 ? "single" : stackSize < 17 ? "double" : stackSize < 33 ? "triple" : stackSize < 49 ? "quadruple" : "quintuple"));
 						} else if(disguise instanceof MinecartDisguise) {
 							sender.sendMessage(ChatColor.GRAY + "Subtypes:");
 							sender.sendMessage(ChatColor.GRAY + " Block inside: " + ((MinecartDisguise)disguise).getDisplayedBlock().name().toLowerCase(Locale.ENGLISH));
