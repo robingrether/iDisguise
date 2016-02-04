@@ -46,7 +46,7 @@ public class EventListener implements Listener {
 	public void onEntityTarget(EntityTargetEvent event) {
 		if(event.getTarget() instanceof Player) {
 			Player target = (Player)event.getTarget();
-			if(DisguiseManager.instance.isDisguised(target) && !plugin.getConfiguration().getBoolean(Configuration.DISABLE_MOB_TARGET)) {
+			if(DisguiseManager.instance.isDisguised(target) && plugin.getConfiguration().getBoolean(Configuration.DISABLE_MOB_TARGET)) {
 				event.setCancelled(true);
 			}
 		}
