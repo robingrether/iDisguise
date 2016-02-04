@@ -697,7 +697,7 @@ public class iDisguise extends JavaPlugin {
 	
 	private void sendHelpMessage(CommandSender sender, Command cmd, boolean self, Disguise disguise) {
 		String disguiseCommand = ChatColor.GOLD + "/" + cmd.getName() + (self ? "" : " <player>");
-		String undisguiseCommand = ChatColor.GOLD + "/u" + (cmd.getName().length() < 3 ? "" : "n") + cmd.getName().substring(1);
+		String undisguiseCommand = ChatColor.GOLD + "/u" + (cmd.getName().length() < 3 ? "" : "n") + cmd.getName().replace("o", "");
 		boolean console = !(sender instanceof Player);
 		sender.sendMessage(ChatColor.GREEN + getFullName() + " - Help");
 		sender.sendMessage(disguiseCommand + " help - Shows this help");
