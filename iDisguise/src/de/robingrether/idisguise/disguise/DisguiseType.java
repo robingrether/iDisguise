@@ -1,5 +1,6 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -176,7 +177,7 @@ public enum DisguiseType {
 	 * @return a random disguise type
 	 */
 	public static DisguiseType random(Type type) {
-		List<DisguiseType> types = Arrays.asList(values());
+		List<DisguiseType> types = new ArrayList<DisguiseType>(Arrays.asList(values()));
 		if(type != null) {
 			int pos = 0;
 			while(pos < types.size()) {
