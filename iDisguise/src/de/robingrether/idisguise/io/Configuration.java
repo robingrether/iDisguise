@@ -101,7 +101,6 @@ public class Configuration {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void saveData() {
 		try {
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(configurationFile)));
