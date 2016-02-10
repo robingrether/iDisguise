@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -36,7 +37,7 @@ public class Configuration {
 	public static final String REPLACE_DEATH_MESSAGES = "replace-death-messages";
 	public static final String REPLACE_JOIN_MESSAGES = "replace-join-leave-messages";
 	
-	private ConcurrentHashMap<String, Setting> settings = new ConcurrentHashMap<String, Setting>();
+	private Map<String, Setting> settings = new ConcurrentHashMap<String, Setting>();
 	private iDisguise plugin;
 	private File configurationFile;
 	private File yamlConfigurationFile;
