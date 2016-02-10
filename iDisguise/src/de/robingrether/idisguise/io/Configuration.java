@@ -75,7 +75,7 @@ public class Configuration {
 						if(StringUtil.equals(split[1], "true", "false")) {
 							value = Boolean.parseBoolean(split[1]);
 						} else if(split[1].matches("[+|-]?\\d+(\\.\\d+)?")) {
-							value = split[1].contains(".") ? Double.parseDouble(split[1]) : Integer.parseInt(split[1]);
+							value = split[1].contains(".") ? (Object)Double.parseDouble(split[1]) : (Object)Integer.parseInt(split[1]);
 						} else if(split[1].startsWith("{") && split[1].trim().endsWith("}")) {
 							value = Arrays.asList(split[1].replaceAll("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)", "").replaceAll("[\"|{|}]", "").split(","));
 						} else {
