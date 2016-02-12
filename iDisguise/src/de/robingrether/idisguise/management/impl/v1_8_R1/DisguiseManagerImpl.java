@@ -1,6 +1,7 @@
 package de.robingrether.idisguise.management.impl.v1_8_R1;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,6 @@ import de.robingrether.idisguise.management.DisguiseMapLegacy;
 import de.robingrether.idisguise.management.GhostFactory;
 import de.robingrether.idisguise.management.PacketHelper;
 import de.robingrether.idisguise.management.PlayerHelper;
-import de.robingrether.idisguise.management.impl.v1_8_R1.ChannelRegisterImpl.PlayerConnectionInjected;
 
 public class DisguiseManagerImpl extends DisguiseManager {
 	
@@ -89,8 +89,12 @@ public class DisguiseManagerImpl extends DisguiseManager {
 		if(packets == null) {
 			return;
 		}
-		for(Packet packet : packets) {
-			((PlayerConnectionInjected)((CraftPlayer)player).getHandle().playerConnection).sendPacketFromPlugin((Packet)packet);
+		try {
+			Method method = ((CraftPlayer)player).getHandle().playerConnection.getClass().getDeclaredMethod("sendPacketFromPlugin", Packet.class);
+			for(Packet packet : packets) {
+				method.invoke(((CraftPlayer)player).getHandle().playerConnection, packet);
+			}
+		} catch(Exception e) {
 		}
 	}
 	
