@@ -959,14 +959,6 @@ public class iDisguise extends JavaPlugin {
 				return DisguiseManager.instance.getOnlineDisguiseCount();
 			}
 			
-			public String getLocale() {
-				return "enUS";
-			}
-			
-			public String getLocalizedPhrase(String name) {
-				return null;
-			}
-			
 			public Sounds getSoundsForEntity(DisguiseType type) {
 				return Sounds.getSoundsForEntity(type);
 			}

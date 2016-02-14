@@ -66,27 +66,6 @@ public interface DisguiseAPI {
 	public int getOnlineDisguiseCount();
 	
 	/**
-	 * Gets the current locale for iDisguise.
-	 * 
-	 * @deprecated Localized messages are not supported anymore.
-	 * @since 2.2.1
-	 * @return always returns <code>enUS</code>, since this is not supported anymore
-	 */
-	@Deprecated
-	public String getLocale();
-	
-	/**
-	 * Gets a localized phrase.
-	 * 
-	 * @deprecated Localized messages are not supported anymore.
-	 * @since 2.2.1
-	 * @param name the name of the phrase
-	 * @return always returns <code>null</code>, since this is not supported anymore
-	 */
-	@Deprecated
-	public String getLocalizedPhrase(String name);
-	
-	/**
 	 * Gets the {@link Sounds} for a specific entity type.
 	 * 
 	 * @since 5.1.1
