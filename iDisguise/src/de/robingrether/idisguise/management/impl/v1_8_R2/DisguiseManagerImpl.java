@@ -101,7 +101,11 @@ public class DisguiseManagerImpl extends DisguiseManager {
 	public void sendPacketLater(final Player player, final Object packet, long delay) {
 		BukkitRunnable runnable = new BukkitRunnable() {
 			public void run() {
-				sendPacket(player, (Packet<?>)packet);
+				if(packet instanceof Packet) {
+					sendPacket(player, (Packet<?>)packet);
+				} else {
+					sendPacket(player, (Packet<?>[])packet);
+				}
 			}
 		};
 		runnable.runTaskLater(Bukkit.getPluginManager().getPlugin("iDisguise"), delay);
@@ -157,7 +161,7 @@ public class DisguiseManagerImpl extends DisguiseManager {
 				continue;
 			}
 			sendPacket(observer, packetDestroy);
-			sendPacket(observer, packetSpawn);
+			sendPacketLater(observer, packetSpawn, 20L);
 		}
 		updateAttributes(player);
 	}
@@ -203,7 +207,7 @@ public class DisguiseManagerImpl extends DisguiseManager {
 				continue;
 			}
 			sendPacket(observer, packetDestroy);
-			sendPacket(observer, packetSpawn);
+			sendPacketLater(observer, packetSpawn, 20L);
 		}
 		updateAttributes(player);
 		return disguise;
@@ -234,9 +238,7 @@ public class DisguiseManagerImpl extends DisguiseManager {
 		packets[4] = new PacketPlayOutEntityEquipment(entityId, 4, CraftItemStack.asNMSCopy(equipment.getHelmet()));
 		Entity entity = ((CraftPlayer)player).getHandle();
 		packets[5] = new PacketPlayOutEntityHeadRotation(entity, (byte)(location.getYaw() * 256 / 360));
-		for(int i = 0; i < packets.length; i++) {
-			sendPacketLater(observer, packets[i], 20L);
-		}
+		sendPacketLater(observer, packets, 30L);
 	}
 	
 	protected synchronized void updateAttributes(Player player) {
