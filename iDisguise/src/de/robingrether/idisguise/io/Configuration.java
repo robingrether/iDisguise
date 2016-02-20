@@ -36,6 +36,7 @@ public class Configuration {
 	public static final String PROHIBITED_PLAYERS = "prohibited-player-disguises";
 	public static final String REPLACE_DEATH_MESSAGES = "replace-death-messages";
 	public static final String REPLACE_JOIN_MESSAGES = "replace-join-leave-messages";
+	public static final String MODIFY_PLAYER_LIST = "modify-player-list";
 	
 	private Map<String, Setting> settings = new ConcurrentHashMap<String, Setting>();
 	private iDisguise plugin;
@@ -61,6 +62,7 @@ public class Configuration {
 		setDefault(PROHIBITED_PLAYERS, Arrays.asList("player1", "player2"), "You can put the player names, you don't want your players to disguise as, here.\nYou can give admins the 'iDisguise.player.prohibited' permission so they can bypass this prohibition.");
 		setDefault(REPLACE_DEATH_MESSAGES, true, "When this option is enabled, disguised players' death and kill messages are replaced,\nso nobody recognizes they are actual players.\nATTENTION: This might interfere with other plugins!");
 		setDefault(REPLACE_JOIN_MESSAGES, true, "When this option is enabled, disguised players' join and leave messages are replaced,\nso nobody recognizes they are actual players.\nATTENTION: This might interfere with other plugins!");
+		setDefault(MODIFY_PLAYER_LIST, true, "When this option is enabled, disguised players' names don't show up in the player list.\nIf a player is disguised as another player, the name of the other player is shown instead.");
 	}
 	
 	public void loadData() {
