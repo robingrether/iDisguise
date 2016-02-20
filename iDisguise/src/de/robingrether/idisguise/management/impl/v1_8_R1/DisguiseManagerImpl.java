@@ -161,7 +161,7 @@ public class DisguiseManagerImpl extends DisguiseManager {
 				continue;
 			}
 			sendPacket(observer, packetDestroy);
-			sendPacketLater(observer, packetSpawn, 20L);
+			sendPacketLater(observer, packetSpawn, 40L);
 		}
 		updateAttributes(player);
 	}
@@ -207,7 +207,7 @@ public class DisguiseManagerImpl extends DisguiseManager {
 				continue;
 			}
 			sendPacket(observer, packetDestroy);
-			sendPacketLater(observer, packetSpawn, 20L);
+			sendPacketLater(observer, packetSpawn, 40L);
 		}
 		updateAttributes(player);
 		return disguise;
@@ -238,7 +238,7 @@ public class DisguiseManagerImpl extends DisguiseManager {
 		packets[4] = new PacketPlayOutEntityEquipment(entityId, 4, CraftItemStack.asNMSCopy(equipment.getHelmet()));
 		Entity entity = ((CraftPlayer)player).getHandle();
 		packets[5] = new PacketPlayOutEntityHeadRotation(entity, (byte)(location.getYaw() * 256 / 360));
-		sendPacketLater(observer, packets, 30L);
+		sendPacketLater(observer, packets, 50L);
 	}
 	
 	protected synchronized void updateAttributes(Player player) {
