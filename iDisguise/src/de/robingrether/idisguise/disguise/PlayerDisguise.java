@@ -11,8 +11,9 @@ import de.robingrether.util.Validate;
  */
 public class PlayerDisguise extends Disguise {
 	
-	private static final long serialVersionUID = 6444092928664929232L;
+	private static final long serialVersionUID = -5730346799961856914L;
 	private final String name;
+	private String playerListName;
 	
 	/**
 	 * Creates an instance.
@@ -38,7 +39,25 @@ public class PlayerDisguise extends Disguise {
 		if(!Validate.minecraftUsername(name)) {
 			throw new IllegalArgumentException("The given name is invalid!");
 		}
+		this.name = this.playerListName = PlayerHelper.instance.getCaseCorrectedName(name);
+	}
+	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 5.1.1
+	 * @param name the player to disguise as
+	 * @param ghost whether the disguise should be a ghost or not
+	 * @param playerListName the name to show in the player list
+	 * @throws IllegalArgumentException the given name is not valid.
+	 */
+	public PlayerDisguise(String name, boolean ghost, String playerListName) {
+		super(ghost ? DisguiseType.GHOST : DisguiseType.PLAYER);
+		if(!Validate.minecraftUsername(name)) {
+			throw new IllegalArgumentException("The given name is invalid!");
+		}
 		this.name = PlayerHelper.instance.getCaseCorrectedName(name);
+		this.playerListName = playerListName;
 	}
 	
 	/**
@@ -59,6 +78,26 @@ public class PlayerDisguise extends Disguise {
 	 */
 	public boolean isGhost() {
 		return type == DisguiseType.GHOST;
+	}
+	
+	/**
+	 * Gets the player list name.
+	 * 
+	 * @since 5.1.1
+	 * @return the player list name
+	 */
+	public String getPlayerListName() {
+		return playerListName;
+	}
+	
+	/**
+	 * Sets the player list name.
+	 * 
+	 * @since 5.1.1
+	 * @param playerListName the new player list name
+	 */
+	public void setPlayerListName(String playerListName) {
+		this.playerListName = playerListName;
 	}
 	
 	/**
