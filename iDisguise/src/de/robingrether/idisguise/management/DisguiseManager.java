@@ -20,9 +20,9 @@ public abstract class DisguiseManager {
 	
 	public abstract void sendPacketLater(final Player player, final Object packet, long delay);
 	
-	public abstract void disguise(Player player, Disguise disguise);
+	public abstract void disguise(OfflinePlayer player, Disguise disguise);
 	
-	public abstract Disguise undisguise(Player player);
+	public abstract Disguise undisguise(OfflinePlayer player);
 	
 	public abstract void undisguiseAll();
 	
@@ -30,15 +30,13 @@ public abstract class DisguiseManager {
 	
 	protected abstract void updateAttributes(Player player);
 	
-	public abstract boolean isDisguised(Player player);
+	public abstract boolean isDisguised(OfflinePlayer player);
 	
-	public abstract Disguise getDisguise(Player player);
+	public abstract Disguise getDisguise(OfflinePlayer player);
 	
 	public abstract int getOnlineDisguiseCount();
 	
 	public abstract Set<OfflinePlayer> getDisguisedPlayers();
-	
-	public abstract Disguise removeDisguise(OfflinePlayer offlinePlayer);
 	
 	public abstract Map getDisguises();
 	
