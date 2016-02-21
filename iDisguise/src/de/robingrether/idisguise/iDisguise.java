@@ -195,7 +195,7 @@ public class iDisguise extends JavaPlugin {
 				} else if(!Validate.minecraftUsername(args[1])) {
 					sender.sendMessage(ChatColor.RED + "The given username is invalid.");
 				} else {
-					PlayerDisguise disguise = new PlayerDisguise(args[1], false);
+					PlayerDisguise disguise = getConfiguration().getBoolean(Configuration.MODIFY_PLAYER_LIST) ? new PlayerDisguise(args[1], false) : new PlayerDisguise(args[1], false, player.getPlayerListName());
 					if(hasPermission(player, disguise)) {
 						DisguiseEvent event = new DisguiseEvent(player, disguise);
 						getServer().getPluginManager().callEvent(event);
@@ -214,7 +214,7 @@ public class iDisguise extends JavaPlugin {
 					sender.sendMessage(ChatColor.RED + "This feature is disabled!");
 				} else if(args.length == 1) {
 					if(DisguiseManager.instance.isDisguised(player) && (DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise)) {
-						PlayerDisguise disguise = new PlayerDisguise(((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName(), true);
+						PlayerDisguise disguise = new PlayerDisguise(((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName(), true, ((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getPlayerListName());
 						if(hasPermission(player, disguise)) {
 							DisguiseEvent event = new DisguiseEvent(player, disguise);
 							getServer().getPluginManager().callEvent(event);
@@ -233,7 +233,7 @@ public class iDisguise extends JavaPlugin {
 				} else if(!Validate.minecraftUsername(args[1])) {
 					sender.sendMessage(ChatColor.RED + "The given username is invalid.");
 				} else {
-					PlayerDisguise disguise = new PlayerDisguise(args[1], true);
+					PlayerDisguise disguise = getConfiguration().getBoolean(Configuration.MODIFY_PLAYER_LIST) ? new PlayerDisguise(args[1], true) : new PlayerDisguise(args[1], true, player.getPlayerListName());
 					if(hasPermission(player, disguise)) {
 						DisguiseEvent event = new DisguiseEvent(player, disguise);
 						getServer().getPluginManager().callEvent(event);
@@ -514,7 +514,7 @@ public class iDisguise extends JavaPlugin {
 				} else if(!Validate.minecraftUsername(args[2])) {
 					sender.sendMessage(ChatColor.RED + "The given username is invalid.");
 				} else {
-					PlayerDisguise disguise = new PlayerDisguise(args[2], false);
+					PlayerDisguise disguise = getConfiguration().getBoolean(Configuration.MODIFY_PLAYER_LIST) ? new PlayerDisguise(args[2], false) : new PlayerDisguise(args[2], false, player.getPlayerListName());
 					DisguiseEvent event = new DisguiseEvent(player, disguise);
 					getServer().getPluginManager().callEvent(event);
 					if(event.isCancelled()) {
@@ -529,7 +529,7 @@ public class iDisguise extends JavaPlugin {
 					sender.sendMessage(ChatColor.RED + "This feature is disabled!");
 				} else if(args.length == 2) {
 					if(DisguiseManager.instance.isDisguised(player) && (DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise)) {
-						PlayerDisguise disguise = new PlayerDisguise(((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName(), true);
+						PlayerDisguise disguise = new PlayerDisguise(((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName(), true, ((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getPlayerListName());
 						DisguiseEvent event = new DisguiseEvent(player, disguise);
 						getServer().getPluginManager().callEvent(event);
 						if(event.isCancelled()) {
@@ -544,7 +544,7 @@ public class iDisguise extends JavaPlugin {
 				} else if(!Validate.minecraftUsername(args[2])) {
 					sender.sendMessage(ChatColor.RED + "The given username is invalid.");
 				} else {
-					PlayerDisguise disguise = new PlayerDisguise(args[2], true);
+					PlayerDisguise disguise = getConfiguration().getBoolean(Configuration.MODIFY_PLAYER_LIST) ? new PlayerDisguise(args[2], true) : new PlayerDisguise(args[2], true, player.getPlayerListName());
 					DisguiseEvent event = new DisguiseEvent(player, disguise);
 					getServer().getPluginManager().callEvent(event);
 					if(event.isCancelled()) {
