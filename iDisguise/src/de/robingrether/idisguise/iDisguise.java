@@ -79,8 +79,8 @@ public class iDisguise extends JavaPlugin {
 		configuration = new Configuration(this, directory);
 		configuration.loadData();
 		configuration.saveData();
-		DisguiseManager.instance.setAttribute(0, configuration.getBoolean(Configuration.MODIFY_PLAYER_LIST));
 		PacketHelper.instance.setAttribute(0, configuration.getBoolean(Configuration.SHOW_PLAYER_NAMES));
+		PacketHelper.instance.setAttribute(1, configuration.getBoolean(Configuration.MODIFY_PLAYER_LIST));
 		Sounds.setEnabled(configuration.getBoolean(Configuration.REPLACE_SOUNDS));
 		try {
 			metrics = new Metrics(this);
@@ -165,6 +165,7 @@ public class iDisguise extends JavaPlugin {
 		configuration.loadData();
 		configuration.saveData();
 		PacketHelper.instance.setAttribute(0, configuration.getBoolean(Configuration.SHOW_PLAYER_NAMES));
+		PacketHelper.instance.setAttribute(1, configuration.getBoolean(Configuration.MODIFY_PLAYER_LIST));
 		Sounds.setEnabled(configuration.getBoolean(Configuration.REPLACE_SOUNDS));
 		if(configuration.getBoolean(Configuration.STORE_DISGUISES)) {
 			loadData();

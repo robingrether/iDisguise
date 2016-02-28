@@ -5,9 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.craftbukkit.v1_8_R3.CraftOfflinePlayer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R3.util.CraftChatMessage;
 import org.bukkit.entity.Player;
+
+import com.mojang.authlib.GameProfile;
 
 import de.robingrether.idisguise.disguise.AgeableDisguise;
 import de.robingrether.idisguise.disguise.CreeperDisguise;
@@ -31,6 +36,7 @@ import de.robingrether.idisguise.disguise.SkeletonDisguise;
 import de.robingrether.idisguise.disguise.VillagerDisguise;
 import de.robingrether.idisguise.disguise.WolfDisguise;
 import de.robingrether.idisguise.disguise.ZombieDisguise;
+import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.PacketHelper;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.VersionHelper;
@@ -62,9 +68,12 @@ import net.minecraft.server.v1_8_R3.ItemStack;
 import net.minecraft.server.v1_8_R3.Packet;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_8_R3.PacketPlayOutNamedEntitySpawn;
+import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
+import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo.PlayerInfoData;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntity;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
 import net.minecraft.server.v1_8_R3.World;
+import net.minecraft.server.v1_8_R3.WorldSettings.EnumGamemode;
 
 public class PacketHelperImpl extends PacketHelper {
 	
@@ -222,6 +231,18 @@ public class PacketHelperImpl extends PacketHelper {
 			}
 		}
 		return packets.toArray(new Packet<?>[0]);
+	}
+	
+	public PlayerInfoData getPlayerInfo(OfflinePlayer offlinePlayer, Object context, int ping, Object gamemode) {
+		Disguise disguise = DisguiseManager.instance.getDisguise(offlinePlayer);
+		if(disguise == null) {
+			return ((PacketPlayOutPlayerInfo)context).new PlayerInfoData(offlinePlayer.isOnline() ? ((CraftPlayer)offlinePlayer).getProfile() : ((CraftOfflinePlayer)offlinePlayer).getProfile(), ping, (EnumGamemode)gamemode, CraftChatMessage.fromString(offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName())[0]);
+		} else if(disguise instanceof PlayerDisguise) {
+			return ((PacketPlayOutPlayerInfo)context).new PlayerInfoData((GameProfile)PlayerHelper.instance.getGameProfile(((PlayerDisguise)disguise).getName()), ping, (EnumGamemode)gamemode, CraftChatMessage.fromString(attributes[1] ? ((PlayerDisguise)disguise).getName() : offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName())[0]);
+		} else if(!attributes[1]) {
+			return ((PacketPlayOutPlayerInfo)context).new PlayerInfoData(offlinePlayer.isOnline() ? ((CraftPlayer)offlinePlayer).getProfile() : ((CraftOfflinePlayer)offlinePlayer).getProfile(), ping, (EnumGamemode)gamemode, CraftChatMessage.fromString(offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName())[0]);
+		}
+		return null;
 	}
 	
 }
