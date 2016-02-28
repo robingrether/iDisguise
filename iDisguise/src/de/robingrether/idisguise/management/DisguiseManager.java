@@ -12,28 +12,13 @@ public abstract class DisguiseManager {
 	
 	public static DisguiseManager instance;
 	
-	protected final boolean[] attributes = new boolean[1];
-	/*
-	 * attributes[0] -> modify player list
-	 */
-	
 	public abstract Object getSpawnPacket(Player player);
-	
-	protected abstract Object getPlayerInfoPacket(Player player);
-	
-	protected abstract Object getDestroyPacket(Player player);
-	
-	public abstract void sendPacketLater(final Player player, final Object packet, long delay);
 	
 	public abstract void disguise(OfflinePlayer offlinePlayer, Disguise disguise);
 	
 	public abstract Disguise undisguise(OfflinePlayer offlinePlayer);
 	
 	public abstract void undisguiseAll();
-	
-	public abstract void updateAttributes(Player player, Player observer);
-	
-	protected abstract void updateAttributes(Player player);
 	
 	public abstract boolean isDisguised(OfflinePlayer offlinePlayer);
 	
@@ -46,9 +31,5 @@ public abstract class DisguiseManager {
 	public abstract Map getDisguises();
 	
 	public abstract void updateDisguises(Map map);
-	
-	public void setAttribute(int index, boolean value) {
-		attributes[index] = value;
-	}
 	
 }

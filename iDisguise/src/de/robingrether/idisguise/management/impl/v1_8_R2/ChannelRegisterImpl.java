@@ -30,11 +30,10 @@ import net.minecraft.server.v1_8_R2.PacketPlayOutSpawnEntityLiving;
 import net.minecraft.server.v1_8_R2.PlayerConnection;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import com.mojang.authlib.GameProfile;
 
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.MobDisguise;
@@ -42,6 +41,7 @@ import de.robingrether.idisguise.disguise.ObjectDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.management.ChannelRegister;
 import de.robingrether.idisguise.management.DisguiseManager;
+import de.robingrether.idisguise.management.PacketHelper;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.Sounds;
 import de.robingrether.util.Cloner;
@@ -178,7 +178,6 @@ public class ChannelRegisterImpl extends ChannelRegister {
 						for(Packet<?> p : packetSpawn) {
 							super.sendPacket(p);
 						}
-						DisguiseManager.instance.updateAttributes(player, this.player);
 						return;
 					}
 				} else if(object instanceof PacketPlayOutPlayerInfo) {
@@ -187,14 +186,12 @@ public class ChannelRegisterImpl extends ChannelRegister {
 					List<PlayerInfoData> add = new ArrayList<PlayerInfoData>();
 					List<PlayerInfoData> remove = new ArrayList<PlayerInfoData>();
 					for(PlayerInfoData playerInfo : list) {
-						Player player = Bukkit.getPlayer(playerInfo.a().getId());
+						OfflinePlayer player = Bukkit.getOfflinePlayer(playerInfo.a().getId());
 						if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player)) {
-							if(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise) {
-								PlayerInfoData newPlayerInfo = packet.new PlayerInfoData((GameProfile)PlayerHelper.instance.getGameProfile(((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName()), playerInfo.b(), playerInfo.c(), null);
-								remove.add(playerInfo);
+							PlayerInfoData newPlayerInfo = (PlayerInfoData)PacketHelper.instance.getPlayerInfo(player, packet, playerInfo.b(), playerInfo.c());
+							remove.add(playerInfo);
+							if(newPlayerInfo != null) {
 								add.add(newPlayerInfo);
-							} else {
-								remove.add(playerInfo);
 							}
 						}
 					}
