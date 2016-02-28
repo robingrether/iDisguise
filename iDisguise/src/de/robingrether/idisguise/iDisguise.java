@@ -79,6 +79,7 @@ public class iDisguise extends JavaPlugin {
 		configuration = new Configuration(this, directory);
 		configuration.loadData();
 		configuration.saveData();
+		DisguiseManager.instance.setAttribute(0, configuration.getBoolean(Configuration.MODIFY_PLAYER_LIST));
 		PacketHelper.instance.setAttribute(0, configuration.getBoolean(Configuration.SHOW_PLAYER_NAMES));
 		Sounds.setEnabled(configuration.getBoolean(Configuration.REPLACE_SOUNDS));
 		try {
@@ -195,7 +196,7 @@ public class iDisguise extends JavaPlugin {
 				} else if(!Validate.minecraftUsername(args[1])) {
 					sender.sendMessage(ChatColor.RED + "The given username is invalid.");
 				} else {
-					PlayerDisguise disguise = getConfiguration().getBoolean(Configuration.MODIFY_PLAYER_LIST) ? new PlayerDisguise(args[1], false) : new PlayerDisguise(args[1], false, player.getPlayerListName());
+					PlayerDisguise disguise = new PlayerDisguise(args[1], false);
 					if(hasPermission(player, disguise)) {
 						DisguiseEvent event = new DisguiseEvent(player, disguise);
 						getServer().getPluginManager().callEvent(event);
@@ -214,7 +215,7 @@ public class iDisguise extends JavaPlugin {
 					sender.sendMessage(ChatColor.RED + "This feature is disabled!");
 				} else if(args.length == 1) {
 					if(DisguiseManager.instance.isDisguised(player) && (DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise)) {
-						PlayerDisguise disguise = new PlayerDisguise(((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName(), true, ((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getPlayerListName());
+						PlayerDisguise disguise = new PlayerDisguise(((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName(), true);
 						if(hasPermission(player, disguise)) {
 							DisguiseEvent event = new DisguiseEvent(player, disguise);
 							getServer().getPluginManager().callEvent(event);
@@ -233,7 +234,7 @@ public class iDisguise extends JavaPlugin {
 				} else if(!Validate.minecraftUsername(args[1])) {
 					sender.sendMessage(ChatColor.RED + "The given username is invalid.");
 				} else {
-					PlayerDisguise disguise = getConfiguration().getBoolean(Configuration.MODIFY_PLAYER_LIST) ? new PlayerDisguise(args[1], true) : new PlayerDisguise(args[1], true, player.getPlayerListName());
+					PlayerDisguise disguise = new PlayerDisguise(args[1], true);
 					if(hasPermission(player, disguise)) {
 						DisguiseEvent event = new DisguiseEvent(player, disguise);
 						getServer().getPluginManager().callEvent(event);
@@ -514,7 +515,7 @@ public class iDisguise extends JavaPlugin {
 				} else if(!Validate.minecraftUsername(args[2])) {
 					sender.sendMessage(ChatColor.RED + "The given username is invalid.");
 				} else {
-					PlayerDisguise disguise = getConfiguration().getBoolean(Configuration.MODIFY_PLAYER_LIST) ? new PlayerDisguise(args[2], false) : new PlayerDisguise(args[2], false, player.getPlayerListName());
+					PlayerDisguise disguise = new PlayerDisguise(args[2], false);
 					DisguiseEvent event = new DisguiseEvent(player, disguise);
 					getServer().getPluginManager().callEvent(event);
 					if(event.isCancelled()) {
@@ -529,7 +530,7 @@ public class iDisguise extends JavaPlugin {
 					sender.sendMessage(ChatColor.RED + "This feature is disabled!");
 				} else if(args.length == 2) {
 					if(DisguiseManager.instance.isDisguised(player) && (DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise)) {
-						PlayerDisguise disguise = new PlayerDisguise(((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName(), true, ((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getPlayerListName());
+						PlayerDisguise disguise = new PlayerDisguise(((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName(), true);
 						DisguiseEvent event = new DisguiseEvent(player, disguise);
 						getServer().getPluginManager().callEvent(event);
 						if(event.isCancelled()) {
@@ -544,7 +545,7 @@ public class iDisguise extends JavaPlugin {
 				} else if(!Validate.minecraftUsername(args[2])) {
 					sender.sendMessage(ChatColor.RED + "The given username is invalid.");
 				} else {
-					PlayerDisguise disguise = getConfiguration().getBoolean(Configuration.MODIFY_PLAYER_LIST) ? new PlayerDisguise(args[2], true) : new PlayerDisguise(args[2], true, player.getPlayerListName());
+					PlayerDisguise disguise = new PlayerDisguise(args[2], true);
 					DisguiseEvent event = new DisguiseEvent(player, disguise);
 					getServer().getPluginManager().callEvent(event);
 					if(event.isCancelled()) {

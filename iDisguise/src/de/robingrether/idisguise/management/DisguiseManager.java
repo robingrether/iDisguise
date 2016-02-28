@@ -12,6 +12,11 @@ public abstract class DisguiseManager {
 	
 	public static DisguiseManager instance;
 	
+	protected final boolean[] attributes = new boolean[1];
+	/*
+	 * attributes[0] -> modify player list
+	 */
+	
 	public abstract Object getSpawnPacket(Player player);
 	
 	protected abstract Object getPlayerInfoPacket(Player player);
@@ -41,5 +46,9 @@ public abstract class DisguiseManager {
 	public abstract Map getDisguises();
 	
 	public abstract void updateDisguises(Map map);
+	
+	public void setAttribute(int index, boolean value) {
+		attributes[index] = value;
+	}
 	
 }
