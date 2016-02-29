@@ -28,6 +28,7 @@ import net.minecraft.server.v1_6_R2.Packet62NamedSoundEffect;
 import net.minecraft.server.v1_6_R2.Packet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -38,6 +39,7 @@ import de.robingrether.idisguise.disguise.ObjectDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.management.ChannelRegister;
 import de.robingrether.idisguise.management.DisguiseManager;
+import de.robingrether.idisguise.management.PacketHelper;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.Sounds;
 import de.robingrether.util.Cloner;
@@ -147,20 +149,18 @@ public class ChannelRegisterImpl extends ChannelRegister {
 						for(Packet p : packetSpawn) {
 							super.sendPacket(p);
 						}
-						DisguiseManager.instance.updateAttributes(player, this.player);
 						return;
 					}
 				} else if(packet instanceof Packet201PlayerInfo) {
 					Packet201PlayerInfo packet201 = clonerPlayerInfo.clone((Packet201PlayerInfo)packet);
-					Player player = Bukkit.getPlayer(packet201.a);
+					OfflinePlayer player = Bukkit.getOfflinePlayer(packet201.a);
 					if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player)) {
-						if(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise) {
-							packet201.a = ((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName();
+						String name = (String)PacketHelper.instance.getPlayerInfo(player, null, 0, null);
+						if(name != null) {
+							packet201.a = name;
 							super.sendPacket(packet201);
-							return;
-						} else {
-							return;
 						}
+						return;
 					}
 				} else if(packet instanceof Packet70Bed) {
 					Packet70Bed packet70 = (Packet70Bed)packet;

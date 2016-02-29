@@ -28,6 +28,7 @@ import net.minecraft.server.v1_7_R1.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_7_R1.PacketPlayOutSpawnEntityLiving;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -38,6 +39,7 @@ import de.robingrether.idisguise.disguise.ObjectDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.management.ChannelRegister;
 import de.robingrether.idisguise.management.DisguiseManager;
+import de.robingrether.idisguise.management.PacketHelper;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.Sounds;
 import de.robingrether.util.Cloner;
@@ -171,20 +173,18 @@ public class ChannelRegisterImpl extends ChannelRegister {
 						for(Packet p : packetSpawn) {
 							super.sendPacket(p);
 						}
-						DisguiseManager.instance.updateAttributes(player, this.player);
 						return;
 					}
 				} else if(object instanceof PacketPlayOutPlayerInfo) {
 					PacketPlayOutPlayerInfo packet = clonerPlayerInfo.clone((PacketPlayOutPlayerInfo)object);
-					Player player = Bukkit.getPlayer((String)fieldName.get(packet));
+					OfflinePlayer player = Bukkit.getOfflinePlayer((String)fieldName.get(packet));
 					if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player)) {
-						if(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise) {
-							fieldName.set(packet, ((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName());
+						String name = (String)PacketHelper.instance.getPlayerInfo(player, null, 0, null);
+						if(name != null) {
+							fieldName.set(packet, name);
 							super.sendPacket(packet);
-							return;
-						} else {
-							return;
 						}
+						return;
 					}
 				} else if(object instanceof PacketPlayOutBed) {
 					PacketPlayOutBed packet = (PacketPlayOutBed)object;

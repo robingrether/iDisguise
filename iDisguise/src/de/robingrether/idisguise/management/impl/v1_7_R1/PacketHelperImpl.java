@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
@@ -29,6 +30,7 @@ import de.robingrether.idisguise.disguise.SkeletonDisguise;
 import de.robingrether.idisguise.disguise.VillagerDisguise;
 import de.robingrether.idisguise.disguise.WolfDisguise;
 import de.robingrether.idisguise.disguise.ZombieDisguise;
+import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.PacketHelper;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.VersionHelper;
@@ -212,6 +214,18 @@ public class PacketHelperImpl extends PacketHelper {
 			}
 		}
 		return packets.toArray(new Packet[0]);
+	}
+	
+	public String getPlayerInfo(OfflinePlayer offlinePlayer, Object context, int ping, Object gamemode) {
+		Disguise disguise = DisguiseManager.instance.getDisguise(offlinePlayer);
+		if(disguise == null) {
+			return offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName();
+		} else if(disguise instanceof PlayerDisguise) {
+			return attributes[1] ? ((PlayerDisguise)disguise).getName() : offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName();
+		} else if(!attributes[1]) {
+			return offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName();
+		}
+		return null;
 	}
 	
 }
