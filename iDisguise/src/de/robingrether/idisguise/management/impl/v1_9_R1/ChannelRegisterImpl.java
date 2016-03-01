@@ -226,11 +226,12 @@ public class ChannelRegisterImpl extends ChannelRegister {
 					Player player = PlayerHelper.instance.getPlayerByEntityId(fieldEntityIdMetadata.getInt(packet));
 					if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player)) {
 						if(!(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise)) {
+							boolean living = DisguiseManager.instance.getDisguise(player) instanceof MobDisguise;
 							List<Item> list = (List<Item>)fieldListMetadata.get(packet);
 							List<Item> remove = new ArrayList<Item>();
 							for(Item metadataItem : list) {
 								DataWatcherObject metadataObject = (DataWatcherObject)fieldObjectMetadata.get(metadataItem);
-								if(metadataObject.a() > 9 || metadataObject.a() == 2 || metadataObject.a() == 3) {
+								if(metadataObject.a() > 0 && !(living && metadataObject.a() >= 6 && metadataObject.a() <= 9)) {
 									remove.add(metadataItem);
 								}
 							}
