@@ -26,6 +26,7 @@ import net.minecraft.server.v1_7_R2.PacketPlayOutNamedEntitySpawn;
 import net.minecraft.server.v1_7_R2.PacketPlayOutNamedSoundEffect;
 import net.minecraft.server.v1_7_R2.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_7_R2.PacketPlayOutSpawnEntityLiving;
+import net.minecraft.server.v1_7_R2.PacketPlayOutUpdateAttributes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -49,7 +50,7 @@ import de.robingrether.util.StringUtil;
 public class ChannelRegisterImpl extends ChannelRegister {
 	
 	private final Map<Player, PlayerConnectionInjected> registeredHandlers = new ConcurrentHashMap<Player, PlayerConnectionInjected>();
-	private Field fieldName, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving, fieldListMetadata, fieldEntityIdUseEntity, fieldEntityIdNamedSpawn, fieldSoundEffect, fieldX, fieldY, fieldZ;
+	private Field fieldName, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving, fieldListMetadata, fieldEntityIdUseEntity, fieldEntityIdNamedSpawn, fieldSoundEffect, fieldX, fieldY, fieldZ, fieldEntityIdAttributes;
 	private Cloner<PacketPlayOutPlayerInfo> clonerPlayerInfo = new PlayerInfoCloner();
 	private Cloner<PacketPlayOutEntityMetadata> clonerEntityMetadata = new EntityMetadataCloner();
 	private Cloner<PacketPlayOutEntity> clonerEntity = new EntityCloner();
@@ -92,6 +93,8 @@ public class ChannelRegisterImpl extends ChannelRegister {
 			fieldY.setAccessible(true);
 			fieldZ = PacketPlayOutNamedSoundEffect.class.getDeclaredField("d");
 			fieldZ.setAccessible(true);
+			fieldEntityIdAttributes = PacketPlayOutUpdateAttributes.class.getDeclaredField("a");
+			fieldEntityIdAttributes.setAccessible(true);
 		} catch(Exception e) {
 		}
 	}
@@ -206,10 +209,11 @@ public class ChannelRegisterImpl extends ChannelRegister {
 					Player player = PlayerHelper.instance.getPlayerByEntityId(fieldEntityIdMetadata.getInt(packet));
 					if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player)) {
 						if(!(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise)) {
+							boolean living = DisguiseManager.instance.getDisguise(player) instanceof MobDisguise;
 							List<WatchableObject> list = (List<WatchableObject>)fieldListMetadata.get(packet);
 							List<WatchableObject> remove = new ArrayList<WatchableObject>();
 							for(WatchableObject metadata : list) {
-								if(metadata.a() > 9) {
+								if(metadata.a() > 0 && !(living && metadata.a() >= 6 && metadata.a() <= 9)) {
 									remove.add(metadata);
 								}
 							}
@@ -301,6 +305,12 @@ public class ChannelRegisterImpl extends ChannelRegister {
 								}
 							}
 						}
+					}
+				} else if(object instanceof PacketPlayOutUpdateAttributes) {
+					PacketPlayOutUpdateAttributes packet = (PacketPlayOutUpdateAttributes)object;
+					Player player = PlayerHelper.instance.getPlayerByEntityId(fieldEntityIdAttributes.getInt(packet));
+					if(player != null && player != this.player && DisguiseManager.instance.getDisguise(player) instanceof ObjectDisguise) {
+						return;
 					}
 				}
 				super.sendPacket(object);
