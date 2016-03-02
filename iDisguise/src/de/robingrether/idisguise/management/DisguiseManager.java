@@ -3,6 +3,7 @@ package de.robingrether.idisguise.management;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -31,5 +32,25 @@ public abstract class DisguiseManager {
 	public abstract Map getDisguises();
 	
 	public abstract void updateDisguises(Map map);
+	
+	public void resendPackets() {
+		for(OfflinePlayer offlinePlayer : getDisguisedPlayers()) {
+			if(offlinePlayer.isOnline()) {
+				Player player = offlinePlayer.getPlayer();
+				for(Player observer : Bukkit.getOnlinePlayers()) {
+					if(observer == player) {
+						continue;
+					}
+					observer.hidePlayer(player);
+				}
+				for(Player observer : Bukkit.getOnlinePlayers()) {
+					if(observer == player) {
+						continue;
+					}
+					observer.showPlayer(player);
+				}
+			}
+		}
+	}
 	
 }

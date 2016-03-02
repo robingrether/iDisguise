@@ -133,6 +133,7 @@ public class iDisguise extends JavaPlugin {
 		getLogger().log(Level.INFO, String.format("%s enabled!", getFullName()));
 		enabled = true;
 		ChannelRegister.instance.registerOnlinePlayers();
+		DisguiseManager.instance.resendPackets();
 	}
 	
 	public void onDisable() {
@@ -174,6 +175,7 @@ public class iDisguise extends JavaPlugin {
 			GhostFactory.instance.enable(this);
 		}
 		enabled = true;
+		DisguiseManager.instance.resendPackets();
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

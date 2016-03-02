@@ -158,4 +158,19 @@ public class DisguiseManagerImpl extends DisguiseManager {
 		}
 	}
 	
+	public void resendPackets() {
+		for(OfflinePlayer offlinePlayer : getDisguisedPlayers()) {
+			if(offlinePlayer.isOnline()) {
+				Player player = offlinePlayer.getPlayer();
+				for(Player observer : Bukkit.getOnlinePlayers()) {
+					if(observer == player) {
+						continue;
+					}
+					observer.hidePlayer(player);
+				}
+				showPlayerLater(player);
+			}
+		}
+	}
+	
 }
