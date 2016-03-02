@@ -13,7 +13,6 @@ import net.minecraft.server.v1_9_R1.DataWatcherObject;
 import net.minecraft.server.v1_9_R1.EntityHuman;
 import net.minecraft.server.v1_9_R1.EntityPlayer;
 import net.minecraft.server.v1_9_R1.MinecraftKey;
-import net.minecraft.server.v1_9_R1.MinecraftServer;
 import net.minecraft.server.v1_9_R1.Packet;
 import net.minecraft.server.v1_9_R1.PacketPlayInUseEntity;
 import net.minecraft.server.v1_9_R1.PacketPlayInUseEntity.EnumEntityUseAction;
@@ -29,11 +28,13 @@ import net.minecraft.server.v1_9_R1.PacketPlayOutNamedSoundEffect;
 import net.minecraft.server.v1_9_R1.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_9_R1.PacketPlayOutPlayerInfo.PlayerInfoData;
 import net.minecraft.server.v1_9_R1.PacketPlayOutSpawnEntityLiving;
+import net.minecraft.server.v1_9_R1.PacketPlayOutUpdateAttributes;
 import net.minecraft.server.v1_9_R1.PlayerConnection;
 import net.minecraft.server.v1_9_R1.SoundEffect;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.craftbukkit.v1_9_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -54,7 +55,7 @@ import de.robingrether.util.StringUtil;
 public class ChannelRegisterImpl extends ChannelRegister {
 	
 	private final Map<Player, PlayerConnectionInjected> registeredHandlers = new ConcurrentHashMap<Player, PlayerConnectionInjected>();
-	private Field fieldListInfo, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving, fieldListMetadata, fieldEntityIdUseEntity, fieldEntityIdNamedSpawn, fieldSoundEffect, /*fieldSoundCategory, */fieldX, fieldY, fieldZ, fieldObjectMetadata;
+	private Field fieldListInfo, fieldEntityIdBed, fieldAnimation, fieldEntityIdAnimation, fieldEntityIdMetadata, fieldEntityIdEntity, fieldYawEntity, fieldEntityIdTeleport, fieldYawTeleport, fieldYawSpawnEntityLiving, fieldListMetadata, fieldEntityIdUseEntity, fieldEntityIdNamedSpawn, fieldSoundEffect, /*fieldSoundCategory, */fieldX, fieldY, fieldZ, fieldObjectMetadata, fieldEntityIdAttributes;
 	private Cloner<PacketPlayOutPlayerInfo> clonerPlayerInfo = new PlayerInfoCloner();
 	private Cloner<PacketPlayOutEntityMetadata> clonerEntityMetadata = new EntityMetadataCloner();
 	private Cloner<PacketPlayOutEntity> clonerEntity = new EntityCloner();
@@ -101,6 +102,8 @@ public class ChannelRegisterImpl extends ChannelRegister {
 			fieldZ.setAccessible(true);
 			fieldObjectMetadata = Item.class.getDeclaredField("a");
 			fieldObjectMetadata.setAccessible(true);
+			fieldEntityIdAttributes = PacketPlayOutUpdateAttributes.class.getDeclaredField("a");
+			fieldEntityIdAttributes.setAccessible(true);
 		} catch(Exception e) {
 		}
 	}
@@ -132,7 +135,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 		private Player player;
 		
 		private PlayerConnectionInjected(Player player, PlayerConnection playerConnection) {
-			super(MinecraftServer.getServer(), playerConnection.networkManager, playerConnection.player);
+			super(((CraftServer)Bukkit.getServer()).getServer(), playerConnection.networkManager, playerConnection.player);
 			this.player = player;
 		}
 		
@@ -282,10 +285,10 @@ public class ChannelRegisterImpl extends ChannelRegister {
 						super.sendPacket(packet);
 						return;
 					}
-				}/* else if(Sounds.isEnabled() && object instanceof PacketPlayOutNamedSoundEffect) {
+				} else if(Sounds.isEnabled() && object instanceof PacketPlayOutNamedSoundEffect) {
 					PacketPlayOutNamedSoundEffect packet = clonerSoundEffect.clone((PacketPlayOutNamedSoundEffect)object);
 					String soundEffect = SoundEffect.a.b((SoundEffect)fieldSoundEffect.get(packet)).a();
-					if(StringUtil.equals(soundEffect, "game.player.die", "game.player.hurt.fall.big", "game.player.hurt.fall.small", "game.player.hurt", "game.player.swim.splash", "game.player.swim")) {
+					if(StringUtil.equals(soundEffect, "entity.player.death", "entity.player.big_fall", "entity.player.small_fall", "entity.player.hurt", "entity.player.splash", "entity.player.swim")) {
 						EntityHuman nearestHuman = ((CraftPlayer)this.player).getHandle().world.a(fieldX.getInt(packet) / 8.0, fieldY.getInt(packet) / 8.0, fieldZ.getInt(packet) / 8.0, 1.0, false);
 						if(nearestHuman instanceof EntityPlayer) {
 							Player player = ((EntityPlayer)nearestHuman).getBukkitEntity();
@@ -314,7 +317,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 											break;
 									}
 									if(replacementSoundEffect != null) {
-										fieldSoundEffect.set(packet, SoundEffect.a.get(new MinecraftKey(replacementSoundEffect)));
+										fieldSoundEffect.set(packet, SoundEffect.a.get(new MinecraftKey(replacementSoundEffect.replace("mob", "entity"))));
 										super.sendPacket(packet);
 									}
 									return;
@@ -324,7 +327,13 @@ public class ChannelRegisterImpl extends ChannelRegister {
 							}
 						}
 					}
-				}*/
+				} else if(object instanceof PacketPlayOutUpdateAttributes) {
+					PacketPlayOutUpdateAttributes packet = (PacketPlayOutUpdateAttributes)object;
+					Player player = PlayerHelper.instance.getPlayerByEntityId(fieldEntityIdAttributes.getInt(packet));
+					if(player != null && player != this.player && DisguiseManager.instance.getDisguise(player) instanceof ObjectDisguise) {
+						return;
+					}
+				}
 				super.sendPacket(object);
 			} catch(Exception e) {
 				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Packet handling error!", e);
