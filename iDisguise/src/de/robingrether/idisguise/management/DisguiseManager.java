@@ -33,7 +33,7 @@ public abstract class DisguiseManager {
 	
 	public abstract void updateDisguises(Map map);
 	
-	public void resendPackets() {
+	/*public void resendPackets() {
 		for(OfflinePlayer offlinePlayer : getDisguisedPlayers()) {
 			if(offlinePlayer.isOnline()) {
 				Player player = offlinePlayer.getPlayer();
@@ -51,6 +51,6 @@ public abstract class DisguiseManager {
 				}
 			}
 		}
-	}
+	}*/
 	
 }
