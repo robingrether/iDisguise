@@ -282,7 +282,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 						super.sendPacket(packet);
 						return;
 					}
-				} else if(Sounds.isEnabled() && object instanceof PacketPlayOutNamedSoundEffect) {
+				}/* else if(Sounds.isEnabled() && object instanceof PacketPlayOutNamedSoundEffect) {
 					PacketPlayOutNamedSoundEffect packet = clonerSoundEffect.clone((PacketPlayOutNamedSoundEffect)object);
 					String soundEffect = SoundEffect.a.b((SoundEffect)fieldSoundEffect.get(packet)).a();
 					if(StringUtil.equals(soundEffect, "game.player.die", "game.player.hurt.fall.big", "game.player.hurt.fall.small", "game.player.hurt", "game.player.swim.splash", "game.player.swim")) {
@@ -324,7 +324,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 							}
 						}
 					}
-				}
+				}*/
 				super.sendPacket(object);
 			} catch(Exception e) {
 				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Packet handling error!", e);
