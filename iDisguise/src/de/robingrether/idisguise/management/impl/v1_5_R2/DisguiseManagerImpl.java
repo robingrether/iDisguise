@@ -5,12 +5,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import net.minecraft.server.v1_5_R2.Packet;
-import net.minecraft.server.v1_5_R2.Packet20NamedEntitySpawn;
-
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import de.robingrether.idisguise.disguise.Disguise;
@@ -20,23 +16,10 @@ import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.DisguiseMap;
 import de.robingrether.idisguise.management.DisguiseMapLegacy;
 import de.robingrether.idisguise.management.GhostFactory;
-import de.robingrether.idisguise.management.PacketHelper;
 
 public class DisguiseManagerImpl extends DisguiseManager {
 	
 	private DisguiseMapLegacy disguiseMap = new DisguiseMapLegacy();
-	
-	public Packet[] getSpawnPacket(Player player) {
-		Packet[] packetSpawn;
-		Disguise disguise = getDisguise(player);
-		if(disguise == null) {
-			packetSpawn = new Packet[1];
-			packetSpawn[0] = new Packet20NamedEntitySpawn(((CraftPlayer)player).getHandle());
-		} else {
-			packetSpawn = (Packet[])PacketHelper.instance.getPackets(player, disguise);
-		}
-		return packetSpawn;
-	}
 	
 	public synchronized void disguise(OfflinePlayer offlinePlayer, Disguise disguise) {
 		if(offlinePlayer.isOnline()) {
@@ -147,6 +130,26 @@ public class DisguiseManagerImpl extends DisguiseManager {
 				disguiseMap = new DisguiseMapLegacy(new DisguiseMap(map));
 			} else if(map.keySet().iterator().next() instanceof String) {
 				disguiseMap = new DisguiseMapLegacy(map);
+			}
+		}
+	}
+	
+	public void resendPackets() {
+		for(OfflinePlayer offlinePlayer : getDisguisedPlayers()) {
+			if(offlinePlayer.isOnline()) {
+				Player player = offlinePlayer.getPlayer();
+				for(Player observer : Bukkit.getOnlinePlayers()) {
+					if(observer == player) {
+						continue;
+					}
+					observer.hidePlayer(player);
+				}
+				for(Player observer : Bukkit.getOnlinePlayers()) {
+					if(observer == player) {
+						continue;
+					}
+					observer.showPlayer(player);
+				}
 			}
 		}
 	}

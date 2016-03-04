@@ -175,7 +175,7 @@ public class ChannelRegisterImpl extends ChannelRegister {
 					PacketPlayOutNamedEntitySpawn packet = (PacketPlayOutNamedEntitySpawn)object;
 					Player player = PlayerHelper.instance.getPlayerByEntityId(fieldEntityIdNamedSpawn.getInt(packet));
 					if(player != null && player != this.player && DisguiseManager.instance.isDisguised(player)) {
-						Packet<?>[] packetSpawn = (Packet<?>[])DisguiseManager.instance.getSpawnPacket(player);
+						Packet<?>[] packetSpawn = (Packet<?>[])PacketHelper.instance.getPackets(player);
 						if(packetSpawn[0] instanceof PacketPlayOutSpawnEntityLiving && DisguiseManager.instance.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
 							byte yaw = fieldYawSpawnEntityLiving.getByte(packetSpawn[0]);
 							if(yaw < 0) {

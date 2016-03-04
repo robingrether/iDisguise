@@ -5,12 +5,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import net.minecraft.server.v1_8_R1.Packet;
-import net.minecraft.server.v1_8_R1.PacketPlayOutNamedEntitySpawn;
-
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import de.robingrether.idisguise.disguise.Disguise;
@@ -20,23 +16,10 @@ import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.DisguiseMap;
 import de.robingrether.idisguise.management.DisguiseMapLegacy;
 import de.robingrether.idisguise.management.GhostFactory;
-import de.robingrether.idisguise.management.PacketHelper;
 
 public class DisguiseManagerImpl extends DisguiseManager {
 	
 	private DisguiseMap disguiseMap = new DisguiseMap();
-	
-	public Packet[] getSpawnPacket(Player player) {
-		Packet[] packetSpawn;
-		Disguise disguise = getDisguise(player);
-		if(disguise == null) {
-			packetSpawn = new Packet[1];
-			packetSpawn[0] = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());
-		} else {
-			packetSpawn = (Packet[])PacketHelper.instance.getPackets(player, disguise);
-		}
-		return packetSpawn;
-	}
 	
 	private void showPlayerLater(final Player player) {
 		Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("iDisguise"), new Runnable() {

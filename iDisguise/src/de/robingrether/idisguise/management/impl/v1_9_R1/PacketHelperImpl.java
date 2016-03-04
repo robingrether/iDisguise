@@ -88,7 +88,8 @@ public class PacketHelperImpl extends PacketHelper {
 		}
 	}
 	
-	public Packet<?>[] getPackets(Player player, Disguise disguise) {
+	public Packet<?>[] getPackets(Player player) {
+		Disguise disguise = DisguiseManager.instance.getDisguise(player);
 		if(disguise == null) {
 			return null;
 		}
