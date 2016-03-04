@@ -36,6 +36,10 @@ public class VersionHelper {
 		return false;
 	}
 	
+	public static boolean require1_9() {
+		return requireVersion("v1_9_R1");
+	}
+	
 	public static boolean require1_8() {
 		return requireVersion("v1_8_R1");
 	}
