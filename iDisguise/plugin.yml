@@ -81,6 +81,7 @@ permissions:
          iDisguise.mob.rabbit.type.*: true
          iDisguise.mob.sheep: true
          iDisguise.mob.sheep.color.*: true
+         iDisguise.mob.shulker: true
          iDisguise.mob.silverfish: true
          iDisguise.mob.skeleton: true
          iDisguise.mob.skeleton.wither: true
@@ -268,6 +269,8 @@ permissions:
    iDisguise.mob.sheep.color.white:
       default: false
    iDisguise.mob.sheep.color.yellow:
+      default: false
+   iDisguise.mob.shulker:
       default: false
    iDisguise.mob.silverfish:
       default: false
