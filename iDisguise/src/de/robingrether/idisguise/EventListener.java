@@ -1,5 +1,9 @@
 package de.robingrether.idisguise;
 
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
@@ -16,9 +20,11 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import de.robingrether.idisguise.api.UndisguiseEvent;
+import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.io.Configuration;
 import de.robingrether.idisguise.io.UpdateCheck;
@@ -165,6 +171,21 @@ public class EventListener implements Listener {
 						break;
 					}
 				}
+			}
+		}
+	}
+	
+	private Map<UUID, Long> mapLastMessageSent = new ConcurrentHashMap<UUID, Long>();
+	
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent event) {
+		Player player = event.getPlayer();
+		if(DisguiseManager.instance.isDisguised(player) && DisguiseManager.instance.getDisguise(player).getType().equals(DisguiseType.SHULKER)) {
+			event.setCancelled(true);
+			long lastSent = mapLastMessageSent.containsKey(player.getUniqueId()) ? mapLastMessageSent.get(player.getUniqueId()) : 0L;
+			if(lastSent + 3000L < System.currentTimeMillis()) {
+				player.sendMessage(ChatColor.RED + "You must not move while you are disguised as a shulker.");
+				mapLastMessageSent.put(player.getUniqueId(), System.currentTimeMillis());
 			}
 		}
 	}
