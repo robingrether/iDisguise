@@ -160,15 +160,17 @@ public class EventListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		if(plugin.getConfiguration().getBoolean(Configuration.REPLACE_DEATH_MESSAGES)) {
-			String[] words = event.getDeathMessage().split(" ");
-			for(String word : words) {
-				Player player = Bukkit.getPlayer(word);
-				if(player != null && DisguiseManager.instance.isDisguised(player)) {
-					if(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise) {
-						event.setDeathMessage(event.getDeathMessage().replace(word, ((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName()));
-					} else {
-						event.setDeathMessage(null);
-						break;
+			if(event.getDeathMessage() != null) {
+				String[] words = event.getDeathMessage().split(" ");
+				for(String word : words) {
+					Player player = Bukkit.getPlayer(word);
+					if(player != null && DisguiseManager.instance.isDisguised(player)) {
+						if(DisguiseManager.instance.getDisguise(player) instanceof PlayerDisguise) {
+							event.setDeathMessage(event.getDeathMessage().replace(word, ((PlayerDisguise)DisguiseManager.instance.getDisguise(player)).getName()));
+						} else {
+							event.setDeathMessage(null);
+							break;
+						}
 					}
 				}
 			}
