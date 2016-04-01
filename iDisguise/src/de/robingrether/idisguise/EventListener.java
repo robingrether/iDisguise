@@ -193,4 +193,12 @@ public class EventListener implements Listener {
 		}
 	}
 	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
+		Player player = event.getPlayer();
+		if(DisguiseManager.getInstance().isDisguised(player) && plugin.getConfiguration().getBoolean(Configuration.DISABLE_ITEM_PICK_UP)) {
+			event.setCancelled(true);
+		}
+	}
+	
 }
