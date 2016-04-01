@@ -1,18 +1,26 @@
 package de.robingrether.idisguise.management;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.GuardianDisguise;
 import de.robingrether.idisguise.disguise.HorseDisguise;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.SizedDisguise;
+import de.robingrether.idisguise.disguise.ZombieDisguise;
+import de.robingrether.util.StringUtil;
 
 public class Sounds {
 	
 	private static Map<DisguiseType, Sounds> entitySounds = new ConcurrentHashMap<DisguiseType, Sounds>();
 	private static boolean enabled = false;
+	private static String[] soundsToReplace;
 	
 	public static boolean isEnabled() {
 		return enabled;
@@ -34,64 +42,137 @@ public class Sounds {
 		return false;
 	}
 	
-	public static String getDeath(MobDisguise disguise) {
-		if(enabled) {
-			Sounds sounds = entitySounds.get(disguise.getType());
-			if(sounds != null) {
-				return sounds.death(disguise);
-			}
-		}
-		return null;
+	public static boolean isSoundFromPlayer(String sound) {
+		return StringUtil.equals(sound, soundsToReplace);
 	}
 	
-	public static String getFallBig(MobDisguise disguise) {
-		if(enabled) {
-			Sounds sounds = entitySounds.get(disguise.getType());
-			if(sounds != null) {
-				return sounds.fallBig(disguise);
-			}
+	public static String replaceSoundFromPlayer(String sound, MobDisguise disguise) {
+		Sounds sounds = getSoundsForEntity(disguise.getType());
+		String replacement = null;
+		if(sound.equals(soundsToReplace[0])) {
+			replacement = sounds.death(disguise);
+		} else if(sound.equals(soundsToReplace[1])) {
+			replacement = sounds.fallBig(disguise);
+		} else if(sound.equals(soundsToReplace[2])) {
+			replacement = sounds.fallSmall(disguise);
+		} else if(sound.equals(soundsToReplace[3])) {
+			replacement = sounds.hit(disguise);
+		} else if(sound.equals(soundsToReplace[4])) {
+			replacement = sounds.splash(disguise);
+		} else if(sound.equals(soundsToReplace[5])) {
+			replacement = sounds.swim(disguise);
 		}
-		return null;
+		if(replacement != null && !replacement.isEmpty()) {
+			return replacement;
+		} else {
+			return null;
+		}
 	}
 	
-	public static String getFallSmall(MobDisguise disguise) {
-		if(enabled) {
-			Sounds sounds = entitySounds.get(disguise.getType());
-			if(sounds != null) {
-				return sounds.fallSmall(disguise);
-			}
-		}
-		return null;
-	}
+	private static final Pattern soundPattern = Pattern.compile("([A-Z_]+)->(.+)");
 	
-	public static String getHit(MobDisguise disguise) {
-		if(enabled) {
-			Sounds sounds = entitySounds.get(disguise.getType());
-			if(sounds != null) {
-				return sounds.hit(disguise);
+	public static void init(String file) {
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(Sounds.class.getResourceAsStream(file)));
+			String line;
+			while((line = reader.readLine()) != null) {
+				Matcher soundMatcher = soundPattern.matcher(line);
+				if(soundMatcher.matches()) {
+					try {
+						String name = soundMatcher.group(1);
+						final String[] arguments = soundMatcher.group(2).split(",");
+						switch(name) {
+							case "_":
+								soundsToReplace = arguments;
+								break;
+							case "GUARDIAN":
+								setSoundsForEntity(DisguiseType.GUARDIAN, new Sounds(null, arguments[0], arguments[1], null, arguments[2], arguments[3]) {
+									
+									public String death(MobDisguise disguise) {
+										return (disguise instanceof GuardianDisguise && ((GuardianDisguise)disguise).isElder()) ? arguments[4] : arguments[5];
+									}
+									
+									public String hit(MobDisguise disguise) {
+										return (disguise instanceof GuardianDisguise && ((GuardianDisguise)disguise).isElder()) ? arguments[6] : arguments[7];
+									}
+									
+								});
+								break;
+							case "HORSE":
+								setSoundsForEntity(DisguiseType.HORSE, new Sounds(null, arguments[0], arguments[1], null, arguments[2], arguments[3]) {
+									
+									public String death(MobDisguise disguise) {
+										if(disguise instanceof HorseDisguise) {
+											switch(((HorseDisguise)disguise).getVariant()) {
+												case HORSE:
+													return arguments[4];
+												case DONKEY:
+												case MULE:
+													return arguments[5];
+												case UNDEAD_HORSE:
+													return arguments[6];
+												case SKELETON_HORSE:
+													return arguments[7];
+											}
+										}
+										return arguments[4];
+									}
+									
+									public String hit(MobDisguise disguise) {
+										if(disguise instanceof HorseDisguise) {
+											switch(((HorseDisguise)disguise).getVariant()) {
+												case HORSE:
+													return arguments[8];
+												case DONKEY:
+												case MULE:
+													return arguments[9];
+												case UNDEAD_HORSE:
+													return arguments[10];
+												case SKELETON_HORSE:
+													return arguments[11];
+											}
+										}
+										return arguments[8];
+									}
+									
+								});
+								break;
+							case "MAGMA_CUBE":
+							case "SLIME":
+								setSoundsForEntity(DisguiseType.valueOf(name), new Sounds(null, arguments[0], arguments[1], null, arguments[2], arguments[3]) {
+									
+									public String death(MobDisguise disguise) {
+										return (disguise instanceof SizedDisguise && ((SizedDisguise)disguise).getSize() > 1) ? arguments[4] : arguments[5];
+									}
+									
+									public String hit(MobDisguise disguise) {
+										return (disguise instanceof SizedDisguise && ((SizedDisguise)disguise).getSize() > 1) ? arguments[6] : arguments[7];
+									}
+									
+								});
+								break;
+							case "ZOMBIE":
+								setSoundsForEntity(DisguiseType.ZOMBIE, new Sounds(null, arguments[0], arguments[1], null, arguments[2], arguments[3]) {
+									
+									public String death(MobDisguise disguise) {
+										return (disguise instanceof ZombieDisguise && ((ZombieDisguise)disguise).isVillager()) ? arguments[4] : arguments[5];
+									}
+									
+									public String hit(MobDisguise disguise) {
+										return (disguise instanceof ZombieDisguise && ((ZombieDisguise)disguise).isVillager()) ? arguments[6] : arguments[7];
+									}
+									
+								});
+							default:
+								setSoundsForEntity(DisguiseType.valueOf(name), new Sounds(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]));
+								break;
+						}
+					} catch(ArrayIndexOutOfBoundsException e) {
+					}
+				}
 			}
+		} catch(IOException e) {
 		}
-		return null;
-	}
-	
-	public static String getSplash(MobDisguise disguise) {
-		if(enabled) {
-			Sounds sounds = entitySounds.get(disguise.getType());
-			if(sounds != null) {
-				return sounds.splash(disguise);
-			}
-		}
-		return null;
-	}
-	
-	public static String getSwim(MobDisguise disguise) {
-		if(enabled) {
-			Sounds sounds = entitySounds.get(disguise.getType());
-			if(sounds != null) {
-				return sounds.swim(disguise);
-			}
-		}
-		return null;
 	}
 	
 	protected String death, fallBig, fallSmall, hit, splash, swim;
@@ -127,97 +208,6 @@ public class Sounds {
 	
 	public String swim(MobDisguise disguise) {
 		return swim;
-	}
-	
-	static {
-		setSoundsForEntity(DisguiseType.BAT, new Sounds("mob.bat.death", null, null, "mob.bat.hurt", null, null));
-		setSoundsForEntity(DisguiseType.BLAZE, new Sounds("mob.blaze.death", "game.hostile.hurt.fall.big", "game.hostile.hurt.fall.small", "mob.blaze.hit", "game.hostile.swim.splash", "game.hostile.swim"));
-		setSoundsForEntity(DisguiseType.CAVE_SPIDER, new Sounds("mob.spider.death", "game.hostile.hurt.fall.big", "game.hostile.hurt.fall.small", "mob.spider.say", "game.hostile.swim.splash", "game.hostile.swim"));
-		setSoundsForEntity(DisguiseType.CHICKEN, new Sounds("mob.chicken.hurt", null, null, "mob.chicken.hurt", "game.neutral.swim.splash", "game.neutral.swim"));
-		setSoundsForEntity(DisguiseType.COW, new Sounds("mob.cow.hurt", "game.neutral.hurt.fall.big", "game.neutral.hurt.fall.small", "mob.cow.hurt", "game.neutral.swim.splash", "game.neutral.swim"));
-		setSoundsForEntity(DisguiseType.CREEPER, new Sounds("mob.creeper.death", "game.hostile.hurt.fall.big", "game.hostile.hurt.fall.small", "mob.creeper.say", "game.hostile.swim.splash", "game.hostile.swim"));
-		setSoundsForEntity(DisguiseType.ENDER_DRAGON, new Sounds("mob.enderdragon.end", null, null, "mob.enderdragon.hit", null, null));
-		setSoundsForEntity(DisguiseType.ENDERMAN, new Sounds("mob.enderman.death", "game.hostile.hurt.fall.big", "game.hostile.hurt.fall.small", "mob.enderman.hit", "game.hostile.swim.splash", "game.hostile.swim"));
-		setSoundsForEntity(DisguiseType.ENDERMITE, new Sounds("mob.silverfish.kill", "game.hostile.hurt.fall.big", "game.hostile.hurt.fall.small", "mob.silverfish.hit", "game.hostile.swim.splash", "game.hostile.swim"));
-		setSoundsForEntity(DisguiseType.GHAST, new Sounds("mob.ghast.death", null, null, "mob.ghast.scream", null, null));
-		setSoundsForEntity(DisguiseType.GIANT, new Sounds("game.hostile.die", "game.hostile.hurt.fall.big", "game.hostile.hurt.fall.small", "game.hostile.hurt", "game.hostile.swim.splash", "game.hostile.swim"));
-		setSoundsForEntity(DisguiseType.GUARDIAN, new Sounds(null, "game.hostile.hurt.fall.big", "game.hostile.hurt.fall.small", null, "game.hostile.swim.splash", "game.hostile.swim") {
-			
-			public String death(MobDisguise disguise) {
-				return (disguise instanceof GuardianDisguise && ((GuardianDisguise)disguise).isElder()) ? "mob.guardian.elder.death" : "mob.guardian.death";
-			}
-			
-			public String hit(MobDisguise disguise) {
-				return (disguise instanceof GuardianDisguise && ((GuardianDisguise)disguise).isElder()) ? "mob.guardian.elder.hit" : "mob.guardian.hit";
-			}
-			
-		});
-		setSoundsForEntity(DisguiseType.HORSE, new Sounds(null, "game.neutral.hurt.fall.big", "game.neutral.hurt.fall.small", null, "game.neutral.swim.splash", "game.neutral.swim") {
-			
-			public String death(MobDisguise disguise) {
-				if(disguise instanceof HorseDisguise) {
-					switch(((HorseDisguise)disguise).getVariant()) {
-						case HORSE:
-							return "mob.horse.death";
-						case DONKEY:
-						case MULE:
-							return "mob.horse.donkey.death";
-						case UNDEAD_HORSE:
-							return "mob.horse.zombie.death";
-						case SKELETON_HORSE:
-							return "mob.horse.skeleton.death";
-					}
-				}
-				return "mob.horse.death";
-			}
-			
-			public String hit(MobDisguise disguise) {
-				if(disguise instanceof HorseDisguise) {
-					switch(((HorseDisguise)disguise).getVariant()) {
-						case HORSE:
-							return "mob.horse.hit";
-						case DONKEY:
-						case MULE:
-							return "mob.horse.donkey.hit";
-						case UNDEAD_HORSE:
-							return "mob.horse.zombie.hit";
-						case SKELETON_HORSE:
-							return "mob.horse.skeleton.hit";
-					}
-				}
-				return "mob.horse.hit";
-			}
-			
-		});
-		setSoundsForEntity(DisguiseType.IRON_GOLEM, new Sounds("mob.irongolem.death", "game.neutral.hurt.fall.big", "game.neutral.hurt.fall.small", "mob.irongolem.hit", "game.neutral.swim.splash", "game.neutral.swim"));
-		setSoundsForEntity(DisguiseType.MAGMA_CUBE, new Sounds(null, "game.neutral.hurt.fall.big", "game.neutral.hurt.fall.small", null, "game.neutral.swim.splash", "game.neutral.swim") {
-			
-			public String death(MobDisguise disguise) {
-				return (disguise instanceof SizedDisguise && ((SizedDisguise)disguise).getSize() > 1) ? "mob.slime.big" : "mob.slime.small";
-			}
-			
-			public String hit(MobDisguise disguise) {
-				return (disguise instanceof SizedDisguise && ((SizedDisguise)disguise).getSize() > 1) ? "mob.slime.big" : "mob.slime.small";
-			}
-			
-		});
-		setSoundsForEntity(DisguiseType.MUSHROOM_COW, getSoundsForEntity(DisguiseType.COW));
-		setSoundsForEntity(DisguiseType.OCELOT, new Sounds("mob.cat.hitt", "game.neutral.hurt.fall.big", "game.neutral.hurt.fall.small", "mob.cat.hitt", "game.neutral.swim.splash", "game.neutral.swim"));
-		setSoundsForEntity(DisguiseType.PIG, new Sounds("mob.pig.death", "game.neutral.hurt.fall.big", "game.neutral.hurt.fall.small", "mob.pig.say", "game.neutral.swim.splash", "game.neutral.swim"));
-		setSoundsForEntity(DisguiseType.PIG_ZOMBIE, new Sounds("mob.zombiepig.zpigdeath", "game.hostile.hurt.fall.big", "game.hostile.hurt.fall.small", "mob.zombiepig.zpighurt", "game.hostile.swim.splash", "game.hostile.swim"));
-		setSoundsForEntity(DisguiseType.RABBIT, new Sounds("mob.rabbit.death", "game.neutral.hurt.fall.big", "game.neutral.hurt.fall.small", "mob.rabbit.hurt", "game.neutral.swim.splash", "game.neutral.swim"));
-		setSoundsForEntity(DisguiseType.SHEEP, new Sounds("mob.sheep.say", "game.neutral.hurt.fall.big", "game.neutral.hurt.fall.small", "mob.sheep.say", "game.neutral.swim.splash", "game.neutral.swim"));
-		setSoundsForEntity(DisguiseType.SILVERFISH, getSoundsForEntity(DisguiseType.ENDERMITE));
-		setSoundsForEntity(DisguiseType.SKELETON, new Sounds("mob.skeleton.death", "game.hostile.hurt.fall.big", "game.hostile.hurt.fall.small", "mob.skeleton.hurt", "game.hostile.swim.splash", "game.hostile.swim"));
-		setSoundsForEntity(DisguiseType.SLIME, getSoundsForEntity(DisguiseType.MAGMA_CUBE));
-		setSoundsForEntity(DisguiseType.SNOWMAN, new Sounds(null, "game.neutral.hurt.fall.big", "game.neutral.hurt.fall.small", null, "game.neutral.swim.splash", "game.neutral.swim"));
-		setSoundsForEntity(DisguiseType.SPIDER, getSoundsForEntity(DisguiseType.CAVE_SPIDER));
-		setSoundsForEntity(DisguiseType.SQUID, getSoundsForEntity(DisguiseType.SNOWMAN));
-		setSoundsForEntity(DisguiseType.VILLAGER, new Sounds("mob.villager.death", "game.neutral.hurt.fall.big", "game.neutral.hurt.fall.small", "mob.villager.hit", "game.neutral.swim.splash", "game.neutral.swim"));
-		setSoundsForEntity(DisguiseType.WITCH, new Sounds(null, "game.hostile.hurt.fall.big", "game.hostile.hurt.fall.small", null, "game.hostile.swim.splash", "game.hostile.swim"));
-		setSoundsForEntity(DisguiseType.WITHER, new Sounds("mob.wither.death", null, null, "mob.wither.hurt", "game.hostile.swim.splash", "game.hostile.swim"));
-		setSoundsForEntity(DisguiseType.WOLF, new Sounds("mob.wolf.death", "game.neutral.hurt.fall.big", "game.neutral.hurt.fall.small", "mob.wolf.hurt", "game.neutral.swim.splash", "game.neutral.swim"));
-		setSoundsForEntity(DisguiseType.ZOMBIE, new Sounds("mob.zombie.death", "game.hostile.hurt.fall.big", "game.hostile.hurt.fall.small", "mob.zombie.hurt", "game.hostile.swim.splash", "game.hostile.swim"));
 	}
 	
 }

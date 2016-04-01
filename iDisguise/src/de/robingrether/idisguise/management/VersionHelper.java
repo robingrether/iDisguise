@@ -2,6 +2,7 @@ package de.robingrether.idisguise.management;
 
 import org.bukkit.Bukkit;
 
+import de.robingrether.idisguise.management.channel.ChannelInjectorPC;
 import de.robingrether.util.StringUtil;
 
 public class VersionHelper {
@@ -9,6 +10,7 @@ public class VersionHelper {
 	private static final String[] versions = {"v1_5_R2", "v1_5_R3", "v1_6_R1", "v1_6_R2", "v1_6_R3", "v1_7_R1", "v1_7_R2", "v1_7_R3", "v1_7_R4", "v1_8_R1", "v1_8_R2", "v1_8_R3", "v1_9_R1"};
 	private static boolean initialized = false;
 	private static String versionCode, orgBukkitCraftbukkit = "org.bukkit.craftbukkit", netMinecraftServer = "net.minecraft.server", orgBukkitCraftbukkitVersioned, netMinecraftServerVersioned;
+	private static boolean require1_6, require1_7, require1_8, require1_9, useGameProfiles;
 	
 	public static String getVersionCode() {
 		return versionCode;
@@ -36,16 +38,24 @@ public class VersionHelper {
 		return false;
 	}
 	
+	public static boolean useGameProfiles() {
+		return useGameProfiles;
+	}
+	
 	public static boolean require1_9() {
-		return requireVersion("v1_9_R1");
+		return require1_9;
 	}
 	
 	public static boolean require1_8() {
-		return requireVersion("v1_8_R1");
+		return require1_8;
+	}
+	
+	public static boolean require1_7() {
+		return require1_7;
 	}
 	
 	public static boolean require1_6() {
-		return requireVersion("v1_6_R1");
+		return require1_6;
 	}
 	
 	public static boolean init() {
@@ -56,100 +66,57 @@ public class VersionHelper {
 		orgBukkitCraftbukkitVersioned = orgBukkitCraftbukkit + "." + versionCode;
 		netMinecraftServerVersioned = netMinecraftServer + "." + versionCode;
 		switch(versionCode) {
-			case "v1_9_R1":
-				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_9_R1.ChannelRegisterImpl();
-				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_9_R1.DisguiseManagerImpl();
-				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_8_R3.GhostFactoryImpl();
-				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_9_R1.PacketHelperImpl();
-				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_9_R1.PlayerHelperImpl();
-				break;
-			case "v1_8_R3":
-				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_8_R3.ChannelRegisterImpl();
-				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_8_R1.DisguiseManagerImpl();
-				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_8_R3.GhostFactoryImpl();
-				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_8_R3.PacketHelperImpl();
-				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_8_R3.PlayerHelperImpl();
-				break;
-			case "v1_8_R2":
-				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_8_R2.ChannelRegisterImpl();
-				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_8_R1.DisguiseManagerImpl();
-				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_7_R3.GhostFactoryImpl();
-				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_8_R2.PacketHelperImpl();
-				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_8_R2.PlayerHelperImpl();
-				break;
-			case "v1_8_R1":
-				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_8_R1.ChannelRegisterImpl();
-				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_8_R1.DisguiseManagerImpl();
-				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_7_R3.GhostFactoryImpl();
-				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_8_R1.PacketHelperImpl();
-				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_8_R1.PlayerHelperImpl();
-				break;
-			case "v1_7_R4":
-				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_7_R4.ChannelRegisterImpl();
-				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_7_R3.DisguiseManagerImpl();
-				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_7_R3.GhostFactoryImpl();
-				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_7_R4.PacketHelperImpl();
-				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_7_R4.PlayerHelperImpl();
-				break;
-			case "v1_7_R3":
-				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_7_R3.ChannelRegisterImpl();
-				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_7_R3.DisguiseManagerImpl();
-				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_7_R3.GhostFactoryImpl();
-				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_7_R3.PacketHelperImpl();
-				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_7_R3.PlayerHelperImpl();
-				break;
-			case "v1_7_R2":
-				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_7_R2.ChannelRegisterImpl();
-				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.DisguiseManagerImpl();
-				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.GhostFactoryImpl();
-				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_7_R2.PacketHelperImpl();
-				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_7_R1.PlayerHelperImpl();
+			case "v1_5_R2":
+			case "v1_5_R3":
+			case "v1_6_R1":
+			case "v1_6_R2":
+			case "v1_6_R3":
+				String localVersionCode = versionCode.replace("v1_5_R3", "v1_5_R2").replace("v1_6_R3", "v1_6_R2");
+				Reflection.init("reflection/" + localVersionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
+				DisguiseManager.setInstance(new DisguiseManager());
+				PlayerHelper.setInstance(new PlayerHelper());
+				Sounds.init("sounds/15_16.txt");
 				break;
 			case "v1_7_R1":
-				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_7_R1.ChannelRegisterImpl();
-				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.DisguiseManagerImpl();
-				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.GhostFactoryImpl();
-				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_7_R1.PacketHelperImpl();
-				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_7_R1.PlayerHelperImpl();
+			case "v1_7_R2":
+				Reflection.init("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
+				DisguiseManager.setInstance(new DisguiseManager());
+				PlayerHelper.setInstance(new de.robingrether.idisguise.management.player.PlayerHelper17());
+				Sounds.init("sounds/17_18.txt");
 				break;
-			case "v1_6_R3":
-				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_6_R3.ChannelRegisterImpl();
-				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.DisguiseManagerImpl();
-				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.GhostFactoryImpl();
-				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_6_R3.PacketHelperImpl();
-				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.PlayerHelperImpl();
+			case "v1_7_R3":
+			case "v1_7_R4":
+				Reflection.init("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
+				DisguiseManager.setInstance(new DisguiseManager());
+				PlayerHelper.setInstance(new de.robingrether.idisguise.management.player.PlayerHelperUID17());
+				Sounds.init("sounds/17_18.txt");
 				break;
-			case "v1_6_R2":
-				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_6_R2.ChannelRegisterImpl();
-				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.DisguiseManagerImpl();
-				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.GhostFactoryImpl();
-				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_6_R2.PacketHelperImpl();
-				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.PlayerHelperImpl();
+			case "v1_8_R1":
+			case "v1_8_R2":
+			case "v1_8_R3":
+				Reflection.init("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
+				DisguiseManager.setInstance(new de.robingrether.idisguise.management.disguise.DisguiseManager18());
+				PlayerHelper.setInstance(new de.robingrether.idisguise.management.player.PlayerHelperUID18());
+				Sounds.init("sounds/17_18.txt");
 				break;
-			case "v1_6_R1":
-				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_6_R1.ChannelRegisterImpl();
-				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.DisguiseManagerImpl();
-				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.GhostFactoryImpl();
-				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_6_R1.PacketHelperImpl();
-				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.PlayerHelperImpl();
-				break;
-			case "v1_5_R3":
-				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_5_R3.ChannelRegisterImpl();
-				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.DisguiseManagerImpl();
-				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.GhostFactoryImpl();
-				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_5_R3.PacketHelperImpl();
-				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.PlayerHelperImpl();
-				break;
-			case "v1_5_R2":
-				ChannelRegister.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.ChannelRegisterImpl();
-				DisguiseManager.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.DisguiseManagerImpl();
-				GhostFactory.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.GhostFactoryImpl();
-				PacketHelper.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.PacketHelperImpl();
-				PlayerHelper.instance = new de.robingrether.idisguise.management.impl.v1_5_R2.PlayerHelperImpl();
+			case "v1_9_R1":
+				Reflection.init("reflection/v1_9_R1.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
+				DisguiseManager.setInstance(new DisguiseManager());
+				PlayerHelper.setInstance(new de.robingrether.idisguise.management.player.PlayerHelperUID18());
+				Sounds.init("sounds/19.txt");
 				break;
 			default:
 				return false;
 		}
+		ChannelInjector.setInstance(new ChannelInjectorPC());
+		GhostFactory.setInstance(new GhostFactory());
+		PacketHandler.setInstance(new PacketHandler());
+		PacketHelper.setInstance(new PacketHelper());
+		require1_6 = requireVersion("v1_6_R1");
+		require1_7 = requireVersion("v1_7_R1");
+		require1_8 = requireVersion("v1_8_R1");
+		require1_9 = requireVersion("v1_9_R1");
+		useGameProfiles = requireVersion("v1_7_R3");
 		initialized = true;
 		return true;
 	}

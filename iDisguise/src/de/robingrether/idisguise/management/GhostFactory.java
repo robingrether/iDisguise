@@ -1,20 +1,121 @@
 package de.robingrether.idisguise.management;
 
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
-public abstract class GhostFactory {
+public class GhostFactory {
 	
-	public static GhostFactory instance;
+	private static GhostFactory instance;
 	
-	public abstract void enable(Plugin plugin);
+	public static GhostFactory getInstance() {
+		return instance;
+	}
 	
-	public abstract void disable();
+	static void setInstance(GhostFactory instance) {
+		GhostFactory.instance = instance;
+	}
 	
-	public abstract void addPlayer(String player);
+	private final String GHOST_TEAM_NAME = "Ghosts";
+	private boolean enabled = false;
+	private Team ghostTeam;
+	private Set<?> ghosts;
+	private int taskId;
 	
-	public abstract boolean addGhost(Player player);
+	public void enable(Plugin plugin) {
+		if(enabled) {
+			return;
+		}
+		if(VersionHelper.useGameProfiles()) {
+			ghosts = new HashSet<UUID>();
+		} else {
+			ghosts = new HashSet<String>();
+		}
+		Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+		ghostTeam = scoreboard.getTeam(GHOST_TEAM_NAME);
+		if(ghostTeam == null) {
+			ghostTeam = scoreboard.registerNewTeam(GHOST_TEAM_NAME);
+		}
+		ghostTeam.setCanSeeFriendlyInvisibles(true);
+		for(OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
+			addPlayer(offlinePlayer.getName());
+		}
+		taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+			
+			public void run() {
+				if(VersionHelper.useGameProfiles()) {
+					for(UUID uid : ((Set<UUID>)ghosts)) {
+						Player player = Bukkit.getPlayer(uid);
+						if(player != null) {
+							player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15));
+						}
+					}
+				} else {
+					for(String name : ((Set<String>)ghosts)) {
+						Player player = Bukkit.getPlayer(name);
+						if(player != null) {
+							player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15));
+						}
+					}
+				}
+			}
+			
+		}, 1200L, 1200L);
+		enabled = true;
+	}
 	
-	public abstract boolean removeGhost(Player player);
+	public void disable() {
+		if(!enabled) {
+			return;
+		}
+		Bukkit.getScheduler().cancelTask(taskId);
+		ghostTeam.unregister();
+		enabled = false;
+	}
 	
+	public void addPlayer(String player) {
+		if(enabled) {
+			if(VersionHelper.requireVersion("v1_8_R3")) {
+				ghostTeam.addEntry(player);
+			} else {
+				ghostTeam.addPlayer(Bukkit.getOfflinePlayer(player));
+			}
+		}
+	}
+	
+	public boolean addGhost(Player player) {
+		if(enabled) {
+			player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15));
+			if(VersionHelper.useGameProfiles()) {
+				return ((Set<UUID>)ghosts).add(player.getUniqueId());
+			} else {
+				return ((Set<String>)ghosts).add(player.getName().toLowerCase(Locale.ENGLISH));
+			}
+		}
+		return false;
+	}
+	
+	public boolean removeGhost(Player player) {
+		if(enabled) {
+			boolean remove;
+			if(VersionHelper.useGameProfiles()) {
+				remove = ghosts.remove(player.getUniqueId());
+			} else {
+				remove = ghosts.remove(player.getName().toLowerCase(Locale.ENGLISH));
+			}
+			player.removePotionEffect(PotionEffectType.INVISIBILITY);
+			return remove;
+		}
+		return false;
+	}
 }

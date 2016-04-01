@@ -38,7 +38,7 @@ public class PlayerDisguise extends Disguise {
 		if(!Validate.minecraftUsername(name)) {
 			throw new IllegalArgumentException("The given name is invalid!");
 		}
-		this.name = PlayerHelper.instance.getCaseCorrectedName(name);
+		this.name = PlayerHelper.getInstance().getCaseCorrectedName(name);
 	}
 	
 	/**

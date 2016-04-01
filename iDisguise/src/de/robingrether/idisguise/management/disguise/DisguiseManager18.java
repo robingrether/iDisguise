@@ -1,9 +1,4 @@
-package de.robingrether.idisguise.management;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+package de.robingrether.idisguise.management.disguise;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -12,22 +7,28 @@ import org.bukkit.entity.Player;
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
+import de.robingrether.idisguise.management.DisguiseManager;
+import de.robingrether.idisguise.management.GhostFactory;
+import de.robingrether.idisguise.management.Reflection;
 
-import static de.robingrether.idisguise.management.Reflection.*;
-
-public class DisguiseManager {
+public class DisguiseManager18 extends DisguiseManager {
 	
-	private static DisguiseManager instance;
-	
-	public static DisguiseManager getInstance() {
-		return instance;
+	private void showPlayerLater(final Player player) {
+		Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("iDisguise"), new Runnable() {
+			
+			public void run() {
+				if(player != null) {
+					for(Player observer : Reflection.getOnlinePlayers()) {
+						if(observer == player) {
+							continue;
+						}
+						observer.showPlayer(player);
+					}
+				}
+			}
+			
+		}, 40L);
 	}
-	
-	static void setInstance(DisguiseManager instance) {
-		DisguiseManager.instance = instance;
-	}
-	
-	protected DisguiseMap disguiseMap = DisguiseMap.emptyMap();
 	
 	public synchronized void disguise(OfflinePlayer offlinePlayer, Disguise disguise) {
 		if(offlinePlayer.isOnline()) {
@@ -53,12 +54,7 @@ public class DisguiseManager {
 					GhostFactory.getInstance().addGhost(player);
 				}
 			}
-			for(Player observer : Reflection.getOnlinePlayers()) {
-				if(observer == player) {
-					continue;
-				}
-				observer.showPlayer(player);
-			}
+			showPlayerLater(player);
 		} else {
 			disguiseMap.updateDisguise(offlinePlayer, disguise);
 		}
@@ -84,60 +80,11 @@ public class DisguiseManager {
 				}
 			}
 			disguiseMap.removeDisguise(player);
-			for(Player observer : Reflection.getOnlinePlayers()) {
-				if(observer == player) {
-					continue;
-				}
-				observer.showPlayer(player);
-			}
+			showPlayerLater(player);
 			return disguise;
 		} else {
 			return disguiseMap.removeDisguise(offlinePlayer);
 		}
-	}
-	
-	public synchronized void undisguiseAll() {
-		for(OfflinePlayer offlinePlayer : getDisguisedPlayers()) {
-			undisguise(offlinePlayer);
-		}
-	}
-	
-	public boolean isDisguised(OfflinePlayer offlinePlayer) {
-		return disguiseMap.isDisguised(offlinePlayer);
-	}
-	
-	public Disguise getDisguise(OfflinePlayer offlinePlayer) {
-		return disguiseMap.getDisguise(offlinePlayer);
-	}
-	
-	public int getOnlineDisguiseCount() {
-		int count = 0;
-		for(Player player : Reflection.getOnlinePlayers()) {
-			if(isDisguised(player)) {
-				count++;
-			}
-		}
-		return count;
-	}
-	
-	public Set<OfflinePlayer> getDisguisedPlayers() {
-		Set<?> origin = disguiseMap.getDisguisedPlayers();
-		Set<OfflinePlayer> destination = new HashSet<OfflinePlayer>();
-		try {
-			for(Object offlinePlayer : origin) {
-				destination.add(offlinePlayer instanceof UUID ? (OfflinePlayer)Bukkit_getOfflinePlayer.invoke(null, offlinePlayer) : Bukkit.getOfflinePlayer((String)offlinePlayer));
-			}
-		} catch(Exception e) {
-		}
-		return destination;
-	}
-	
-	public Map<?, Disguise> getDisguises() {
-		return disguiseMap.getMap();
-	}
-	
-	public void updateDisguises(Map<?, Disguise> map) {
-		disguiseMap = DisguiseMap.fromMap(map);
 	}
 	
 	public void resendPackets(Player player) {
@@ -147,12 +94,7 @@ public class DisguiseManager {
 			}
 			observer.hidePlayer(player);
 		}
-		for(Player observer : Reflection.getOnlinePlayers()) {
-			if(observer == player) {
-				continue;
-			}
-			observer.showPlayer(player);
-		}
+		showPlayerLater(player);
 	}
 	
 	public void resendPackets() {
@@ -165,12 +107,7 @@ public class DisguiseManager {
 					}
 					observer.hidePlayer(player);
 				}
-				for(Player observer : Reflection.getOnlinePlayers()) {
-					if(observer == player) {
-						continue;
-					}
-					observer.showPlayer(player);
-				}
+				showPlayerLater(player);
 			}
 		}
 	}

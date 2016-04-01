@@ -1,15 +1,44 @@
 package de.robingrether.idisguise.management;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
-public abstract class PlayerHelper {
+import de.robingrether.idisguise.iDisguise;
+
+public class PlayerHelper {
 	
-	public static PlayerHelper instance;
+	private static PlayerHelper instance;
 	
-	protected Map<Integer, Player> players;
+	public static PlayerHelper getInstance() {
+		return instance;
+	}
+	
+	static void setInstance(PlayerHelper instance) {
+		PlayerHelper.instance = instance;
+	}
+	
+	private final String API_URL = "https://api.mojang.com/user/profiles/";
+	private Map<Integer, Player> players;
+	
+	public PlayerHelper() {
+		players = new HashMap<Integer, Player>();
+		for(Player player : Reflection.getOnlinePlayers()) {
+			players.put(player.getEntityId(), player);
+		}
+	}
 	
 	public synchronized void addPlayer(Player player) {
 		players.put(player.getEntityId(), player);
@@ -23,12 +52,42 @@ public abstract class PlayerHelper {
 		return players.get(entityId);
 	}
 	
-	public abstract String getCaseCorrectedName(String name);
+	public String getCaseCorrectedName(String name) {
+		return name;
+	}
 	
-	public abstract UUID getUniqueId(String name);
+	public UUID getUniqueId(String name) {
+		return null;
+	}
 	
-	public abstract String getName(UUID uniqueId);
+	public String getName(UUID uniqueId) {
+		BufferedReader reader = null;
+		try {
+			URL url = new URL(API_URL + uniqueId.toString().replace("-", "") + "/names");
+			URLConnection connection = url.openConnection();
+			connection.addRequestProperty("User-Agent", ((iDisguise)Bukkit.getPluginManager().getPlugin("iDisguise")).getFullName().replace(' ', '/') + " (by RobinGrether)");
+			connection.setDoOutput(true);
+			reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String response = reader.readLine();
+			JSONArray array = (JSONArray)JSONValue.parse(response);
+			JSONObject object = (JSONObject)array.get(0);
+			return (String)object.get("name");
+		} catch(IOException e) {
+			Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "An error occured while converting saved disguises.", e);
+		} catch(NullPointerException e) {
+		} finally {
+			if(reader != null) {
+				try {
+					reader.close();
+				} catch(IOException e) {
+				}
+			}
+		}
+		return null;
+	}
 	
-	public abstract Object getGameProfile(String name);
+	public Object getGameProfile(String name) {
+		return null;
+	}
 	
 }

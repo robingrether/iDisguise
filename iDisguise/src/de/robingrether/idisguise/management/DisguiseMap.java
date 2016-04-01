@@ -1,55 +1,42 @@
 package de.robingrether.idisguise.management;
 
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+
+import org.bukkit.OfflinePlayer;
 
 import de.robingrether.idisguise.disguise.Disguise;
+import de.robingrether.idisguise.management.disguise.DisguiseMapName;
+import de.robingrether.idisguise.management.disguise.DisguiseMapUID;
 
-public class DisguiseMap {
+public abstract class DisguiseMap {
 	
-	private Map<UUID, Disguise> disguises;
+	public abstract boolean isDisguised(OfflinePlayer offlinePlayer);
 	
-	public DisguiseMap() {
-		disguises = new ConcurrentHashMap<UUID, Disguise>();
-	}
+	public abstract Disguise getDisguise(OfflinePlayer offlinePlayer);
 	
-	public DisguiseMap(Map<UUID, Disguise> map) {
-		disguises = new ConcurrentHashMap<UUID, Disguise>(map);
-	}
+	public abstract Map<?, Disguise> getMap();
 	
-	public DisguiseMap(DisguiseMapLegacy legacyMap) {
-		disguises = new ConcurrentHashMap<UUID, Disguise>();
-		Map<String, Disguise> map = legacyMap.getMap();
-		for(Entry<String, Disguise> entry : map.entrySet()) {
-			disguises.put(PlayerHelper.instance.getUniqueId(entry.getKey()), entry.getValue());
+	public abstract Set<?> getDisguisedPlayers();
+	
+	public abstract void updateDisguise(OfflinePlayer offlinePlayer, Disguise disguise);
+	
+	public abstract Disguise removeDisguise(OfflinePlayer offlinePlayer);
+	
+	public static DisguiseMap emptyMap() {
+		if(VersionHelper.useGameProfiles()) {
+			return new DisguiseMapUID(null);
+		} else {
+			return new DisguiseMapName(null);
 		}
 	}
 	
-	public boolean isDisguised(UUID player) {
-		return disguises.containsKey(player);
-	}
-	
-	public Disguise getDisguise(UUID player) {
-		return disguises.get(player);
-	}
-	
-	public Map<UUID, Disguise> getMap() {
-		return disguises;
-	}
-	
-	public Set<UUID> getPlayers() {
-		return disguises.keySet();
-	}
-	
-	public void putDisguise(UUID player, Disguise disguise) {
-		disguises.put(player, disguise);
-	}
-	
-	public Disguise removeDisguise(UUID player) {
-		return disguises.remove(player);
+	public static DisguiseMap fromMap(Map<?, Disguise> map) {
+		if(VersionHelper.useGameProfiles()) {
+			return new DisguiseMapUID(map);
+		} else {
+			return new DisguiseMapName(map);
+		}
 	}
 	
 }
