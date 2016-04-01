@@ -163,6 +163,7 @@ public class Sounds {
 									}
 									
 								});
+								break;
 							default:
 								setSoundsForEntity(DisguiseType.valueOf(name), new Sounds(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]));
 								break;
