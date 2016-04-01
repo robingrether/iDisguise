@@ -10,9 +10,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class Reflection {
@@ -346,8 +348,10 @@ public class Reflection {
 										parameterTypes[i] = Class.forName(parameters[i].replace("{nms}", nms).replace("{obc}", obc));
 										continue;
 									} catch(ClassNotFoundException e) {
+										if(VersionHelper.debug()) {
+											Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot find the given class file.", e);
+										}
 									}
-									System.out.println("Cannot parse argument: " + parameterTypes[i]);
 									parameterTypes[i] = null;
 								}
 								field.set(null, ((Class<?>)clazz.get(null)).getDeclaredMethod(name, parameterTypes));
@@ -411,23 +415,31 @@ public class Reflection {
 										parameterTypes[i] = Class.forName(parameters[i].replace("{nms}", nms).replace("{obc}", obc));
 										continue;
 									} catch(ClassNotFoundException e) {
+										if(VersionHelper.debug()) {
+											Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot find the given class file.", e);
+										}
 									}
-									System.out.println("Cannot parse argument: " + parameterTypes[i]);
 									parameterTypes[i] = null;
 								}
 								field.set(null, ((Class<?>)clazz.get(null)).getConstructor(parameterTypes));
 								((AccessibleObject)field.get(null)).setAccessible(true);
 							}
 						} else {
-							System.out.println("Line does not match: " + line);
+							if(VersionHelper.debug()) {
+								Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.WARNING, "Cannot parse line: " + line);
+							}
 						}
 					} catch(Exception e) {
-						System.out.println("Error parsing line: " + line);
-						e.printStackTrace();
+						if(VersionHelper.debug()) {
+							Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot parse line: " + line, e);
+						}
 					}
 				}
 			}
 		} catch(IOException e) {
+			if(VersionHelper.debug()) {
+				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot load the required reflection configuration.", e);
+			}
 		}
 	}
 	
@@ -440,7 +452,9 @@ public class Reflection {
 				return Arrays.asList((Player[])object);
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			if(VersionHelper.debug()) {
+				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot access org.bukkit.Bukkit$getOnlinePlayers()", e);
+			}
 			return new ArrayList<Player>();
 		}
 	}

@@ -69,7 +69,7 @@ public class iDisguise extends JavaPlugin {
 	private boolean enabled = false;
 	
 	public void onEnable() {
-		if(!VersionHelper.init()) {
+		if(!VersionHelper.init(false)) {
 			getLogger().log(Level.SEVERE, String.format("%s is not compatible with your server version!", getFullName()));
 			getServer().getPluginManager().disablePlugin(this);
 			return;

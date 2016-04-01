@@ -5,7 +5,9 @@ import static de.robingrether.idisguise.management.Reflection.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -63,12 +65,7 @@ public class PacketHelper {
 			List<Object> packets = new ArrayList<Object>();
 			if(disguise instanceof MobDisguise) {
 				MobDisguise mobDisguise = (MobDisguise)disguise;
-				Object entity;
-				try {
-					entity = type.getClass(VersionHelper.getNMSPackage()).getConstructor(World).newInstance(Entity_world.get(entityPlayer));
-				} catch(Exception e) {
-					entity = null;
-				}
+				Object entity = type.getClass(VersionHelper.getNMSPackage()).getConstructor(World).newInstance(Entity_world.get(entityPlayer));
 				if(mobDisguise.getCustomName() != null && !mobDisguise.getCustomName().isEmpty()) {
 					EntityInsentient_setCustomName.invoke(entity, mobDisguise.getCustomName());
 					EntityInsentient_setCustomNameVisible.invoke(entity, true);
@@ -197,12 +194,7 @@ public class PacketHelper {
 				}
 			} else if(disguise instanceof ObjectDisguise) {
 				ObjectDisguise objectDisguise = (ObjectDisguise)disguise;
-				Object entity;
-				try {
-					entity = type.getClass(VersionHelper.getNMSPackage()).getConstructor(World).newInstance(Entity_world.get(entityPlayer));
-				} catch(Exception e) {
-					entity = null;
-				}
+				Object entity = type.getClass(VersionHelper.getNMSPackage()).getConstructor(World).newInstance(Entity_world.get(entityPlayer));
 				Location location = player.getLocation();
 				Entity_setLocation.invoke(entity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 				if(VersionHelper.require1_7()) {
@@ -237,7 +229,9 @@ public class PacketHelper {
 			}
 			return packets.toArray(new Object[0]);
 		} catch(Exception e) {
-			e.printStackTrace();
+			if(VersionHelper.debug()) {
+				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot construct the required packet.", e);
+			}
 		}
 		return new Object[0];
 	}
@@ -254,6 +248,9 @@ public class PacketHelper {
 					return PlayerInfoData_new.newInstance(context, offlinePlayer.isOnline() ? CraftPlayer_getProfile.invoke(offlinePlayer) : CraftOfflinePlayer_getProfile.invoke(offlinePlayer), ping, gamemode, Array.get(CraftChatMessage_fromString.invoke(null, offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName()), 0));
 				}
 			} catch(Exception e) {
+				if(VersionHelper.debug()) {
+					Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot construct the required player info.", e);
+				}
 			}
 		} else {
 			if(disguise == null) {
@@ -275,6 +272,9 @@ public class PacketHelper {
 				return (Integer)DataWatcherObject_getId.invoke(metadataItem);
 			}
 		} catch(Exception e) {
+			if(VersionHelper.debug()) {
+				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot retrieve the required metadata id.", e);
+			}
 		}
 		return 127;
 	}
@@ -284,6 +284,9 @@ public class PacketHelper {
 			try {
 				return (String)MinecraftKey_getName.invoke(RegistryMaterials_getKey.invoke(SoundEffect_registry.get(null), soundEffect));
 			} catch(Exception e) {
+				if(VersionHelper.debug()) {
+					Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot retrieve the required sound effect name.", e);
+				}
 			}
 		} else {
 			return (String)soundEffect;
@@ -296,6 +299,9 @@ public class PacketHelper {
 			try {
 				return RegistryMaterials_getValue.invoke(SoundEffect_registry.get(null), MinecraftKey_new.newInstance(name));
 			} catch(Exception e) {
+				if(VersionHelper.debug()) {
+					Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot retrieve the required sound effect.", e);
+				}
 			}
 		} else {
 			return name;
@@ -351,6 +357,9 @@ public class PacketHelper {
 				PacketPlayOutNamedSoundEffect_pitch.setInt(clone, PacketPlayOutNamedSoundEffect_pitch.getInt(packet));
 			}
 		} catch(Exception e) {
+			if(VersionHelper.debug()) {
+				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot clone the given packet.", e);
+			}
 		}
 		return clone;
 	}

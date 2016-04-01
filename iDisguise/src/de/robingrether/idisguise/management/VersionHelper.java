@@ -10,7 +10,7 @@ public class VersionHelper {
 	private static final String[] versions = {"v1_5_R2", "v1_5_R3", "v1_6_R1", "v1_6_R2", "v1_6_R3", "v1_7_R1", "v1_7_R2", "v1_7_R3", "v1_7_R4", "v1_8_R1", "v1_8_R2", "v1_8_R3", "v1_9_R1"};
 	private static boolean initialized = false;
 	private static String versionCode, orgBukkitCraftbukkit = "org.bukkit.craftbukkit", netMinecraftServer = "net.minecraft.server", orgBukkitCraftbukkitVersioned, netMinecraftServerVersioned;
-	private static boolean require1_6, require1_7, require1_8, require1_9, useGameProfiles;
+	private static boolean debug, require1_6, require1_7, require1_8, require1_9, useGameProfiles;
 	
 	public static String getVersionCode() {
 		return versionCode;
@@ -22,6 +22,10 @@ public class VersionHelper {
 	
 	public static String getNMSPackage() {
 		return netMinecraftServerVersioned;
+	}
+	
+	public static boolean debug() {
+		return debug;
 	}
 	
 	public static boolean requireVersion(String requiredVersion) {
@@ -58,13 +62,14 @@ public class VersionHelper {
 		return require1_6;
 	}
 	
-	public static boolean init() {
+	public static boolean init(boolean debug) {
 		if(initialized) {
 			return false;
 		}
 		versionCode = Bukkit.getServer().getClass().getPackage().getName().substring(orgBukkitCraftbukkit.length() + 1);
 		orgBukkitCraftbukkitVersioned = orgBukkitCraftbukkit + "." + versionCode;
 		netMinecraftServerVersioned = netMinecraftServer + "." + versionCode;
+		VersionHelper.debug = debug;
 		switch(versionCode) {
 			case "v1_5_R2":
 			case "v1_5_R3":

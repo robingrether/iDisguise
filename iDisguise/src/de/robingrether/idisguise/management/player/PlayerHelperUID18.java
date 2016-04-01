@@ -3,6 +3,7 @@ package de.robingrether.idisguise.management.player;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 
@@ -13,6 +14,7 @@ import com.mojang.authlib.ProfileLookupCallback;
 import static de.robingrether.idisguise.management.Reflection.*;
 
 import de.robingrether.idisguise.management.PlayerHelper;
+import de.robingrether.idisguise.management.VersionHelper;
 
 public class PlayerHelperUID18 extends PlayerHelper {
 	
@@ -24,6 +26,9 @@ public class PlayerHelperUID18 extends PlayerHelper {
 			GameProfileRepository_findProfilesByNames.invoke(MinecraftServer_getGameProfileRepository.invoke(MinecraftServer_getServer.invoke(null)), new String[] {name}, Agent.MINECRAFT, callback);
 			return callback.getGameProfile().getName();
 		} catch(Exception e) {
+			if(VersionHelper.debug()) {
+				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot retrieve the required profile information.", e);
+			}
 		}
 		return name;
 	}
@@ -34,6 +39,9 @@ public class PlayerHelperUID18 extends PlayerHelper {
 			GameProfileRepository_findProfilesByNames.invoke(MinecraftServer_getGameProfileRepository.invoke(MinecraftServer_getServer.invoke(null)), new String[] {name}, Agent.MINECRAFT, callback);
 			return callback.getGameProfile().getId();
 		} catch(Exception e) {
+			if(VersionHelper.debug()) {
+				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot retrieve the required profile information.", e);
+			}
 		}
 		return UUID.fromString("ffffffff-ffff-ffff-ffff-ffffffffffff");
 	}
@@ -56,6 +64,9 @@ public class PlayerHelperUID18 extends PlayerHelper {
 				gameProfiles.put(name, gameProfile);
 				return gameProfile;
 			} catch(Exception e) {
+				if(VersionHelper.debug()) {
+					Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot retrieve the required profile information.", e);
+				}
 			}
 		}
 		return null;

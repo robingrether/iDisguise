@@ -73,7 +73,9 @@ public class PlayerHelper {
 			JSONObject object = (JSONObject)array.get(0);
 			return (String)object.get("name");
 		} catch(IOException e) {
-			Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "An error occured while converting saved disguises.", e);
+			if(VersionHelper.debug()) {
+				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot convert the stored disguise data.", e);
+			}
 		} catch(NullPointerException e) {
 		} finally {
 			if(reader != null) {

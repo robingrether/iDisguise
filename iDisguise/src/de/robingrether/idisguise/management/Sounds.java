@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.bukkit.Bukkit;
 
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.GuardianDisguise;
@@ -169,10 +172,16 @@ public class Sounds {
 								break;
 						}
 					} catch(ArrayIndexOutOfBoundsException e) {
+						if(VersionHelper.debug()) {
+							Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot parse line: " + line, e);
+						}
 					}
 				}
 			}
 		} catch(IOException e) {
+			if(VersionHelper.debug()) {
+				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot load the required sound effect configuration.");
+			}
 		}
 	}
 	

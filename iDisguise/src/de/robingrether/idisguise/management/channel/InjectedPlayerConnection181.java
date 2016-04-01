@@ -2,10 +2,14 @@ package de.robingrether.idisguise.management.channel;
 
 import static de.robingrether.idisguise.management.Reflection.*;
 
+import java.util.logging.Level;
+
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import de.robingrether.idisguise.management.PacketHandler;
+import de.robingrether.idisguise.management.VersionHelper;
 import net.minecraft.server.v1_8_R1.MinecraftServer;
 import net.minecraft.server.v1_8_R1.Packet;
 import net.minecraft.server.v1_8_R1.PacketPlayInUseEntity;
@@ -35,6 +39,9 @@ public class InjectedPlayerConnection181 extends PlayerConnection implements Inj
 				super.a(packet);
 			}
 		} catch(Exception e) {
+			if(VersionHelper.debug()) {
+				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot handle packet in: " + packet.getClass().getSimpleName() + " from " + observer.getName());
+			}
 		}
 	}
 	
