@@ -124,6 +124,14 @@ public class EventListener implements Listener {
 		}
 		ChannelInjector.getInstance().inject(player);
 		GhostFactory.getInstance().addPlayer(player.getName());
+		if(DisguiseManager.getInstance().isDisguised(player) && DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.GHOST)) {
+			if(plugin.getConfiguration().getBoolean(Configuration.GHOST_DISGUISES)) {
+				GhostFactory.getInstance().addGhost(player);
+			} else {
+				DisguiseManager.getInstance().undisguise(player);
+				player.sendMessage(ChatColor.GOLD + "You were undisguised because ghost disguises are disable.");
+			}
+		}
 		PlayerHelper.getInstance().addPlayer(player);
 	}
 	
@@ -140,6 +148,7 @@ public class EventListener implements Listener {
 			}
 		}
 		ChannelInjector.getInstance().remove(player);
+		GhostFactory.getInstance().removeGhost(player);
 		PlayerHelper.getInstance().removePlayer(player);
 	}
 	
