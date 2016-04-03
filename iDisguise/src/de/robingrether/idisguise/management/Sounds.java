@@ -83,7 +83,7 @@ public class Sounds {
 				if(soundMatcher.matches()) {
 					try {
 						String name = soundMatcher.group(1);
-						final String[] arguments = soundMatcher.group(2).split(",");
+						final String[] arguments = soundMatcher.group(2).split(",", -1);
 						switch(name) {
 							case "_":
 								soundsToReplace = arguments;
