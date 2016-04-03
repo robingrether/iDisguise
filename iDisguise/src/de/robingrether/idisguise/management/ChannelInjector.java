@@ -24,4 +24,10 @@ public abstract class ChannelInjector {
 		}
 	}
 	
+	public void removeOnlinePlayers() {
+		for(Player player : Reflection.getOnlinePlayers()) {
+			remove(player);
+		}
+	}
+	
 }
