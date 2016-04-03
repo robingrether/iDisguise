@@ -6,20 +6,19 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -42,8 +41,8 @@ public class EventListener implements Listener {
 		this.plugin = plugin;
 	}
 	
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onAsyncPlayerPreLogin(AsyncPlayerPreLoginEvent event) {
+	@EventHandler
+	public void onPlayerLogin(PlayerLoginEvent event) {
 		if(!plugin.enabled()) {
 			event.disallow(Result.KICK_OTHER, "Server start/reload has not finished yet");
 		}
@@ -53,52 +52,35 @@ public class EventListener implements Listener {
 	public void onEntityTarget(EntityTargetEvent event) {
 		if(event.getTarget() instanceof Player) {
 			Player target = (Player)event.getTarget();
-			if(DisguiseManager.getInstance().isDisguised(target) && plugin.getConfiguration().getBoolean(Configuration.DISABLE_MOB_TARGET)) {
+			if(plugin.getConfiguration().getBoolean(Configuration.DISABLE_MOB_TARGET) && DisguiseManager.getInstance().isDisguised(target)) {
 				event.setCancelled(true);
 			}
 		}
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onEntityDamage(EntityDamageEvent event) {
-		if(event.getEntityType() == EntityType.PLAYER) {
-			Player p = (Player)event.getEntity();
-			if(!event.isCancelled()) {
-				if(DisguiseManager.getInstance().isDisguised(p)) {
-					if(event.getCause() == DamageCause.ENTITY_ATTACK) {
-						if(!plugin.getConfiguration().getBoolean(Configuration.ALLOW_DAMAGE)) {
-							event.setCancelled(true);
-						}
-						if(plugin.getConfiguration().getBoolean(Configuration.UNDISGUISE_HURT)) {
-							UndisguiseEvent undisEvent = new UndisguiseEvent(p, DisguiseManager.getInstance().getDisguise(p).clone(), false);
-							plugin.getServer().getPluginManager().callEvent(undisEvent);
-							if(!undisEvent.isCancelled()) {
-								DisguiseManager.getInstance().undisguise(p);
-							}
-						}
-					} else if(event.getCause() == DamageCause.PROJECTILE) {
-						if(plugin.getConfiguration().getBoolean(Configuration.UNDISGUISE_PROJECTILE)) {
-							UndisguiseEvent undisEvent = new UndisguiseEvent(p, DisguiseManager.getInstance().getDisguise(p).clone(), false);
-							plugin.getServer().getPluginManager().callEvent(undisEvent);
-							if(!undisEvent.isCancelled()) {
-								DisguiseManager.getInstance().undisguise(p);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	@EventHandler(priority = EventPriority.MONITOR)
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-		if(event.getEntityType() == EntityType.PLAYER && event.getDamager() instanceof Player) {
-			Player damager = (Player)event.getDamager();
-			if(DisguiseManager.getInstance().isDisguised(damager) && plugin.getConfiguration().getBoolean(Configuration.UNDISGUISE_ATTACK)) {
-				UndisguiseEvent undisEvent = new UndisguiseEvent(damager, DisguiseManager.getInstance().getDisguise(damager).clone(), false);
-				plugin.getServer().getPluginManager().callEvent(undisEvent);
-				if(!undisEvent.isCancelled()) {
-					DisguiseManager.getInstance().undisguise(damager);
+		if(event.isCancelled()) {
+			return;
+		}
+		if(event.getEntity() instanceof Player) {
+			Player damagee = (Player)event.getEntity();
+			Entity damager = event.getDamager();
+			if(damager instanceof Player) {
+				if(plugin.getConfiguration().getBoolean(Configuration.UNDISGUISE_HURT) && DisguiseManager.getInstance().isDisguised(damagee)) {
+					DisguiseManager.getInstance().undisguise(damagee);
+					damagee.sendMessage(ChatColor.GOLD + "You were undisguised because you were hit by another player.");
+				}
+				if(plugin.getConfiguration().getBoolean(Configuration.UNDISGUISE_ATTACK) && DisguiseManager.getInstance().isDisguised((Player)damager)) {
+					DisguiseManager.getInstance().undisguise((Player)damager);
+					((Player)damager).sendMessage(ChatColor.GOLD + "You were undisguised because you attacked another player.");
+				}
+			} else {
+				if(!plugin.getConfiguration().getBoolean(Configuration.ALLOW_DAMAGE)) {
+					event.setCancelled(true);
+				} else if(damager instanceof Projectile && plugin.getConfiguration().getBoolean(Configuration.UNDISGUISE_PROJECTILE) && DisguiseManager.getInstance().isDisguised(damagee)) {
+					DisguiseManager.getInstance().undisguise(damagee);
+					damagee.sendMessage(ChatColor.GOLD + "You were undisguised because you were hit by a projectile.");
 				}
 			}
 		}
@@ -107,14 +89,22 @@ public class EventListener implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		if(player.hasPermission("iDisguise.update") && plugin.getConfiguration().getBoolean(Configuration.CHECK_FOR_UPDATES)) {
-			plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new UpdateCheck(plugin, player, ChatColor.GOLD + "An update for iDisguise is available: " + ChatColor.ITALIC + "%s"), 20L);
+		ChannelInjector.getInstance().inject(player);
+		PlayerHelper.getInstance().addPlayer(player);
+		GhostFactory.getInstance().addPlayer(player.getName());
+		if(DisguiseManager.getInstance().isDisguised(player) && DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.GHOST)) {
+			if(plugin.getConfiguration().getBoolean(Configuration.GHOST_DISGUISES)) {
+				GhostFactory.getInstance().addGhost(player);
+			} else {
+				DisguiseManager.getInstance().undisguise(player);
+				player.sendMessage(ChatColor.GOLD + "You were undisguised because ghost disguises are disabled.");
+			}
 		}
 		if(DisguiseManager.getInstance().isDisguised(player)) {
 			player.sendMessage(ChatColor.GOLD + "You are still disguised. Use " + ChatColor.ITALIC + "/disguise status" + ChatColor.RESET + ChatColor.GOLD + " to get more information.");
 		}
 		if(plugin.getConfiguration().getBoolean(Configuration.REPLACE_JOIN_MESSAGES)) {
-			if(player != null && DisguiseManager.getInstance().isDisguised(player)) {
+			if(event.getJoinMessage() != null && DisguiseManager.getInstance().isDisguised(player)) {
 				if(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise) {
 					event.setJoinMessage(event.getJoinMessage().replace(player.getName(), ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getName()));
 				} else {
@@ -122,24 +112,16 @@ public class EventListener implements Listener {
 				}
 			}
 		}
-		ChannelInjector.getInstance().inject(player);
-		GhostFactory.getInstance().addPlayer(player.getName());
-		if(DisguiseManager.getInstance().isDisguised(player) && DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.GHOST)) {
-			if(plugin.getConfiguration().getBoolean(Configuration.GHOST_DISGUISES)) {
-				GhostFactory.getInstance().addGhost(player);
-			} else {
-				DisguiseManager.getInstance().undisguise(player);
-				player.sendMessage(ChatColor.GOLD + "You were undisguised because ghost disguises are disable.");
-			}
+		if(player.hasPermission("iDisguise.update") && plugin.getConfiguration().getBoolean(Configuration.CHECK_FOR_UPDATES)) {
+			plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new UpdateCheck(plugin, player, ChatColor.GOLD + "An update for iDisguise is available: " + ChatColor.ITALIC + "%s"), 20L);
 		}
-		PlayerHelper.getInstance().addPlayer(player);
 	}
 	
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		if(plugin.getConfiguration().getBoolean(Configuration.REPLACE_JOIN_MESSAGES)) {
-			if(player != null && DisguiseManager.getInstance().isDisguised(player)) {
+			if(event.getQuitMessage() != null && DisguiseManager.getInstance().isDisguised(player)) {
 				if(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise) {
 					event.setQuitMessage(event.getQuitMessage().replace(player.getName(), ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getName()));
 				} else {
@@ -154,14 +136,14 @@ public class EventListener implements Listener {
 	
 	@EventHandler
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
-		Player p = event.getPlayer();
-		if(DisguiseManager.getInstance().isDisguised(p)) {
-			if(!plugin.isDisguisingPermittedInWorld(p.getWorld()) && !p.hasPermission("iDisguise.everywhere")) {
-				UndisguiseEvent undisEvent = new UndisguiseEvent(p, DisguiseManager.getInstance().getDisguise(p).clone(), false);
-				plugin.getServer().getPluginManager().callEvent(undisEvent);
-				if(!undisEvent.isCancelled()) {
-					DisguiseManager.getInstance().undisguise(p);
-					p.sendMessage(ChatColor.GOLD + "You were undisguised because disguising is prohibited in this world.");
+		Player player = event.getPlayer();
+		if(DisguiseManager.getInstance().isDisguised(player)) {
+			if(!plugin.isDisguisingPermittedInWorld(player.getWorld()) && !player.hasPermission("iDisguise.everywhere")) {
+				UndisguiseEvent undisguiseEvent = new UndisguiseEvent(player, DisguiseManager.getInstance().getDisguise(player).clone(), false);
+				plugin.getServer().getPluginManager().callEvent(undisguiseEvent);
+				if(!undisguiseEvent.isCancelled()) {
+					DisguiseManager.getInstance().undisguise(player);
+					player.sendMessage(ChatColor.GOLD + "You were undisguised because disguising is prohibited in this world.");
 				}
 			}
 		}
