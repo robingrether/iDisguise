@@ -157,6 +157,7 @@ PacketPlayOutNamedSoundEffect_y->FPacketPlayOutNamedSoundEffect$c
 PacketPlayOutNamedSoundEffect_z->FPacketPlayOutNamedSoundEffect$d
 
 PacketPlayOutPlayerInfo->C{nms}.PacketPlayOutPlayerInfo
+PacketPlayOutPlayerInfo_new->NPacketPlayOutPlayerInfo()
 PacketPlayOutPlayerInfo_playerName->FPacketPlayOutPlayerInfo$a
 PacketPlayOutPlayerInfo_isOnline->FPacketPlayOutPlayerInfo$b
 PacketPlayOutPlayerInfo_ping->FPacketPlayOutPlayerInfo$c
