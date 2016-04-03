@@ -54,11 +54,11 @@ public class Configuration {
 		setDefault(REPLACE_SOUNDS, true, "If this option is set to true, the plugin will replace disguised players' sound effects with realistic hurt/death/etc. sounds.\nThis feature does not work completely in Minecraft 1.5, 1.6 and 1.9.");
 		setDefault(SHOW_PLAYER_NAMES, false, "If this option is set to true, all disguised players will have their name above their head.\nThis only works for mob disguises.");
 		setDefault(DISABLE_MOB_TARGET, false, "If this option is set to true, disguised players cannot be targeted by mobs (e.g. skeletons).");
-		setDefault(ALLOW_DAMAGE, true, "If this option is set to false, disguised players cannot be damaged by mobs (e.g. zombies).");
+		setDefault(ALLOW_DAMAGE, true, "If this option is set to false, disguised players cannot be damaged by any mobs (including projectiles) except other players.");
 		setDefault(UNDISGUISE_PERMISSION, false, "If this option is set to true, disguised players need the 'iDisguise.undisguise' permission,\notherwise they cannot undisguise themselves anymore.");
-		setDefault(UNDISGUISE_HURT, false, "If this option is set to true, a disguised player will be undisguised as soon as he is hit by another player.\nATTENTION: The player will not get notified about this!");
-		setDefault(UNDISGUISE_PROJECTILE, false, "If this option is set to true, a disguised player will be undisguised as soon as he is hit by a projectile (e.g. arrows).\nATTENTION: The player will not get notified about this!");
-		setDefault(UNDISGUISE_ATTACK, false, "If this option is set to true, a disguised player will be undisguised as soon as he attacks another player.\nATTENTION: The player will not get notified about this!");
+		setDefault(UNDISGUISE_HURT, false, "If this option is set to true, a disguised player will be undisguised as soon as he is hit by another player.");
+		setDefault(UNDISGUISE_PROJECTILE, false, "If this option is set to true, a disguised player will be undisguised as soon as he is hit by a projectile (e.g. arrows).");
+		setDefault(UNDISGUISE_ATTACK, false, "If this option is set to true, a disguised player will be undisguised as soon as he attacks another player.");
 		setDefault(GHOST_DISGUISES, true, "Enable or disable ghost disguises.\nYou should disable this if you use any scoreboard plugin(s).");
 		setDefault(PROHIBITED_PLAYERS, Arrays.asList("player1", "player2"), "You can put the player names, you don't want your players to disguise as, here.\nYou can give admins the 'iDisguise.player.prohibited' permission so they can bypass this prohibition.");
 		setDefault(REPLACE_DEATH_MESSAGES, true, "If this option is enabled, disguised players' death and kill messages are replaced,\nso nobody recognizes they are actual players.\nATTENTION: This might interfere with other plugins!");
