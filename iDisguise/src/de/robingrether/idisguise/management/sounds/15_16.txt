@@ -14,7 +14,7 @@ CREEPER->mob.creeper.death,damage.fallbig,damage.fallsmall,mob.creeper.say,liqui
 
 ENDER_DRAGON->mob.enderdragon.end,,,mob.enderdragon.hit,,
 
-ENDERMAN->mob.enderman.death,damage.fallbig,damage.fallsmall,mob.enderman.hit,liquid.splash,liquid.swim
+ENDERMAN->mob.endermen.death,damage.fallbig,damage.fallsmall,mob.endermen.hit,liquid.splash,liquid.swim
 
 ENDERMITE->mob.silverfish.kill,damage.fallbig,damage.fallsmall,mob.silverfish.hit,liquid.splash,liquid.swim
 
