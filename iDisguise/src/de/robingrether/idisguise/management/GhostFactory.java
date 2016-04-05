@@ -14,6 +14,8 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import de.robingrether.idisguise.disguise.PlayerDisguise;
+
 public class GhostFactory {
 	
 	private static GhostFactory instance;
@@ -50,6 +52,11 @@ public class GhostFactory {
 		for(OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
 			addPlayer(offlinePlayer.getName());
 		}
+		for(Player player : Reflection.getOnlinePlayers()) {
+			if(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise && ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).isGhost()) {
+				addGhost(player);
+			}
+		}
 		taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 			
 			public void run() {
@@ -79,6 +86,22 @@ public class GhostFactory {
 			return;
 		}
 		Bukkit.getScheduler().cancelTask(taskId);
+		if(VersionHelper.useGameProfiles()) {
+			for(UUID uid : ((Set<UUID>)ghosts)) {
+				Player player = Bukkit.getPlayer(uid);
+				if(player != null) {
+					player.removePotionEffect(PotionEffectType.INVISIBILITY);
+				}
+			}
+		} else {
+			for(String name : ((Set<String>)ghosts)) {
+				Player player = Bukkit.getPlayer(name);
+				if(player != null) {
+					player.removePotionEffect(PotionEffectType.INVISIBILITY);
+				}
+			}
+		}
+		ghostTeam.setCanSeeFriendlyInvisibles(false);
 		ghostTeam.unregister();
 		enabled = false;
 	}
