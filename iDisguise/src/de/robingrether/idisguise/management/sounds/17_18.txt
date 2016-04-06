@@ -14,7 +14,7 @@ CREEPER->mob.creeper.death,game.hostile.hurt.fall.big,game.hostile.hurt.fall.sma
 
 ENDER_DRAGON->mob.enderdragon.end,,,mob.enderdragon.hit,,
 
-ENDERMAN->mob.enderman.death,game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,mob.enderman.hit,game.hostile.swim.splash,game.hostile.swim
+ENDERMAN->mob.endermen.death,game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,mob.endermen.hit,game.hostile.swim.splash,game.hostile.swim
 
 ENDERMITE->mob.silverfish.kill,game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,mob.silverfish.hit,game.hostile.swim.splash,game.hostile.swim
 
