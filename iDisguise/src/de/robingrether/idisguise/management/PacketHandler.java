@@ -8,6 +8,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import de.robingrether.idisguise.api.PlayerInteractDisguisedPlayerEvent;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.ObjectDisguise;
@@ -48,6 +49,7 @@ public class PacketHandler {
 				};
 				runnable.runTaskLater(Bukkit.getPluginManager().getPlugin("iDisguise"), 2L);
 			}
+			Bukkit.getPluginManager().callEvent(new PlayerInteractDisguisedPlayerEvent(observer, player));
 			return null;
 		}
 		return packet;
