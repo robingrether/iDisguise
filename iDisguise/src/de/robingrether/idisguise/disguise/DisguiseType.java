@@ -56,6 +56,7 @@ public enum DisguiseType {
 	GHOST(Type.PLAYER, PlayerDisguise.class, "EntityPlayer"),
 	PLAYER(Type.PLAYER, PlayerDisguise.class, "EntityPlayer"),
 	
+	ARMOR_STAND(Type.OBJECT, ArmorStandDisguise.class, "EntityArmorStand", "armor_stand", "armor-stand", "armorstand"),
 	BOAT(Type.OBJECT, ObjectDisguise.class, "EntityBoat", "boat"),
 	ENDER_CRYSTAL(Type.OBJECT, ObjectDisguise.class, "EntityEnderCrystal", "ender_crystal", "ender-crystal", "endercrystal", "crystal"),
 	FALLING_BLOCK(Type.OBJECT, FallingBlockDisguise.class, "EntityFallingBlock", "falling_block", "falling-block", "fallingblock", "block"),
