@@ -6,6 +6,12 @@ import java.util.regex.Pattern;
 
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * Represents a disguise as an armor stand.
+ * 
+ * @since 5.2.2
+ * @author RobinGrether
+ */
 public class ArmorStandDisguise extends ObjectDisguise {
 	
 	private static final long serialVersionUID = 2192535300050398947L;
@@ -15,10 +21,25 @@ public class ArmorStandDisguise extends ObjectDisguise {
 	private Armor boots;
 	private ItemStack itemInHand;
 	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 5.2.2
+	 */
 	public ArmorStandDisguise() {
 		this(Armor.NONE, Armor.NONE, Armor.NONE, Armor.NONE, null);
 	}
 	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 5.2.2
+	 * @param helmet helmet armor type
+	 * @param chestplate chestplate armor type
+	 * @param leggings leggings armor type
+	 * @param boots boots armor type
+	 * @param itemInHand item shown in hand
+	 */
 	public ArmorStandDisguise(Armor helmet, Armor chestplate, Armor leggings, Armor boots, ItemStack itemInHand) {
 		super(DisguiseType.ARMOR_STAND);
 		this.helmet = helmet;
@@ -28,42 +49,102 @@ public class ArmorStandDisguise extends ObjectDisguise {
 		this.itemInHand = itemInHand;
 	}
 	
+	/**
+	 * Get the helmet armor type.
+	 * 
+	 * @since 5.2.2
+	 * @return helmet armor type
+	 */
 	public Armor getHelmet() {
 		return helmet;
 	}
 	
+	/**
+	 * Set the helmet armor type.
+	 * 
+	 * @since 5.2.2
+	 * @param helmet helmet armor type
+	 */
 	public void setHelmet(Armor helmet) {
 		this.helmet = helmet;
 	}
 	
+	/**
+	 * Get the chestplate armor type.
+	 * 
+	 * @since 5.2.2
+	 * @return chestplate armor type
+	 */
 	public Armor getChestplate() {
 		return chestplate;
 	}
 	
+	/**
+	 * Set the chestplate armor type.
+	 * 
+	 * @since 5.2.2
+	 * @param chestplate chestplate armor type
+	 */
 	public void setChestplate(Armor chestplate) {
 		this.chestplate = chestplate;
 	}
 	
+	/**
+	 * Get the leggings armor type.
+	 * 
+	 * @since 5.2.2
+	 * @return leggings armor type
+	 */
 	public Armor getLeggings() {
 		return leggings;
 	}
 	
+	/**
+	 * Set the leggings armor type.
+	 * 
+	 * @since 5.2.2
+	 * @param leggings leggings armor type
+	 */
 	public void setLeggings(Armor leggings) {
 		this.leggings = leggings;
 	}
 	
+	/**
+	 * Get the boots armor type.
+	 * 
+	 * @since 5.2.2
+	 * @return boots armor type
+	 */
 	public Armor getBoots() {
 		return boots;
 	}
 	
+	/**
+	 * Set the boots armor type.
+	 * 
+	 * @since 5.2.2
+	 * @param boots boots armor type
+	 */
 	public void setBoots(Armor boots) {
 		this.boots = boots;
 	}
 	
+	/**
+	 * Get the item shown in hand.
+	 * 
+	 * @since 5.2.2
+	 * @return item shown in hand
+	 */
 	public ItemStack getItemInHand() {
 		return itemInHand;
 	}
 	
+	/**
+	 * Set the item shown in hand.
+	 * 
+	 * @since 5.2.2
+	 * @param itemInHand item shown in hand
+	 */
 	public void setItemInHand(ItemStack itemInHand) {
 		this.itemInHand = itemInHand;
 	}
@@ -112,6 +193,13 @@ public class ArmorStandDisguise extends ObjectDisguise {
 	
 	private static final Pattern argumentPattern = Pattern.compile("(no|leather|chainmail|iron|gold|diamond)[-_]?(helmet|chestplate|leggings|boots)");
 	
+	/**
+	 * Represents the different materials armor may be made out of.<br>
+	 * {@linkplain Armor#NONE} means the slot is empty.
+	 * 
+	 * @since 5.2.2
+	 * @author RobinGrether
+	 */
 	public enum Armor {
 		
 		NONE,
