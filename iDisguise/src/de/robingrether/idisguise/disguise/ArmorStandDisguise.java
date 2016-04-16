@@ -1,5 +1,6 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -85,12 +86,26 @@ public class ArmorStandDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean applySubtype(String argument) {
-		Matcher matcher = argumentPattern.matcher(argument);
+		Matcher matcher = argumentPattern.matcher(argument.toLowerCase(Locale.ENGLISH));
 		if(matcher.matches()) {
 			String type = matcher.group(1);
 			String position = matcher.group(2);
-			Armor armor;
-			
+			Armor armor = Armor.valueOf(type.replace("no", "none").toUpperCase(Locale.ENGLISH));
+			switch(position) {
+				case "helmet":
+					setHelmet(armor);
+					break;
+				case "chestplate":
+					setChestplate(armor);
+					break;
+				case "leggings":
+					setLeggings(armor);
+					break;
+				case "boots":
+					setBoots(armor);
+					break;
+			}
+			return true;
 		}
 		return false;
 	}
