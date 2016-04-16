@@ -127,6 +127,8 @@ public class WolfDisguise extends AgeableDisguise {
 		} else {
 			try {
 				DyeColor collarColor = DyeColor.valueOf(argument.replace('-', '_').toUpperCase(Locale.ENGLISH));
+				setAngry(false);
+				setTamed(true);
 				setCollarColor(collarColor);
 				return true;
 			} catch(IllegalArgumentException e) {
@@ -135,22 +137,20 @@ public class WolfDisguise extends AgeableDisguise {
 				case "tamed":
 				case "tame":
 					setTamed(true);
-					return true;
-				case "not_tamed":
-				case "nottamed":
-				case "not_tame":
-				case "nottame":
-					setTamed(false);
-					return true;
-				case "angry":
-				case "aggressive":
-					setAngry(true);
-					return true;
 				case "not_angry":
 				case "notangry":
 				case "not_aggressive":
 				case "notaggressive":
 					setAngry(false);
+					return true;
+				case "angry":
+				case "aggressive":
+					setAngry(true);
+				case "not_tamed":
+				case "nottamed":
+				case "not_tame":
+				case "nottame":
+					setTamed(false);
 					return true;
 				default:
 					return false;
