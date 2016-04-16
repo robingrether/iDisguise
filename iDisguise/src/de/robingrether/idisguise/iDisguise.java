@@ -896,6 +896,8 @@ public class iDisguise extends JavaPlugin {
 				return player.hasPermission("iDisguise.mob.wolf") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.wolf.collar." + ((WolfDisguise)disguise).getCollarColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-')) && (!((WolfDisguise)disguise).isTamed() || player.hasPermission("iDisguise.mob.wolf.tamed")) && (!((WolfDisguise)disguise).isAngry() || player.hasPermission("iDisguise.mob.wolf.angry"));
 			case ZOMBIE:
 				return player.hasPermission("iDisguise.mob.zombie") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && (!((ZombieDisguise)disguise).isVillager() || player.hasPermission("iDisguise.mob.zombie.infected"));
+			case ARMOR_STAND:
+				return player.hasPermission("iDisguise.object.armor_stand");
 			case BOAT:
 				return player.hasPermission("iDisguise.object.boat");
 			case ENDER_CRYSTAL:

@@ -380,11 +380,14 @@ permissions:
    iDisguise.object.*:
       default: false
       children:
+         iDisguise.object.armor_stand: true
          iDisguise.object.boat: true
          iDisguise.object.ender_crystal: true
          iDisguise.object.falling_block: true
          iDisguise.object.item: true
          iDisguise.object.minecart: true
+   iDisguise.object.armor_stand:
+      default: false
    iDisguise.object.boat:
       default: false
    iDisguise.object.ender_crystal:
