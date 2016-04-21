@@ -38,6 +38,7 @@ public class Configuration {
 	public static final String REPLACE_JOIN_MESSAGES = "replace-join-leave-messages";
 	public static final String MODIFY_PLAYER_LIST = "modify-player-list";
 	public static final String DISABLE_ITEM_PICK_UP = "disable-item-pick-up";
+	public static final String AUTO_DOWNLOAD_UPDATES = "auto-download-updates";
 	
 	private Map<String, Setting> settings = new ConcurrentHashMap<String, Setting>();
 	private iDisguise plugin;
@@ -65,6 +66,7 @@ public class Configuration {
 		setDefault(REPLACE_JOIN_MESSAGES, true, "If this option is enabled, disguised players' join and leave messages are replaced,\nso nobody recognizes they are actual players.\nATTENTION: This might interfere with other plugins!");
 		setDefault(MODIFY_PLAYER_LIST, true, "If this option is enabled, disguised players' names don't show up in the player list.\nIf a player is disguised as another player, the name of the other player is shown instead.");
 		setDefault(DISABLE_ITEM_PICK_UP, false, "If this option is enabled, disguised players' cannot pick up items.");
+		setDefault(AUTO_DOWNLOAD_UPDATES, false, "If this option is enabled, an available update is automatically downloaded from dev.bukkit.org.\nThis option is useless if 'check-for-updates' is disabled.");
 	}
 	
 	public void loadData() {
