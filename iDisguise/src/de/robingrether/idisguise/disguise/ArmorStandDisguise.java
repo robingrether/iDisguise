@@ -153,7 +153,7 @@ public class ArmorStandDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public ArmorStandDisguise clone() {
-		return new ArmorStandDisguise(helmet, chestplate, leggings, boots, itemInHand.clone());
+		return new ArmorStandDisguise(helmet, chestplate, leggings, boots, itemInHand != null ? itemInHand.clone() : null);
 	}
 	
 	/**
