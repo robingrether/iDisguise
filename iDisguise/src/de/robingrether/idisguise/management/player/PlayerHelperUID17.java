@@ -49,19 +49,24 @@ public class PlayerHelperUID17 extends PlayerHelper {
 		return Bukkit.getOfflinePlayer(uniqueId).getName();
 	}
 	
-	public synchronized GameProfile getGameProfile(String name) {
-		if(gameProfiles.containsKey(name)) {
-			return gameProfiles.get(name);
+	public synchronized GameProfile getGameProfile(String skinName, String displayName) {
+		if(gameProfiles.containsKey(skinName)) {
+			GameProfile gameProfile = gameProfiles.get(skinName);
+			GameProfile localGameProfile = new GameProfile(gameProfile.getId(), displayName.length() <= 16 ? displayName : skinName);
+			localGameProfile.getProperties().putAll(gameProfile.getProperties());
+			return localGameProfile;
 		} else {
 			try {
 				ProfileLookupCallbackImpl callback = new ProfileLookupCallbackImpl();
-				GameProfileRepository_findProfilesByNames.invoke(MinecraftServer_getGameProfileRepository.invoke(MinecraftServer_getServer.invoke(null)), new String[] {name}, Agent.MINECRAFT, callback);
+				GameProfileRepository_findProfilesByNames.invoke(MinecraftServer_getGameProfileRepository.invoke(MinecraftServer_getServer.invoke(null)), new String[] {skinName}, Agent.MINECRAFT, callback);
 				GameProfile gameProfile = callback.getGameProfile();
 				if(gameProfile.getProperties().isEmpty()) {
 					MinecraftSessionService_fillProfileProperties.invoke(MinecraftServer_getSessionService.invoke(MinecraftServer_getServer.invoke(null)), gameProfile, true);
 				}
-				gameProfiles.put(name, gameProfile);
-				return gameProfile;
+				gameProfiles.put(skinName, gameProfile);
+				GameProfile localGameProfile = new GameProfile(gameProfile.getId(), displayName.length() <= 16 ? displayName : skinName);
+				localGameProfile.getProperties().putAll(gameProfile.getProperties());
+				return localGameProfile;
 			} catch(Exception e) {
 				if(VersionHelper.debug()) {
 					Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot retrieve the required profile information.", e);

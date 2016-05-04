@@ -49,7 +49,7 @@ public class GhostFactory {
 		}
 		for(OfflinePlayer offlinePlayer : DisguiseManager.getInstance().getDisguisedPlayers()) {
 			if(DisguiseManager.getInstance().getDisguise(offlinePlayer) instanceof PlayerDisguise && ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(offlinePlayer)).isGhost()) {
-				addPlayer(((PlayerDisguise)DisguiseManager.getInstance().getDisguise(offlinePlayer)).getName());
+				addPlayer(((PlayerDisguise)DisguiseManager.getInstance().getDisguise(offlinePlayer)).getSkinName());
 				if(offlinePlayer.isOnline()) {
 					addGhost(offlinePlayer.getPlayer());
 				}

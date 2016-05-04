@@ -94,7 +94,7 @@ public class EventListener implements Listener {
 		GhostFactory.getInstance().addPlayer(player.getName());
 		if(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise && ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).isGhost()) {
 			if(plugin.getConfiguration().getBoolean(Configuration.GHOST_DISGUISES)) {
-				GhostFactory.getInstance().addPlayer(((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getName());
+				GhostFactory.getInstance().addPlayer(((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getSkinName());
 				GhostFactory.getInstance().addGhost(player);
 			} else {
 				DisguiseManager.getInstance().undisguise(player);
@@ -107,7 +107,7 @@ public class EventListener implements Listener {
 		if(plugin.getConfiguration().getBoolean(Configuration.REPLACE_JOIN_MESSAGES)) {
 			if(event.getJoinMessage() != null && DisguiseManager.getInstance().isDisguised(player)) {
 				if(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise) {
-					event.setJoinMessage(event.getJoinMessage().replace(player.getName(), ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getName()));
+					event.setJoinMessage(event.getJoinMessage().replace(player.getName(), ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getDisplayName()));
 				} else {
 					event.setJoinMessage(null);
 				}
@@ -124,7 +124,7 @@ public class EventListener implements Listener {
 		if(plugin.getConfiguration().getBoolean(Configuration.REPLACE_JOIN_MESSAGES)) {
 			if(event.getQuitMessage() != null && DisguiseManager.getInstance().isDisguised(player)) {
 				if(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise) {
-					event.setQuitMessage(event.getQuitMessage().replace(player.getName(), ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getName()));
+					event.setQuitMessage(event.getQuitMessage().replace(player.getName(), ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getDisplayName()));
 				} else {
 					event.setQuitMessage(null);
 				}
@@ -159,7 +159,7 @@ public class EventListener implements Listener {
 					Player player = Bukkit.getPlayer(word);
 					if(player != null && DisguiseManager.getInstance().isDisguised(player)) {
 						if(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise) {
-							event.setDeathMessage(event.getDeathMessage().replace(word, ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getName()));
+							event.setDeathMessage(event.getDeathMessage().replace(word, ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getDisplayName()));
 						} else {
 							event.setDeathMessage(null);
 							break;

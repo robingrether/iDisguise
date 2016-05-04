@@ -47,9 +47,9 @@ public class DisguiseManager {
 			}
 			disguiseMap.updateDisguise(player, disguise);
 			if(disguise instanceof PlayerDisguise) {
-				player.setDisplayName(((PlayerDisguise)disguise).getName());
+				player.setDisplayName(((PlayerDisguise)disguise).getDisplayName());
 				if(((PlayerDisguise)disguise).isGhost()) {
-					GhostFactory.getInstance().addPlayer(((PlayerDisguise)disguise).getName());
+					GhostFactory.getInstance().addPlayer(((PlayerDisguise)disguise).getSkinName());
 					GhostFactory.getInstance().addGhost(player);
 				}
 			}

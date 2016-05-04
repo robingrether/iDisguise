@@ -88,7 +88,7 @@ public class PlayerHelper {
 		return null;
 	}
 	
-	public Object getGameProfile(String name) {
+	public Object getGameProfile(String skinName, String displayName) {
 		return null;
 	}
 	

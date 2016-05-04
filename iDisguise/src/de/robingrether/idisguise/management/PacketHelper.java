@@ -186,11 +186,11 @@ public class PacketHelper {
 			} else if(disguise instanceof PlayerDisguise) {
 				packets.add(PacketPlayOutNamedEntitySpawn_new.newInstance(entityPlayer));
 				if(VersionHelper.require1_8()) {
-					PacketPlayOutNamedEntitySpawn_profileId.set(packets.get(0), PlayerHelper.getInstance().getUniqueId(((PlayerDisguise)disguise).getName()));
+					PacketPlayOutNamedEntitySpawn_profileId.set(packets.get(0), PlayerHelper.getInstance().getUniqueId(((PlayerDisguise)disguise).getSkinName()));
 				} else if(VersionHelper.require1_7()) {
-					PacketPlayOutNamedEntitySpawn_gameProfile.set(packets.get(0), PlayerHelper.getInstance().getGameProfile(((PlayerDisguise)disguise).getName()));
+					PacketPlayOutNamedEntitySpawn_gameProfile.set(packets.get(0), PlayerHelper.getInstance().getGameProfile(((PlayerDisguise)disguise).getSkinName(), ((PlayerDisguise)disguise).getDisplayName()));
 				} else {
-					PacketPlayOutNamedEntitySpawn_playerName.set(packets.get(0), ((PlayerDisguise)disguise).getName());
+					PacketPlayOutNamedEntitySpawn_playerName.set(packets.get(0), ((PlayerDisguise)disguise).getDisplayName());
 				}
 			} else if(disguise instanceof ObjectDisguise) {
 				ObjectDisguise objectDisguise = (ObjectDisguise)disguise;
@@ -243,7 +243,7 @@ public class PacketHelper {
 				if(disguise == null) {
 					return PlayerInfoData_new.newInstance(context, offlinePlayer.isOnline() ? CraftPlayer_getProfile.invoke(offlinePlayer) : CraftOfflinePlayer_getProfile.invoke(offlinePlayer), ping, gamemode, Array.get(CraftChatMessage_fromString.invoke(null, offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName()), 0));
 				} else if(disguise instanceof PlayerDisguise) {
-					return PlayerInfoData_new.newInstance(context, PlayerHelper.getInstance().getGameProfile(((PlayerDisguise)disguise).getName()), ping, gamemode, Array.get(CraftChatMessage_fromString.invoke(null, attributes[1] ? ((PlayerDisguise)disguise).getName() : offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName()), 0));
+					return PlayerInfoData_new.newInstance(context, PlayerHelper.getInstance().getGameProfile(((PlayerDisguise)disguise).getSkinName(), ((PlayerDisguise)disguise).getDisplayName()), ping, gamemode, Array.get(CraftChatMessage_fromString.invoke(null, attributes[1] ? ((PlayerDisguise)disguise).getDisplayName() : offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName()), 0));
 				} else if(!attributes[1]) {
 					return PlayerInfoData_new.newInstance(context, offlinePlayer.isOnline() ? CraftPlayer_getProfile.invoke(offlinePlayer) : CraftOfflinePlayer_getProfile.invoke(offlinePlayer), ping, gamemode, Array.get(CraftChatMessage_fromString.invoke(null, offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName()), 0));
 				}
@@ -256,7 +256,7 @@ public class PacketHelper {
 			if(disguise == null) {
 				return offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName();
 			} else if(disguise instanceof PlayerDisguise) {
-				return attributes[1] ? ((PlayerDisguise)disguise).getName() : offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName();
+				return attributes[1] ? ((PlayerDisguise)disguise).getDisplayName() : offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName();
 			} else if(!attributes[1]) {
 				return offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName();
 			}
