@@ -208,7 +208,7 @@ public class iDisguise extends JavaPlugin {
 							sender.sendMessage(ChatColor.RED + "Some plugin denies you to disguise.");
 						} else {
 							DisguiseManager.getInstance().disguise(player, disguise);
-							sender.sendMessage(ChatColor.GOLD + "You disguised as a player called " + ChatColor.ITALIC + disguise.getDisplayName());
+							sender.sendMessage(ChatColor.GOLD + "You disguised as a player called " + ChatColor.RESET + disguise.getDisplayName());
 						}
 					} else {
 						sender.sendMessage(ChatColor.RED + "You are not allowed to disguise.");
@@ -227,7 +227,7 @@ public class iDisguise extends JavaPlugin {
 								sender.sendMessage(ChatColor.RED + "Some plugin denies you to disguise.");
 							} else {
 								DisguiseManager.getInstance().disguise(player, disguise);
-								sender.sendMessage(ChatColor.GOLD + "You disguised as a ghost called " + ChatColor.ITALIC + disguise.getDisplayName());
+								sender.sendMessage(ChatColor.GOLD + "You disguised as a ghost called " + ChatColor.RESET + disguise.getDisplayName());
 							}
 						} else {
 							sender.sendMessage(ChatColor.RED + "You are not allowed to disguise.");
@@ -246,7 +246,7 @@ public class iDisguise extends JavaPlugin {
 							sender.sendMessage(ChatColor.RED + "Some plugin denies you to disguise.");
 						} else {
 							DisguiseManager.getInstance().disguise(player, disguise);
-							sender.sendMessage(ChatColor.GOLD + "You disguised as a ghost called " + ChatColor.ITALIC + disguise.getDisplayName());
+							sender.sendMessage(ChatColor.GOLD + "You disguised as a ghost called " + ChatColor.RESET + disguise.getDisplayName());
 						}
 					} else {
 						sender.sendMessage(ChatColor.RED + "You are not allowed to disguise.");
@@ -256,7 +256,7 @@ public class iDisguise extends JavaPlugin {
 				if(DisguiseManager.getInstance().isDisguised(player)) {
 					Disguise disguise = DisguiseManager.getInstance().getDisguise(player);
 					if(disguise instanceof PlayerDisguise) {
-						sender.sendMessage(ChatColor.GOLD + "You are disguised as a " + (((PlayerDisguise)disguise).isGhost() ? "ghost" : "player") + " called " + ChatColor.ITALIC + ((PlayerDisguise)disguise).getDisplayName());
+						sender.sendMessage(ChatColor.GOLD + "You are disguised as a " + (((PlayerDisguise)disguise).isGhost() ? "ghost" : "player") + " called " + ChatColor.RESET + ((PlayerDisguise)disguise).getDisplayName());
 					} else if(disguise instanceof MobDisguise) {
 						sender.sendMessage(ChatColor.GOLD + "You are disguised as a " + disguise.getType().name().toLowerCase(Locale.ENGLISH));
 						if(disguise instanceof AgeableDisguise) {
@@ -526,7 +526,7 @@ public class iDisguise extends JavaPlugin {
 						sender.sendMessage(ChatColor.RED + "Some plugin denies " + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.RED + " to disguise.");
 					} else {
 						DisguiseManager.getInstance().disguise(player, disguise);
-						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " disguised as a player called " + ChatColor.ITALIC + disguise.getDisplayName());
+						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " disguised as a player called " + ChatColor.RESET + disguise.getDisplayName());
 					}
 				}
 			} else if(StringUtil.equalsIgnoreCase(args[1], "ghost", "g")) {
@@ -541,7 +541,7 @@ public class iDisguise extends JavaPlugin {
 							sender.sendMessage(ChatColor.RED + "Some plugin denies " + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.RED + " to disguise.");
 						} else {
 							DisguiseManager.getInstance().disguise(player, disguise);
-							sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " disguised as a ghost called " + ChatColor.ITALIC + disguise.getDisplayName());
+							sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " disguised as a ghost called " + ChatColor.RESET + disguise.getDisplayName());
 						}
 					} else {
 						sender.sendMessage(ChatColor.RED + "Wrong usage: " + ChatColor.ITALIC + "/" + cmd.getName() + " " + player.getName() + " " + args[1] + " <name>");
@@ -556,14 +556,14 @@ public class iDisguise extends JavaPlugin {
 						sender.sendMessage(ChatColor.RED + "Some plugin denies " + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.RED + " to disguise.");
 					} else {
 						DisguiseManager.getInstance().disguise(player, disguise);
-						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " disguised as a ghost called " + ChatColor.ITALIC + disguise.getDisplayName());
+						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " disguised as a ghost called " + ChatColor.RESET + disguise.getDisplayName());
 					}
 				}
 			} else if(StringUtil.equalsIgnoreCase(args[1], "status", "state", "stat", "stats")) {
 				if(DisguiseManager.getInstance().isDisguised(player)) {
 					Disguise disguise = DisguiseManager.getInstance().getDisguise(player);
 					if(disguise instanceof PlayerDisguise) {
-						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " is disguised as a " + (((PlayerDisguise)disguise).isGhost() ? "ghost" : "player") + " called " + ChatColor.ITALIC + ((PlayerDisguise)disguise).getDisplayName());
+						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " is disguised as a " + (((PlayerDisguise)disguise).isGhost() ? "ghost" : "player") + " called " + ChatColor.RESET + ((PlayerDisguise)disguise).getDisplayName());
 					} else if(disguise instanceof MobDisguise) {
 						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " is disguised as a " + disguise.getType().name().toLowerCase(Locale.ENGLISH));
 						if(disguise instanceof AgeableDisguise) {
