@@ -13,6 +13,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import de.robingrether.idisguise.disguise.AgeableDisguise;
+import de.robingrether.idisguise.disguise.ArmorStandDisguise;
 import de.robingrether.idisguise.disguise.CreeperDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
@@ -220,6 +221,12 @@ public class PacketHelper {
 							EntityMinecartAbstract_setDisplayBlockId.invoke(entity, minecartDisguise.getDisplayedBlock().getId());
 							EntityMinecartAbstract_setDisplayBlockData.invoke(entity, minecartDisguise.getDisplayedBlockData());
 						}
+					}
+					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), 0));
+					packets.add(PacketPlayOutEntityMetadata_new_full.newInstance(player.getEntityId(), Entity_getDataWatcher.invoke(entity), true));
+				} else if(EntityArmorStand.isInstance(entity)) {
+					if(objectDisguise instanceof ArmorStandDisguise) {
+						EntityArmorStand_setArms.invoke(entity, ((ArmorStandDisguise)objectDisguise).getShowArms());
 					}
 					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), 0));
 					packets.add(PacketPlayOutEntityMetadata_new_full.newInstance(player.getEntityId(), Entity_getDataWatcher.invoke(entity), true));

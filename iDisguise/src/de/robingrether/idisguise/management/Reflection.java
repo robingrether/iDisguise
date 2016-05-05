@@ -263,6 +263,9 @@ public class Reflection {
 	
 	public static Class<?> EntityTameableAnimal;
 	
+	public static Class<?> EntityArmorStand;
+	public static Method EntityArmorStand_setArms;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");

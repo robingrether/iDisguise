@@ -33,6 +33,9 @@ Entity_world->FEntity$world
 EntityAgeable->C{nms}.EntityAgeable
 EntityAgeable_setAge->MEntityAgeable$setAge(int)
 
+EntityArmorStand->C{nms}.EntityArmorStand
+EntityArmorStand_setArms->MEntityArmorStand$setArms(boolean)
+
 EntityBat->C{nms}.EntityBat
 EntityBat_setAsleep->MEntityBat$setAsleep(boolean)
 
