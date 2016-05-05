@@ -14,6 +14,7 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	
 	private static final long serialVersionUID = -5052831499921781174L;
 	private Material material;
+	private int data;
 	
 	/**
 	 * Creates an instance.<br>
@@ -33,11 +34,27 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	 * @throws IllegalArgumentException if the material is not a block
 	 */
 	public FallingBlockDisguise(Material material) {
+		this(material, 0);
+	}
+	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 5.2.2
+	 * @param material the material
+	 * @param data the block data
+	 * @throws IllegalArgumentException if the material is not a block, or if the data is negative
+	 */
+	public FallingBlockDisguise(Material material, int data) {
 		super(DisguiseType.FALLING_BLOCK);
 		if(!material.isBlock()) {
 			throw new IllegalArgumentException("Material must be a block");
 		}
+		if(data < 0) {
+			throw new IllegalArgumentException("Data must be positive");
+		}
 		this.material = material;
+		this.data = data;
 	}
 	
 	/**
@@ -65,17 +82,37 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	}
 	
 	/**
+	 * Gets the block data.
+	 * 
+	 * @since 5.2.2
+	 * @return the block data
+	 */
+	public int getData() {
+		return data;
+	}
+	
+	/**
+	 * Sets the block data.
+	 * 
+	 * @since 5.2.2
+	 * @param data the block data
+	 */
+	public void setData(int data) {
+		this.data = data;
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public FallingBlockDisguise clone() {
-		return new FallingBlockDisguise(material);
+		return new FallingBlockDisguise(material, data);
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof FallingBlockDisguise && ((FallingBlockDisguise)object).material.equals(material);
+		return super.equals(object) && object instanceof FallingBlockDisguise && ((FallingBlockDisguise)object).material.equals(material) && ((FallingBlockDisguise)object).data == data;
 	}
 	
 	/**
@@ -86,9 +123,18 @@ public class FallingBlockDisguise extends ObjectDisguise {
 			Material material = Material.valueOf(argument.replace('-', '_').toUpperCase(Locale.ENGLISH));
 			if(material.isBlock()) {
 				setMaterial(material);
+				setData(0);
 				return true;
 			}
 		} catch(IllegalArgumentException e) {
+		}
+		try {
+			Short data = Short.parseShort(argument);
+			if(data >= 0 && data < 256) {
+				setData(data);
+				return true;
+			}
+		} catch(NumberFormatException e) {
 		}
 		return false;
 	}
