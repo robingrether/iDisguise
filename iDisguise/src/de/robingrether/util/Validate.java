@@ -25,7 +25,6 @@ public class Validate {
 	 * Indicates whether a given minecraft username is valid. <br>
 	 * Minecraft usernames may not be longer than 16 characters and they may not contain any characters except letters, numbers and underscores.
 	 * 
-	 * @since 4.0.1
 	 * @param username the username to be validated
 	 * @return <code>true</code> if the given username is valid, <code>false</code> otherwise
 	 */
