@@ -25,6 +25,8 @@ Entity_world->FEntity$world
 EntityAgeable->C{nms}.EntityAgeable
 EntityAgeable_setAge->MEntityAgeable$setAge(int)
 
+EntityArmorStand->Cjava.lang.String
+
 EntityBat->C{nms}.EntityBat
 EntityBat_setAsleep->MEntityBat$setStartled(boolean)
 
