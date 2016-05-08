@@ -52,7 +52,7 @@ public class Configuration {
 		setDefault(STORE_DISGUISES, true, "If this option is set to true, all the disguises are saved when the server shuts down,\nso all the players are still disguised after a restart.");
 		setDefault(PROHIBITED_WORLDS, Arrays.asList("prohibited1", "prohibited2"), "You can put the worlds, you don't want your players to disguise in, here.\nYou can give admins the 'iDisguise.everywhere' permission so they can bypass this prohibition.");
 		setDefault(CHECK_FOR_UPDATES, true, "Enable this if you want the plugin to check for an update when the server starts.\nIf an update is available a message will be printed out into console,\nand every player who has the 'iDisguise.update' permission will receive a message.");
-		setDefault(REPLACE_SOUNDS, true, "If this option is set to true, the plugin will replace disguised players' sound effects with realistic hurt/death/etc. sounds.\nThis feature does not work completely in Minecraft 1.5, 1.6 and 1.9.");
+		setDefault(REPLACE_SOUNDS, true, "If this option is set to true, the plugin will replace disguised players' sound effects with realistic hurt/death/etc. sounds.");
 		setDefault(SHOW_PLAYER_NAMES, false, "If this option is set to true, all disguised players will have their name above their head.\nThis only works for mob disguises.");
 		setDefault(DISABLE_MOB_TARGET, false, "If this option is set to true, disguised players cannot be targeted by mobs (e.g. skeletons).");
 		setDefault(ALLOW_DAMAGE, true, "If this option is set to false, disguised players cannot be damaged by any mobs (including projectiles) except other players.");
