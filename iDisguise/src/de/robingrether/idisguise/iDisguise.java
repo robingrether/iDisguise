@@ -21,6 +21,7 @@ import de.robingrether.idisguise.api.DisguiseAPI;
 import de.robingrether.idisguise.api.DisguiseEvent;
 import de.robingrether.idisguise.api.UndisguiseEvent;
 import de.robingrether.idisguise.disguise.AgeableDisguise;
+import de.robingrether.idisguise.disguise.ArmorStandDisguise;
 import de.robingrether.idisguise.disguise.CreeperDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
@@ -328,6 +329,7 @@ public class iDisguise extends JavaPlugin {
 						if(disguise instanceof FallingBlockDisguise) {
 							sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
 							sender.sendMessage(ChatColor.GRAY + " Block type: " + ((FallingBlockDisguise)disguise).getMaterial().name().toLowerCase(Locale.ENGLISH));
+							sender.sendMessage(ChatColor.GRAY + " Block data: " + ((FallingBlockDisguise)disguise).getData());
 						} else if(disguise instanceof ItemDisguise) {
 							sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
 							sender.sendMessage(ChatColor.GRAY + " Material: " + ((ItemDisguise)disguise).getItemStack().getType().name().toLowerCase(Locale.ENGLISH));
@@ -338,6 +340,9 @@ public class iDisguise extends JavaPlugin {
 							sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
 							sender.sendMessage(ChatColor.GRAY + " Block inside: " + ((MinecartDisguise)disguise).getDisplayedBlock().name().toLowerCase(Locale.ENGLISH));
 							sender.sendMessage(ChatColor.GRAY + " Data: " + ((MinecartDisguise)disguise).getDisplayedBlockData());
+						} else if(disguise instanceof ArmorStandDisguise) {
+							sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
+							sender.sendMessage(ChatColor.GRAY + " Show arms: " + (((ArmorStandDisguise)disguise).getShowArms() ? "yes" : "no"));
 						}
 					}
 				} else {
@@ -636,6 +641,7 @@ public class iDisguise extends JavaPlugin {
 						if(disguise instanceof FallingBlockDisguise) {
 							sender.sendMessage(ChatColor.GRAY + "Subtypes:");
 							sender.sendMessage(ChatColor.GRAY + " Block type: " + ((FallingBlockDisguise)disguise).getMaterial().name().toLowerCase(Locale.ENGLISH));
+							sender.sendMessage(ChatColor.GRAY + " Block data: " + ((FallingBlockDisguise)disguise).getData());
 						} else if(disguise instanceof ItemDisguise) {
 							sender.sendMessage(ChatColor.GRAY + "Subtypes:");
 							sender.sendMessage(ChatColor.GRAY + " Material: " + ((ItemDisguise)disguise).getItemStack().getType().name().toLowerCase(Locale.ENGLISH));
@@ -646,6 +652,9 @@ public class iDisguise extends JavaPlugin {
 							sender.sendMessage(ChatColor.GRAY + "Subtypes:");
 							sender.sendMessage(ChatColor.GRAY + " Block inside: " + ((MinecartDisguise)disguise).getDisplayedBlock().name().toLowerCase(Locale.ENGLISH));
 							sender.sendMessage(ChatColor.GRAY + " Data: " + ((MinecartDisguise)disguise).getDisplayedBlockData());
+						} else if(disguise instanceof ArmorStandDisguise) {
+							sender.sendMessage(ChatColor.GRAY + "Subtypes:");
+							sender.sendMessage(ChatColor.GRAY + " Show arms: " + (((ArmorStandDisguise)disguise).getShowArms() ? "yes" : "no"));
 						}
 					}
 				} else {
@@ -809,6 +818,7 @@ public class iDisguise extends JavaPlugin {
 				break;
 			case FALLING_BLOCK:
 				sender.sendMessage(ChatColor.GRAY + " Block type: <material-name>");
+				sender.sendMessage(ChatColor.GRAY + " Block data: <0-255>");
 				break;
 			case ITEM:
 				sender.sendMessage(ChatColor.GRAY + " Material: <material-name>");
@@ -818,6 +828,9 @@ public class iDisguise extends JavaPlugin {
 			case MINECART:
 				sender.sendMessage(ChatColor.GRAY + " Block inside: <material-name>");
 				sender.sendMessage(ChatColor.GRAY + " Data: <0-255>");
+				break;
+			case ARMOR_STAND:
+				sender.sendMessage(ChatColor.GRAY + " Show arms: show-arms, hide-arms");
 				break;
 			default:
 				sender.sendMessage(ChatColor.GRAY + " no subtypes available");
