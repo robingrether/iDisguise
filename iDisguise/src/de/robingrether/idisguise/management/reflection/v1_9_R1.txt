@@ -152,6 +152,9 @@ PacketPlayOutAnimation_entityId->FPacketPlayOutAnimation$a
 PacketPlayOutBed->C{nms}.PacketPlayOutBed
 PacketPlayOutBed_entityId->FPacketPlayOutBed$a
 
+PacketPlayOutCollect->C{nms}.PacketPlayOutCollect
+PacketPlayOutCollect_entityId->FPacketPlayOutCollect$b
+
 PacketPlayOutEntity->C{nms}.PacketPlayOutEntity
 PacketPlayOutEntity_deltaX->FPacketPlayOutEntity$b
 PacketPlayOutEntity_deltaY->FPacketPlayOutEntity$c

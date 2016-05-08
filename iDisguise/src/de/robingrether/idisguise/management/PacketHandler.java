@@ -190,6 +190,14 @@ public class PacketHandler {
 		return packet;
 	}
 	
+	public Object handlePacketPlayOutCollect(final Player observer, final Object packet) throws Exception {
+		final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayOutCollect_entityId.getInt(packet));
+		if(player != null && player != observer && DisguiseManager.getInstance().getDisguise(player) instanceof ObjectDisguise) {
+			return null;
+		}
+		return packet;
+	}
+	
 	public Object handlePacketPlayOutNamedSoundEffect(final Player observer, final Object packet) throws Exception {
 		String soundEffect = PacketHelper.getInstance().soundEffectToString(PacketPlayOutNamedSoundEffect_soundEffect.get(packet));
 		if(Sounds.isSoundFromPlayer(soundEffect)) {
