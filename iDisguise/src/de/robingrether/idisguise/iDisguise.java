@@ -129,7 +129,7 @@ public class iDisguise extends JavaPlugin {
 		}
 		getServer().getServicesManager().register(DisguiseAPI.class, getAPI(), this, ServicePriority.Normal);
 		if(configuration.getBoolean(Configuration.CHECK_FOR_UPDATES)) {
-			getServer().getScheduler().runTaskLaterAsynchronously(this, new UpdateCheck(this, getServer().getConsoleSender(), ChatColor.GOLD + "[iDisguise] " + "An update for iDisguise is available: " + ChatColor.ITALIC + "%s", configuration.getBoolean(Configuration.AUTO_DOWNLOAD_UPDATES)), 20L);
+			getServer().getScheduler().runTaskLaterAsynchronously(this, new UpdateCheck(this, getServer().getConsoleSender(), configuration.getBoolean(Configuration.AUTO_DOWNLOAD_UPDATES)), 20L);
 		}
 		getLogger().log(Level.INFO, String.format("%s enabled!", getFullName()));
 		enabled = true;

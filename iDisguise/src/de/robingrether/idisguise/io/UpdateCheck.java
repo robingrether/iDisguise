@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.file.Files;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
@@ -34,22 +33,20 @@ public class UpdateCheck implements Runnable {
 	private String pluginVersion;
 	private String latestVersion;
 	private CommandSender toBeNotified;
-	private String notification;
 	private String downloadUrl;
 	private boolean autoDownload;
 	
-	public UpdateCheck(iDisguise plugin, CommandSender toBeNotified, String notification, boolean autoDownload) {
+	public UpdateCheck(iDisguise plugin, CommandSender toBeNotified, boolean autoDownload) {
 		this.plugin = plugin;
 		this.pluginVersion = plugin.getFullName();
 		this.toBeNotified = toBeNotified;
-		this.notification = notification;
 		this.autoDownload = autoDownload;
 	}
 	
 	public void run() {
 		checkForUpdate();
 		if(isUpdateAvailable()) {
-			toBeNotified.sendMessage(String.format(notification, latestVersion));
+			toBeNotified.sendMessage(ChatColor.GOLD + "[iDisguise] An update is available: " + latestVersion);
 			if(autoDownload) {
 				downloadUpdate();
 			}
@@ -99,11 +96,12 @@ public class UpdateCheck implements Runnable {
 		File oldFile = plugin.getPluginFile();
 		File newFile = new File(plugin.getServer().getUpdateFolderFile(), oldFile.getName());
 		if(newFile.exists()) {
-			toBeNotified.sendMessage(ChatColor.GOLD + "Update already downloaded. (Restart server to apply)");
+			toBeNotified.sendMessage(ChatColor.GOLD + "[iDisguise] Update already downloaded. (Restart server to apply update)");
 		} else {
 			InputStream input = null;
 			OutputStream output = null;
 			try {
+				toBeNotified.sendMessage(ChatColor.GOLD + "[iDisguise] Downloading update...");
 				URL url = new URL(downloadUrl);
 				URLConnection connection = url.openConnection();
 				connection.addRequestProperty("User-Agent", pluginVersion.replace(' ', '/') + " (by RobinGrether)");
@@ -118,10 +116,10 @@ public class UpdateCheck implements Runnable {
 				}
 				input.close();
 				output.close();
-				toBeNotified.sendMessage(ChatColor.GOLD + "Update download succeeded. (Restart server to apply)");
+				toBeNotified.sendMessage(ChatColor.GOLD + "[iDisguise] Download succeeded. (Restart server to apply update)");
 			} catch(IOException e) {
-				toBeNotified.sendMessage(ChatColor.RED + "Update download failed.");
-				e.printStackTrace();
+				toBeNotified.sendMessage(ChatColor.RED + "[iDisguise] Download failed.");
+				plugin.getLogger().log(Level.WARNING, "Update download failed: " + e.getClass().getSimpleName());
 			} finally {
 				if(input != null) {
 					try {
