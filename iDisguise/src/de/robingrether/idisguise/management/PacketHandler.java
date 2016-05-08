@@ -116,10 +116,16 @@ public class PacketHandler {
 	}
 	
 	public Object handlePacketPlayOutAnimation(final Player observer, final Object packet) throws Exception {
-		if(PacketPlayOutAnimation_animationType.getInt(packet) == (VersionHelper.require1_7() ? 2 : 3)) {
-			final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayOutAnimation_entityId.getInt(packet));
-			if(player != null && player != observer && DisguiseManager.getInstance().isDisguised(player) && !(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise)) {
-				return null;
+		final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayOutAnimation_entityId.getInt(packet));
+		if(player != null && player != observer && DisguiseManager.getInstance().isDisguised(player) && !(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise)) {
+			if(DisguiseManager.getInstance().getDisguise(player) instanceof MobDisguise) {
+				if(VersionHelper.require1_7() ? PacketPlayOutAnimation_animationType.getInt(packet) == 2 : PacketPlayOutAnimation_animationType.getInt(packet) == 3) {
+					return null;
+				}
+			} else if(DisguiseManager.getInstance().getDisguise(player) instanceof ObjectDisguise) {
+				if(VersionHelper.require1_7() ? ObjectUtil.equals(PacketPlayOutAnimation_animationType.getInt(packet), 0, 2, 3) : ObjectUtil.equals(PacketPlayOutAnimation_animationType.getInt(packet),  1, 3, 5)) {
+					return null;
+				}
 			}
 		}
 		return packet;
