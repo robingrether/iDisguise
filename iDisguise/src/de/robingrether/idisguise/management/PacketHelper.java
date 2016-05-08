@@ -191,7 +191,7 @@ public class PacketHelper {
 				} else if(VersionHelper.require1_7()) {
 					PacketPlayOutNamedEntitySpawn_gameProfile.set(packets.get(0), PlayerHelper.getInstance().getGameProfile(((PlayerDisguise)disguise).getSkinName(), ((PlayerDisguise)disguise).getDisplayName()));
 				} else {
-					PacketPlayOutNamedEntitySpawn_playerName.set(packets.get(0), ((PlayerDisguise)disguise).getDisplayName());
+					PacketPlayOutNamedEntitySpawn_playerName.set(packets.get(0), ((PlayerDisguise)disguise).getSkinName());
 				}
 			} else if(disguise instanceof ObjectDisguise) {
 				ObjectDisguise objectDisguise = (ObjectDisguise)disguise;
@@ -267,7 +267,7 @@ public class PacketHelper {
 			if(disguise == null) {
 				return offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName();
 			} else if(disguise instanceof PlayerDisguise) {
-				return attributes[1] ? ((PlayerDisguise)disguise).getDisplayName() : offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName();
+				return attributes[1] ? VersionHelper.require1_7() ? ((PlayerDisguise)disguise).getDisplayName() : ((PlayerDisguise)disguise).getSkinName() : offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName();
 			} else if(!attributes[1]) {
 				return offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName();
 			}
