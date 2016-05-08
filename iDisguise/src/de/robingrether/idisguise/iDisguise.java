@@ -510,6 +510,7 @@ public class iDisguise extends JavaPlugin {
 			}
 			if(!isDisguisingPermittedInWorld(player.getWorld()) && sender instanceof Player && !((Player)sender).hasPermission("iDisguise.everywhere")) {
 				sender.sendMessage(ChatColor.RED + "Using this plugin is prohibited in this world.");
+				return true;
 			}
 			if(StringUtil.equalsIgnoreCase(args[1], "?", "help")) {
 				sendHelpMessage(sender, cmd, false, DisguiseManager.getInstance().getDisguise(player));
