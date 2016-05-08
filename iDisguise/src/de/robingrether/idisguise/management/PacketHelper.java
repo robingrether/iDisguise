@@ -204,7 +204,11 @@ public class PacketHelper {
 					Entity_entityId.setInt(entity, player.getEntityId());
 				}
 				if(EntityFallingBlock.isInstance(entity)) {
-					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), objectDisguise instanceof FallingBlockDisguise ? ((FallingBlockDisguise)objectDisguise).getMaterial().getId() | (((FallingBlockDisguise)objectDisguise).getData() << 12) : 1));
+					if(VersionHelper.require1_8()) {
+						packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), objectDisguise instanceof FallingBlockDisguise ? ((FallingBlockDisguise)objectDisguise).getMaterial().getId() | (((FallingBlockDisguise)objectDisguise).getData() << 12) : 1));
+					} else {
+						packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), objectDisguise instanceof FallingBlockDisguise ? ((FallingBlockDisguise)objectDisguise).getMaterial().getId() | (((FallingBlockDisguise)objectDisguise).getData() << 16) : 1));
+					}
 				} else if(EntityItem.isInstance(entity)) {
 					if(objectDisguise instanceof ItemDisguise) {
 						ItemDisguise itemDisguise = (ItemDisguise)objectDisguise;
