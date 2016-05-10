@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.management.PacketHandler;
 import de.robingrether.idisguise.management.VersionHelper;
 import net.minecraft.server.v1_6_R3.MinecraftServer;
@@ -40,7 +41,7 @@ public class InjectedPlayerConnection163 extends PlayerConnection implements Inj
 			}
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {
-				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot handle packet in: " + packet.getClass().getSimpleName() + " from " + observer.getName());
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot handle packet in: " + packet.getClass().getSimpleName() + " from " + observer.getName());
 			}
 		}
 	}

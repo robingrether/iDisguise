@@ -65,7 +65,7 @@ public class PlayerHelper {
 		try {
 			URL url = new URL(API_URL + uniqueId.toString().replace("-", "") + "/names");
 			URLConnection connection = url.openConnection();
-			connection.addRequestProperty("User-Agent", ((iDisguise)Bukkit.getPluginManager().getPlugin("iDisguise")).getFullName().replace(' ', '/') + " (by RobinGrether)");
+			connection.addRequestProperty("User-Agent", iDisguise.getInstance().getFullName().replace(' ', '/') + " (by RobinGrether)");
 			connection.setDoOutput(true);
 			reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			String response = reader.readLine();
@@ -74,7 +74,7 @@ public class PlayerHelper {
 			return (String)object.get("name");
 		} catch(IOException e) {
 			if(VersionHelper.debug()) {
-				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot convert the stored disguise data.", e);
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot convert the stored disguise data.", e);
 			}
 		} catch(NullPointerException e) {
 		} finally {

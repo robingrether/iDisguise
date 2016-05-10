@@ -3,6 +3,7 @@ package de.robingrether.idisguise.management.channel;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.management.ChannelInjector;
 import de.robingrether.idisguise.management.PacketHandler;
 import de.robingrether.idisguise.management.Sounds;
@@ -26,7 +27,7 @@ public class ChannelInjectorPC extends ChannelInjector {
 			playerConnectionConstructor = Class.forName("de.robingrether.idisguise.management.channel.InjectedPlayerConnection" + VersionHelper.getVersionCode().replaceAll("[^0-9]*", "")).getConstructor(getClass(), Player.class, Object.class);
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {
-				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot find the required player connection constructor.", e);
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot find the required player connection constructor.", e);
 			}
 		}
 	}
@@ -38,7 +39,7 @@ public class ChannelInjectorPC extends ChannelInjector {
 			playerConnectionMap.put(player, playerConnection);
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {
-				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot inject the given player connection: " + player.getName(), e);
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot inject the given player connection: " + player.getName(), e);
 			}
 		}
 	}
@@ -51,7 +52,7 @@ public class ChannelInjectorPC extends ChannelInjector {
 			}
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {
-				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot remove the given player connection: " + player.getName(), e);
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot remove the given player connection: " + player.getName(), e);
 			}
 		}
 	}
@@ -82,7 +83,7 @@ public class ChannelInjectorPC extends ChannelInjector {
 			return new Object[] {packet};
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {
-				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot handle packet out: " + packet.getClass().getSimpleName() + " to " + observer.getName());
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot handle packet out: " + packet.getClass().getSimpleName() + " to " + observer.getName());
 			}
 		}
 		return new Object[0];

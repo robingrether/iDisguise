@@ -13,6 +13,7 @@ import com.mojang.authlib.ProfileLookupCallback;
 
 import static de.robingrether.idisguise.management.Reflection.*;
 
+import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.VersionHelper;
 
@@ -27,7 +28,7 @@ public class PlayerHelperUID18 extends PlayerHelper {
 			return callback.getGameProfile().getName();
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {
-				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot retrieve the required profile information.", e);
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot retrieve the required profile information.", e);
 			}
 		}
 		return name;
@@ -40,7 +41,7 @@ public class PlayerHelperUID18 extends PlayerHelper {
 			return callback.getGameProfile().getId();
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {
-				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot retrieve the required profile information.", e);
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot retrieve the required profile information.", e);
 			}
 		}
 		return UUID.fromString("ffffffff-ffff-ffff-ffff-ffffffffffff");
@@ -70,7 +71,7 @@ public class PlayerHelperUID18 extends PlayerHelper {
 				return localGameProfile;
 			} catch(Exception e) {
 				if(VersionHelper.debug()) {
-					Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot retrieve the required profile information.", e);
+					iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot retrieve the required profile information.", e);
 				}
 			}
 		}

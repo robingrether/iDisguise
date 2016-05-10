@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import de.robingrether.idisguise.iDisguise;
+
 public class Reflection {
 	
 	public static Class<?> Bukkit_reflect;
@@ -355,7 +357,7 @@ public class Reflection {
 										continue;
 									} catch(ClassNotFoundException e) {
 										if(VersionHelper.debug()) {
-											Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot find the given class file.", e);
+											iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot find the given class file.", e);
 										}
 									}
 									parameterTypes[i] = null;
@@ -422,7 +424,7 @@ public class Reflection {
 										continue;
 									} catch(ClassNotFoundException e) {
 										if(VersionHelper.debug()) {
-											Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot find the given class file.", e);
+											iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot find the given class file.", e);
 										}
 									}
 									parameterTypes[i] = null;
@@ -432,19 +434,19 @@ public class Reflection {
 							}
 						} else {
 							if(VersionHelper.debug()) {
-								Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.WARNING, "Cannot parse line: " + line);
+								iDisguise.getInstance().getLogger().log(Level.WARNING, "Cannot parse line: " + line);
 							}
 						}
 					} catch(Exception e) {
 						if(VersionHelper.debug()) {
-							Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot parse line: " + line, e);
+							iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot parse line: " + line, e);
 						}
 					}
 				}
 			}
 		} catch(IOException e) {
 			if(VersionHelper.debug()) {
-				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot load the required reflection configuration.", e);
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot load the required reflection configuration.", e);
 			}
 		}
 	}
@@ -459,7 +461,7 @@ public class Reflection {
 			}
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {
-				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot access org.bukkit.Bukkit$getOnlinePlayers()", e);
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot access org.bukkit.Bukkit$getOnlinePlayers()", e);
 			}
 			return new ArrayList<Player>();
 		}

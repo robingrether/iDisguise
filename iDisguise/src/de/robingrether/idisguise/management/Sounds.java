@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 
+import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.GuardianDisguise;
 import de.robingrether.idisguise.disguise.HorseDisguise;
@@ -173,14 +174,14 @@ public class Sounds {
 						}
 					} catch(ArrayIndexOutOfBoundsException e) {
 						if(VersionHelper.debug()) {
-							Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot parse line: " + line, e);
+							iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot parse line: " + line, e);
 						}
 					}
 				}
 			}
 		} catch(IOException e) {
 			if(VersionHelper.debug()) {
-				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot load the required sound effect configuration.");
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot load the required sound effect configuration.");
 			}
 		}
 	}

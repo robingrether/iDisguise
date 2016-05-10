@@ -12,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.AgeableDisguise;
 import de.robingrether.idisguise.disguise.ArmorStandDisguise;
 import de.robingrether.idisguise.disguise.CreeperDisguise;
@@ -241,7 +242,7 @@ public class PacketHelper {
 			return packets.toArray(new Object[0]);
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {
-				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot construct the required packet.", e);
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot construct the required packet.", e);
 			}
 		}
 		return new Object[0];
@@ -260,7 +261,7 @@ public class PacketHelper {
 				}
 			} catch(Exception e) {
 				if(VersionHelper.debug()) {
-					Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot construct the required player info.", e);
+					iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot construct the required player info.", e);
 				}
 			}
 		} else {
@@ -284,7 +285,7 @@ public class PacketHelper {
 			}
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {
-				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot retrieve the required metadata id.", e);
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot retrieve the required metadata id.", e);
 			}
 		}
 		return 127;
@@ -296,7 +297,7 @@ public class PacketHelper {
 				return (String)MinecraftKey_getName.invoke(RegistryMaterials_getKey.invoke(SoundEffect_registry.get(null), soundEffect));
 			} catch(Exception e) {
 				if(VersionHelper.debug()) {
-					Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot retrieve the required sound effect name.", e);
+					iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot retrieve the required sound effect name.", e);
 				}
 			}
 		} else {
@@ -311,7 +312,7 @@ public class PacketHelper {
 				return RegistryMaterials_getValue.invoke(SoundEffect_registry.get(null), MinecraftKey_new.newInstance(name));
 			} catch(Exception e) {
 				if(VersionHelper.debug()) {
-					Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot retrieve the required sound effect.", e);
+					iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot retrieve the required sound effect.", e);
 				}
 			}
 		} else {
@@ -369,7 +370,7 @@ public class PacketHelper {
 			}
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {
-				Bukkit.getPluginManager().getPlugin("iDisguise").getLogger().log(Level.SEVERE, "Cannot clone the given packet.", e);
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot clone the given packet.", e);
 			}
 		}
 		return clone;

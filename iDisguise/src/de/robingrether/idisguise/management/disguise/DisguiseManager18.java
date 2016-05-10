@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
@@ -14,7 +15,7 @@ import de.robingrether.idisguise.management.Reflection;
 public class DisguiseManager18 extends DisguiseManager {
 	
 	private void showPlayerLater(final Player player) {
-		Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("iDisguise"), new Runnable() {
+		Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), new Runnable() {
 			
 			public void run() {
 				if(player != null) {
