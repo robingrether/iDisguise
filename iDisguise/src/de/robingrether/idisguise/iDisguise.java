@@ -62,7 +62,7 @@ import de.robingrether.util.Validate;
 
 public class iDisguise extends JavaPlugin {
 	
-	public static final File directory = new File("plugins/iDisguise");
+	private static iDisguise instance;
 	
 	private EventListener listener;
 	private Configuration configuration;
@@ -75,9 +75,10 @@ public class iDisguise extends JavaPlugin {
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
+		instance = this;
 		checkDirectory();
 		listener = new EventListener(this);
-		configuration = new Configuration(this, directory);
+		configuration = new Configuration(this, getDataFolder());
 		configuration.loadData();
 		configuration.saveData();
 		PacketHelper.getInstance().setAttribute(0, configuration.getBoolean(Configuration.SHOW_PLAYER_NAMES));
@@ -164,7 +165,7 @@ public class iDisguise extends JavaPlugin {
 			saveData();
 		}
 		enabled = false;
-		configuration = new Configuration(this, directory);
+		configuration = new Configuration(this, getDataFolder());
 		configuration.loadData();
 		configuration.saveData();
 		PacketHelper.getInstance().setAttribute(0, configuration.getBoolean(Configuration.SHOW_PLAYER_NAMES));
@@ -928,14 +929,14 @@ public class iDisguise extends JavaPlugin {
 	}
 	
 	private void checkDirectory() {
-		if(!directory.exists()) {
-			directory.mkdir();
+		if(!getDataFolder().exists()) {
+			getDataFolder().mkdir();
 		}
 	}
 	
 	private void loadData() {
-		File dataFile = new File(directory, "data.bin");
-		File oldDataFile = new File(directory, "disguise.bin");
+		File dataFile = new File(getDataFolder(), "data.bin");
+		File oldDataFile = new File(getDataFolder(), "disguise.bin");
 		if(dataFile.exists()) {
 			Object map = SLAPI.load(dataFile);
 			if(map instanceof Map) {
@@ -951,7 +952,7 @@ public class iDisguise extends JavaPlugin {
 	}
 	
 	private void saveData() {
-		File dataFile = new File(directory, "data.bin");
+		File dataFile = new File(getDataFolder(), "data.bin");
 		SLAPI.save(DisguiseManager.getInstance().getDisguises(), dataFile);
 	}
 	
@@ -1086,6 +1087,10 @@ public class iDisguise extends JavaPlugin {
 	
 	public boolean enabled() {
 		return enabled;
+	}
+	
+	public static iDisguise getInstance() {
+		return instance;
 	}
 	
 }
