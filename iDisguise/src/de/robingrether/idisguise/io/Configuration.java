@@ -62,9 +62,9 @@ public class Configuration {
 		setDefault(UNDISGUISE_ATTACK, false, "If this option is set to true, a disguised player will be undisguised as soon as he attacks another player.");
 		setDefault(GHOST_DISGUISES, true, "Enable or disable ghost disguises.\nYou should disable this if you use any scoreboard plugin(s).");
 		setDefault(PROHIBITED_PLAYERS, Arrays.asList("player1", "player2"), "You can put the player names, you don't want your players to disguise as, here.\nYou can give admins the 'iDisguise.player.prohibited' permission so they can bypass this prohibition.");
-		setDefault(REPLACE_DEATH_MESSAGES, true, "If this option is enabled, disguised players' death and kill messages are replaced,\nso nobody recognizes they are actual players.\nATTENTION: This might interfere with other plugins!");
-		setDefault(REPLACE_JOIN_MESSAGES, true, "If this option is enabled, disguised players' join and leave messages are replaced,\nso nobody recognizes they are actual players.\nATTENTION: This might interfere with other plugins!");
-		setDefault(MODIFY_PLAYER_LIST, true, "If this option is enabled, disguised players' names don't show up in the player list.\nIf a player is disguised as another player, the name of the other player is shown instead.");
+		setDefault(REPLACE_DEATH_MESSAGES, false, "If this option is enabled, disguised players' death and kill messages are replaced,\nso nobody recognizes they are actual players.\nATTENTION: This might interfere with other plugins!");
+		setDefault(REPLACE_JOIN_MESSAGES, false, "If this option is enabled, disguised players' join and leave messages are replaced,\nso nobody recognizes they are actual players.\nATTENTION: This might interfere with other plugins!");
+		setDefault(MODIFY_PLAYER_LIST, false, "If this option is enabled, disguised players' names don't show up in the player list.\nIf a player is disguised as another player, the name of the other player is shown instead.");
 		setDefault(DISABLE_ITEM_PICK_UP, false, "If this option is enabled, disguised players' cannot pick up items.");
 		setDefault(AUTO_DOWNLOAD_UPDATES, false, "If this option is enabled, an available update is automatically downloaded from dev.bukkit.org.\nThis option is useless if 'check-for-updates' is disabled.");
 	}
