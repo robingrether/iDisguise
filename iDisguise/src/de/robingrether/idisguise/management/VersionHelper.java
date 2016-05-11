@@ -7,7 +7,7 @@ import de.robingrether.util.StringUtil;
 
 public class VersionHelper {
 	
-	private static final String[] versions = {"v1_5_R2", "v1_5_R3", "v1_6_R1", "v1_6_R2", "v1_6_R3", "v1_7_R1", "v1_7_R2", "v1_7_R3", "v1_7_R4", "v1_8_R1", "v1_8_R2", "v1_8_R3", "v1_9_R1"};
+	private static final String[] versions = {"v1_5_R2", "v1_5_R3", "v1_6_R1", "v1_6_R2", "v1_6_R3", "v1_7_R1", "v1_7_R2", "v1_7_R3", "v1_7_R4", "v1_8_R1", "v1_8_R2", "v1_8_R3", "v1_9_R1", "v1_9_R2"};
 	private static boolean initialized = false;
 	private static String versionCode, orgBukkitCraftbukkit = "org.bukkit.craftbukkit", netMinecraftServer = "net.minecraft.server", orgBukkitCraftbukkitVersioned, netMinecraftServerVersioned;
 	private static boolean debug, require1_6, require1_7, require1_8, require1_9, useGameProfiles;
@@ -105,6 +105,7 @@ public class VersionHelper {
 				Sounds.init("sounds/17_18.txt");
 				break;
 			case "v1_9_R1":
+			case "v1_9_R2":
 				Reflection.init("reflection/v1_9_R1.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
 				DisguiseManager.setInstance(new DisguiseManager());
 				PlayerHelper.setInstance(new de.robingrether.idisguise.management.player.PlayerHelperUID18());
