@@ -43,12 +43,10 @@ public class Configuration {
 	private Map<String, Setting> settings = new ConcurrentHashMap<String, Setting>();
 	private iDisguise plugin;
 	private File configurationFile;
-	private File yamlConfigurationFile;
 	
 	public Configuration(iDisguise plugin, File directory) {
 		this.plugin = plugin;
 		configurationFile = new File(directory, "config.txt");
-		yamlConfigurationFile = new File(directory, "Config.yml");
 		setDefault(STORE_DISGUISES, true, "If this option is set to true, all the disguises are saved when the server shuts down,\nso all the players are still disguised after a restart.");
 		setDefault(PROHIBITED_WORLDS, Arrays.asList("prohibited1", "prohibited2"), "You can put the worlds, you don't want your players to disguise in, here.\nYou can give admins the 'iDisguise.everywhere' permission so they can bypass this prohibition.");
 		setDefault(CHECK_FOR_UPDATES, true, "Enable this if you want the plugin to check for an update when the server starts.\nIf an update is available a message will be printed out into console,\nand every player who has the 'iDisguise.update' permission will receive a message.");
@@ -97,14 +95,6 @@ public class Configuration {
 			} catch(Exception e) {
 				plugin.getLogger().log(Level.SEVERE, "An error occured while loading the configuration.", e);
 			}
-		} else if(yamlConfigurationFile.exists()) {
-			YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(yamlConfigurationFile);
-			for(Setting setting : settings.values()) {
-				if(yamlConfiguration.contains(setting.key())) {
-					settings.put(setting.key(), new Setting(setting.key(), yamlConfiguration.get(setting.key()), setting.description()));
-				}
-			}
-			yamlConfigurationFile.delete();
 		}
 	}
 	
