@@ -37,7 +37,7 @@ public enum DisguiseType {
 	MUSHROOM_COW(Type.MOB, AgeableDisguise.class, "EntityMushroomCow", "mushroom_cow", "mushroom-cow", "mushroomcow", "mushroom", "mooshroom"),
 	OCELOT(Type.MOB, OcelotDisguise.class, "EntityOcelot", "ocelot", "cat"),
 	PIG(Type.MOB, PigDisguise.class, "EntityPig", "pig"),
-	PIG_ZOMBIE(Type.MOB, MobDisguise.class, "EntityPigZombie", "pig_zombie", "pig-zombie", "pigzombie", "pigman", "zombie_pigman", "zombie-pigman", "zombiepigman"),
+	PIG_ZOMBIE(Type.MOB, AgeableDisguise.class, "EntityPigZombie", "pig_zombie", "pig-zombie", "pigzombie", "pigman", "zombie_pigman", "zombie-pigman", "zombiepigman"),
 	RABBIT(Type.MOB, RabbitDisguise.class, "EntityRabbit", "rabbit", "bunny"),
 	SHEEP(Type.MOB, SheepDisguise.class, "EntitySheep", "sheep"),
 	SHULKER(Type.MOB, MobDisguise.class, "EntityShulker", "shulker"),
