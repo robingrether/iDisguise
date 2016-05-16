@@ -69,13 +69,14 @@ public class iDisguise extends JavaPlugin {
 	private Metrics metrics;
 	private boolean enabled = false;
 	
+	public iDisguise() { instance = this; }
+	
 	public void onEnable() {
 		if(!VersionHelper.init(false)) {
 			getLogger().log(Level.SEVERE, String.format("%s is not compatible with your server version!", getFullName()));
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
-		instance = this;
 		checkDirectory();
 		listener = new EventListener(this);
 		configuration = new Configuration(this, getDataFolder());
