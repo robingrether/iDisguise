@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -76,13 +75,6 @@ public class PacketHelper {
 					if(mobDisguise instanceof AgeableDisguise && !((AgeableDisguise)disguise).isAdult()) {
 						EntityAgeable_setAge.invoke(entity, -24000);
 					}
-				}
-				Location location = player.getLocation();
-				Entity_setLocation.invoke(entity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-				if(VersionHelper.require1_7()) {
-					Entity_setEntityId.invoke(entity, player.getEntityId());
-				} else {
-					Entity_entityId.setInt(entity, player.getEntityId());
 				}
 				if(mobDisguise instanceof SheepDisguise) {
 					if(EntitySheep.isInstance(entity)) {
@@ -179,6 +171,13 @@ public class PacketHelper {
 				}
 				if(EntityBat.isInstance(entity)) {
 					EntityBat_setAsleep.invoke(entity, false);
+				}
+				Location location = player.getLocation();
+				Entity_setLocation.invoke(entity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+				if(VersionHelper.require1_7()) {
+					Entity_setEntityId.invoke(entity, player.getEntityId());
+				} else {
+					Entity_entityId.setInt(entity, player.getEntityId());
 				}
 				if(attributes[0]) {
 					EntityInsentient_setCustomName.invoke(entity, player.getName());
