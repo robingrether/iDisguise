@@ -92,7 +92,7 @@ public class StringUtil {
 	 * @return the capitalized string
 	 */
 	public static String capitalize(String string) {
-		String[] words = string.split(" ");
+		String[] words = string.split(" ", -1);
 		for(int i = 0; i < words.length; i++) {
 			if(words[i].length() > 0) {
 				words[i] = Character.toString(words[i].charAt(0)).toUpperCase(Locale.ENGLISH) + words[i].substring(1);
@@ -109,7 +109,7 @@ public class StringUtil {
 	 * @return the capitalized string
 	 */
 	public static String capitalizeFully(String string) {
-		String[] words = string.split(" ");
+		String[] words = string.split(" ", -1);
 		for(int i = 0; i < words.length; i++) {
 			if(words[i].length() > 0) {
 				words[i] = Character.toString(words[i].charAt(0)).toUpperCase(Locale.ENGLISH) + words[i].substring(1).toLowerCase(Locale.ENGLISH);
