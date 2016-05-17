@@ -142,7 +142,7 @@ public enum DisguiseType {
 	 * @return the new instance or <code>null</code>, if the instantiation failed
 	 */
 	public Disguise newInstance() {
-		if(isAvailable()) {
+		if(!isAvailable()) {
 			throw new OutdatedServerException();
 		}
 		try {
