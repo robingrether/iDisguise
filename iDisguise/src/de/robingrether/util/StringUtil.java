@@ -1,5 +1,7 @@
 package de.robingrether.util;
 
+import java.util.Locale;
+
 /**
  * Some utility methods for strings.
  * 
@@ -80,6 +82,40 @@ public class StringUtil {
 			builder.append(strings[i]);
 		}
 		return builder.toString();
+	}
+	
+	/**
+	 * Capitalizes the first letter of every word of the given string.<br>
+	 * e.g. "This is a STRING!" -> "This Is A STRING!"
+	 * 
+	 * @param string string to capitalize
+	 * @return the capitalized string
+	 */
+	public static String capitalize(String string) {
+		String[] words = string.split(" ");
+		for(int i = 0; i < words.length; i++) {
+			if(words[i].length() > 0) {
+				words[i] = Character.toString(words[i].charAt(0)).toUpperCase(Locale.ENGLISH) + words[i].substring(1);
+			}
+		}
+		return join(' ', words);
+	}
+	
+	/**
+	 * Capitalizes the first letter of every word of the given string and decapitalizes all other letters.<br>
+	 * e.g. "This is a STRING!" -> "This Is A String!"
+	 * 
+	 * @param string string to capitalize
+	 * @return the capitalized string
+	 */
+	public static String capitalizeFully(String string) {
+		String[] words = string.split(" ");
+		for(int i = 0; i < words.length; i++) {
+			if(words[i].length() > 0) {
+				words[i] = Character.toString(words[i].charAt(0)).toUpperCase(Locale.ENGLISH) + words[i].substring(1).toLowerCase(Locale.ENGLISH);
+			}
+		}
+		return join(' ', words);
 	}
 	
 }
