@@ -54,11 +54,11 @@ public class Configuration {
 	
 	public void loadData() {
 		File configurationFile = new File(plugin.getDataFolder(), "config.yml");
-		FileConfiguration fileConfiguration = plugin.getConfig();
 		if(!configurationFile.exists()) {
 			plugin.saveDefaultConfig();
 		}
 		plugin.reloadConfig();
+		FileConfiguration fileConfiguration = plugin.getConfig();
 		try {
 			for(Field pathField : getClass().getDeclaredFields()) {
 				if(pathField.getName().endsWith("_PATH")) {
