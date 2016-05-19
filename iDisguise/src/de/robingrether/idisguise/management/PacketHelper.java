@@ -48,11 +48,13 @@ public class PacketHelper {
 		PacketHelper.instance = instance;
 	}
 	
-	private final boolean[] attributes = new boolean[2];
+	private final boolean[] attributes = new boolean[3];
 	/*
-	 * attributes[0] -> always show names on mob and object disguises
+	 * attributes[0] -> show original player name for mob disguise (1.5+) and object disguise (1.8+)
 	 * 
 	 * attributes[1] -> modify player list (tab key list)
+	 * 
+	 * attributes[2] -> always show original player name
 	 */
 	
 	public Object[] getPackets(Player player) {
@@ -181,7 +183,9 @@ public class PacketHelper {
 				}
 				if(attributes[0]) {
 					EntityInsentient_setCustomName.invoke(entity, player.getName());
-					EntityInsentient_setCustomNameVisible.invoke(entity, true);
+					if(attributes[2]) {
+						EntityInsentient_setCustomNameVisible.invoke(entity, true);
+					}
 				}
 				packets.add(PacketPlayOutSpawnEntityLiving_new.newInstance(entity));
 			} else if(disguise instanceof PlayerDisguise) {
@@ -202,6 +206,14 @@ public class PacketHelper {
 					Entity_setEntityId.invoke(entity, player.getEntityId());
 				} else {
 					Entity_entityId.setInt(entity, player.getEntityId());
+				}
+				if(VersionHelper.require1_8()) {
+					if(attributes[0]) {
+						EntityInsentient_setCustomName.invoke(entity, player.getName());
+						if(attributes[2]) {
+							EntityInsentient_setCustomNameVisible.invoke(entity, true);
+						}
+					}
 				}
 				if(EntityFallingBlock.isInstance(entity)) {
 					if(VersionHelper.require1_8()) {

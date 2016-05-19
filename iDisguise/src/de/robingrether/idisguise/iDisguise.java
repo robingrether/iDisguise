@@ -83,6 +83,7 @@ public class iDisguise extends JavaPlugin {
 		configuration.loadData();
 		PacketHelper.getInstance().setAttribute(0, configuration.NAME_TAG_SHOWN);
 		PacketHelper.getInstance().setAttribute(1, configuration.MODIFY_PLAYER_LIST_ENTRY);
+		PacketHelper.getInstance().setAttribute(2, configuration.NAME_TAG_ALWAYS_VISIBLE);
 		Sounds.setEnabled(configuration.REPLACE_SOUND_EFFECTS);
 		try {
 			metrics = new Metrics(this);
