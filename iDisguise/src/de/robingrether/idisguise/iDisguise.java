@@ -118,6 +118,11 @@ public class iDisguise extends JavaPlugin {
 					return configuration.ENABLE_GHOST_DISGUISE ? 1 : 0;
 				}
 			});
+			graphFeatures.addPlotter(new Plotter("automatic updates") {
+				public int getValue() {
+					return configuration.UPDATE_DOWNLOAD ? 1 : 0;
+				}
+			});
 			metrics.start();
 		} catch(Exception e) {
 		}
