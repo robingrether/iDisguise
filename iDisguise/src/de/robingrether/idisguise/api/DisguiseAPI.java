@@ -17,7 +17,9 @@ import de.robingrether.idisguise.management.Sounds;
 public interface DisguiseAPI {
 	
 	/**
-	 * Disguises a player.
+	 * Disguises a player.<br>
+	 * <br>
+	 * <strong>This method should only be accessed synchronously.</strong>
 	 * 
 	 * @deprecated replaced by <code>disguise(OfflinePlayer, Disguise)</code>
 	 * @since 3.0.1
@@ -28,7 +30,9 @@ public interface DisguiseAPI {
 	public void disguiseToAll(Player player, Disguise disguise);
 	
 	/**
-	 * Undisguises a player.
+	 * Undisguises a player.<br>
+	 * <br>
+	 * <strong>This method should only be accessed synchronously.</strong>
 	 * 
 	 * @deprecated replaced by <code>undisguise(OfflinePlayer)</code>
 	 * @since 2.1.3
@@ -40,7 +44,9 @@ public interface DisguiseAPI {
 	/**
 	 * Disguise a player (may be offline).<br>
 	 * Calling <code>disguise(player, disguise)</code> is equivalent to calling <code>disguise(player, disguise, true)</code>.<br>
-	 * This method always fires a {@linkplain DisguiseEvent} which may be cancelled by other plugins.
+	 * This method always fires a {@linkplain DisguiseEvent} which may be cancelled by other plugins.<br>
+	 * <br>
+	 * <strong>This method should only be accessed synchronously.</strong>
 	 * 
 	 * @since 5.1.1
 	 * @param player the player (or offline player) to disguise
@@ -50,7 +56,9 @@ public interface DisguiseAPI {
 	public boolean disguise(OfflinePlayer player, Disguise disguise);
 	
 	/**
-	 * Disguise a player (may be offline).
+	 * Disguise a player (may be offline).<br>
+	 * <br>
+	 * <strong>This method should only be accessed synchronously.</strong>
 	 * 
 	 * @since 5.1.1
 	 * @param player the player (or offline player) to disguise
@@ -63,7 +71,9 @@ public interface DisguiseAPI {
 	/**
 	 * Undisguise a player (may be offline).<br>
 	 * Calling <code>undisguise(player)</code> is equivalent to calling <code>undisguise(player, true)</code>.<br>
-	 * This method always fires an {@linkplain UndisguiseEvent} which may be cancelled by other plugins.
+	 * This method always fires an {@linkplain UndisguiseEvent} which may be cancelled by other plugins.<br>
+	 * <br>
+	 * <strong>This method should only be accessed synchronously.</strong>
 	 * 
 	 * @since 5.1.1
 	 * @param player the player (or offline player) to undisguise
@@ -72,7 +82,9 @@ public interface DisguiseAPI {
 	public boolean undisguise(OfflinePlayer player);
 	
 	/**
-	 * Undisguise a player (may be offline).
+	 * Undisguise a player (may be offline).<br>
+	 * <br>
+	 * <strong>This method should only be accessed synchronously.</strong>
 	 * 
 	 * @since 5.1.1
 	 * @param player the player (or offline player) to undisguise
@@ -82,7 +94,9 @@ public interface DisguiseAPI {
 	public boolean undisguise(OfflinePlayer player, boolean fireEvent);
 	
 	/**
-	 * Undisguise everyone.
+	 * Undisguise everyone.<br>
+	 * <br>
+	 * <strong>This method should only be accessed synchronously.</strong>
 	 * 
 	 * @since 2.1.3
 	 */
