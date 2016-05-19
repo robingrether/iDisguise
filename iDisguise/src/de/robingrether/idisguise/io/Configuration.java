@@ -54,8 +54,12 @@ public class Configuration {
 	
 	public void loadData() {
 		File configurationFile = new File(plugin.getDataFolder(), "config.yml");
+		File oldConfigurationFile = new File(plugin.getDataFolder(), "config.txt");
 		if(!configurationFile.exists()) {
 			plugin.saveDefaultConfig();
+		}
+		if(oldConfigurationFile.exists()) {
+			plugin.getLogger().log(Level.WARNING, "The config file is now called config.yml. Unfortunately the values cannot be imported automatically from the old file, so you might have to do this on your own. For more information visit http://dev.bukkit.org/bukkit-plugins/idisguise/pages/configuration/");
 		}
 		plugin.reloadConfig();
 		FileConfiguration fileConfiguration = plugin.getConfig();
