@@ -36,6 +36,7 @@ import de.robingrether.idisguise.disguise.SheepDisguise;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.ObjectDisguise;
 import de.robingrether.idisguise.disguise.OcelotDisguise;
+import de.robingrether.idisguise.disguise.OutdatedServerException;
 import de.robingrether.idisguise.disguise.PigDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.disguise.RabbitDisguise;
@@ -381,13 +382,13 @@ public class iDisguise extends JavaPlugin {
 				for(String argument : args) {
 					DisguiseType type = DisguiseType.Matcher.match(argument.toLowerCase(Locale.ENGLISH));
 					if(type != null) {
-						disguise = type.newInstance();
-						if(disguise == null) {
-							sender.sendMessage(ChatColor.RED + "An error occured. Maybe your Minecraft version does not support the chosen disguise type.");
-							return true;
-						} else {
+						try {
+							disguise = type.newInstance();
 							changed = true;
 							break;
+						} catch(OutdatedServerException e) {
+							sender.sendMessage(ChatColor.RED + "Your Minecraft version does not support the chosen disguise type.");
+							return true;
 						}
 					}
 				}
@@ -682,13 +683,13 @@ public class iDisguise extends JavaPlugin {
 				for(String argument : Arrays.copyOfRange(args, 1, args.length)) {
 					DisguiseType type = DisguiseType.Matcher.match(argument.toLowerCase(Locale.ENGLISH));
 					if(type != null) {
-						disguise = type.newInstance();
-						if(disguise == null) {
-							sender.sendMessage(ChatColor.RED + "An error occured. Maybe your Minecraft version does not support the chosen disguise type.");
-							return true;
-						} else {
+						try {
+							disguise = type.newInstance();
 							changed = true;
 							break;
+						} catch(OutdatedServerException e) {
+							sender.sendMessage(ChatColor.RED + "Your Minecraft version does not support the chosen disguise type.");
+							return true;
 						}
 					}
 				}
