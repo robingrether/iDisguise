@@ -118,4 +118,15 @@ public class StringUtil {
 		return join(' ', words);
 	}
 	
+	/**
+	 * Indicates whether a string starts with a given prefix ignoring the case.
+	 * 
+	 * @param string string to test
+	 * @param prefix prefix to look for
+	 * @return <code>true</code>, if and only if the given string starts with the given prefix (ignoring case)
+	 */
+	public static boolean startsWithIgnoreCase(String string, String prefix) {
+		return string.toLowerCase(Locale.ENGLISH).startsWith(prefix.toLowerCase(Locale.ENGLISH));
+	}
+	
 }
