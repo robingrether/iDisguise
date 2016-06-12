@@ -35,10 +35,6 @@ disguise:
    # Show name tags with their original name for players disguised as living mobs
    name-tag-shown: false
    
-   # Always show name tags instead of just when you directly look at a disguised player
-   # Different Minecraft clients and versions display name tags differently
-   name-tag-always-visible: false
-   
    # Do disguised players sound like actual mobs
    # e.g. a player disguised as a cow moos when he is hurt
    replace-sound-effects: true

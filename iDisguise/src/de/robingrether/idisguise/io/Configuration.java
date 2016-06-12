@@ -21,7 +21,6 @@ public class Configuration {
 	public static final String MODIFY_MESSAGE_LEAVE_PATH = "disguise.modify-message-leave";
 	public static final String MODIFY_PLAYER_LIST_ENTRY_PATH = "disguise.modify-player-list-entry";
 	public static final String NAME_TAG_SHOWN_PATH = "disguise.name-tag-shown";
-	public static final String NAME_TAG_ALWAYS_VISIBLE_PATH ="disguise.name-tag-always-visible";
 	public static final String REPLACE_SOUND_EFFECTS_PATH = "disguise.replace-sound-effects";
 	public static final String RESTRICTED_PLAYER_NAMES_PATH = "commands.restricted-player-names";
 	public static final String RESTRICTED_WORLDS_PATH = "commands.restricted-worlds";
@@ -38,7 +37,6 @@ public class Configuration {
 	public boolean MODIFY_MESSAGE_LEAVE = false;
 	public boolean MODIFY_PLAYER_LIST_ENTRY = false;
 	public boolean NAME_TAG_SHOWN = false;
-	public boolean NAME_TAG_ALWAYS_VISIBLE = false;
 	public boolean REPLACE_SOUND_EFFECTS = true;
 	public List<String> RESTRICTED_PLAYER_NAMES = Arrays.asList("player1", "player2");
 	public List<String> RESTRICTED_WORLDS = Arrays.asList("world1", "world2");
