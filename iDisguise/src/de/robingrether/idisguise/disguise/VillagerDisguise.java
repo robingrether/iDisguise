@@ -4,6 +4,8 @@ import java.util.Locale;
 
 import org.bukkit.entity.Villager.Profession;
 
+import de.robingrether.util.StringUtil;
+
 /**
  * Represents a disguise as a villager.
  * 
@@ -81,7 +83,9 @@ public class VillagerDisguise extends AgeableDisguise {
 	
 	static {
 		for(Profession profession : Profession.values()) {
-			Subtypes.registerSubtype(VillagerDisguise.class, "setProfession", profession, profession.name().toLowerCase(Locale.ENGLISH));
+			if(!StringUtil.equals(profession.name(), "NORMAL", "HUSK")) {
+				Subtypes.registerSubtype(VillagerDisguise.class, "setProfession", profession, profession.name().toLowerCase(Locale.ENGLISH));
+			}
 		}
 	}
 	

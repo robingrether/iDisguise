@@ -68,6 +68,7 @@ permissions:
          iDisguise.mob.pig: true
          iDisguise.mob.pig.saddled: true
          iDisguise.mob.pig_zombie: true
+         iDisguise.mob.polar_bear: true
          iDisguise.mob.rabbit: true
          iDisguise.mob.rabbit.type.*: true
          iDisguise.mob.sheep: true
@@ -177,6 +178,8 @@ permissions:
    iDisguise.mob.pig.saddled:
       default: false
    iDisguise.mob.pig_zombie:
+      default: false
+   iDisguise.mob.polar_bear:
       default: false
    iDisguise.mob.rabbit:
       default: false

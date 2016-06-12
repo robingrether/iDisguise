@@ -667,6 +667,8 @@ public class iDisguise extends JavaPlugin {
 				return sender.hasPermission("iDisguise.mob.pig_zombie") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case PLAYER:
 				return (sender.hasPermission("iDisguise.player.name.*") || sender.hasPermission("iDisguise.player.name." + ((PlayerDisguise)disguise).getSkinName().toLowerCase(Locale.ENGLISH))) && (isPlayerDisguisePermitted(((PlayerDisguise)disguise).getSkinName().toLowerCase(Locale.ENGLISH)) || sender.hasPermission("iDisguise.player.prohibited"));
+			case POLAR_BEAR:
+				return sender.hasPermission("iDisguise.mob.polar_bear") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case RABBIT:
 				return sender.hasPermission("iDisguise.mob.rabbit") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && sender.hasPermission("iDisguise.mob.rabbit.type." + ((RabbitDisguise)disguise).getRabbitType().name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer"));
 			case SHEEP:

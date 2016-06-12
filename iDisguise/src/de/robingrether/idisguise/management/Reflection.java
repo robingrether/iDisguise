@@ -271,6 +271,12 @@ public class Reflection {
 	public static Class<?> PacketPlayOutCollect;
 	public static Field PacketPlayOutCollect_entityId;
 	
+	public static Class<?> EnumSkeletonType;
+	public static Method EnumSkeletonType_fromIndex;
+	
+	public static Class<?> EnumZombieType;
+	public static Method EnumZombieType_fromIndex;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");

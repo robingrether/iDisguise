@@ -52,25 +52,26 @@ public class Sounds {
 	
 	public static String replaceSoundFromPlayer(String sound, MobDisguise disguise) {
 		Sounds sounds = getSoundsForEntity(disguise.getType());
-		String replacement = null;
-		if(sound.equals(soundsToReplace[0])) {
-			replacement = sounds.death(disguise);
-		} else if(sound.equals(soundsToReplace[1])) {
-			replacement = sounds.fallBig(disguise);
-		} else if(sound.equals(soundsToReplace[2])) {
-			replacement = sounds.fallSmall(disguise);
-		} else if(sound.equals(soundsToReplace[3])) {
-			replacement = sounds.hit(disguise);
-		} else if(sound.equals(soundsToReplace[4])) {
-			replacement = sounds.splash(disguise);
-		} else if(sound.equals(soundsToReplace[5])) {
-			replacement = sounds.swim(disguise);
+		if(sounds != null) {	
+			String replacement = null;
+			if(sound.equals(soundsToReplace[0])) {
+				replacement = sounds.death(disguise);
+			} else if(sound.equals(soundsToReplace[1])) {
+				replacement = sounds.fallBig(disguise);
+			} else if(sound.equals(soundsToReplace[2])) {
+				replacement = sounds.fallSmall(disguise);
+			} else if(sound.equals(soundsToReplace[3])) {
+				replacement = sounds.hit(disguise);
+			} else if(sound.equals(soundsToReplace[4])) {
+				replacement = sounds.splash(disguise);
+			} else if(sound.equals(soundsToReplace[5])) {
+				replacement = sounds.swim(disguise);
+			}
+			if(replacement != null && !replacement.isEmpty()) {
+				return replacement;
+			}
 		}
-		if(replacement != null && !replacement.isEmpty()) {
-			return replacement;
-		} else {
-			return null;
-		}
+		return null;
 	}
 	
 	private static final Pattern soundPattern = Pattern.compile("([A-Z_]+)->(.+)");

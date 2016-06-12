@@ -38,6 +38,8 @@ PIG->entity.pig.death,entity.generic.big_fall,entity.generic.small_fall,entity.p
 
 PIG_ZOMBIE->entity.zombie_pig.death,entity.hostile.big_fall,entity.hostile.small_fall,entity.zombie_pig.hurt,entity.hostile.splash,entity.hostile.swim
 
+POLAR_BEAR->entity.polar_bear.death,entity.generic.big_fall,entity.generic.small_fall,entity.polar_bear.hurt,entity.generic.splash,entity.generic.swim
+
 RABBIT->entity.rabbit.death,entity.generic.big_fall,entity.generic.small_fall,entity.rabbit.hurt,entity.generic.splash,entity.generic.swim
 
 SHEEP->entity.sheep.death,entity.generic.big_fall,entity.generic.small_fall,entity.sheep.hurt,entity.generic.splash,entity.generic.swim

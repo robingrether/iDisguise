@@ -1,6 +1,5 @@
 package de.robingrether.idisguise.management.channel;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import de.robingrether.idisguise.iDisguise;

@@ -153,18 +153,24 @@ public class PacketHelper {
 					}
 				} else if(mobDisguise instanceof SkeletonDisguise) {
 					if(EntitySkeleton.isInstance(entity)) {
-						EntitySkeleton_setSkeletonType.invoke(entity, ((SkeletonDisguise)mobDisguise).getSkeletonType().getId());
+						if(VersionHelper.require1_10()) {
+							EntitySkeleton_setSkeletonType.invoke(entity, EnumSkeletonType_fromIndex.invoke(null, ((SkeletonDisguise)mobDisguise).getSkeletonType().ordinal()));
+						} else {	
+							EntitySkeleton_setSkeletonType.invoke(entity, ((SkeletonDisguise)mobDisguise).getSkeletonType().ordinal());
+						}
 					}
 				} else if(mobDisguise instanceof VillagerDisguise) {
 					if(EntityVillager.isInstance(entity)) {
-						EntityVillager_setProfession.invoke(entity, ((VillagerDisguise)mobDisguise).getProfession().getId());
+						EntityVillager_setProfession.invoke(entity, VersionHelper.require1_10() ? ((VillagerDisguise)mobDisguise).getProfession().ordinal() - 1 : ((VillagerDisguise)mobDisguise).getProfession().ordinal());
 					}
 				} else if(mobDisguise instanceof ZombieDisguise) {
 					if(EntityZombie.isInstance(entity)) {
 						ZombieDisguise zombieDisguise = (ZombieDisguise)mobDisguise;
 						EntityZombie_setBaby.invoke(entity, !zombieDisguise.isAdult());
-						if(VersionHelper.require1_9()) {
-							EntityZombie_setVillagerType.invoke(entity, zombieDisguise.isVillager() ? 0 : -1);
+						if(VersionHelper.require1_10()) {
+							EntityZombie_setVillagerType.invoke(entity, EnumZombieType_fromIndex.invoke(null, zombieDisguise.getVillagerType().ordinal()));
+						} else if(VersionHelper.require1_9()) {
+							EntityZombie_setVillagerType.invoke(entity, zombieDisguise.getVillagerType() != null ? zombieDisguise.getVillagerType().ordinal() : -1);
 						} else {
 							EntityZombie_setVillager.invoke(entity, zombieDisguise.isVillager());
 						}
