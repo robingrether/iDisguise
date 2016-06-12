@@ -83,45 +83,13 @@ public class RabbitDisguise extends AgeableDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean applySubtype(String argument) {
-		if(super.applySubtype(argument)) {
-			return true;
-		} else {
-			switch(argument.replace('-', '_').toLowerCase(Locale.ENGLISH)) {
-				case "black":
-					setRabbitType(RabbitType.BLACK);
-					return true;
-				case "blackwhite":
-				case "black_white":
-				case "blackandwhite":
-				case "black_and_white":
-					setRabbitType(RabbitType.BLACK_AND_WHITE);
-					return true;
-				case "brown":
-					setRabbitType(RabbitType.BROWN);
-					return true;
-				case "gold":
-					setRabbitType(RabbitType.GOLD);
-					return true;
-				case "saltpepper":
-				case "salt_pepper":
-				case "saltandpepper":
-				case "salt_and_pepper":
-					setRabbitType(RabbitType.SALT_AND_PEPPER);
-					return true;
-				case "killer":
-				case "killer_bunny":
-				case "killerbunny":
-				case "thekillerbunny":
-				case "the_killer_bunny":
-					setRabbitType(RabbitType.THE_KILLER_BUNNY);
-					return true;
-				case "white":
-					setRabbitType(RabbitType.WHITE);
-					return true;
-				default:
-					return false;
-			}
+	public String toString() {
+		return super.toString() + "; " + rabbitType.name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer");
+	}
+	
+	static {
+		for(RabbitType rabbitType : RabbitType.values()) {
+			Subtypes.registerSubtype(RabbitDisguise.class, "setRabbitType", rabbitType, rabbitType.name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer"));
 		}
 	}
 	

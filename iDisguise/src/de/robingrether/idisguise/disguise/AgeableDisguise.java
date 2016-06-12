@@ -1,7 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import java.util.Locale;
-
 /**
  * Represents a disguise that can be both an adult or a baby.
  * 
@@ -74,21 +72,13 @@ public class AgeableDisguise extends MobDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean applySubtype(String argument) {
-		switch(argument.toLowerCase(Locale.ENGLISH)) {
-			case "adult":
-			case "senior":
-				setAdult(true);
-				return true;
-			case "baby":
-			case "child":
-			case "kid":
-			case "junior":
-				setAdult(false);
-				return true;
-			default:
-				return false;
-		}
+	public String toString() {
+		return super.toString() + "; " + (adult ? "adult" : "baby");
+	}
+	
+	static {
+		Subtypes.registerSubtype(AgeableDisguise.class, "setAdult", true, "adult");
+		Subtypes.registerSubtype(AgeableDisguise.class, "setAdult", false, "baby");
 	}
 	
 }

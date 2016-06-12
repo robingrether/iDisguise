@@ -52,13 +52,6 @@ public class ObjectDisguise extends Disguise {
 	}
 	
 	/**
-	 * {@inheritDoc}
-	 */
-	public boolean applySubtype(String argument) {
-		return false;
-	}
-	
-	/**
 	 * Gets the mob type id for a given {@linkplain DisguiseType}.<br>
 	 * This id is used in the client/server communication.
 	 * 

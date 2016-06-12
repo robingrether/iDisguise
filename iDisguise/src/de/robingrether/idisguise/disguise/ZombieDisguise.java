@@ -1,7 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import java.util.Locale;
-
 /**
  * Represents a disguise as a zombie.
  * 
@@ -83,21 +81,13 @@ public class ZombieDisguise extends AgeableDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean applySubtype(String argument) {
-		if(super.applySubtype(argument)) {
-			return true;
-		} else {
-			switch(argument.toLowerCase(Locale.ENGLISH)) {
-				case "normal":
-					setVillager(false);
-					return true;
-				case "infected":
-					setVillager(true);
-					return true;
-				default:
-					return false;
-			}
-		}
+	public String toString() {
+		return super.toString() + "; " + (isVillager ? "infected" : "normal");
+	}
+	
+	static {
+		Subtypes.registerSubtype(ZombieDisguise.class, "setVillager", true, "infected");
+		Subtypes.registerSubtype(ZombieDisguise.class, "setVillager", false, "normal");
 	}
 	
 }

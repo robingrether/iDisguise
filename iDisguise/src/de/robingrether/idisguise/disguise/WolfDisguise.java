@@ -121,41 +121,18 @@ public class WolfDisguise extends AgeableDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean applySubtype(String argument) {
-		if(super.applySubtype(argument)) {
-			return true;
-		} else {
-			try {
-				DyeColor collarColor = DyeColor.valueOf(argument.replace('-', '_').toUpperCase(Locale.ENGLISH));
-				setAngry(false);
-				setTamed(true);
-				setCollarColor(collarColor);
-				return true;
-			} catch(IllegalArgumentException e) {
-			}
-			switch(argument.replace('-', '_').toLowerCase(Locale.ENGLISH)) {
-				case "tamed":
-				case "tame":
-					setTamed(true);
-				case "not_angry":
-				case "notangry":
-				case "not_aggressive":
-				case "notaggressive":
-					setAngry(false);
-					return true;
-				case "angry":
-				case "aggressive":
-					setAngry(true);
-				case "not_tamed":
-				case "nottamed":
-				case "not_tame":
-				case "nottame":
-					setTamed(false);
-					return true;
-				default:
-					return false;
-			}
+	public String toString() {
+		return super.toString() + "; " + collarColor.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; " + (tamed ? "tamed" : "not-tamed") + "; " + (angry ? "angry" : "not-angry");
+	}
+	
+	static {
+		for(DyeColor collarColor : DyeColor.values()) {
+			Subtypes.registerSubtype(WolfDisguise.class, "setCollarColor", collarColor, collarColor.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
+		Subtypes.registerSubtype(WolfDisguise.class, "setTamed", true, "tamed");
+		Subtypes.registerSubtype(WolfDisguise.class, "setTamed", false, "not-tamed");
+		Subtypes.registerSubtype(WolfDisguise.class, "setAngry", true, "angry");
+		Subtypes.registerSubtype(WolfDisguise.class, "setAngry", false, "not-angry");
 	}
 	
 }

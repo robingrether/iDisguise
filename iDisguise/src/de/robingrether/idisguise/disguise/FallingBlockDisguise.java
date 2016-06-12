@@ -118,25 +118,19 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean applySubtype(String argument) {
-		try {
-			Material material = Material.valueOf(argument.replace('-', '_').toUpperCase(Locale.ENGLISH));
+	public String toString() {
+		return super.toString() + "; " + material.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; " + data;
+	}
+	
+	static {
+		for(Material material : Material.values()) {
 			if(material.isBlock()) {
-				setMaterial(material);
-				setData(0);
-				return true;
+				Subtypes.registerSubtype(FallingBlockDisguise.class, "setMaterial", material, material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 			}
-		} catch(IllegalArgumentException e) {
 		}
-		try {
-			Short data = Short.parseShort(argument);
-			if(data >= 0 && data < 256) {
-				setData(data);
-				return true;
-			}
-		} catch(NumberFormatException e) {
+		for(int i = 0; i < 256; i++) {
+			Subtypes.registerSubtype(FallingBlockDisguise.class, "setData", i, Integer.toString(i));
 		}
-		return false;
 	}
 	
 }

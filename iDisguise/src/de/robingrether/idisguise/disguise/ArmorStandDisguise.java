@@ -1,7 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import java.util.Locale;
-
 /**
  * Represents a disguise as an armor stand.
  * 
@@ -70,26 +68,13 @@ public class ArmorStandDisguise extends ObjectDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean applySubtype(String argument) {
-			switch(argument.replace('-', '_').toLowerCase(Locale.ENGLISH)) {
-				case "arms":
-				case "show_arms":
-				case "showarms":
-				case "has_arms":
-				case "hasarms":
-				case "with_arms":
-				case "witharms":
-					setShowArms(true);
-					return true;
-				case "no_arms":
-				case "noarms":
-				case "hide_arms":
-				case "hidearms":
-					setShowArms(false);
-					return true;
-				default:
-					return false;
-			}
+	public String toString() {
+		return super.toString() + "; " + (showArms ? "show-arms" : "hide-arms");
+	}
+	
+	static {
+		Subtypes.registerSubtype(ArmorStandDisguise.class, "setShowArms", true, "show-arms");
+		Subtypes.registerSubtype(ArmorStandDisguise.class, "setShowArms", false, "hide-arms");
 	}
 	
 }

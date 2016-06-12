@@ -1,7 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import java.util.Locale;
-
 /**
  * Represents a disguise as a sized mob (e.g. slime, magma slime).
  * 
@@ -74,31 +72,17 @@ public class SizedDisguise extends MobDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean applySubtype(String argument) {
-		switch(argument.toLowerCase(Locale.ENGLISH)) {
-			case "tiny":
-			case "small":
-				setSize(1);
-				return true;
-			case "normal":
-			case "medium":
-				setSize(2);
-				return true;
-			case "big":
-			case "tall":
-			case "massive":
-				setSize(4);
-				return true;
+	public String toString() {
+		return super.toString() + "; " + size + (size == 1 ? " (tiny)" : size == 2 ? " (normal)" : size == 4 ? " (big)" : "");
+	}
+	
+	static {
+		Subtypes.registerSubtype(SizedDisguise.class, "setSize", 1, "tiny");
+		Subtypes.registerSubtype(SizedDisguise.class, "setSize", 2, "normal");
+		Subtypes.registerSubtype(SizedDisguise.class, "setSize", 4, "big");
+		for(int i = 1; i <= 100; i++) {
+			Subtypes.registerSubtype(SizedDisguise.class, "setSize", i, Integer.toString(i));
 		}
-		try {
-			int size = Integer.parseInt(argument);
-			if(size <= 100 && size > 0) {
-				setSize(size);
-				return true;
-			}
-		} catch(NumberFormatException e) {
-		}
-		return false;
 	}
 	
 }

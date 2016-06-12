@@ -1,7 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import java.util.Locale;
-
 /**
  * Represents a disguise as a creeper.
  * 
@@ -72,22 +70,13 @@ public class CreeperDisguise extends MobDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean applySubtype(String argument) {
-		switch(argument.replace('-', '_').toLowerCase(Locale.ENGLISH)) {
-			case "powered":
-			case "charged":
-				setPowered(true);
-				return true;
-			case "normal":
-			case "not_powered":
-			case "notpowered":
-			case "not_charged":
-			case "notcharged":
-				setPowered(false);
-				return true;
-			default:
-				return false;
-		}
+	public String toString() {
+		return super.toString() + "; " + (powered ? "powered" : "not-powered");
+	}
+	
+	static {
+		Subtypes.registerSubtype(CreeperDisguise.class, "setPowered", true, "powered");
+		Subtypes.registerSubtype(CreeperDisguise.class, "setPowered", false, "not-powered");
 	}
 	
 }

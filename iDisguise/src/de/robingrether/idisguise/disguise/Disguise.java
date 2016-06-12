@@ -49,12 +49,13 @@ public abstract class Disguise implements Serializable, Cloneable {
 	}
 	
 	/**
-	 * Applies subtype updates based on command arguments.
+	 * Returns a string representation of the object.
 	 * 
-	 * @since 5.1.1
-	 * @param argument the command argument
-	 * @return <code>true</code>, if an update has been applied, <code>false</code> otherwise
+	 * @since 5.3.1
+	 * @return a string representation of the object
 	 */
-	public abstract boolean applySubtype(String argument);
+	public String toString() {
+		return type.toString();
+	}
 	
 }

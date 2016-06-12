@@ -75,26 +75,13 @@ public class OcelotDisguise extends AgeableDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean applySubtype(String argument) {
-		if(super.applySubtype(argument)) {
-			return true;
-		} else {
-			switch(argument.toLowerCase(Locale.ENGLISH)) {
-				case "black":
-					setCatType(Type.BLACK_CAT);
-					return true;
-				case "red":
-					setCatType(Type.RED_CAT);
-					return true;
-				case "siamese":
-					setCatType(Type.SIAMESE_CAT);
-					return true;
-				case "wild":
-					setCatType(Type.WILD_OCELOT);
-					return true;
-				default:
-					return false;
-			}
+	public String toString() {
+		return super.toString() + "; " + catType.name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", "");
+	}
+	
+	static {
+		for(Type catType : Type.values()) {
+			Subtypes.registerSubtype(OcelotDisguise.class, "setCatType", catType, catType.name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", ""));
 		}
 	}
 	

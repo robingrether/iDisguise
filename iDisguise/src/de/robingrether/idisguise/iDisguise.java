@@ -1,9 +1,12 @@
 package de.robingrether.idisguise;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
@@ -19,22 +22,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import de.robingrether.idisguise.api.DisguiseAPI;
 import de.robingrether.idisguise.api.DisguiseEvent;
+import de.robingrether.idisguise.api.OfflinePlayerDisguiseEvent;
+import de.robingrether.idisguise.api.OfflinePlayerUndisguiseEvent;
 import de.robingrether.idisguise.api.UndisguiseEvent;
 import de.robingrether.idisguise.disguise.AgeableDisguise;
-import de.robingrether.idisguise.disguise.ArmorStandDisguise;
 import de.robingrether.idisguise.disguise.CreeperDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.DisguiseType.Type;
 import de.robingrether.idisguise.disguise.EndermanDisguise;
-import de.robingrether.idisguise.disguise.FallingBlockDisguise;
 import de.robingrether.idisguise.disguise.GuardianDisguise;
 import de.robingrether.idisguise.disguise.HorseDisguise;
-import de.robingrether.idisguise.disguise.ItemDisguise;
-import de.robingrether.idisguise.disguise.MinecartDisguise;
 import de.robingrether.idisguise.disguise.SheepDisguise;
-import de.robingrether.idisguise.disguise.MobDisguise;
-import de.robingrether.idisguise.disguise.ObjectDisguise;
 import de.robingrether.idisguise.disguise.OcelotDisguise;
 import de.robingrether.idisguise.disguise.OutdatedServerException;
 import de.robingrether.idisguise.disguise.PigDisguise;
@@ -42,10 +41,12 @@ import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.disguise.RabbitDisguise;
 import de.robingrether.idisguise.disguise.SizedDisguise;
 import de.robingrether.idisguise.disguise.SkeletonDisguise;
+import de.robingrether.idisguise.disguise.Subtypes;
 import de.robingrether.idisguise.disguise.VillagerDisguise;
 import de.robingrether.idisguise.disguise.WolfDisguise;
 import de.robingrether.idisguise.disguise.ZombieDisguise;
 import de.robingrether.idisguise.io.Configuration;
+import de.robingrether.idisguise.io.Language;
 import de.robingrether.idisguise.io.Metrics.Graph;
 import de.robingrether.idisguise.io.Metrics.Plotter;
 import de.robingrether.idisguise.io.Metrics;
@@ -55,6 +56,7 @@ import de.robingrether.idisguise.management.ChannelInjector;
 import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.GhostFactory;
 import de.robingrether.idisguise.management.PacketHelper;
+import de.robingrether.idisguise.management.Reflection;
 import de.robingrether.idisguise.management.Sounds;
 import de.robingrether.idisguise.management.VersionHelper;
 import de.robingrether.util.RandomUtil;
@@ -67,13 +69,14 @@ public class iDisguise extends JavaPlugin {
 	
 	private EventListener listener;
 	private Configuration configuration;
+	private Language language;
 	private Metrics metrics;
 	private boolean enabled = false;
 	
 	public iDisguise() { instance = this; }
 	
 	public void onEnable() {
-		if(!VersionHelper.init(false)) {
+		if(!VersionHelper.init(true)) {
 			getLogger().log(Level.SEVERE, String.format("%s is not compatible with your server version!", getFullName()));
 			getServer().getPluginManager().disablePlugin(this);
 			return;
@@ -82,6 +85,9 @@ public class iDisguise extends JavaPlugin {
 		listener = new EventListener(this);
 		configuration = new Configuration(this);
 		configuration.loadData();
+		language = new Language(this);
+		language.loadData();
+		language.saveData();
 		PacketHelper.getInstance().setAttribute(0, configuration.NAME_TAG_SHOWN);
 		PacketHelper.getInstance().setAttribute(1, configuration.MODIFY_PLAYER_LIST_ENTRY);
 		PacketHelper.getInstance().setAttribute(2, configuration.NAME_TAG_ALWAYS_VISIBLE);
@@ -173,8 +179,11 @@ public class iDisguise extends JavaPlugin {
 		}
 		enabled = false;
 		configuration.loadData();
+		language.loadData();
+		language.saveData();
 		PacketHelper.getInstance().setAttribute(0, configuration.NAME_TAG_SHOWN);
 		PacketHelper.getInstance().setAttribute(1, configuration.MODIFY_PLAYER_LIST_ENTRY);
+		PacketHelper.getInstance().setAttribute(2, configuration.NAME_TAG_ALWAYS_VISIBLE);
 		Sounds.setEnabled(configuration.REPLACE_SOUND_EFFECTS);
 		if(configuration.KEEP_DISGUISE_SHUTDOWN) {
 			loadData();
@@ -186,748 +195,520 @@ public class iDisguise extends JavaPlugin {
 		DisguiseManager.getInstance().resendPackets();
 	}
 	
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		Player player = null;
-		if(StringUtil.equalsIgnoreCase(cmd.getName(), "d", "dis", "disguise")) {
-			if(sender instanceof Player) {
-				player = (Player)sender;
-			} else {
-				sender.sendMessage(ChatColor.RED + "You have to use " + ChatColor.ITALIC + "/odisguise" + ChatColor.RESET + ChatColor.RED + " from console.");
-				return true;
-			}
-			if(!(isDisguisingPermittedInWorld(player.getWorld()) || player.hasPermission("iDisguise.everywhere"))) {
-				sender.sendMessage(ChatColor.RED + "Using this plugin is prohibited in this world.");
-				return true;
-			}
-			if(args.length == 0 || StringUtil.equalsIgnoreCase(args[0], "?", "help")) {
-				sendHelpMessage(sender, cmd, true, DisguiseManager.getInstance().getDisguise(player));
-			} else if(StringUtil.equalsIgnoreCase(args[0], "player", "p")) {
-				if(args.length == 1) {
-					sender.sendMessage(ChatColor.RED + "Wrong usage: " + ChatColor.ITALIC + "/" + cmd.getName() + " " + args[0] + " <name>");
-				} else if(!Validate.minecraftUsername(args[1].replaceAll("&[0-9a-fk-or]", ""))) {
-					sender.sendMessage(ChatColor.RED + "The given username is invalid.");
+	public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
+		if(StringUtil.equalsIgnoreCase(command.getName(), "disguise", "odisguise")) {
+			if(args.length == 0) {
+				sendHelpMessage(sender, alias);
+			} else if(args[0].equalsIgnoreCase("reload")) {
+				if(sender.hasPermission("iDisguise.reload")) {
+					onReload();
+					sender.sendMessage(language.RELOAD_COMPLETE);
 				} else {
-					PlayerDisguise disguise = new PlayerDisguise(args[1].replaceAll("&[0-9a-fk-or]", ""), args[1].replace('&', ChatColor.COLOR_CHAR), false);
-					if(hasPermission(player, disguise)) {
-						DisguiseEvent event = new DisguiseEvent(player, disguise);
-						getServer().getPluginManager().callEvent(event);
-						if(event.isCancelled()) {
-							sender.sendMessage(ChatColor.RED + "Some plugin denies you to disguise.");
-						} else {
-							DisguiseManager.getInstance().disguise(player, disguise);
-							sender.sendMessage(ChatColor.GOLD + "You disguised as a player called " + ChatColor.RESET + disguise.getDisplayName());
-						}
-					} else {
-						sender.sendMessage(ChatColor.RED + "You are not allowed to disguise.");
-					}
+					sender.sendMessage(language.NO_PERMISSION);
 				}
-			} else if(StringUtil.equalsIgnoreCase(args[0], "ghost", "g")) {
-				if(!getConfiguration().ENABLE_GHOST_DISGUISE) {
-					sender.sendMessage(ChatColor.RED + "This feature is disabled!");
-				} else if(args.length == 1) {
-					if(DisguiseManager.getInstance().isDisguised(player) && (DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise)) {
-						PlayerDisguise disguise = new PlayerDisguise(((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getSkinName(), ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getDisplayName(), true);
-						if(hasPermission(player, disguise)) {
-							DisguiseEvent event = new DisguiseEvent(player, disguise);
+			} else {
+				OfflinePlayer player = null;
+				boolean disguiseSelf;
+				if(command.getName().equalsIgnoreCase("disguise")) {
+					if(sender instanceof Player) {
+						player = (Player)sender;
+						disguiseSelf = true;
+					} else {
+						sender.sendMessage(language.CONSOLE_USE_OTHER_COMMAND);
+						return true;
+					}
+				} else if(args.length > 1) {
+					if(sender.hasPermission("iDisguise.others")) {
+						if(getServer().getPlayerExact(args[0]) != null) {
+							player = getServer().getPlayerExact(args[0]);
+						} else if(getServer().matchPlayer(args[0]).size() == 1) {
+							player = getServer().matchPlayer(args[0]).get(0);
+						} else if(getServer().getOfflinePlayer(args[0]) != null) {
+							player = getServer().getOfflinePlayer(args[0]);
+						} else {
+							sender.sendMessage(language.CANNOT_FIND_PLAYER.replace("%player%", args[0]));
+							return true;
+						}
+						disguiseSelf = false;
+						args = Arrays.copyOfRange(args, 1, args.length);
+					} else {
+						sender.sendMessage(language.NO_PERMISSION);
+						return true;
+					}
+				} else {
+					sendHelpMessage(sender, alias);
+					return true;
+				}
+				if(player.isOnline() && !isDisguisingPermittedInWorld(player.getPlayer().getWorld()) && !sender.hasPermission("iDisguise.everywhere")) {
+					sender.sendMessage(language.RESTRICTED_WORLD);
+					return true;
+				}
+				if(args[0].equalsIgnoreCase("help")) {
+					sendHelpMessage(sender, alias);
+				} else if(StringUtil.equalsIgnoreCase(args[0], "player", "p") || (configuration.ENABLE_GHOST_DISGUISE && StringUtil.equalsIgnoreCase(args[0], "ghost", "g"))) {
+					if(args.length < 2) {
+						sender.sendMessage(language.WRONG_USAGE_NO_NAME);
+					} else if(!Validate.minecraftUsername(args[1].replaceAll("&[0-9a-fk-or]", ""))) {
+						sender.sendMessage(language.INVALID_NAME);
+					} else {
+						PlayerDisguise disguise = new PlayerDisguise(args[1].replaceAll("&[0-9a-fk-or]", ""), args[1].replace('&', ChatColor.COLOR_CHAR), StringUtil.equalsIgnoreCase(args[0], "ghost", "g"));
+						if(hasPermission(sender, disguise)) {
+							if(player.isOnline()) {
+								DisguiseEvent event = new DisguiseEvent(player.getPlayer(), disguise);
+								getServer().getPluginManager().callEvent(event);
+								if(event.isCancelled()) {
+									sender.sendMessage(language.EVENT_CANCELLED);
+								} else {
+									DisguiseManager.getInstance().disguise(player, disguise);
+									sender.sendMessage((disguiseSelf ? language.DISGUISE_PLAYER_SUCCESS_SELF : language.DISGUISE_PLAYER_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()).replace("%name%", disguise.getDisplayName()));
+								}
+							} else {
+								OfflinePlayerDisguiseEvent event = new OfflinePlayerDisguiseEvent(player, disguise);
+								getServer().getPluginManager().callEvent(event);
+								if(event.isCancelled()) {
+									sender.sendMessage(language.EVENT_CANCELLED);
+								} else {
+									DisguiseManager.getInstance().disguise(player, disguise);
+									sender.sendMessage((disguiseSelf ? language.DISGUISE_PLAYER_SUCCESS_SELF : language.DISGUISE_PLAYER_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()).replace("%name%", disguise.getDisplayName()));
+								}
+							}
+						} else {
+							sender.sendMessage(language.NO_PERMISSION);
+						}
+					}
+				} else if(args[0].equalsIgnoreCase("random")) {
+					if(sender.hasPermission("iDisguise.random")) {
+						Disguise disguise = (RandomUtil.nextBoolean() ? DisguiseType.random(Type.MOB) : DisguiseType.random(Type.OBJECT)).newInstance();
+						if(player.isOnline()) {
+							DisguiseEvent event = new DisguiseEvent(player.getPlayer(), disguise);
 							getServer().getPluginManager().callEvent(event);
 							if(event.isCancelled()) {
-								sender.sendMessage(ChatColor.RED + "Some plugin denies you to disguise.");
+								sender.sendMessage(language.EVENT_CANCELLED);
 							} else {
 								DisguiseManager.getInstance().disguise(player, disguise);
-								sender.sendMessage(ChatColor.GOLD + "You disguised as a ghost called " + ChatColor.RESET + disguise.getDisplayName());
+								sender.sendMessage((disguiseSelf ? language.DISGUISE_SUCCESS_SELF : language.DISGUISE_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()));
 							}
 						} else {
-							sender.sendMessage(ChatColor.RED + "You are not allowed to disguise.");
-						}
-					} else {
-						sender.sendMessage(ChatColor.RED + "Wrong usage: " + ChatColor.ITALIC + "/" + cmd.getName() + " " + args[0] + " <name>");
-					}
-				} else if(!Validate.minecraftUsername(args[1].replaceAll("&[0-9a-fk-or]", ""))) {
-					sender.sendMessage(ChatColor.RED + "The given username is invalid.");
-				} else {
-					PlayerDisguise disguise = new PlayerDisguise(args[1].replaceAll("&[0-9a-fk-or]", ""), args[1].replace('&', ChatColor.COLOR_CHAR), true);
-					if(hasPermission(player, disguise)) {
-						DisguiseEvent event = new DisguiseEvent(player, disguise);
-						getServer().getPluginManager().callEvent(event);
-						if(event.isCancelled()) {
-							sender.sendMessage(ChatColor.RED + "Some plugin denies you to disguise.");
-						} else {
-							DisguiseManager.getInstance().disguise(player, disguise);
-							sender.sendMessage(ChatColor.GOLD + "You disguised as a ghost called " + ChatColor.RESET + disguise.getDisplayName());
-						}
-					} else {
-						sender.sendMessage(ChatColor.RED + "You are not allowed to disguise.");
-					}
-				}
-			} else if(StringUtil.equalsIgnoreCase(args[0], "status", "state", "stat", "stats")) {
-				if(DisguiseManager.getInstance().isDisguised(player)) {
-					Disguise disguise = DisguiseManager.getInstance().getDisguise(player);
-					if(disguise instanceof PlayerDisguise) {
-						sender.sendMessage(ChatColor.GOLD + "You are disguised as a " + (((PlayerDisguise)disguise).isGhost() ? "ghost" : "player") + " called " + ChatColor.RESET + ((PlayerDisguise)disguise).getDisplayName());
-					} else if(disguise instanceof MobDisguise) {
-						sender.sendMessage(ChatColor.GOLD + "You are disguised as a " + disguise.getType().name().toLowerCase(Locale.ENGLISH));
-						if(disguise instanceof AgeableDisguise) {
-							sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
-							sender.sendMessage(ChatColor.GRAY + " Age: " + (((AgeableDisguise)disguise).isAdult() ? "adult" : "baby"));
-							switch(disguise.getType()) {
-								case HORSE:
-									sender.sendMessage(ChatColor.GRAY + " Variant: " + ((HorseDisguise)disguise).getVariant().name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal").replace("skeleton", "skeletal"));
-									sender.sendMessage(ChatColor.GRAY + " Style: " + ((HorseDisguise)disguise).getStyle().name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings"));
-									sender.sendMessage(ChatColor.GRAY + " Color: " + ((HorseDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-									sender.sendMessage(ChatColor.GRAY + " Saddle: " + (((HorseDisguise)disguise).isSaddled() ? "saddled" : "not-saddled"));
-									sender.sendMessage(ChatColor.GRAY + " Chest: " + (((HorseDisguise)disguise).hasChest() ? "chest" : "no-chest"));
-									sender.sendMessage(ChatColor.GRAY + " Armor: " + ((HorseDisguise)disguise).getArmor().name().toLowerCase(Locale.ENGLISH).replace("none", "no-armor"));
-									break;
-								case OCELOT:
-									sender.sendMessage(ChatColor.GRAY + " Cat type: " + ((OcelotDisguise)disguise).getCatType().name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", ""));
-									break;
-								case PIG:
-									sender.sendMessage(ChatColor.GRAY + " Saddle: " + (((PigDisguise)disguise).isSaddled() ? "saddled" : "not-saddled"));
-									break;
-								case RABBIT:
-									sender.sendMessage(ChatColor.GRAY + " Rabbit type: " + ((RabbitDisguise)disguise).getRabbitType().name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer"));
-									break;
-								case SHEEP:
-									sender.sendMessage(ChatColor.GRAY + " Color: " + ((SheepDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-									break;
-								case VILLAGER:
-									sender.sendMessage(ChatColor.GRAY + " Profession: " + ((VillagerDisguise)disguise).getProfession().name().toLowerCase(Locale.ENGLISH));
-									break;
-								case WOLF:
-									sender.sendMessage(ChatColor.GRAY + " Collar: " + ((WolfDisguise)disguise).getCollarColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-									sender.sendMessage(ChatColor.GRAY + " Tamed: " + (((WolfDisguise)disguise).isTamed() ? "tamed" : "not-tamed"));
-									sender.sendMessage(ChatColor.GRAY + " Angry: " + (((WolfDisguise)disguise).isAngry() ? "angry" : "not-angry"));
-									break;
-								case ZOMBIE:
-									sender.sendMessage(ChatColor.GRAY + " Zombie type: " + (((ZombieDisguise)disguise).isVillager() ? "infected" : "normal"));
-									break;
-								default: break;
-							}
-						} else {
-							switch(disguise.getType()) {
-								case CREEPER:
-									sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
-									sender.sendMessage(ChatColor.GRAY + " Creeper: " + (((CreeperDisguise)disguise).isPowered() ? "powered" : "not-powered"));
-									break;
-								case ENDERMAN:
-									sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
-									sender.sendMessage(ChatColor.GRAY + " Block in Hand: " + ((EndermanDisguise)disguise).getBlockInHand().name().toLowerCase(Locale.ENGLISH));
-									sender.sendMessage(ChatColor.GRAY + " Data: " + ((EndermanDisguise)disguise).getBlockInHandData());
-									break;
-								case GUARDIAN:
-									sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
-									sender.sendMessage(ChatColor.GRAY + " Guardian type: " + (((GuardianDisguise)disguise).isElder() ? "elder" : "not-elder"));
-									break;
-								case SKELETON:
-									sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
-									sender.sendMessage(ChatColor.GRAY + " Skeleton type: " + (((SkeletonDisguise)disguise).getSkeletonType().equals(SkeletonType.NORMAL) ? "normal" : "wither"));
-									break;
-								case MAGMA_CUBE:
-								case SLIME:
-									sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
-									sender.sendMessage(ChatColor.GRAY + " Size: " + ((SizedDisguise)disguise).getSize() + (((SizedDisguise)disguise).getSize() == 1 ? " (tiny)" : (((SizedDisguise)disguise).getSize() == 2 ? " (normal)" : (((SizedDisguise)disguise).getSize() == 4 ? " (big)" : ""))));
-									break;
-								default: break;
+							OfflinePlayerDisguiseEvent event = new OfflinePlayerDisguiseEvent(player, disguise);
+							getServer().getPluginManager().callEvent(event);
+							if(event.isCancelled()) {
+								sender.sendMessage(language.EVENT_CANCELLED);
+							} else {
+								DisguiseManager.getInstance().disguise(player, disguise);
+								sender.sendMessage((disguiseSelf ? language.DISGUISE_SUCCESS_SELF : language.DISGUISE_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()));
 							}
 						}
-					} else if(disguise instanceof ObjectDisguise) {
-						sender.sendMessage(ChatColor.GOLD + "You are disguised as a " + disguise.getType().name().toLowerCase(Locale.ENGLISH));
-						if(disguise instanceof FallingBlockDisguise) {
-							sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
-							sender.sendMessage(ChatColor.GRAY + " Block type: " + ((FallingBlockDisguise)disguise).getMaterial().name().toLowerCase(Locale.ENGLISH));
-							sender.sendMessage(ChatColor.GRAY + " Block data: " + ((FallingBlockDisguise)disguise).getData());
-						} else if(disguise instanceof ItemDisguise) {
-							sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
-							sender.sendMessage(ChatColor.GRAY + " Material: " + ((ItemDisguise)disguise).getItemStack().getType().name().toLowerCase(Locale.ENGLISH));
-							sender.sendMessage(ChatColor.GRAY + " Material data: " + ((ItemDisguise)disguise).getItemStack().getDurability());
-							int stackSize = ((ItemDisguise)disguise).getItemStack().getAmount();
-							sender.sendMessage(ChatColor.GRAY + " Stack size: " + (stackSize < 2 ? "single" : stackSize < 17 ? "double" : stackSize < 33 ? "triple" : stackSize < 49 ? "quadruple" : "quintuple"));
-						} else if(disguise instanceof MinecartDisguise) {
-							sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
-							sender.sendMessage(ChatColor.GRAY + " Block inside: " + ((MinecartDisguise)disguise).getDisplayedBlock().name().toLowerCase(Locale.ENGLISH));
-							sender.sendMessage(ChatColor.GRAY + " Data: " + ((MinecartDisguise)disguise).getDisplayedBlockData());
-						} else if(disguise instanceof ArmorStandDisguise) {
-							sender.sendMessage(ChatColor.GRAY + "Your subtypes:");
-							sender.sendMessage(ChatColor.GRAY + " Show arms: " + (((ArmorStandDisguise)disguise).getShowArms() ? "yes" : "no"));
+					} else {
+						sender.sendMessage(language.NO_PERMISSION);
+					}
+				} else if(StringUtil.equalsIgnoreCase(args[0], "status", "state", "stats")) {
+					if(DisguiseManager.getInstance().isDisguised(player)) {
+						if(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise) {
+							PlayerDisguise disguise = (PlayerDisguise)DisguiseManager.getInstance().getDisguise(player);
+							sender.sendMessage((disguiseSelf ? language.STATUS_PLAYER_SELF : language.STATUS_PLAYER_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()).replace("%name%", disguise.getDisplayName()));
+						} else {
+							Disguise disguise = DisguiseManager.getInstance().getDisguise(player);
+							sender.sendMessage((disguiseSelf ? language.STATUS_SELF : language.STATUS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()));
+							sender.sendMessage(language.STATUS_SUBTYPES.replace("%subtypes%", disguise.toString()));
+						}
+					} else {
+						sender.sendMessage((disguiseSelf ? language.STATUS_NOT_DISGUISED_SELF : language.STATUS_NOT_DISGUISED_OTHER).replace("%player%", player.getName()));
+					}
+				} else {
+					Disguise disguise = DisguiseManager.getInstance().isDisguised(player) ? DisguiseManager.getInstance().getDisguise(player).clone() : null;
+					boolean match = false;
+					for(String argument : args) {
+						DisguiseType type = DisguiseType.Matcher.match(argument.toLowerCase(Locale.ENGLISH));
+						if(type != null) {
+							try {
+								disguise = type.newInstance();
+								match = true;
+								break;
+							} catch(OutdatedServerException e) {
+								sender.sendMessage(language.OUTDATED_SERVER);
+								return true;
+							} catch(UnsupportedOperationException e) {
+								sendHelpMessage(sender, alias);
+								return true;
+							}
 						}
 					}
-				} else {
-					sender.sendMessage(ChatColor.GOLD + "You are not disguised.");
-				}
-			} else if(args[0].equalsIgnoreCase("random")) {
-				if(player.hasPermission("iDisguise.random")) {
-					DisguiseType type = RandomUtil.nextBoolean() ? DisguiseType.random(Type.MOB) : DisguiseType.random(Type.OBJECT);
-					Disguise disguise = type.newInstance();
-					DisguiseEvent event = new DisguiseEvent(player, disguise);
-					getServer().getPluginManager().callEvent(event);
-					if(event.isCancelled()) {
-						sender.sendMessage(ChatColor.RED + "Some plugin denies you to disguise.");
+					if(disguise != null) {
+						for(String argument : args) {
+							match |= Subtypes.applySubtype(disguise, argument);
+						}
+					}
+					if(match) {
+						if(hasPermission(sender, disguise)) {
+							if(player.isOnline()) {
+								DisguiseEvent event = new DisguiseEvent(player.getPlayer(), disguise);
+								getServer().getPluginManager().callEvent(event);
+								if(event.isCancelled()) {
+									sender.sendMessage(language.EVENT_CANCELLED);
+								} else {
+									DisguiseManager.getInstance().disguise(player, disguise);
+									sender.sendMessage((disguiseSelf ? language.DISGUISE_SUCCESS_SELF : language.DISGUISE_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()));
+								}
+							} else {
+								OfflinePlayerDisguiseEvent event = new OfflinePlayerDisguiseEvent(player, disguise);
+								getServer().getPluginManager().callEvent(event);
+								if(event.isCancelled()) {
+									sender.sendMessage(language.EVENT_CANCELLED);
+								} else {
+									DisguiseManager.getInstance().disguise(player, disguise);
+									sender.sendMessage((disguiseSelf ? language.DISGUISE_SUCCESS_SELF : language.DISGUISE_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()));
+								}
+							}
+						} else {
+							sender.sendMessage(language.NO_PERMISSION);
+						}
 					} else {
-						DisguiseManager.getInstance().disguise(player, disguise);
-						sender.sendMessage(ChatColor.GOLD + "You disguised as a random mob. Type " + ChatColor.ITALIC + "/" + cmd.getName() + " status" + ChatColor.RESET + ChatColor.GOLD + " to get more information.");
+						sendHelpMessage(sender, alias);
+					}
+				}
+			}
+		} else if(command.getName().equalsIgnoreCase("undisguise")) {
+			if(args.length == 0) {
+				if(sender instanceof Player) {
+					if(DisguiseManager.getInstance().isDisguised((Player)sender)) {
+						if(!configuration.UNDISGUISE_PERMISSION || sender.hasPermission("iDisguise.undisguise")) {
+							UndisguiseEvent event = new UndisguiseEvent((Player)sender, DisguiseManager.getInstance().getDisguise((Player)sender), false);
+							getServer().getPluginManager().callEvent(event);
+							if(event.isCancelled()) {
+								sender.sendMessage(language.EVENT_CANCELLED);
+							} else {
+								DisguiseManager.getInstance().undisguise((Player)sender);
+								sender.sendMessage(language.UNDISGUISE_SUCCESS_SELF);
+							}
+						} else {
+							sender.sendMessage(language.NO_PERMISSION);
+						}
+					} else {
+						sender.sendMessage(language.UNDISGUISE_NOT_DISGUISED_SELF);
 					}
 				} else {
-					sender.sendMessage(ChatColor.RED + "You are not allowed to disguise.");
+					sender.sendMessage(language.UNDISGUISE_CONSOLE);
 				}
-			} else if(args[0].equalsIgnoreCase("reload")) {
-				if(player.hasPermission("iDisguise.reload")) {
-					onReload();
-					sender.sendMessage(ChatColor.GOLD + "Reloaded config file.");
+			} else if(args[0].equals("*")) {
+				if(sender.hasPermission("iDisguise.undisguise.all")) {	
+					if(args.length > 1 && args[1].equalsIgnoreCase("ignore")) {
+						DisguiseManager.getInstance().undisguiseAll();
+						sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL_IGNORE);
+					} else {
+						Set<OfflinePlayer> disguisedPlayers = DisguiseManager.getInstance().getDisguisedPlayers();
+						int share = 0, total = disguisedPlayers.size();
+						for(OfflinePlayer player : disguisedPlayers) {
+							if(player.isOnline()) {
+								UndisguiseEvent event = new UndisguiseEvent(player.getPlayer(), DisguiseManager.getInstance().getDisguise(player), true);
+								getServer().getPluginManager().callEvent(event);
+								if(!event.isCancelled()) {
+									DisguiseManager.getInstance().undisguise(player);
+									share++;
+								}
+							} else {
+								OfflinePlayerUndisguiseEvent event = new OfflinePlayerUndisguiseEvent(player, DisguiseManager.getInstance().getDisguise(player), true);
+								getServer().getPluginManager().callEvent(event);
+								if(!event.isCancelled()) {
+									DisguiseManager.getInstance().undisguise(player);
+									share++;
+								}
+							}
+						}
+						sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL.replace("%share%", Integer.toString(share)).replace("%total%", Integer.toString(total)));
+					}
 				} else {
-					sender.sendMessage(ChatColor.RED + "You are not allowed to do this.");
+					sender.sendMessage(language.NO_PERMISSION);
 				}
 			} else {
+				if(sender.hasPermission("iDisguise.undisguise.others")) {
+					OfflinePlayer player = null;
+					if(getServer().getPlayerExact(args[0]) != null) {
+						player = getServer().getPlayerExact(args[0]);
+					} else if(getServer().matchPlayer(args[0]).size() == 1) {
+						player = getServer().matchPlayer(args[0]).get(0);
+					} else if(getServer().getOfflinePlayer(args[0]) != null) {
+						player = getServer().getOfflinePlayer(args[0]);
+					} else {
+						sender.sendMessage(language.CANNOT_FIND_PLAYER.replace("%player%", args[0]));
+						return true;
+					}
+					if(DisguiseManager.getInstance().isDisguised(player)) {
+						if(args.length > 1 && args[1].equalsIgnoreCase("ignore")) {
+							DisguiseManager.getInstance().undisguise(player);
+							sender.sendMessage(language.UNDISGUISE_SUCCESS_OTHER.replace("%player%", player.getName()));
+						} else {
+							if(player.isOnline()) {
+								UndisguiseEvent event = new UndisguiseEvent(player.getPlayer(), DisguiseManager.getInstance().getDisguise(player), false);
+								getServer().getPluginManager().callEvent(event);
+								if(event.isCancelled()) {
+									sender.sendMessage(language.EVENT_CANCELLED);
+								} else {
+									DisguiseManager.getInstance().undisguise(player);
+									sender.sendMessage(language.UNDISGUISE_SUCCESS_OTHER.replace("%player%", player.getName()));
+								}
+							} else {
+								OfflinePlayerUndisguiseEvent event = new OfflinePlayerUndisguiseEvent(player, DisguiseManager.getInstance().getDisguise(player), false);
+								getServer().getPluginManager().callEvent(event);
+								if(event.isCancelled()) {
+									sender.sendMessage(language.EVENT_CANCELLED);
+								} else {
+									DisguiseManager.getInstance().undisguise(player);
+									sender.sendMessage(language.UNDISGUISE_SUCCESS_OTHER.replace("%player%", player.getName()));
+								}
+							}
+						}
+					} else {
+						sender.sendMessage(language.UNDISGUISE_NOT_DISGUISED_OTHER.replace("%player%", player.getName()));
+					}
+				} else {
+					sender.sendMessage(language.NO_PERMISSION);
+				}
+			}
+		}
+		return true;
+	}
+	
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+		List<String> completions = new ArrayList<String>();
+		if(command.getName().equalsIgnoreCase("disguise")) {
+			if(sender instanceof Player) {
+				Player player = (Player)sender;
+				if(args.length < 2) {
+					completions.addAll(Arrays.asList("help", "player", "status"));
+					if(configuration.ENABLE_GHOST_DISGUISE) {
+						completions.add("ghost");
+					}
+					if(sender.hasPermission("iDisguise.random")) {
+						completions.add("random");
+					}
+					if(sender.hasPermission("iDisguise.reload")) {
+						completions.add("reload");
+					}
+					for(DisguiseType type : DisguiseType.values()) {
+						if(type.isAvailable() && !type.isPlayer()) {
+							completions.add(type.getDefaultCommandArgument());
+						}
+					}
+				}
 				Disguise disguise = DisguiseManager.getInstance().isDisguised(player) ? DisguiseManager.getInstance().getDisguise(player).clone() : null;
-				boolean changed = false;
 				for(String argument : args) {
 					DisguiseType type = DisguiseType.Matcher.match(argument.toLowerCase(Locale.ENGLISH));
 					if(type != null) {
 						try {
 							disguise = type.newInstance();
-							changed = true;
 							break;
 						} catch(OutdatedServerException e) {
-							sender.sendMessage(ChatColor.RED + "Your Minecraft version does not support the chosen disguise type.");
-							return true;
+						} catch(UnsupportedOperationException e) {
 						}
 					}
 				}
 				if(disguise != null) {
-					for(String argument : args) {
-						changed |= disguise.applySubtype(argument);
-					}
-				}
-				if(changed) {
-					if(hasPermission(player, disguise)) {
-						DisguiseEvent event = new DisguiseEvent(player, disguise);
-						getServer().getPluginManager().callEvent(event);
-						if(event.isCancelled()) {
-							sender.sendMessage(ChatColor.RED + "Some plugin denies you to disguise.");
-						} else {
-							DisguiseManager.getInstance().disguise(player, disguise);
-							sender.sendMessage(ChatColor.GOLD + "You disguised. Type " + ChatColor.ITALIC + "/" + cmd.getName() + " status" + ChatColor.RESET + ChatColor.GOLD + " for information about your disguise.");
-						}
-					} else {
-						sender.sendMessage(ChatColor.RED + "You are not allowed to disguise.");
-					}
-				} else {
-					sender.sendMessage(ChatColor.RED + "Wrong usage. Type " + ChatColor.ITALIC + "/" + cmd.getName() + " help" + ChatColor.RESET + ChatColor.RED + " for additional information.");
-				}
-			}
-			return true;
-		} else if(StringUtil.equalsIgnoreCase(cmd.getName(), "ud", "undis", "undisguise")) {
-			if(sender instanceof Player) {
-				player = (Player)sender;
-			}
-			if(args.length == 0) {
-				if(player == null) {
-					sender.sendMessage(ChatColor.RED + "You cannot undisguise as console.");
-				} else {
-					if(DisguiseManager.getInstance().isDisguised(player)) {
-						if(!getConfiguration().UNDISGUISE_PERMISSION || player.hasPermission("iDisguise.undisguise")) {
-							UndisguiseEvent event = new UndisguiseEvent(player, DisguiseManager.getInstance().getDisguise(player), false);
-							getServer().getPluginManager().callEvent(event);
-							if(!event.isCancelled()) {
-								DisguiseManager.getInstance().undisguise(player);
-								sender.sendMessage(ChatColor.GOLD + "You were undisguised.");
-							} else {
-								sender.sendMessage(ChatColor.RED + "Some plugin denies you to undisguise.");
-							}
-						} else {
-							sender.sendMessage(ChatColor.RED + "You are not allowed to undisguise.");
-						}
-					} else {
-						sender.sendMessage(ChatColor.RED + "You are not disguised.");
-					}
-				}
-			} else if(args[0].equals("*")) {
-				if(player == null || player.hasPermission("iDisguise.undisguise.all")) {
-					if(args.length > 1 && args[1].equalsIgnoreCase("ignore")) {
-						DisguiseManager.getInstance().undisguiseAll();
-						sender.sendMessage(ChatColor.GOLD + "Undisguised everyone ignoring event cancelling.");
-					} else {
-						int count = 0;
-						int total = DisguiseManager.getInstance().getDisguisedPlayers().size();
-						for(OfflinePlayer offlinePlayer : DisguiseManager.getInstance().getDisguisedPlayers()) {
-							if(offlinePlayer.isOnline()) {
-								UndisguiseEvent event = new UndisguiseEvent(offlinePlayer.getPlayer(), DisguiseManager.getInstance().getDisguise(offlinePlayer.getPlayer()), true);
-								getServer().getPluginManager().callEvent(event);
-								if(!event.isCancelled()) {
-									DisguiseManager.getInstance().undisguise(offlinePlayer);
-									count++;
-								}
-							} else {
-								DisguiseManager.getInstance().undisguise(offlinePlayer);
-								count++;
-							}
-						}
-						sender.sendMessage(ChatColor.GOLD + Integer.toString(count) + " of " + total + " disguised players were undisguised.");
-					}
-				} else {
-					sender.sendMessage(ChatColor.RED + "You are not allowed to undisguise everyone.");
+					completions.addAll(Subtypes.listSubtypeArguments(disguise));
 				}
 			} else {
-				if(player == null || player.hasPermission("iDisguise.undisguise.others")) {
-					if(getServer().matchPlayer(args[0]).isEmpty()) {
-						sender.sendMessage(ChatColor.RED + "Cannot find player " + ChatColor.ITALIC + args[0]);
-					} else {
-						player = getServer().matchPlayer(args[0]).get(0);
-						if(DisguiseManager.getInstance().isDisguised(player)) {
-							if(args.length > 1 && args[1].equalsIgnoreCase("ignore")) {
-								DisguiseManager.getInstance().undisguise(player);
-								sender.sendMessage(ChatColor.GOLD + "Undisguised " + ChatColor.ITALIC + player.getName());
-							} else {
-								UndisguiseEvent event = new UndisguiseEvent(player, DisguiseManager.getInstance().getDisguise(player), false);
-								getServer().getPluginManager().callEvent(event);
-								if(!event.isCancelled()) {
-									DisguiseManager.getInstance().undisguise(player);
-									sender.sendMessage(ChatColor.GOLD + "Undisguised " + ChatColor.ITALIC + player.getName());
-								} else {
-									sender.sendMessage(ChatColor.RED + "Some plugin denies " + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.RED + " to undisguise.");
-								}
-							}
-						} else {
-							sender.sendMessage(ChatColor.RED.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.RED + " is not disguised.");
-						}
-					}
-				} else {
-					sender.sendMessage(ChatColor.RED + "You are not allowed to undisguise other players.");
-				}
+				completions.add("reload");
 			}
-		} else if(StringUtil.equalsIgnoreCase(cmd.getName(), "od", "odis", "odisguise")) {
-			if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-				if(sender instanceof Player && !((Player)sender).hasPermission("iDisguise.reload")) {
-					sender.sendMessage(ChatColor.RED + "You are not allowed to do this.");
-				} else {
-					onReload();
-					sender.sendMessage(ChatColor.GOLD + "Reloaded config file.");
-				}
-				return true;
-			}
-			if(sender instanceof Player && !((Player)sender).hasPermission("iDisguise.others")) {
-				sender.sendMessage(ChatColor.RED + "You are not allowed to do this.");
-				return true;
-			}
+		} else if(command.getName().equalsIgnoreCase("odisguise")) {
 			if(args.length < 2) {
-				sendHelpMessage(sender, cmd, false, null);
-				return true;
-			} else {
-				if(getServer().matchPlayer(args[0]).isEmpty()) {
-					sender.sendMessage(ChatColor.RED + "Cannot find player " + ChatColor.ITALIC + args[0]);
-					return true;
-				} else {
+				if(sender.hasPermission("iDisguise.reload")) {
+					completions.add("reload");
+				}
+				if(sender.hasPermission("iDisguise.others")) {
+					for(Player player : Reflection.getOnlinePlayers()) {
+						completions.add(player.getName());
+					}
+				}
+			} else if(sender.hasPermission("iDisguise.others")) {
+				OfflinePlayer player = null;
+				if(getServer().getPlayerExact(args[0]) != null) {
+					player = getServer().getPlayerExact(args[0]);
+				} else if(getServer().matchPlayer(args[0]).size() == 1) {
 					player = getServer().matchPlayer(args[0]).get(0);
+				} else if(getServer().getOfflinePlayer(args[0]) != null) {
+					player = getServer().getOfflinePlayer(args[0]);
 				}
-			}
-			if(!isDisguisingPermittedInWorld(player.getWorld()) && sender instanceof Player && !((Player)sender).hasPermission("iDisguise.everywhere")) {
-				sender.sendMessage(ChatColor.RED + "Using this plugin is prohibited in this world.");
-				return true;
-			}
-			if(StringUtil.equalsIgnoreCase(args[1], "?", "help")) {
-				sendHelpMessage(sender, cmd, false, DisguiseManager.getInstance().getDisguise(player));
-			} else if(StringUtil.equalsIgnoreCase(args[1], "player", "p")) {
-				if(args.length == 2) {
-					sender.sendMessage(ChatColor.RED + "Wrong usage: " + ChatColor.ITALIC + "/" + cmd.getName() + " " + player.getName() + " " + args[1] + " <name>");
-				} else if(!Validate.minecraftUsername(args[2].replaceAll("&[0-9a-fk-or]", ""))) {
-					sender.sendMessage(ChatColor.RED + "The given username is invalid.");
-				} else {
-					PlayerDisguise disguise = new PlayerDisguise(args[2].replaceAll("&[0-9a-fk-or]", ""), args[2].replace('&', ChatColor.COLOR_CHAR), false);
-					DisguiseEvent event = new DisguiseEvent(player, disguise);
-					getServer().getPluginManager().callEvent(event);
-					if(event.isCancelled()) {
-						sender.sendMessage(ChatColor.RED + "Some plugin denies " + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.RED + " to disguise.");
-					} else {
-						DisguiseManager.getInstance().disguise(player, disguise);
-						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " disguised as a player called " + ChatColor.RESET + disguise.getDisplayName());
-					}
-				}
-			} else if(StringUtil.equalsIgnoreCase(args[1], "ghost", "g")) {
-				if(!getConfiguration().ENABLE_GHOST_DISGUISE) {
-					sender.sendMessage(ChatColor.RED + "This feature is disabled!");
-				} else if(args.length == 2) {
-					if(DisguiseManager.getInstance().isDisguised(player) && (DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise)) {
-						PlayerDisguise disguise = new PlayerDisguise(((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getSkinName(), ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getDisplayName(), true);
-						DisguiseEvent event = new DisguiseEvent(player, disguise);
-						getServer().getPluginManager().callEvent(event);
-						if(event.isCancelled()) {
-							sender.sendMessage(ChatColor.RED + "Some plugin denies " + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.RED + " to disguise.");
-						} else {
-							DisguiseManager.getInstance().disguise(player, disguise);
-							sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " disguised as a ghost called " + ChatColor.RESET + disguise.getDisplayName());
+				if(player != null) {
+					if(args.length < 3) {
+						completions.addAll(Arrays.asList("help", "player", "status"));
+						if(configuration.ENABLE_GHOST_DISGUISE) {
+							completions.add("ghost");
 						}
-					} else {
-						sender.sendMessage(ChatColor.RED + "Wrong usage: " + ChatColor.ITALIC + "/" + cmd.getName() + " " + player.getName() + " " + args[1] + " <name>");
-					}
-				} else if(!Validate.minecraftUsername(args[2].replaceAll("&[0-9a-fk-or]", ""))) {
-					sender.sendMessage(ChatColor.RED + "The given username is invalid.");
-				} else {
-					PlayerDisguise disguise = new PlayerDisguise(args[2].replaceAll("&[0-9a-fk-or]", ""), args[2].replace('&', ChatColor.COLOR_CHAR), true);
-					DisguiseEvent event = new DisguiseEvent(player, disguise);
-					getServer().getPluginManager().callEvent(event);
-					if(event.isCancelled()) {
-						sender.sendMessage(ChatColor.RED + "Some plugin denies " + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.RED + " to disguise.");
-					} else {
-						DisguiseManager.getInstance().disguise(player, disguise);
-						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " disguised as a ghost called " + ChatColor.RESET + disguise.getDisplayName());
-					}
-				}
-			} else if(StringUtil.equalsIgnoreCase(args[1], "status", "state", "stat", "stats")) {
-				if(DisguiseManager.getInstance().isDisguised(player)) {
-					Disguise disguise = DisguiseManager.getInstance().getDisguise(player);
-					if(disguise instanceof PlayerDisguise) {
-						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " is disguised as a " + (((PlayerDisguise)disguise).isGhost() ? "ghost" : "player") + " called " + ChatColor.RESET + ((PlayerDisguise)disguise).getDisplayName());
-					} else if(disguise instanceof MobDisguise) {
-						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " is disguised as a " + disguise.getType().name().toLowerCase(Locale.ENGLISH));
-						if(disguise instanceof AgeableDisguise) {
-							sender.sendMessage(ChatColor.GRAY + "Subtypes:");
-							sender.sendMessage(ChatColor.GRAY + " Age: " + (((AgeableDisguise)disguise).isAdult() ? "adult" : "baby"));
-							switch(disguise.getType()) {
-								case HORSE:
-									sender.sendMessage(ChatColor.GRAY + " Variant: " + ((HorseDisguise)disguise).getVariant().name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal").replace("skeleton", "skeletal"));
-									sender.sendMessage(ChatColor.GRAY + " Style: " + ((HorseDisguise)disguise).getStyle().name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings"));
-									sender.sendMessage(ChatColor.GRAY + " Color: " + ((HorseDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-									sender.sendMessage(ChatColor.GRAY + " Saddle: " + (((HorseDisguise)disguise).isSaddled() ? "saddled" : "not-saddled"));
-									sender.sendMessage(ChatColor.GRAY + " Chest: " + (((HorseDisguise)disguise).hasChest() ? "chest" : "no-chest"));
-									sender.sendMessage(ChatColor.GRAY + " Armor: " + ((HorseDisguise)disguise).getArmor().name().toLowerCase(Locale.ENGLISH).replace("none", "no-armor"));
-									break;
-								case OCELOT:
-									sender.sendMessage(ChatColor.GRAY + " Cat type: " + ((OcelotDisguise)disguise).getCatType().name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", ""));
-									break;
-								case PIG:
-									sender.sendMessage(ChatColor.GRAY + " Saddle: " + (((PigDisguise)disguise).isSaddled() ? "saddled" : "not-saddled"));
-									break;
-								case RABBIT:
-									sender.sendMessage(ChatColor.GRAY + " Rabbit type: " + ((RabbitDisguise)disguise).getRabbitType().name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer"));
-									break;
-								case SHEEP:
-									sender.sendMessage(ChatColor.GRAY + " Color: " + ((SheepDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-									break;
-								case VILLAGER:
-									sender.sendMessage(ChatColor.GRAY + " Profession: " + ((VillagerDisguise)disguise).getProfession().name().toLowerCase(Locale.ENGLISH));
-									break;
-								case WOLF:
-									sender.sendMessage(ChatColor.GRAY + " Collar: " + ((WolfDisguise)disguise).getCollarColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-									sender.sendMessage(ChatColor.GRAY + " Tamed: " + (((WolfDisguise)disguise).isTamed() ? "tamed" : "not-tamed"));
-									sender.sendMessage(ChatColor.GRAY + " Angry: " + (((WolfDisguise)disguise).isAngry() ? "angry" : "not-angry"));
-									break;
-								case ZOMBIE:
-									sender.sendMessage(ChatColor.GRAY + " Zombie type: " + (((ZombieDisguise)disguise).isVillager() ? "infected" : "normal"));
-									break;
-								default: break;
-							}
-						} else {
-							switch(disguise.getType()) {
-								case CREEPER:
-									sender.sendMessage(ChatColor.GRAY + "Subtypes:");
-									sender.sendMessage(ChatColor.GRAY + " Creeper: " + (((CreeperDisguise)disguise).isPowered() ? "powered" : "not-powered"));
-									break;
-								case ENDERMAN:
-									sender.sendMessage(ChatColor.GRAY + "Subtypes:");
-									sender.sendMessage(ChatColor.GRAY + " Block in Hand: " + ((EndermanDisguise)disguise).getBlockInHand().name().toLowerCase(Locale.ENGLISH));
-									sender.sendMessage(ChatColor.GRAY + " Data: " + ((EndermanDisguise)disguise).getBlockInHandData());
-									break;
-								case GUARDIAN:
-									sender.sendMessage(ChatColor.GRAY + "Subtypes:");
-									sender.sendMessage(ChatColor.GRAY + " Guardian type: " + (((GuardianDisguise)disguise).isElder() ? "elder" : "not-elder"));
-									break;
-								case SKELETON:
-									sender.sendMessage(ChatColor.GRAY + "Subtypes:");
-									sender.sendMessage(ChatColor.GRAY + " Skeleton type: " + (((SkeletonDisguise)disguise).getSkeletonType().equals(SkeletonType.NORMAL) ? "normal" : "wither"));
-									break;
-								case MAGMA_CUBE:
-								case SLIME:
-									sender.sendMessage(ChatColor.GRAY + "Subtypes:");
-									sender.sendMessage(ChatColor.GRAY + " Size: " + ((SizedDisguise)disguise).getSize() + (((SizedDisguise)disguise).getSize() == 1 ? " (tiny)" : (((SizedDisguise)disguise).getSize() == 2 ? " (normal)" : (((SizedDisguise)disguise).getSize() == 4 ? " (big)" : ""))));
-									break;
-								default: break;
+						if(sender.hasPermission("iDisguise.random")) {
+							completions.add("random");
+						}
+						for(DisguiseType type : DisguiseType.values()) {
+							if(type.isAvailable() && !type.isPlayer()) {
+								completions.add(type.getDefaultCommandArgument());
 							}
 						}
-					} else if(disguise instanceof ObjectDisguise) {
-						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " is disguised as a " + disguise.getType().name().toLowerCase(Locale.ENGLISH));
-						if(disguise instanceof FallingBlockDisguise) {
-							sender.sendMessage(ChatColor.GRAY + "Subtypes:");
-							sender.sendMessage(ChatColor.GRAY + " Block type: " + ((FallingBlockDisguise)disguise).getMaterial().name().toLowerCase(Locale.ENGLISH));
-							sender.sendMessage(ChatColor.GRAY + " Block data: " + ((FallingBlockDisguise)disguise).getData());
-						} else if(disguise instanceof ItemDisguise) {
-							sender.sendMessage(ChatColor.GRAY + "Subtypes:");
-							sender.sendMessage(ChatColor.GRAY + " Material: " + ((ItemDisguise)disguise).getItemStack().getType().name().toLowerCase(Locale.ENGLISH));
-							sender.sendMessage(ChatColor.GRAY + " Material data: " + ((ItemDisguise)disguise).getItemStack().getDurability());
-							int stackSize = ((ItemDisguise)disguise).getItemStack().getAmount();
-							sender.sendMessage(ChatColor.GRAY + " Stack size: " + (stackSize < 2 ? "single" : stackSize < 17 ? "double" : stackSize < 33 ? "triple" : stackSize < 49 ? "quadruple" : "quintuple"));
-						} else if(disguise instanceof MinecartDisguise) {
-							sender.sendMessage(ChatColor.GRAY + "Subtypes:");
-							sender.sendMessage(ChatColor.GRAY + " Block inside: " + ((MinecartDisguise)disguise).getDisplayedBlock().name().toLowerCase(Locale.ENGLISH));
-							sender.sendMessage(ChatColor.GRAY + " Data: " + ((MinecartDisguise)disguise).getDisplayedBlockData());
-						} else if(disguise instanceof ArmorStandDisguise) {
-							sender.sendMessage(ChatColor.GRAY + "Subtypes:");
-							sender.sendMessage(ChatColor.GRAY + " Show arms: " + (((ArmorStandDisguise)disguise).getShowArms() ? "yes" : "no"));
+					}
+					Disguise disguise = DisguiseManager.getInstance().isDisguised(player) ? DisguiseManager.getInstance().getDisguise(player).clone() : null;
+					for(String argument : args) {
+						DisguiseType type = DisguiseType.Matcher.match(argument.toLowerCase(Locale.ENGLISH));
+						if(type != null) {
+							try {
+								disguise = type.newInstance();
+								break;
+							} catch(OutdatedServerException e) {
+							} catch(UnsupportedOperationException e) {
+							}
 						}
 					}
-				} else {
-					sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " is not disguised.");
+					if(disguise != null) {
+						completions.addAll(Subtypes.listSubtypeArguments(disguise));
+					}
 				}
-			} else if(args[1].equalsIgnoreCase("random")) {
-				DisguiseType type = RandomUtil.nextBoolean() ? DisguiseType.random(Type.MOB) : DisguiseType.random(Type.OBJECT);
-				Disguise disguise = type.newInstance();
-				DisguiseEvent event = new DisguiseEvent(player, disguise);
-				getServer().getPluginManager().callEvent(event);
-				if(event.isCancelled()) {
-					sender.sendMessage(ChatColor.RED + "Some plugin denies " + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.RED + " to disguise.");
-				} else {
-					DisguiseManager.getInstance().disguise(player, disguise);
-					sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " disguised as a random mob. Type " + ChatColor.ITALIC + "/" + cmd.getName() + " " + player.getName() + " status" + ChatColor.RESET + ChatColor.GOLD + " to get more information.");
+			}
+		} else if(command.getName().equalsIgnoreCase("undisguise")) {
+			if(args.length < 2) {
+				if(sender.hasPermission("iDisguise.undisguise.all")) {
+					completions.add("*");
+				}
+				if(sender.hasPermission("iDisguise.undisguise.others")) {
+					for(Player player : Reflection.getOnlinePlayers()) {
+						if(DisguiseManager.getInstance().isDisguised(player)) {
+							completions.add(player.getName());
+						}
+					}
 				}
 			} else {
-				Disguise disguise = DisguiseManager.getInstance().isDisguised(player) ? DisguiseManager.getInstance().getDisguise(player).clone() : null;
-				boolean changed = false;
-				for(String argument : Arrays.copyOfRange(args, 1, args.length)) {
-					DisguiseType type = DisguiseType.Matcher.match(argument.toLowerCase(Locale.ENGLISH));
-					if(type != null) {
-						try {
-							disguise = type.newInstance();
-							changed = true;
-							break;
-						} catch(OutdatedServerException e) {
-							sender.sendMessage(ChatColor.RED + "Your Minecraft version does not support the chosen disguise type.");
-							return true;
-						}
-					}
-				}
-				if(disguise != null) {
-					for(String argument : args) {
-						changed |= disguise.applySubtype(argument);
-					}
-				}
-				if(changed) {
-					DisguiseEvent event = new DisguiseEvent(player, disguise);
-					getServer().getPluginManager().callEvent(event);
-					if(event.isCancelled()) {
-						sender.sendMessage(ChatColor.RED + "Some plugin denies " + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.RED + " to disguise.");
-					} else {
-						DisguiseManager.getInstance().disguise(player, disguise);
-						sender.sendMessage(ChatColor.GOLD.toString() + ChatColor.ITALIC + player.getName() + ChatColor.RESET + ChatColor.GOLD + " disguised. Type " + ChatColor.ITALIC + "/" + cmd.getName() + " " + player.getName() + " status" + ChatColor.RESET + ChatColor.GOLD + " for information about the disguise.");
-					}
-				} else {
-					sender.sendMessage(ChatColor.RED + "Wrong usage. Type " + ChatColor.ITALIC + "/" + cmd.getName() + " " + player.getName() + " help" + ChatColor.RESET + ChatColor.RED + " for additional information.");
+				completions.add("ignore");
+			}
+		}
+		if(args.length > 0) {
+			for(int i = 0; i < completions.size(); i++) {
+				if(!StringUtil.startsWithIgnoreCase(completions.get(i), args[args.length - 1])) {
+					completions.remove(i);
+					i--;
 				}
 			}
-			return true;
 		}
-		return true;
+		return completions;
 	}
 	
-	private void sendHelpMessage(CommandSender sender, Command cmd, boolean self, Disguise disguise) {
-		String disguiseCommand = ChatColor.GOLD + "/" + cmd.getName() + (self ? "" : " <player>");
-		String undisguiseCommand = ChatColor.GOLD + "/u" + (cmd.getName().length() < 3 ? "" : "n") + cmd.getName().replace("o", "");
-		boolean console = !(sender instanceof Player);
-		sender.sendMessage(ChatColor.GREEN + getFullName() + " - Help");
-		sender.sendMessage(disguiseCommand + " help - Shows this help");
-		sender.sendMessage(disguiseCommand + " player <name> - Disguise as a player");
+	private void sendHelpMessage(CommandSender sender, String alias) {
+		boolean self = !StringUtil.startsWithIgnoreCase(alias, "o");
+		String disguiseCommand = "/" + (self ? alias : alias + " <player>");
+		String undisguiseCommand = "/u" + (alias.length() < 3 ? "" : "n") + alias.substring(1);
+		sender.sendMessage(language.HELP_INFO.replace("%name%", "iDisguise").replace("%version%", getVersion()));
+		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " help").replace("%description%", language.HELP_HELP));		
+		
+		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " player <name>").replace("%description%", self ? language.HELP_PLAYER_SELF : language.HELP_PLAYER_OTHER));
 		if(configuration.ENABLE_GHOST_DISGUISE) {
-			sender.sendMessage(disguiseCommand + " ghost <name> - Disguise as a ghost player");
+			sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " ghost <name>").replace("%description%", self ? language.HELP_GHOST_SELF : language.HELP_GHOST_OTHER));
 		}
-		if(!self || sender.hasPermission("iDisguise.random")) {
-			sender.sendMessage(disguiseCommand + " random - Disguise as a randomly chosen mob");
+		if(sender.hasPermission("iDisguise.random")) {
+			sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " random").replace("%description%", self ? language.HELP_RANDOM_SELF : language.HELP_RANDOM_OTHER));
 		}
-		if(console || sender.hasPermission("iDisguise.reload")) {
-			sender.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " reload - Reload the config file");
+		if(sender.hasPermission("iDisguise.reload")) {
+			sender.sendMessage(language.HELP_BASE.replace("%command%", "/" + alias + " reload").replace("%description%", language.HELP_RELOAD));
 		}
-		sender.sendMessage(disguiseCommand + " status - Show the current disguise");
+		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " status").replace("%description%", self ? language.HELP_STATUS_SELF : language.HELP_STATUS_OTHER));
 		if(self) {
-			sender.sendMessage(undisguiseCommand + " - Undisguise");
+			sender.sendMessage(language.HELP_BASE.replace("%command%", undisguiseCommand).replace("%description%", language.HELP_UNDISGUISE_SELF));
 		}
-		if(console || sender.hasPermission("iDisguise.undisguise.all")) {
-			sender.sendMessage(undisguiseCommand + " * - Undisguise everyone");
+		if(sender.hasPermission("iDisguise.undisguise.all")) {
+			sender.sendMessage(language.HELP_BASE.replace("%command%", undisguiseCommand + " * [ignore]").replace("%description%", language.HELP_UNDISGUISE_ALL));
 		}
-		if(console || sender.hasPermission("iDisguise.undisguise.others")) {
-			sender.sendMessage(undisguiseCommand + " <player> - Undisguise another player");
+		if(sender.hasPermission("iDisguise.undisguise.others")) {
+			sender.sendMessage(language.HELP_BASE.replace("%command%", undisguiseCommand + " <player> [ignore]").replace("%description%", language.HELP_UNDISGUISE_OTHER));
 		}
-		sender.sendMessage(disguiseCommand + " [subtype] <mobtype> [subtype] - Disguise with optional subtype");
-		sender.sendMessage(disguiseCommand + " <subtype> - Change subtype after disguising");
-		sender.sendMessage(ChatColor.GOLD + "Types:");
+		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " [subtype] <type> [subtype]").replace("%description%", self ? language.HELP_DISGUISE_SELF : language.HELP_DISGUISE_OTHER));
+		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " <subtype>").replace("%description%", language.HELP_SUBTYPE));
 		StringBuilder builder = new StringBuilder(" ");
 		for(DisguiseType type : DisguiseType.values()) {
-			if(!type.isPlayer()) {
-				builder.append(type.getDefaultCommandArgument() + ", ");
+			if(type.isAvailable() && !type.isPlayer()) {
+				builder.append(type.getDefaultCommandArgument());
+				builder.append(", ");
 			}
 		}
-		String types = builder.toString();
-		sender.sendMessage(ChatColor.GRAY + types.substring(0, types.length() - 2));
-		if(disguise != null) {
-			sendSubtypeInformation(sender, disguise.getType());
-		}
+		sender.sendMessage(language.HELP_TYPES.replace("%types%", builder.substring(0, builder.length() - 2)));
 	}
 	
-	private void sendSubtypeInformation(CommandSender sender, DisguiseType type) {
-		sender.sendMessage(ChatColor.GOLD + "Information about subtypes:");
-		switch(type) {
-			case CREEPER:
-				sender.sendMessage(ChatColor.GRAY + " Creeper: powered, not-powered");
-				break;
-			case ENDERMAN:
-				sender.sendMessage(ChatColor.GRAY + " Block in hand: <material-name>");
-				sender.sendMessage(ChatColor.GRAY + " Data: <0-255>");
-				break;
-			case GUARDIAN:
-				sender.sendMessage(ChatColor.GRAY + " Guardian type: elder, not-elder");
-				break;
-			case HORSE:
-				sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
-				sender.sendMessage(ChatColor.GRAY + " Variant: donkey, normal, mule, skeletal, undead");
-				sender.sendMessage(ChatColor.GRAY + " Style: black-dots, no-markings, white-stripes, white-dots, whitefield");
-				sender.sendMessage(ChatColor.GRAY + " Color: black, brown, chestnut, creamy, dark-brown, gray, white");
-				sender.sendMessage(ChatColor.GRAY + " Saddle: saddled, not-saddled");
-				sender.sendMessage(ChatColor.GRAY + " Chest: chest, no-chest");
-				sender.sendMessage(ChatColor.GRAY + " Armor: no-armor, iron, gold, diamond");
-				break;
-			case OCELOT:
-				sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
-				sender.sendMessage(ChatColor.GRAY + " Cat type: black, red, siamese, wild");
-				break;
-			case PIG:
-				sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
-				sender.sendMessage(ChatColor.GRAY + " Saddle: saddled, not-saddled");
-				break;
-			case RABBIT:
-				sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
-				sender.sendMessage(ChatColor.GRAY + " Rabbit type: black, black-white, brown, gold, salt-pepper, killer, white");
-				break;
-			case SHEEP:
-				sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
-				sender.sendMessage(ChatColor.GRAY + " Color: black, blue, brown, cyan, gray, green, light-blue, lime, magenta, orange, pink, purple, red, silver, white, yellow");
-				break;
-			case SKELETON:
-				sender.sendMessage(ChatColor.GRAY + " Skeleton type: normal, wither");
-				break;
-			case MAGMA_CUBE:
-			case SLIME:
-				sender.sendMessage(ChatColor.GRAY + " Size: tiny, normal, big, <1-1000>");
-				break;
-			case VILLAGER:
-				sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
-				sender.sendMessage(ChatColor.GRAY + " Profession: blacksmith, butcher, farmer, librarian, priest");
-				break;
-			case WOLF:
-				sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
-				sender.sendMessage(ChatColor.GRAY + " Collar: black, blue, brown, cyan, gray, green, light-blue, lime, magenta, orange, pink, purple, red, silver, white, yellow");
-				sender.sendMessage(ChatColor.GRAY + " Tamed: tamed, not-tamed");
-				sender.sendMessage(ChatColor.GRAY + " Angry: angry, not-angry");
-				break;
-			case ZOMBIE:
-				sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
-				sender.sendMessage(ChatColor.GRAY + " Zombie type: normal, infected");
-				break;
-			case CHICKEN:
-			case COW:
-			case MUSHROOM_COW:
-				sender.sendMessage(ChatColor.GRAY + " Age: adult, baby");
-				break;
-			case FALLING_BLOCK:
-				sender.sendMessage(ChatColor.GRAY + " Block type: <material-name>");
-				sender.sendMessage(ChatColor.GRAY + " Block data: <0-255>");
-				break;
-			case ITEM:
-				sender.sendMessage(ChatColor.GRAY + " Material: <material-name>");
-				sender.sendMessage(ChatColor.GRAY + " Material data: <0-255>");
-				sender.sendMessage(ChatColor.GRAY + " Stack size: single, double, triple, quadruple, quintuple");
-				break;
-			case MINECART:
-				sender.sendMessage(ChatColor.GRAY + " Block inside: <material-name>");
-				sender.sendMessage(ChatColor.GRAY + " Data: <0-255>");
-				break;
-			case ARMOR_STAND:
-				sender.sendMessage(ChatColor.GRAY + " Show arms: show-arms, hide-arms");
-				break;
-			default:
-				sender.sendMessage(ChatColor.GRAY + " no subtypes available");
-				break;
-		}
-	}
-	
-	private boolean hasPermission(Player player, Disguise disguise) {
+	private boolean hasPermission(CommandSender sender, Disguise disguise) {
 		switch(disguise.getType()) {
 			case BAT:
-				return player.hasPermission("iDisguise.mob.bat");
+				return sender.hasPermission("iDisguise.mob.bat");
 			case BLAZE:
-				return player.hasPermission("iDisguise.mob.blaze");
+				return sender.hasPermission("iDisguise.mob.blaze");
 			case CAVE_SPIDER:
-				return player.hasPermission("iDisguise.mob.cave_spider");
+				return sender.hasPermission("iDisguise.mob.cave_spider");
 			case CHICKEN:
-				return player.hasPermission("iDisguise.mob.chicken") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby"));
+				return sender.hasPermission("iDisguise.mob.chicken") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case COW:
-				return player.hasPermission("iDisguise.mob.cow") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby"));
+				return sender.hasPermission("iDisguise.mob.cow") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case CREEPER:
-				return player.hasPermission("iDisguise.mob.creeper") && (!((CreeperDisguise)disguise).isPowered() || player.hasPermission("iDisguise.mob.creeper.powered"));
+				return sender.hasPermission("iDisguise.mob.creeper") && (!((CreeperDisguise)disguise).isPowered() || sender.hasPermission("iDisguise.mob.creeper.powered"));
 			case ENDER_DRAGON:
-				return player.hasPermission("iDisguise.mob.ender_dragon");
+				return sender.hasPermission("iDisguise.mob.ender_dragon");
 			case ENDERMAN:
-				return player.hasPermission("iDisguise.mob.enderman") && (((EndermanDisguise)disguise).getBlockInHand().equals(Material.AIR) || player.hasPermission("iDisguise.mob.enderman.block"));
+				return sender.hasPermission("iDisguise.mob.enderman") && (((EndermanDisguise)disguise).getBlockInHand().equals(Material.AIR) || sender.hasPermission("iDisguise.mob.enderman.block"));
 			case ENDERMITE:
-				return player.hasPermission("iDisguise.mob.endermite");
+				return sender.hasPermission("iDisguise.mob.endermite");
 			case GHAST:
-				return player.hasPermission("iDisguise.mob.ghast");
+				return sender.hasPermission("iDisguise.mob.ghast");
 			case GHOST:
-				return player.hasPermission("iDisguise.ghost") && (player.hasPermission("iDisguise.player.name.*") || player.hasPermission("iDisguise.player.name." + ((PlayerDisguise)disguise).getSkinName().toLowerCase(Locale.ENGLISH))) && (isPlayerDisguisePermitted(((PlayerDisguise)disguise).getSkinName().toLowerCase(Locale.ENGLISH)) || player.hasPermission("iDisguise.player.prohibited"));
+				return sender.hasPermission("iDisguise.ghost") && (sender.hasPermission("iDisguise.player.name.*") || sender.hasPermission("iDisguise.player.name." + ((PlayerDisguise)disguise).getSkinName().toLowerCase(Locale.ENGLISH))) && (isPlayerDisguisePermitted(((PlayerDisguise)disguise).getSkinName().toLowerCase(Locale.ENGLISH)) || sender.hasPermission("iDisguise.player.prohibited"));
 			case GIANT:
-				return player.hasPermission("iDisguise.mob.giant");
+				return sender.hasPermission("iDisguise.mob.giant");
 			case GUARDIAN:
-				return player.hasPermission("iDisguise.mob.guardian") && (!((GuardianDisguise)disguise).isElder() || player.hasPermission("iDisguise.mob.guardian.elder"));
+				return sender.hasPermission("iDisguise.mob.guardian") && (!((GuardianDisguise)disguise).isElder() || sender.hasPermission("iDisguise.mob.guardian.elder"));
 			case HORSE:
-				return player.hasPermission("iDisguise.mob.horse") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.horse.variant." + ((HorseDisguise)disguise).getVariant().name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal").replace("skeleton", "skeletal"));
+				return sender.hasPermission("iDisguise.mob.horse") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && sender.hasPermission("iDisguise.mob.horse.variant." + ((HorseDisguise)disguise).getVariant().name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal").replace("skeleton", "skeletal"));
 			case IRON_GOLEM:
-				return player.hasPermission("iDisguise.mob.iron_golem");
+				return sender.hasPermission("iDisguise.mob.iron_golem");
 			case MAGMA_CUBE:
-				return player.hasPermission("iDisguise.mob.magma_cube") && (((SizedDisguise)disguise).getSize() < 5 || player.hasPermission("iDisguise.mob.magma_cube.giant"));
+				return sender.hasPermission("iDisguise.mob.magma_cube") && (((SizedDisguise)disguise).getSize() < 5 || sender.hasPermission("iDisguise.mob.magma_cube.giant"));
 			case MUSHROOM_COW:
-				return player.hasPermission("iDisguise.mob.mushroom_cow") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby"));
+				return sender.hasPermission("iDisguise.mob.mushroom_cow") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case OCELOT:
-				return player.hasPermission("iDisguise.mob.ocelot") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.ocelot.type." + ((OcelotDisguise)disguise).getCatType().name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", ""));
+				return sender.hasPermission("iDisguise.mob.ocelot") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && sender.hasPermission("iDisguise.mob.ocelot.type." + ((OcelotDisguise)disguise).getCatType().name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", ""));
 			case PIG:
-				return player.hasPermission("iDisguise.mob.pig") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && (!((PigDisguise)disguise).isSaddled() || player.hasPermission("iDisguise.mob.pig.saddled"));
+				return sender.hasPermission("iDisguise.mob.pig") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && (!((PigDisguise)disguise).isSaddled() || sender.hasPermission("iDisguise.mob.pig.saddled"));
 			case PIG_ZOMBIE:
-				return player.hasPermission("iDisguise.mob.pig_zombie") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby"));
+				return sender.hasPermission("iDisguise.mob.pig_zombie") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case PLAYER:
-				return (player.hasPermission("iDisguise.player.name.*") || player.hasPermission("iDisguise.player.name." + ((PlayerDisguise)disguise).getSkinName().toLowerCase(Locale.ENGLISH))) && (isPlayerDisguisePermitted(((PlayerDisguise)disguise).getSkinName().toLowerCase(Locale.ENGLISH)) || player.hasPermission("iDisguise.player.prohibited"));
+				return (sender.hasPermission("iDisguise.player.name.*") || sender.hasPermission("iDisguise.player.name." + ((PlayerDisguise)disguise).getSkinName().toLowerCase(Locale.ENGLISH))) && (isPlayerDisguisePermitted(((PlayerDisguise)disguise).getSkinName().toLowerCase(Locale.ENGLISH)) || sender.hasPermission("iDisguise.player.prohibited"));
 			case RABBIT:
-				return player.hasPermission("iDisguise.mob.rabbit") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.rabbit.type." + ((RabbitDisguise)disguise).getRabbitType().name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer"));
+				return sender.hasPermission("iDisguise.mob.rabbit") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && sender.hasPermission("iDisguise.mob.rabbit.type." + ((RabbitDisguise)disguise).getRabbitType().name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer"));
 			case SHEEP:
-				return player.hasPermission("iDisguise.mob.sheep") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.sheep.color." + ((SheepDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+				return sender.hasPermission("iDisguise.mob.sheep") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && sender.hasPermission("iDisguise.mob.sheep.color." + ((SheepDisguise)disguise).getColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 			case SHULKER:
-				return player.hasPermission("iDisguise.mob.shulker");
+				return sender.hasPermission("iDisguise.mob.shulker");
 			case SILVERFISH:
-				return player.hasPermission("iDisguise.mob.silverfish");
+				return sender.hasPermission("iDisguise.mob.silverfish");
 			case SKELETON:
-				return player.hasPermission("iDisguise.mob.skeleton") && (((SkeletonDisguise)disguise).getSkeletonType().equals(SkeletonType.NORMAL) || player.hasPermission("iDisguise.mob.skeleton.wither"));
+				return sender.hasPermission("iDisguise.mob.skeleton") && (((SkeletonDisguise)disguise).getSkeletonType().equals(SkeletonType.NORMAL) || sender.hasPermission("iDisguise.mob.skeleton.wither"));
 			case SLIME:
-				return player.hasPermission("iDisguise.mob.slime") && (((SizedDisguise)disguise).getSize() < 5 || player.hasPermission("iDisguise.mob.slime.giant"));
+				return sender.hasPermission("iDisguise.mob.slime") && (((SizedDisguise)disguise).getSize() < 5 || sender.hasPermission("iDisguise.mob.slime.giant"));
 			case SNOWMAN:
-				return player.hasPermission("iDisguise.mob.snowman");
+				return sender.hasPermission("iDisguise.mob.snowman");
 			case SPIDER:
-				return player.hasPermission("iDisguise.mob.spider");
+				return sender.hasPermission("iDisguise.mob.spider");
 			case SQUID:
-				return player.hasPermission("iDisguise.mob.squid");
+				return sender.hasPermission("iDisguise.mob.squid");
 			case VILLAGER:
-				return player.hasPermission("iDisguise.mob.villager") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.villager.profession." + ((VillagerDisguise)disguise).getProfession().name().toLowerCase(Locale.ENGLISH));
+				return sender.hasPermission("iDisguise.mob.villager") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && sender.hasPermission("iDisguise.mob.villager.profession." + ((VillagerDisguise)disguise).getProfession().name().toLowerCase(Locale.ENGLISH));
 			case WITCH:
-				return player.hasPermission("iDisguise.mob.witch");
+				return sender.hasPermission("iDisguise.mob.witch");
 			case WITHER:
-				return player.hasPermission("iDisguise.mob.witherboss");
+				return sender.hasPermission("iDisguise.mob.witherboss");
 			case WOLF:
-				return player.hasPermission("iDisguise.mob.wolf") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && player.hasPermission("iDisguise.mob.wolf.collar." + ((WolfDisguise)disguise).getCollarColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-')) && (!((WolfDisguise)disguise).isTamed() || player.hasPermission("iDisguise.mob.wolf.tamed")) && (!((WolfDisguise)disguise).isAngry() || player.hasPermission("iDisguise.mob.wolf.angry"));
+				return sender.hasPermission("iDisguise.mob.wolf") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && sender.hasPermission("iDisguise.mob.wolf.collar." + ((WolfDisguise)disguise).getCollarColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-')) && (!((WolfDisguise)disguise).isTamed() || sender.hasPermission("iDisguise.mob.wolf.tamed")) && (!((WolfDisguise)disguise).isAngry() || sender.hasPermission("iDisguise.mob.wolf.angry"));
 			case ZOMBIE:
-				return player.hasPermission("iDisguise.mob.zombie") && (((AgeableDisguise)disguise).isAdult() || player.hasPermission("iDisguise.mob.baby")) && (!((ZombieDisguise)disguise).isVillager() || player.hasPermission("iDisguise.mob.zombie.infected"));
+				return sender.hasPermission("iDisguise.mob.zombie") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && (!((ZombieDisguise)disguise).isVillager() || sender.hasPermission("iDisguise.mob.zombie.infected"));
 			case ARMOR_STAND:
-				return player.hasPermission("iDisguise.object.armor_stand");
+				return sender.hasPermission("iDisguise.object.armor_stand");
 			case BOAT:
-				return player.hasPermission("iDisguise.object.boat");
+				return sender.hasPermission("iDisguise.object.boat");
 			case ENDER_CRYSTAL:
-				return player.hasPermission("iDisguise.object.ender_crystal");
+				return sender.hasPermission("iDisguise.object.ender_crystal");
 			case FALLING_BLOCK:
-				return player.hasPermission("iDisguise.object.falling_block");
+				return sender.hasPermission("iDisguise.object.falling_block");
 			case ITEM:
-				return player.hasPermission("iDisguise.object.item");
+				return sender.hasPermission("iDisguise.object.item");
 			case MINECART:
-				return player.hasPermission("iDisguise.object.minecart");
+				return sender.hasPermission("iDisguise.object.minecart");
 			default:
 				return false;
 		}
@@ -979,14 +760,25 @@ public class iDisguise extends JavaPlugin {
 			}
 			
 			public boolean disguise(OfflinePlayer player, Disguise disguise, boolean fireEvent) {
-				if(player.isOnline() && fireEvent) {
-					DisguiseEvent event = new DisguiseEvent(player.getPlayer(), disguise);
-					getServer().getPluginManager().callEvent(event);
-					if(event.isCancelled()) {
-						return false;
+				if(fireEvent) {
+					if(player.isOnline()) {
+						DisguiseEvent event = new DisguiseEvent(player.getPlayer(), disguise);
+						getServer().getPluginManager().callEvent(event);
+						if(event.isCancelled()) {
+							return false;
+						} else {
+							DisguiseManager.getInstance().disguise(player, disguise);
+							return true;
+						}
 					} else {
-						DisguiseManager.getInstance().disguise(player, disguise);
-						return true;
+						OfflinePlayerDisguiseEvent event = new OfflinePlayerDisguiseEvent(player, disguise);
+						getServer().getPluginManager().callEvent(event);
+						if(event.isCancelled()) {
+							return false;
+						} else {
+							DisguiseManager.getInstance().disguise(player, disguise);
+							return true;
+						}
 					}
 				} else {
 					DisguiseManager.getInstance().disguise(player, disguise);
@@ -1002,14 +794,25 @@ public class iDisguise extends JavaPlugin {
 				if(!isDisguised(player)) {
 					return false;
 				}
-				if(player.isOnline() && fireEvent) {
-					UndisguiseEvent event = new UndisguiseEvent(player.getPlayer(), getDisguise(player), false);
-					getServer().getPluginManager().callEvent(event);
-					if(event.isCancelled()) {
-						return false;
+				if(fireEvent) {
+					if(player.isOnline()) {
+						UndisguiseEvent event = new UndisguiseEvent(player.getPlayer(), getDisguise(player), false);
+						getServer().getPluginManager().callEvent(event);
+						if(event.isCancelled()) {
+							return false;
+						} else {
+							DisguiseManager.getInstance().undisguise(player);
+							return true;
+						}
 					} else {
-						DisguiseManager.getInstance().undisguise(player);
-						return true;
+						OfflinePlayerUndisguiseEvent event = new OfflinePlayerUndisguiseEvent(player, getDisguise(player), false);
+						getServer().getPluginManager().callEvent(event);
+						if(event.isCancelled()) {
+							return false;
+						} else {
+							DisguiseManager.getInstance().undisguise(player);
+							return true;
+						}
 					}
 				} else {
 					DisguiseManager.getInstance().undisguise(player);

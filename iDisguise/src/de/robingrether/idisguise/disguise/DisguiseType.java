@@ -125,10 +125,22 @@ public enum DisguiseType {
 		return type;
 	}
 	
+	/**
+	 * Indicates whether this disguise type is available on this server.
+	 * 
+	 * @since 5.3.1
+	 * @return <code>true</code>, if and only if this disguise type is available
+	 */
 	public boolean isAvailable() {
 		return VersionHelper.requireVersion(requiredVersion);
 	}
 	
+	/**
+	 * Returns the class that handles the subtypes for this disguise type.
+	 * 
+	 * @since 5.3.1
+	 * @return the disguise class that handles the subtypes for this disguise type
+	 */
 	public Class<? extends Disguise> getDisguiseClass() {
 		return disguiseClass;
 	}
@@ -181,6 +193,20 @@ public enum DisguiseType {
 	 */
 	public String getDefaultCommandArgument() {
 		return commandArgument;
+	}
+	
+	/**
+	 * Returns a string representation of the object.
+	 * 
+	 * @since 5.3.1
+	 * @return a string representation of the object
+	 */
+	public String toString() {
+		if(getDefaultCommandArgument() != null) {
+			return getDefaultCommandArgument();
+		} else {
+			return name().toLowerCase(Locale.ENGLISH);
+		}
 	}
 	
 	private static final Random random = new Random();

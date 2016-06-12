@@ -123,24 +123,19 @@ public class EndermanDisguise extends MobDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean applySubtype(String argument) {
-		try {
-			Material blockInHand = Material.valueOf(argument.replace('-', '_').toUpperCase(Locale.ENGLISH));
-			if(blockInHand.isBlock()) {
-				setBlockInHand(blockInHand);
-				return true;
+	public String toString() {
+		return super.toString() + "; " + blockInHand.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; " + blockInHandData;
+	}
+	
+	static {
+		for(Material material : Material.values()) {
+			if(material.isBlock()) {
+				Subtypes.registerSubtype(EndermanDisguise.class, "setBlockInHand", material, material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 			}
-		} catch(IllegalArgumentException e) {
 		}
-		try {
-			int blockInHandData = Integer.parseInt(argument);
-			if(blockInHandData < 256) {
-				setBlockInHandData(blockInHandData);
-				return true;
-			}
-		} catch(NumberFormatException e) {
+		for(int i = 0; i < 256; i++) {
+			Subtypes.registerSubtype(EndermanDisguise.class, "setBlockInHandData", i, Integer.toString(i));
 		}
-		return false;
 	}
 	
 }

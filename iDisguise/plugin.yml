@@ -6,22 +6,13 @@ website: http://dev.bukkit.org/bukkit-plugins/idisguise/
 commands:
    disguise:
       description: Disguise.
-   dis:
-      description: Disguise.
-   d:
-      description: Disguise.
+      aliases: [dis, d]
    undisguise:
       description: Undisguise.
-   undis:
-      description: Undisguise.
-   ud:
-      description: Undisguise.
+      aliases: [undis, ud]
    odisguise:
       description: Disguise others.
-   odis:
-      description: Disguise others.
-   od:
-      description: Disguise others.
+      aliases: [odis, od]
 permissions:
    iDisguise.*:
       default: op

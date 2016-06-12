@@ -108,11 +108,4 @@ public class MobDisguise extends Disguise {
 		return super.equals(object) && object instanceof MobDisguise;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean applySubtype(String argument) {
-		return false;
-	}
-	
 }

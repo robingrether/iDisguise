@@ -1,7 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import java.util.Locale;
-
 /**
  * Represents a disguise as a pig.
  * 
@@ -73,25 +71,13 @@ public class PigDisguise extends AgeableDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean applySubtype(String argument) {
-		if(super.applySubtype(argument)) {
-			return true;
-		} else {
-			switch(argument.replace('-', '_').toLowerCase(Locale.ENGLISH)) {
-				case "saddled":
-				case "saddle":
-					setSaddled(true);
-					return true;
-				case "not_saddled":
-				case "notsaddled":
-				case "no_saddle":
-				case "nosaddle":
-					setSaddled(false);
-					return true;
-				default:
-					return false;
-			}
-		}
+	public String toString() {
+		return super.toString() + "; " + (saddled ? "saddled" : "not-saddled");
+	}
+	
+	static {
+		Subtypes.registerSubtype(PigDisguise.class, "setSaddled", true, "saddled");
+		Subtypes.registerSubtype(PigDisguise.class, "setSaddled", false, "not-saddled");
 	}
 	
 }

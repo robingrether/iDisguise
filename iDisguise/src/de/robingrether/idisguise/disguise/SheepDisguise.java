@@ -74,17 +74,13 @@ public class SheepDisguise extends AgeableDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean applySubtype(String argument) {
-		if(super.applySubtype(argument)) {
-			return true;
-		} else {
-			try {
-				DyeColor color = DyeColor.valueOf(argument.replace('-', '_').toUpperCase(Locale.ENGLISH));
-				setColor(color);
-				return true;
-			} catch(IllegalArgumentException e) {
-				return false;
-			}
+	public String toString() {
+		return super.toString() + "; " + color.name().toLowerCase(Locale.ENGLISH).replace('_', '-');
+	}
+	
+	static {
+		for(DyeColor color : DyeColor.values()) {
+			Subtypes.registerSubtype(SheepDisguise.class, "setColor", color, color.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
 	}
 	

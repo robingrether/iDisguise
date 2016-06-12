@@ -66,6 +66,66 @@ public class ItemDisguise extends ObjectDisguise {
 	}
 	
 	/**
+	 * Gets the material.
+	 * 
+	 * @since 5.3.1
+	 * @return the material
+	 */
+	public Material getMaterial() {
+		return itemStack.getType();
+	}
+	
+	/**
+	 * Sets the material.
+	 * 
+	 * @since 5.3.1
+	 * @param material the material
+	 */
+	public void setMaterial(Material material) {
+		itemStack.setType(material);
+	}
+	
+	/**
+	 * Gets the data value.
+	 * 
+	 * @since 5.3.1
+	 * @return the data value
+	 */
+	public int getData() {
+		return itemStack.getDurability();
+	}
+	
+	/**
+	 * Sets the data value.
+	 * 
+	 * @since 5.3.1
+	 * @param data the data value
+	 */
+	public void setData(int data) {
+		itemStack.setDurability((short)data);
+	}
+	
+	/**
+	 * Gets the amount.
+	 * 
+	 * @since 5.3.1
+	 * @return the amount
+	 */
+	public int getAmount() {
+		return itemStack.getAmount();
+	}
+	
+	/**
+	 * Sets the amount.
+	 * 
+	 * @since 5.3.1
+	 * @param amount the amount
+	 */
+	public void setAmount(int amount) {
+		itemStack.setAmount(amount);
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public ItemDisguise clone() {
@@ -82,40 +142,22 @@ public class ItemDisguise extends ObjectDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean applySubtype(String argument) {
-		try {
-			Material material = Material.valueOf(argument.replace('-', '_').toUpperCase(Locale.ENGLISH));
-			itemStack.setType(material);
-			return true;
-		} catch(IllegalArgumentException e) {
+	public String toString() {
+		return super.toString() + "; " + itemStack.getType().name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; " + Short.toString(itemStack.getDurability()) + "; " + (itemStack.getAmount() < 2 ? "single" : itemStack.getAmount() < 17 ? "double" : itemStack.getAmount() < 33 ? "triple" : itemStack.getAmount() < 49 ? "quadruple" : "quintuple");
+	}
+	
+	static {
+		for(Material material : Material.values()) {
+			Subtypes.registerSubtype(ItemDisguise.class, "setMaterial", material, material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
-		try {
-			short damage = Short.parseShort(argument);
-			if(damage >= 0 && damage < 256) {
-				itemStack.setDurability(damage);
-				return true;
-			}
-		} catch(NumberFormatException e) {
+		for(int i = 0; i < 256; i++) {
+			Subtypes.registerSubtype(ItemDisguise.class, "setData", i, Integer.toString(i));
 		}
-		switch(argument.toLowerCase(Locale.ENGLISH)) {
-			case "single":
-				itemStack.setAmount(1); //   1     1
-				return true;
-			case "double":
-				itemStack.setAmount(2); //   2     2
-				return true;
-			case "triple":
-				itemStack.setAmount(17); //  17    16
-				return true;
-			case "quadruple":
-				itemStack.setAmount(33); // 33    33
-				return true;
-			case "quintuple":
-				itemStack.setAmount(49); // 49    --
-				return true;
-			default:
-				return false;
-		}
+		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 1, "single");
+		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 2, "double");
+		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 17, "triple");
+		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 33, "quadruple");
+		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 49, "quintuple");
 	}
 	
 }

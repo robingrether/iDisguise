@@ -125,24 +125,19 @@ public class MinecartDisguise extends ObjectDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean applySubtype(String argument) {
-		try {
-			Material displayedBlock = Material.valueOf(argument.replace('-', '_').toUpperCase(Locale.ENGLISH));
-			if(displayedBlock.isBlock()) {
-				setDisplayedBlock(displayedBlock);
-				return true;
+	public String toString() {
+		return super.toString() + "; " + displayedBlock.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; " + displayedBlockData;
+	}
+	
+	static {
+		for(Material material : Material.values()) {
+			if(material.isBlock()) {
+				Subtypes.registerSubtype(MinecartDisguise.class, "setDisplayedBlock", material, material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 			}
-		} catch(IllegalArgumentException e) {
 		}
-		try {
-			short displayedBlockData = Short.parseShort(argument);
-			if(displayedBlockData >= 0 && displayedBlockData < 256) {
-				setDisplayedBlockData(displayedBlockData);
-				return true;
-			}
-		} catch(NumberFormatException e) {
+		for(int i = 0; i < 256; i++) {
+			Subtypes.registerSubtype(MinecartDisguise.class, "setDisplayedBlockData", i, Integer.toString(i));
 		}
-		return false;
 	}
 	
 }

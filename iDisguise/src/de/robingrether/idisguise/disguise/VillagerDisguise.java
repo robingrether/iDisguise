@@ -75,17 +75,13 @@ public class VillagerDisguise extends AgeableDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean applySubtype(String argument) {
-		if(super.applySubtype(argument)) {
-			return true;
-		} else {
-			try {
-				Profession profession = Profession.valueOf(argument.toUpperCase(Locale.ENGLISH));
-				setProfession(profession);
-				return true;
-			} catch(IllegalArgumentException e) {
-				return false;
-			}
+	public String toString() {
+		return super.toString() + "; " + profession.name().toLowerCase(Locale.ENGLISH);
+	}
+	
+	static {
+		for(Profession profession : Profession.values()) {
+			Subtypes.registerSubtype(VillagerDisguise.class, "setProfession", profession, profession.name().toLowerCase(Locale.ENGLISH));
 		}
 	}
 	

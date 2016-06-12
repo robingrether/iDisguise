@@ -191,104 +191,26 @@ public class HorseDisguise extends AgeableDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean applySubtype(String argument) {
-		if(super.applySubtype(argument)) {
-			return true;
-		} else {
-			switch(argument.replace('-', '_').toLowerCase(Locale.ENGLISH)) {
-				case "donkey":
-					setVariant(Variant.DONKEY);
-					return true;
-				case "normal":
-					setVariant(Variant.HORSE);
-					return true;
-				case "mule":
-					setVariant(Variant.MULE);
-					return true;
-				case "skeleton":
-				case "skeletal":
-					setVariant(Variant.SKELETON_HORSE);
-					return true;
-				case "undead":
-				case "zombie":
-					setVariant(Variant.UNDEAD_HORSE);
-					return true;
-				case "blackdots":
-				case "black_dots":
-					setStyle(Style.BLACK_DOTS);
-					return true;
-				case "nomarkings":
-				case "no_markings":
-					setStyle(Style.NONE);
-					return true;
-				case "whitestripes":
-				case "white_stripes":
-					setStyle(Style.WHITE);
-					return true;
-				case "whitedots":
-				case "white_dots":
-					setStyle(Style.WHITE_DOTS);
-					return true;
-				case "whitefield":
-					setStyle(Style.WHITEFIELD);
-					return true;
-				case "black":
-					setColor(Color.BLACK);
-					return true;
-				case "brown":
-					setColor(Color.BROWN);
-					return true;
-				case "chestnut":
-					setColor(Color.CHESTNUT);
-					return true;
-				case "creamy":
-				case "cream":
-					setColor(Color.CREAMY);
-					return true;
-				case "darkbrown":
-				case "dark_brown":
-					setColor(Color.DARK_BROWN);
-					return true;
-				case "gray":
-				case "grey":
-					setColor(Color.GRAY);
-					return true;
-				case "white":
-					setColor(Color.WHITE);
-					return true;
-				case "saddled":
-				case "saddle":
-					setSaddled(true);
-					return true;
-				case "notsattled":
-				case "not_saddled":
-				case "nosaddle":
-				case "no_saddle":
-					setSaddled(false);
-					return true;
-				case "chest":
-					setHasChest(true);
-					return true;
-				case "nochest":
-				case "no_chest":
-					setHasChest(false);
-					return true;
-				case "noarmor":
-				case "no_armor":
-					setArmor(Armor.NONE);
-					return true;
-				case "iron":
-					setArmor(Armor.IRON);
-					return true;
-				case "gold":
-					setArmor(Armor.GOLD);
-					return true;
-				case "diamond":
-					setArmor(Armor.DIAMOND);
-					return true;
-				default:
-					return false;
-			}
+	public String toString() {
+		return super.toString() + "; " + variant.name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal").replace("skeleton", "skeletal") + "; " + style.name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings") + "; " + color.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; " + (saddled ? "saddled" : "not-saddled") + "; " + (hasChest ? "chest" : "no-chest") + "; " + armor.name().toLowerCase(Locale.ENGLISH).replace("none", "no-armor");
+	}
+	
+	static {
+		for(Variant variant : Variant.values()) {
+			Subtypes.registerSubtype(HorseDisguise.class, "setVariant", variant, variant.name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal").replace("skeleton", "skeletal"));
+		}
+		for(Style style : Style.values()) {
+			Subtypes.registerSubtype(HorseDisguise.class, "setStyle", style, style.name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings"));
+		}
+		for(Color color : Color.values()) {
+			Subtypes.registerSubtype(HorseDisguise.class, "setColor", color, color.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+		}
+		Subtypes.registerSubtype(HorseDisguise.class, "setSaddled", true, "saddled");
+		Subtypes.registerSubtype(HorseDisguise.class, "setSaddled", false, "not-saddled");
+		Subtypes.registerSubtype(HorseDisguise.class, "setHasChest", true, "chest");
+		Subtypes.registerSubtype(HorseDisguise.class, "setHasChest", false, "no-chest");
+		for(Armor armor : Armor.values()) {
+			Subtypes.registerSubtype(HorseDisguise.class, "setArmor", armor, armor.name().toLowerCase(Locale.ENGLISH).replace("none", "no-armor"));
 		}
 	}
 	
