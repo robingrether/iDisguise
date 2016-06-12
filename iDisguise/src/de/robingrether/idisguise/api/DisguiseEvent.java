@@ -7,8 +7,7 @@ import org.bukkit.event.player.PlayerEvent;
 import de.robingrether.idisguise.disguise.Disguise;
 
 /**
- * This event is fired whenever someone attempts to disguise.<br>
- * This class replaces the old DisguiseAsPlayerEvent and DisguiseAsMobEvent classes.
+ * This event is fired whenever an online player is about to be disguised.
  * 
  * @since 3.0.1
  * @author RobinGrether
@@ -25,7 +24,7 @@ public class DisguiseEvent extends PlayerEvent implements Cancellable {
 	}
 	
 	/**
-	 * Returns the disguise
+	 * Returns the disguise.
 	 * 
 	 * @since 3.0.1
 	 * @return the disguise
@@ -35,7 +34,7 @@ public class DisguiseEvent extends PlayerEvent implements Cancellable {
 	}
 	
 	/**
-	 * Changes the disguise
+	 * Changes the disguise.
 	 * 
 	 * @since 3.0.1
 	 * @param disguise the disguise to change to
@@ -45,20 +44,20 @@ public class DisguiseEvent extends PlayerEvent implements Cancellable {
 	}
 	
 	/**
-	 * Checks whether this event is cancelled
+	 * Checks whether this event is cancelled.
 	 * 
 	 * @since 3.0.1
-	 * @return true if cancelled, false if not
+	 * @return <code>true</code>, if and only if this event is cancelled
 	 */
 	public boolean isCancelled() {
 		return cancel;
 	}
 	
 	/**
-	 * Sets whether this event is cancelled
+	 * Sets whether this event is cancelled.
 	 * 
 	 * @since 3.0.1
-	 * @param cancel true if it should be cancelled
+	 * @param cancel <code>true</code> if this event shall be cancelled
 	 */
 	public void setCancelled(boolean cancel) {
 		this.cancel = cancel;
