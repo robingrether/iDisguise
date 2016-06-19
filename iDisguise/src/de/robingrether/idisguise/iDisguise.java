@@ -76,7 +76,7 @@ public class iDisguise extends JavaPlugin {
 	public iDisguise() { instance = this; }
 	
 	public void onEnable() {
-		if(!VersionHelper.init(true)) {
+		if(!VersionHelper.init(false)) {
 			getLogger().log(Level.SEVERE, String.format("%s is not compatible with your server version!", getFullName()));
 			getServer().getPluginManager().disablePlugin(this);
 			return;
@@ -678,7 +678,7 @@ public class iDisguise extends JavaPlugin {
 			case SILVERFISH:
 				return sender.hasPermission("iDisguise.mob.silverfish");
 			case SKELETON:
-				return sender.hasPermission("iDisguise.mob.skeleton") && (((SkeletonDisguise)disguise).getSkeletonType().equals(SkeletonType.NORMAL) || sender.hasPermission("iDisguise.mob.skeleton.wither"));
+				return sender.hasPermission("iDisguise.mob.skeleton") && (!((SkeletonDisguise)disguise).getSkeletonType().equals(SkeletonType.WITHER) || sender.hasPermission("iDisguise.mob.skeleton.wither")) && (!((SkeletonDisguise)disguise).getSkeletonType().name().equals("STRAY") || sender.hasPermission("iDisguise.mob.skeleton.stray"));
 			case SLIME:
 				return sender.hasPermission("iDisguise.mob.slime") && (((SizedDisguise)disguise).getSize() < 5 || sender.hasPermission("iDisguise.mob.slime.giant"));
 			case SNOWMAN:
@@ -696,7 +696,7 @@ public class iDisguise extends JavaPlugin {
 			case WOLF:
 				return sender.hasPermission("iDisguise.mob.wolf") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && sender.hasPermission("iDisguise.mob.wolf.collar." + ((WolfDisguise)disguise).getCollarColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-')) && (!((WolfDisguise)disguise).isTamed() || sender.hasPermission("iDisguise.mob.wolf.tamed")) && (!((WolfDisguise)disguise).isAngry() || sender.hasPermission("iDisguise.mob.wolf.angry"));
 			case ZOMBIE:
-				return sender.hasPermission("iDisguise.mob.zombie") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && (!((ZombieDisguise)disguise).isVillager() || sender.hasPermission("iDisguise.mob.zombie.infected"));
+				return sender.hasPermission("iDisguise.mob.zombie") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && (!((ZombieDisguise)disguise).isVillager() || sender.hasPermission("iDisguise.mob.zombie.infected")) && (!((ZombieDisguise)disguise).getVillagerType().name().equals("HUSK") || sender.hasPermission("iDisguise.mob.zombie.husk"));
 			case ARMOR_STAND:
 				return sender.hasPermission("iDisguise.object.armor_stand");
 			case BOAT:

@@ -76,6 +76,7 @@ permissions:
          iDisguise.mob.shulker: true
          iDisguise.mob.silverfish: true
          iDisguise.mob.skeleton: true
+         iDisguise.mob.skeleton.stray: true
          iDisguise.mob.skeleton.wither: true
          iDisguise.mob.slime: true
          iDisguise.mob.slime.giant: true
@@ -91,6 +92,7 @@ permissions:
          iDisguise.mob.wolf.tamed: true
          iDisguise.mob.wolf.angry: true
          iDisguise.mob.zombie: true
+         iDisguise.mob.zombie.husk: true
          iDisguise.mob.zombie.infected: true
    iDisguise.mob.baby:
       default: false
@@ -270,6 +272,8 @@ permissions:
       default: false
    iDisguise.mob.skeleton:
       default: false
+   iDisguise.mob.skeleton.stray:
+      default: false
    iDisguise.mob.skeleton.wither:
       default: false
    iDisguise.mob.slime:
@@ -368,6 +372,8 @@ permissions:
    iDisguise.mob.wolf.angry:
       default: false
    iDisguise.mob.zombie:
+      default: false
+   iDisguise.mob.zombie.husk:
       default: false
    iDisguise.mob.zombie.infected:
       default: false
