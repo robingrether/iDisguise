@@ -587,7 +587,7 @@ public class iDisguise extends JavaPlugin {
 	private void sendHelpMessage(CommandSender sender, String alias) {
 		boolean self = !StringUtil.startsWithIgnoreCase(alias, "o");
 		String disguiseCommand = "/" + (self ? alias : alias + " <player>");
-		String undisguiseCommand = "/u" + (alias.length() < 3 ? "" : "n") + alias.substring(1);
+		String undisguiseCommand = "/u" + (alias.length() < 3 ? "" : "n") + (self ? alias : alias.substring(1));
 		sender.sendMessage(language.HELP_INFO.replace("%name%", "iDisguise").replace("%version%", getVersion()));
 		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " help").replace("%description%", language.HELP_HELP));		
 		
