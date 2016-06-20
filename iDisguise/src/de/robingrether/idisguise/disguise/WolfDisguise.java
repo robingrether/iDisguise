@@ -80,6 +80,7 @@ public class WolfDisguise extends AgeableDisguise {
 	 */
 	public void setTamed(boolean tamed) {
 		this.tamed = tamed;
+		if(tamed) this.angry = false;
 	}
 	
 	/**
@@ -100,6 +101,7 @@ public class WolfDisguise extends AgeableDisguise {
 	 */
 	public void setAngry(boolean angry) {
 		this.angry = angry;
+		if(angry) this.tamed = false;
 	}
 	
 	/**
