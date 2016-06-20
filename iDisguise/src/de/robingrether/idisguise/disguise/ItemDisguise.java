@@ -76,13 +76,15 @@ public class ItemDisguise extends ObjectDisguise {
 	}
 	
 	/**
-	 * Sets the material.
+	 * Sets the material.<br>
+	 * This also resets the data.
 	 * 
 	 * @since 5.3.1
 	 * @param material the material
 	 */
 	public void setMaterial(Material material) {
 		itemStack.setType(material);
+		itemStack.setDurability((short)0);
 	}
 	
 	/**
