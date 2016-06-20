@@ -67,7 +67,8 @@ public class EndermanDisguise extends MobDisguise {
 	}
 	
 	/**
-	 * Sets the carried block.
+	 * Sets the carried block.<br>
+	 * This also resets the block data to 0.
 	 * 
 	 * @since 4.0.1
 	 * @param blockInHand the carried block
@@ -78,6 +79,7 @@ public class EndermanDisguise extends MobDisguise {
 			throw new IllegalArgumentException("Material must be a block!");
 		}
 		this.blockInHand = blockInHand;
+		this.blockInHandData = 0;
 	}
 	
 	/**

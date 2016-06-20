@@ -71,7 +71,8 @@ public class MinecartDisguise extends ObjectDisguise {
 	}
 	
 	/**
-	 * Sets the block to display inside the cart.
+	 * Sets the block to display inside the cart.<br>
+	 * This also resets the block data to 0.
 	 * 
 	 * @since 5.1.1
 	 * @param displayedBlock the block to display inside the cart
@@ -82,6 +83,7 @@ public class MinecartDisguise extends ObjectDisguise {
 			throw new IllegalArgumentException("Material must be a block");
 		}
 		this.displayedBlock = displayedBlock;
+		this.displayedBlockData = 0;
 	}
 	
 	/**

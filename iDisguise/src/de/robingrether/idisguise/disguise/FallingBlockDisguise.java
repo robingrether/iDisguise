@@ -68,7 +68,8 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	}
 	
 	/**
-	 * Sets the material.
+	 * Sets the material.<br>
+	 * This also resets the data to 0.
 	 * 
 	 * @since 5.1.1
 	 * @param material the material
@@ -79,6 +80,7 @@ public class FallingBlockDisguise extends ObjectDisguise {
 			throw new IllegalArgumentException("Material must be a block");
 		}
 		this.material = material;
+		this.data = 0;
 	}
 	
 	/**
