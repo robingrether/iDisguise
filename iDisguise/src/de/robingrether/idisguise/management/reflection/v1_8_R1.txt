@@ -204,6 +204,7 @@ PacketPlayOutUpdateAttributes->C{nms}.PacketPlayOutUpdateAttributes
 PacketPlayOutUpdateAttributes_entityId->FPacketPlayOutUpdateAttributes$a
 
 PlayerInfoData->C{nms}.PlayerInfoData
+PlayerInfoData_getDisplayName->MPlayerInfoData$d()
 PlayerInfoData_getGamemode->MPlayerInfoData$c()
 PlayerInfoData_getPing->MPlayerInfoData$b()
 PlayerInfoData_getProfile->MPlayerInfoData$a()

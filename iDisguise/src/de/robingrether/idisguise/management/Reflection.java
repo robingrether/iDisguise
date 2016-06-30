@@ -14,7 +14,6 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import de.robingrether.idisguise.iDisguise;
@@ -133,6 +132,7 @@ public class Reflection {
 	public static Method PlayerInfoData_getProfile;
 	public static Method PlayerInfoData_getPing;
 	public static Method PlayerInfoData_getGamemode;
+	public static Method PlayerInfoData_getDisplayName;
 	
 	public static Class<?> World;
 	public static Method World_findNearbyPlayer;

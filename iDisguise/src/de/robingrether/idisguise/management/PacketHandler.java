@@ -83,7 +83,7 @@ public class PacketHandler {
 			for(Object playerInfo : playerInfoList) {
 				OfflinePlayer offlinePlayer = (OfflinePlayer)Bukkit_getOfflinePlayer.invoke(null, GameProfile_getProfileId.invoke(PlayerInfoData_getProfile.invoke(playerInfo)));
 				if(offlinePlayer != null && offlinePlayer != observer && DisguiseManager.getInstance().isDisguised(offlinePlayer)) {
-					Object newPlayerInfo = PacketHelper.getInstance().getPlayerInfo(offlinePlayer, customizablePacket, (Integer)PlayerInfoData_getPing.invoke(playerInfo), PlayerInfoData_getGamemode.invoke(playerInfo));
+					Object newPlayerInfo = PacketHelper.getInstance().getPlayerInfo(offlinePlayer, customizablePacket, (Integer)PlayerInfoData_getPing.invoke(playerInfo), PlayerInfoData_getGamemode.invoke(playerInfo), PlayerInfoData_getDisplayName.invoke(playerInfo));
 					itemsToRemove.add(playerInfo);
 					if(newPlayerInfo != null) {
 						itemsToAdd.add(newPlayerInfo);
@@ -96,7 +96,7 @@ public class PacketHandler {
 		} else {
 			OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer((String)PacketPlayOutPlayerInfo_playerName.get(packet));
 			if(offlinePlayer != null && offlinePlayer != observer && DisguiseManager.getInstance().isDisguised(offlinePlayer)) {
-				String name = (String)PacketHelper.getInstance().getPlayerInfo(offlinePlayer, null, 0, null);
+				String name = (String)PacketHelper.getInstance().getPlayerInfo(offlinePlayer, null, 0, null, PacketPlayOutPlayerInfo_playerName.get(packet));
 				if(name != null) {
 					Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
 					PacketPlayOutPlayerInfo_playerName.set(customizablePacket, name);
