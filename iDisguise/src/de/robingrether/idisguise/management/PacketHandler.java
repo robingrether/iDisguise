@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -94,7 +95,7 @@ public class PacketHandler {
 			playerInfoList.addAll(itemsToAdd);
 			return customizablePacket;
 		} else {
-			OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer((String)PacketPlayOutPlayerInfo_playerName.get(packet));
+			OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(ChatColor.stripColor((String)PacketPlayOutPlayerInfo_playerName.get(packet)));
 			if(offlinePlayer != null && offlinePlayer != observer && DisguiseManager.getInstance().isDisguised(offlinePlayer)) {
 				String name = (String)PacketHelper.getInstance().getPlayerInfo(offlinePlayer, null, 0, null, PacketPlayOutPlayerInfo_playerName.get(packet));
 				if(name != null) {

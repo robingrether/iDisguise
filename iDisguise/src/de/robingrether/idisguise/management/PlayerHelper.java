@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -88,7 +87,7 @@ public class PlayerHelper {
 		return null;
 	}
 	
-	public Object getGameProfile(String skinName, String displayName) {
+	public Object getGameProfile(UUID uniqueId, String skinName, String displayName) {
 		return null;
 	}
 	

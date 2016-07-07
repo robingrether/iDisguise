@@ -51,10 +51,10 @@ public class PlayerHelperUID18 extends PlayerHelper {
 		return Bukkit.getOfflinePlayer(uniqueId).getName();
 	}
 	
-	public synchronized GameProfile getGameProfile(String skinName, String displayName) {
+	public synchronized GameProfile getGameProfile(UUID uniqueId, String skinName, String displayName) {
 		if(gameProfiles.containsKey(skinName)) {
 			GameProfile gameProfile = gameProfiles.get(skinName);
-			GameProfile localGameProfile = new GameProfile(gameProfile.getId(), displayName.length() <= 16 ? displayName : skinName);
+			GameProfile localGameProfile = new GameProfile(uniqueId, displayName.length() <= 16 ? displayName : skinName);
 			localGameProfile.getProperties().putAll(gameProfile.getProperties());
 			return localGameProfile;
 		} else {
@@ -66,7 +66,7 @@ public class PlayerHelperUID18 extends PlayerHelper {
 					MinecraftSessionService_fillProfileProperties.invoke(MinecraftServer_getSessionService.invoke(MinecraftServer_getServer.invoke(null)), gameProfile, true);
 				}
 				gameProfiles.put(skinName, gameProfile);
-				GameProfile localGameProfile = new GameProfile(gameProfile.getId(), displayName.length() <= 16 ? displayName : skinName);
+				GameProfile localGameProfile = new GameProfile(uniqueId, displayName.length() <= 16 ? displayName : skinName);
 				localGameProfile.getProperties().putAll(gameProfile.getProperties());
 				return localGameProfile;
 			} catch(Exception e) {
