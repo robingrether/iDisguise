@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -56,11 +55,11 @@ public class EventListener implements Listener {
 				GhostFactory.getInstance().addGhost(player);
 			} else {
 				DisguiseManager.getInstance().undisguise(player);
-				player.sendMessage(ChatColor.GOLD + "You were undisguised because ghost disguises are disabled.");
+				player.sendMessage(plugin.getLanguage().UNDISGUISE_GHOST_DISABLED);
 			}
 		}
 		if(DisguiseManager.getInstance().isDisguised(player)) {
-			player.sendMessage(ChatColor.GOLD + "You are still disguised. Use " + ChatColor.ITALIC + "/disguise status" + ChatColor.RESET + ChatColor.GOLD + " to get more information.");
+			player.sendMessage(plugin.getLanguage().JOIN_DISGUISED);
 		}
 		if(plugin.getConfiguration().MODIFY_MESSAGE_JOIN) {
 			if(event.getJoinMessage() != null && DisguiseManager.getInstance().isDisguised(player)) {
@@ -107,7 +106,7 @@ public class EventListener implements Listener {
 				plugin.getServer().getPluginManager().callEvent(undisguiseEvent);
 				if(!undisguiseEvent.isCancelled()) {
 					DisguiseManager.getInstance().undisguise(player);
-					player.sendMessage(ChatColor.GOLD + "You were undisguised because disguising is prohibited in this world.");
+					player.sendMessage(plugin.getLanguage().UNDISGUISE_WORLD_CHANGE);
 				}
 			}
 		}
@@ -149,7 +148,7 @@ public class EventListener implements Listener {
 			event.setCancelled(true);
 			long lastSent = mapLastMessageSent.containsKey(player.getUniqueId()) ? mapLastMessageSent.get(player.getUniqueId()) : 0L;
 			if(lastSent + 3000L < System.currentTimeMillis()) {
-				player.sendMessage(ChatColor.RED + "You must not move while you are disguised as a shulker.");
+				player.sendMessage(plugin.getLanguage().MOVE_AS_SHULKER);
 				mapLastMessageSent.put(player.getUniqueId(), System.currentTimeMillis());
 			}
 		}

@@ -11,7 +11,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -46,7 +45,7 @@ public class UpdateCheck implements Runnable {
 	public void run() {
 		checkForUpdate();
 		if(isUpdateAvailable()) {
-			toBeNotified.sendMessage(ChatColor.GOLD + "[iDisguise] An update is available: " + latestVersion);
+			toBeNotified.sendMessage(plugin.getLanguage().UPDATE_AVAILABLE.replace("%version%", latestVersion));
 			if(autoDownload) {
 				downloadUpdate();
 			}
@@ -96,12 +95,12 @@ public class UpdateCheck implements Runnable {
 		File oldFile = plugin.getPluginFile();
 		File newFile = new File(plugin.getServer().getUpdateFolderFile(), oldFile.getName());
 		if(newFile.exists()) {
-			toBeNotified.sendMessage(ChatColor.GOLD + "[iDisguise] Update already downloaded. (Restart server to apply update)");
+			toBeNotified.sendMessage(plugin.getLanguage().UPDATE_ALREADY_DOWNLOADED);
 		} else {
 			InputStream input = null;
 			OutputStream output = null;
 			try {
-				toBeNotified.sendMessage(ChatColor.GOLD + "[iDisguise] Downloading update...");
+				toBeNotified.sendMessage(plugin.getLanguage().UPDATE_DOWNLOADING);
 				URL url = new URL(downloadUrl);
 				URLConnection connection = url.openConnection();
 				connection.addRequestProperty("User-Agent", pluginVersion.replace(' ', '/') + " (by RobinGrether)");
@@ -116,9 +115,9 @@ public class UpdateCheck implements Runnable {
 				}
 				input.close();
 				output.close();
-				toBeNotified.sendMessage(ChatColor.GOLD + "[iDisguise] Download succeeded. (Restart server to apply update)");
+				toBeNotified.sendMessage(plugin.getLanguage().UPDATE_DOWNLOAD_SUCCEEDED);
 			} catch(IOException e) {
-				toBeNotified.sendMessage(ChatColor.RED + "[iDisguise] Download failed.");
+				toBeNotified.sendMessage(plugin.getLanguage().UPDATE_DOWNLOAD_FAILED);
 				plugin.getLogger().log(Level.WARNING, "Update download failed: " + e.getClass().getSimpleName());
 			} finally {
 				if(input != null) {

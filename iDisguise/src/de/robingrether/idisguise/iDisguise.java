@@ -881,6 +881,10 @@ public class iDisguise extends JavaPlugin {
 		return configuration;
 	}
 	
+	public Language getLanguage() {
+		return language;
+	}
+	
 	public boolean isDisguisingPermittedInWorld(World world) {
 		return isDisguisingPermittedInWorld(world.getName());
 	}
