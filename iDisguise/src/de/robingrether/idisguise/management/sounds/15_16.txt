@@ -16,13 +16,9 @@ ENDER_DRAGON->mob.enderdragon.end,,,mob.enderdragon.hit,,
 
 ENDERMAN->mob.endermen.death,damage.fallbig,damage.fallsmall,mob.endermen.hit,liquid.splash,liquid.swim
 
-ENDERMITE->mob.silverfish.kill,damage.fallbig,damage.fallsmall,mob.silverfish.hit,liquid.splash,liquid.swim
-
 GHAST->mob.ghast.death,,,mob.ghast.scream,,
 
 GIANT->damage.hit,damage.fallbig,damage.fallsmall,damage.hit,liquid.splash,liquid.swim
-
-GUARDIAN->damage.fallbig,damage.fallsmall,liquid.splash,liquid.swim,mob.guardian.elder.death,mob.guardian.death,mob.guardian.elder.hit,mob.guardian.hit
 
 HORSE->damage.fallbig,damage.fallsmall,liquid.splash,liquid.swim,mob.horse.death,mob.horse.donkey.death,mob.horse.zombie.death,mob.horse.skeleton.death,mob.horse.hit,mob.horse.donkey.hit,mob.horse.zombie.hit,mob.horse.skeleton.hit
 
@@ -37,8 +33,6 @@ OCELOT->mob.cat.hitt,damage.fallbig,damage.fallsmall,mob.cat.hitt,liquid.splash,
 PIG->mob.pig.death,damage.fallbig,damage.fallsmall,mob.pig.say,liquid.splash,liquid.swim
 
 PIG_ZOMBIE->mob.zombiepig.zpigdeath,damage.fallbig,damage.fallsmall,mob.zombiepig.zpighurt,liquid.splash,liquid.swim
-
-RABBIT->mob.rabbit.death,damage.fallbig,damage.fallsmall,mob.rabbit.hurt,liquid.splash,liquid.swim
 
 SHEEP->mob.sheep.say,damage.fallbig,damage.fallsmall,mob.sheep.say,liquid.splash,liquid.swim
 
