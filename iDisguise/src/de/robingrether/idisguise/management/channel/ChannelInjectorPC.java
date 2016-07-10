@@ -34,7 +34,6 @@ public class ChannelInjectorPC extends ChannelInjector {
 	public synchronized void inject(Player player) {
 		try {
 			InjectedPlayerConnection playerConnection = (InjectedPlayerConnection)playerConnectionConstructor.newInstance(this, player, EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(player)));
-			EntityPlayer_playerConnection.set(CraftPlayer_getHandle.invoke(player), playerConnection);
 			playerConnectionMap.put(player, playerConnection);
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {
@@ -47,7 +46,7 @@ public class ChannelInjectorPC extends ChannelInjector {
 		try {
 			InjectedPlayerConnection playerConnection = playerConnectionMap.remove(player);
 			if(playerConnection != null) {
-				EntityPlayer_playerConnection.set(CraftPlayer_getHandle.invoke(player), playerConnection.getOriginalConnection());
+				playerConnection.resetToDefaultConnection();
 			}
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {

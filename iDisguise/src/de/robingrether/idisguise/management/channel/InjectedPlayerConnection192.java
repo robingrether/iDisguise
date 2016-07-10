@@ -2,6 +2,8 @@ package de.robingrether.idisguise.management.channel;
 
 import static de.robingrether.idisguise.management.Reflection.*;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.logging.Level;
 
 import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
@@ -19,17 +21,25 @@ public class InjectedPlayerConnection192 extends PlayerConnection implements Inj
 	
 	private final ChannelInjectorPC channelInjector;
 	private final Player observer;
-	private final PlayerConnection originalConnection;
 	
 	public InjectedPlayerConnection192(ChannelInjectorPC channelInjector, Player observer, Object originalConnection) throws Exception {
 		super((MinecraftServer)MinecraftServer_getServer.invoke(null), ((PlayerConnection)originalConnection).networkManager, ((CraftPlayer)observer).getHandle());
 		this.channelInjector = channelInjector;
 		this.observer = observer;
-		this.originalConnection = (PlayerConnection)originalConnection;
+		for(Field field : PlayerConnection.class.getDeclaredFields()) {
+			if(!Modifier.isFinal(field.getModifiers()) && !Modifier.isStatic(field.getModifiers())) {
+				field.set(this, field.get(originalConnection));
+			}
+		}
 	}
 	
-	public PlayerConnection getOriginalConnection() {
-		return originalConnection;
+	public void resetToDefaultConnection() throws Exception {
+		PlayerConnection defaultConnection = new PlayerConnection((MinecraftServer)MinecraftServer_getServer.invoke(null), networkManager, player);
+		for(Field field : PlayerConnection.class.getDeclaredFields()) {
+			if(!Modifier.isFinal(field.getModifiers()) && !Modifier.isStatic(field.getModifiers())) {
+				field.set(defaultConnection, field.get(this));
+			}
+		}
 	}
 	
 	public void a(PacketPlayInUseEntity packet) {
