@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Skeleton.SkeletonType;
 
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
@@ -17,6 +18,7 @@ import de.robingrether.idisguise.disguise.GuardianDisguise;
 import de.robingrether.idisguise.disguise.HorseDisguise;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.SizedDisguise;
+import de.robingrether.idisguise.disguise.SkeletonDisguise;
 import de.robingrether.idisguise.disguise.ZombieDisguise;
 import de.robingrether.util.StringUtil;
 
@@ -156,15 +158,40 @@ public class Sounds {
 									
 								});
 								break;
+							case "SKELETON":
+								setSoundsForEntity(DisguiseType.SKELETON, new Sounds(null, arguments[0], arguments[1], null, arguments[2], arguments[3]) {
+									
+									public String death(MobDisguise disguise) {
+										if(disguise instanceof SkeletonDisguise) {
+											return ((SkeletonDisguise)disguise).getSkeletonType().equals(SkeletonType.WITHER) ? arguments[4] : ((SkeletonDisguise)disguise).getSkeletonType().name().equals("STRAY") ? arguments[5] : arguments[6];
+										}
+										return arguments[6];
+									}
+									
+									public String hit(MobDisguise disguise) {
+										if(disguise instanceof SkeletonDisguise) {
+											return ((SkeletonDisguise)disguise).getSkeletonType().equals(SkeletonType.WITHER) ? arguments[7] : ((SkeletonDisguise)disguise).getSkeletonType().name().equals("STRAY") ? arguments[8] : arguments[9];
+										}
+										return arguments[9];
+									}
+									
+								});
+								break;
 							case "ZOMBIE":
 								setSoundsForEntity(DisguiseType.ZOMBIE, new Sounds(null, arguments[0], arguments[1], null, arguments[2], arguments[3]) {
 									
 									public String death(MobDisguise disguise) {
-										return (disguise instanceof ZombieDisguise && ((ZombieDisguise)disguise).isVillager()) ? arguments[4] : arguments[5];
+										if(disguise instanceof ZombieDisguise) {
+											return ((ZombieDisguise)disguise).isVillager() ? arguments[4] : ((ZombieDisguise)disguise).isHusk() ? arguments[5] : arguments[6];
+										}
+										return arguments[6];
 									}
 									
 									public String hit(MobDisguise disguise) {
-										return (disguise instanceof ZombieDisguise && ((ZombieDisguise)disguise).isVillager()) ? arguments[6] : arguments[7];
+										if(disguise instanceof ZombieDisguise) {
+											return ((ZombieDisguise)disguise).isVillager() ? arguments[7] : ((ZombieDisguise)disguise).isHusk() ? arguments[8] : arguments[9];
+										}
+										return arguments[9];
 									}
 									
 								});

@@ -44,7 +44,7 @@ SHEEP->mob.sheep.say,game.neutral.hurt.fall.big,game.neutral.hurt.fall.small,mob
 
 SILVERFISH->mob.silverfish.kill,game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,mob.silverfish.hit,game.hostile.swim.splash,game.hostile.swim
 
-SKELETON->mob.skeleton.death,game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,mob.skeleton.hurt,game.hostile.swim.splash,game.hostile.swim
+SKELETON->game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,game.hostile.swim.splash,game.hostile.swim,mob.skeleton.death,mob.skeleton.death,mob.skeleton.death,mob.skeleton.hurt,mob.skeleton.hurt,mob.skeleton.hurt
 
 SLIME->game.neutral.hurt.fall.big,game.neutral.hurt.fall.small,game.neutral.swim.splash,game.neutral.swim,mob.slime.big,mob.slime.small,mob.slime.big,mob.slime.small
 
@@ -62,4 +62,4 @@ WITHER->mob.wither.death,,,mob.wither.hurt,game.hostile.swim.splash,game.hostile
 
 WOLF->mob.wolf.death,game.neutral.hurt.fall.big,game.neutral.hurt.fall.small,mob.wolf.hurt,game.neutral.swim.splash,game.neutral.swim
 
-ZOMBIE->game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,game.hostile.swim.splash,game.hostile.swim,mob.zombie.death,mob.zombie.death,mob.zombie.hurt,mob.zombie.hurt
+ZOMBIE->game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,game.hostile.swim.splash,game.hostile.swim,mob.zombie.death,mob.zombie.death,mob.zombie.death,mob.zombie.hurt,mob.zombie.hurt,mob.zombie.hurt

@@ -38,6 +38,8 @@ PIG->entity.pig.death,entity.generic.big_fall,entity.generic.small_fall,entity.p
 
 PIG_ZOMBIE->entity.zombie_pig.death,entity.hostile.big_fall,entity.hostile.small_fall,entity.zombie_pig.hurt,entity.hostile.splash,entity.hostile.swim
 
+POLAR_BEAR->entity.polar_bear.death,entity.generic.big_fall,entity.generic.small_fall,entity.polar_bear.hurt,entity.generic.splash,entity.generic.swim
+
 RABBIT->entity.rabbit.death,entity.generic.big_fall,entity.generic.small_fall,entity.rabbit.hurt,entity.generic.splash,entity.generic.swim
 
 SHEEP->entity.sheep.death,entity.generic.big_fall,entity.generic.small_fall,entity.sheep.hurt,entity.generic.splash,entity.generic.swim
@@ -46,7 +48,7 @@ SHULKER->entity.shulker.death,,,entity.shulker.hurt,,
 
 SILVERFISH->entity.silverfish.death,entity.hostile.big_fall,entity.hostile.small_fall,entity.silverfish.hurt,entity.hostile.splash,entity.hostile.swim
 
-SKELETON->entity.hostile.big_fall,entity.hostile.small_fall,entity.hostile.splash,entity.hostile.swim,entity.skeleton.death,entity.skeleton.death,entity.skeleton.death,entity.skeleton.hurt,entity.skeleton.hurt,entity.skeleton.hurt
+SKELETON->entity.hostile.big_fall,entity.hostile.small_fall,entity.hostile.splash,entity.hostile.swim,entity.wither_skeleton.death,entity.stray.death,entity.skeleton.death,entity.wither_skeleton.hurt,entity.stray.hurt,entity.skeleton.hurt
 
 SLIME->entity.generic.big_fall,entity.generic.small_fall,entity.generic.splash,entity.generic.swim,entity.slime.death,entity.small_slime.death,entity.slime.hurt,entity.small_slime.hurt
 
@@ -64,4 +66,4 @@ WITHER->entity.wither.death,,,entity.wither.hurt,entity.hostile.splash,entity.ho
 
 WOLF->entity.wolf.death,entity.generic.big_fall,entity.generic.small_fall,entity.wolf.hurt,entity.generic.splash,entity.generic.swim
 
-ZOMBIE->entity.hostile.big_fall,entity.hostile.small_fall,entity.hostile.splash,entity.hostile.swim,entity.zombie_villager.death,entity.zombie.death,entity.zombie.death,entity.zombie_villager.hurt,entity.zombie.hurt,entity.zombie.hurt
+ZOMBIE->entity.hostile.big_fall,entity.hostile.small_fall,entity.hostile.splash,entity.hostile.swim,entity.zombie_villager.death,entity.husk.death,entity.zombie.death,entity.zombie_villager.hurt,entity.husk.hurt,entity.zombie.hurt

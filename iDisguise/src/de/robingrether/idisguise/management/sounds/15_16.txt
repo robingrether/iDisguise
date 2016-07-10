@@ -38,7 +38,7 @@ SHEEP->mob.sheep.say,damage.fallbig,damage.fallsmall,mob.sheep.say,liquid.splash
 
 SILVERFISH->mob.silverfish.kill,damage.fallbig,damage.fallsmall,mob.silverfish.hit,liquid.splash,liquid.swim
 
-SKELETON->mob.skeleton.death,damage.fallbig,damage.fallsmall,mob.skeleton.hurt,liquid.splash,liquid.swim
+SKELETON->damage.fallbig,damage.fallsmall,liquid.splash,liquid.swim,mob.skeleton.death,mob.skeleton.death,mob.skeleton.death,mob.skeleton.hurt,mob.skeleton.hurt,mob.skeleton.hurt
 
 SLIME->damage.fallbig,damage.fallsmall,liquid.splash,liquid.swim,mob.slime.big,mob.slime.small,mob.slime.big,mob.slime.small
 
@@ -56,4 +56,4 @@ WITHER->mob.wither.death,,,mob.wither.hurt,liquid.splash,liquid.swim
 
 WOLF->mob.wolf.death,damage.fallbig,damage.fallsmall,mob.wolf.hurt,liquid.splash,liquid.swim
 
-ZOMBIE->damage.fallbig,damage.fallsmall,liquid.splash,liquid.swim,mob.zombie.death,mob.zombie.death,mob.zombie.hurt,mob.zombie.hurt
+ZOMBIE->damage.fallbig,damage.fallsmall,liquid.splash,liquid.swim,mob.zombie.death,mob.zombie.death,mob.zombie.death,mob.zombie.hurt,mob.zombie.hurt,mob.zombie.hurt
