@@ -28,6 +28,7 @@ public class InjectedPlayerConnection152 extends PlayerConnection implements Inj
 		this.observer = observer;
 		for(Field field : PlayerConnection.class.getDeclaredFields()) {
 			if(!Modifier.isFinal(field.getModifiers()) && !Modifier.isStatic(field.getModifiers())) {
+				field.setAccessible(true);
 				field.set(this, field.get(originalConnection));
 			}
 		}
@@ -37,6 +38,7 @@ public class InjectedPlayerConnection152 extends PlayerConnection implements Inj
 		PlayerConnection defaultConnection = new PlayerConnection((MinecraftServer)MinecraftServer_getServer.invoke(null), networkManager, player);
 		for(Field field : PlayerConnection.class.getDeclaredFields()) {
 			if(!Modifier.isFinal(field.getModifiers()) && !Modifier.isStatic(field.getModifiers())) {
+				field.setAccessible(true);
 				field.set(defaultConnection, field.get(this));
 			}
 		}
