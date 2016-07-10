@@ -62,6 +62,16 @@ public class ZombieDisguise extends AgeableDisguise {
 	}
 	
 	/**
+	 * Indicates whether the zombie is a husk.
+	 * 
+	 * @since 5.3.3
+	 * @return <code>true</code> if and only if this zombie is a husk
+	 */
+	public boolean isHusk() {
+		return villagerType != null && villagerType.name().equals("HUSK");
+	}
+	
+	/**
 	 * Returns whether the zombie is an infected villager.
 	 * 
 	 * @since 4.0.1
