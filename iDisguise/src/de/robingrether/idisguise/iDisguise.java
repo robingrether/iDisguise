@@ -196,7 +196,7 @@ public class iDisguise extends JavaPlugin {
 	public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
 		if(StringUtil.equalsIgnoreCase(command.getName(), "disguise", "odisguise")) {
 			if(args.length == 0) {
-				sendHelpMessage(sender, alias);
+				sendHelpMessage(sender, command, alias);
 			} else if(args[0].equalsIgnoreCase("reload")) {
 				if(sender.hasPermission("iDisguise.reload")) {
 					onReload();
@@ -234,7 +234,7 @@ public class iDisguise extends JavaPlugin {
 						return true;
 					}
 				} else {
-					sendHelpMessage(sender, alias);
+					sendHelpMessage(sender, command, alias);
 					return true;
 				}
 				if(player.isOnline() && !isDisguisingPermittedInWorld(player.getPlayer().getWorld()) && !sender.hasPermission("iDisguise.everywhere")) {
@@ -242,7 +242,7 @@ public class iDisguise extends JavaPlugin {
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("help")) {
-					sendHelpMessage(sender, alias);
+					sendHelpMessage(sender, command, alias);
 				} else if(StringUtil.equalsIgnoreCase(args[0], "player", "p") || (configuration.ENABLE_GHOST_DISGUISE && StringUtil.equalsIgnoreCase(args[0], "ghost", "g"))) {
 					if(args.length < 2) {
 						sender.sendMessage(language.WRONG_USAGE_NO_NAME);
@@ -326,7 +326,7 @@ public class iDisguise extends JavaPlugin {
 								sender.sendMessage(language.OUTDATED_SERVER);
 								return true;
 							} catch(UnsupportedOperationException e) {
-								sendHelpMessage(sender, alias);
+								sendHelpMessage(sender, command, alias);
 								return true;
 							}
 						}
@@ -361,7 +361,7 @@ public class iDisguise extends JavaPlugin {
 							sender.sendMessage(language.NO_PERMISSION);
 						}
 					} else {
-						sendHelpMessage(sender, alias);
+						sendHelpMessage(sender, command, alias);
 					}
 				}
 			}
@@ -584,10 +584,11 @@ public class iDisguise extends JavaPlugin {
 		return completions;
 	}
 	
-	private void sendHelpMessage(CommandSender sender, String alias) {
-		boolean self = !StringUtil.startsWithIgnoreCase(alias, "o");
+	private void sendHelpMessage(CommandSender sender, Command command, String alias) {
+		alias = alias.toLowerCase(Locale.ENGLISH);
+		boolean self = command.getName().equalsIgnoreCase("disguise");
 		String disguiseCommand = "/" + (self ? alias : alias + " <player>");
-		String undisguiseCommand = "/u" + (alias.length() < 3 ? "" : "n") + (self ? alias : alias.substring(1));
+		String undisguiseCommand = "/" + alias.replaceAll("o?disguise$", "undisguise").replaceAll("o?dis$", "undis").replaceAll("o?d$", "ud");
 		sender.sendMessage(language.HELP_INFO.replace("%name%", "iDisguise").replace("%version%", getVersion()));
 		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " help").replace("%description%", language.HELP_HELP));		
 		
