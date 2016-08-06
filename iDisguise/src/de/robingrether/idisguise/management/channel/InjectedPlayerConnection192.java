@@ -14,6 +14,7 @@ import de.robingrether.idisguise.management.PacketHandler;
 import de.robingrether.idisguise.management.VersionHelper;
 import net.minecraft.server.v1_9_R2.MinecraftServer;
 import net.minecraft.server.v1_9_R2.Packet;
+import net.minecraft.server.v1_9_R2.PacketPlayInTeleportAccept;
 import net.minecraft.server.v1_9_R2.PacketPlayInUseEntity;
 import net.minecraft.server.v1_9_R2.PlayerConnection;
 
@@ -41,6 +42,13 @@ public class InjectedPlayerConnection192 extends PlayerConnection implements Inj
 				field.setAccessible(true);
 				field.set(defaultConnection, field.get(this));
 			}
+		}
+	}
+	
+	public void a(PacketPlayInTeleportAccept packet) {
+		try {
+			super.a(packet);
+		} catch(NullPointerException e) {
 		}
 	}
 	
