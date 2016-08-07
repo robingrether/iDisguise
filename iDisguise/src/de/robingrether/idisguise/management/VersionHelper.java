@@ -74,6 +74,12 @@ public class VersionHelper {
 		orgBukkitCraftbukkitVersioned = orgBukkitCraftbukkit + "." + versionCode;
 		netMinecraftServerVersioned = netMinecraftServer + "." + versionCode;
 		VersionHelper.debug = debug;
+		require1_6 = requireVersion("v1_6_R1");
+		require1_7 = requireVersion("v1_7_R1");
+		require1_8 = requireVersion("v1_8_R1");
+		require1_9 = requireVersion("v1_9_R1");
+		require1_10 = requireVersion("v1_10_R1");
+		useGameProfiles = requireVersion("v1_7_R3");
 		switch(versionCode) {
 			case "v1_5_R2":
 			case "v1_5_R3":
@@ -128,12 +134,6 @@ public class VersionHelper {
 		GhostFactory.setInstance(new GhostFactory());
 		PacketHandler.setInstance(new PacketHandler());
 		PacketHelper.setInstance(new PacketHelper());
-		require1_6 = requireVersion("v1_6_R1");
-		require1_7 = requireVersion("v1_7_R1");
-		require1_8 = requireVersion("v1_8_R1");
-		require1_9 = requireVersion("v1_9_R1");
-		require1_10 = requireVersion("v1_10_R1");
-		useGameProfiles = requireVersion("v1_7_R3");
 		initialized = true;
 		return true;
 	}
