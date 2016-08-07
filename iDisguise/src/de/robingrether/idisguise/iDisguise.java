@@ -535,7 +535,7 @@ public class iDisguise extends JavaPlugin {
 							completions.add("random");
 						}
 						for(DisguiseType type : DisguiseType.values()) {
-							if(type.isAvailable() && !type.isPlayer()) {
+							if(!type.isPlayer() && type.isAvailable() && hasPermission(sender, type.newInstance())) {
 								completions.add(type.getDefaultCommandArgument());
 							}
 						}
@@ -614,11 +614,12 @@ public class iDisguise extends JavaPlugin {
 		}
 		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " [subtype] <type> [subtype]").replace("%description%", self ? language.HELP_DISGUISE_SELF : language.HELP_DISGUISE_OTHER));
 		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " <subtype>").replace("%description%", language.HELP_SUBTYPE));
-		StringBuilder builder = new StringBuilder(" ");
+		StringBuilder builder = new StringBuilder();
+		String color = ChatColor.getLastColors(language.HELP_TYPES);
 		for(DisguiseType type : DisguiseType.values()) {
-			if(type.isAvailable() && !type.isPlayer()) {
-				builder.append(type.getDefaultCommandArgument());
-				builder.append(", ");
+			if(!type.isPlayer()) {
+				builder.append((type.isAvailable() && hasPermission(sender, type.newInstance()) ? "" : ChatColor.STRIKETHROUGH) + type.getDefaultCommandArgument());
+				builder.append(color + ", ");
 			}
 		}
 		sender.sendMessage(language.HELP_TYPES.replace("%types%", builder.substring(0, builder.length() - 2)));
