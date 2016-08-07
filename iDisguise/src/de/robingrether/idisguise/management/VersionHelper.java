@@ -125,7 +125,7 @@ public class VersionHelper {
 				Reflection.init("reflection/v1_10_R1.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
 				DisguiseManager.setInstance(new DisguiseManager());
 				PlayerHelper.setInstance(new de.robingrether.idisguise.management.player.PlayerHelperUID18());
-				Sounds.init("sounds/19.txt");
+				Sounds.init("sounds/110.txt");
 				break;
 			default:
 				return false;
