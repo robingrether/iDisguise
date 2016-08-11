@@ -81,7 +81,7 @@ public class ChannelInjectorPC extends ChannelInjector {
 			return new Object[] {packet};
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {
-				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot handle packet out: " + packet.getClass().getSimpleName() + " to " + observer.getName());
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot handle packet out: " + packet.getClass().getSimpleName() + " to " + observer.getName(), e);
 			}
 		}
 		return new Object[0];

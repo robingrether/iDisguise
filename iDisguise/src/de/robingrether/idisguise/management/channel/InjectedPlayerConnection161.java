@@ -52,7 +52,7 @@ public class InjectedPlayerConnection161 extends PlayerConnection implements Inj
 			}
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {
-				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot handle packet in: " + packet.getClass().getSimpleName() + " from " + observer.getName());
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot handle packet in: " + packet.getClass().getSimpleName() + " from " + observer.getName(), e);
 			}
 		}
 	}

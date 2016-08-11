@@ -209,7 +209,7 @@ public class Sounds {
 			}
 		} catch(IOException e) {
 			if(VersionHelper.debug()) {
-				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot load the required sound effect configuration.");
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot load the required sound effect configuration.", e);
 			}
 		}
 	}
