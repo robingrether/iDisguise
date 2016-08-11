@@ -31,6 +31,7 @@ import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.DisguiseType.Type;
 import de.robingrether.idisguise.disguise.EndermanDisguise;
+import de.robingrether.idisguise.disguise.FallingBlockDisguise;
 import de.robingrether.idisguise.disguise.GuardianDisguise;
 import de.robingrether.idisguise.disguise.HorseDisguise;
 import de.robingrether.idisguise.disguise.SheepDisguise;
@@ -706,7 +707,7 @@ public class iDisguise extends JavaPlugin {
 			case ENDER_CRYSTAL:
 				return sender.hasPermission("iDisguise.object.ender_crystal");
 			case FALLING_BLOCK:
-				return sender.hasPermission("iDisguise.object.falling_block");
+				return sender.hasPermission("iDisguise.object.falling_block") && (sender.hasPermission("iDisguise.object.falling_block.material.*") || sender.hasPermission("iDisguise.object.falling_block.material." + ((FallingBlockDisguise)disguise).getMaterial().name().toLowerCase(Locale.ENGLISH).replace('_', '-')));
 			case ITEM:
 				return sender.hasPermission("iDisguise.object.item");
 			case MINECART:

@@ -384,6 +384,7 @@ permissions:
          iDisguise.object.boat: true
          iDisguise.object.ender_crystal: true
          iDisguise.object.falling_block: true
+         iDisguise.object.falling_block.material.*: true
          iDisguise.object.item: true
          iDisguise.object.minecart: true
    iDisguise.object.armor_stand:
@@ -393,6 +394,10 @@ permissions:
    iDisguise.object.ender_crystal:
       default: false
    iDisguise.object.falling_block:
+      default: false
+      children:
+         iDisguise.object.falling_block.material.stone: true
+   iDisguise.object.falling_block.material.*:
       default: false
    iDisguise.object.item:
       default: false
