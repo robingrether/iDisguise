@@ -9,7 +9,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 import java.util.logging.Level;
+
+import javax.xml.bind.DatatypeConverter;
 
 import org.bukkit.command.CommandSender;
 import org.json.simple.JSONArray;
@@ -22,6 +28,7 @@ public class UpdateCheck implements Runnable {
 	
 	public static final int PROJECT_ID = 46941;
 	public static final String API_URL = "https://api.curseforge.com/servermods/files?projectIds=";
+	public static final String API_CHECKSUM = "md5";
 	public static final String API_DOWNLOAD_URL = "downloadUrl";
 	public static final String API_FILE_NAME = "fileName";
 	public static final String API_GAME_VERSION = "gameVersion";
@@ -33,6 +40,7 @@ public class UpdateCheck implements Runnable {
 	private String latestVersion;
 	private CommandSender toBeNotified;
 	private String downloadUrl;
+	private String checksum;
 	private boolean autoDownload;
 	
 	public UpdateCheck(iDisguise plugin, CommandSender toBeNotified, boolean autoDownload) {
@@ -78,7 +86,8 @@ public class UpdateCheck implements Runnable {
 			latestVersion = null;
 			JSONObject object = (JSONObject)array.get(array.size() - 1);
 			latestVersion = (String)object.get(API_NAME);
-			downloadUrl = (String)object.get(API_DOWNLOAD_URL);
+			downloadUrl = ((String)object.get(API_DOWNLOAD_URL)).replace("servermods.cursecdn.com", "addons-origin.cursecdn.com");
+			checksum = (String)object.get(API_CHECKSUM);
 		} catch(Exception e) {
 			plugin.getLogger().log(Level.WARNING, "Update checking failed: " + e.getClass().getSimpleName());
 		} finally {
@@ -105,7 +114,8 @@ public class UpdateCheck implements Runnable {
 				URLConnection connection = url.openConnection();
 				connection.addRequestProperty("User-Agent", pluginVersion.replace(' ', '/') + " (by RobinGrether)");
 				connection.setDoOutput(true);
-				input = connection.getInputStream();
+				MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+				input = new DigestInputStream(connection.getInputStream(), messageDigest);
 				plugin.getServer().getUpdateFolderFile().mkdir();
 				output = new FileOutputStream(newFile);
 				int fetched;
@@ -115,8 +125,14 @@ public class UpdateCheck implements Runnable {
 				}
 				input.close();
 				output.close();
-				toBeNotified.sendMessage(plugin.getLanguage().UPDATE_DOWNLOAD_SUCCEEDED);
-			} catch(IOException e) {
+				if(DatatypeConverter.printHexBinary(messageDigest.digest()).toLowerCase(Locale.ENGLISH).equals(checksum.toLowerCase(Locale.ENGLISH))) {
+					toBeNotified.sendMessage(plugin.getLanguage().UPDATE_DOWNLOAD_SUCCEEDED);
+				} else {
+					newFile.delete();
+					toBeNotified.sendMessage(plugin.getLanguage().UPDATE_DOWNLOAD_FAILED);
+					plugin.getLogger().log(Level.WARNING, "Update download failed: checksum is bad");
+				}
+			} catch(IOException | NoSuchAlgorithmException e) {
 				toBeNotified.sendMessage(plugin.getLanguage().UPDATE_DOWNLOAD_FAILED);
 				plugin.getLogger().log(Level.WARNING, "Update download failed: " + e.getClass().getSimpleName());
 			} finally {
