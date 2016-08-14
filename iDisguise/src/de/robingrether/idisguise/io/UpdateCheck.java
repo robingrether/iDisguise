@@ -56,6 +56,8 @@ public class UpdateCheck implements Runnable {
 			toBeNotified.sendMessage(plugin.getLanguage().UPDATE_AVAILABLE.replace("%version%", latestVersion));
 			if(autoDownload) {
 				downloadUpdate();
+			} else {
+				toBeNotified.sendMessage(plugin.getLanguage().UPDATE_OPTION);
 			}
 		}
 	}
