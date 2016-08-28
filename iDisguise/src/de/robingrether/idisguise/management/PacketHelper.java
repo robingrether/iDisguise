@@ -50,7 +50,7 @@ public class PacketHelper {
 	
 	private final boolean[] attributes = new boolean[2];
 	/*
-	 * attributes[0] -> show original player name for mob disguise (1.5+) and object disguise (1.8+)
+	 * attributes[0] -> set custom names to actual player name
 	 * 
 	 * attributes[1] -> modify player list (tab key list)
 	 * 
