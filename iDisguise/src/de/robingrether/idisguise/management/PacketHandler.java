@@ -230,4 +230,8 @@ public class PacketHandler {
 		return packet;
 	}
 	
+	public void setAttribute(int index, boolean value) {
+		attributes[index] = value;
+	}
+	
 }
