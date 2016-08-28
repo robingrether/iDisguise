@@ -40,14 +40,14 @@ public class DisguiseManager {
 				observer.hidePlayer(player);
 			}
 			if(oldDisguise instanceof PlayerDisguise) {
-				player.setDisplayName(player.getName());
+				//player.setDisplayName(player.getName());
 				if(oldDisguise.getType().equals(DisguiseType.GHOST)) {
 					GhostFactory.getInstance().removeGhost(player);
 				}
 			}
 			disguiseMap.updateDisguise(player, disguise);
 			if(disguise instanceof PlayerDisguise) {
-				player.setDisplayName(((PlayerDisguise)disguise).getDisplayName());
+				//player.setDisplayName(((PlayerDisguise)disguise).getDisplayName());
 				if(((PlayerDisguise)disguise).isGhost()) {
 					GhostFactory.getInstance().addPlayer(((PlayerDisguise)disguise).getSkinName());
 					GhostFactory.getInstance().addGhost(player);
@@ -78,7 +78,7 @@ public class DisguiseManager {
 				observer.hidePlayer(player);
 			}
 			if(disguise instanceof PlayerDisguise) {
-				player.setDisplayName(player.getName());
+				//player.setDisplayName(player.getName());
 				if(disguise.getType().equals(DisguiseType.GHOST)) {
 					GhostFactory.getInstance().removeGhost(player);
 				}
