@@ -38,6 +38,8 @@ permissions:
       default: false
    iDisguise.ghost:
       default: false
+   iDisguise.help:
+      default: true
    iDisguise.mob.*:
       default: false
       children:
