@@ -70,72 +70,77 @@ public class VersionHelper {
 		if(initialized) {
 			return false;
 		}
-		versionCode = Bukkit.getServer().getClass().getPackage().getName().substring(orgBukkitCraftbukkit.length() + 1);
-		orgBukkitCraftbukkitVersioned = orgBukkitCraftbukkit + "." + versionCode;
-		netMinecraftServerVersioned = netMinecraftServer + "." + versionCode;
-		VersionHelper.debug = debug;
-		require1_6 = requireVersion("v1_6_R1");
-		require1_7 = requireVersion("v1_7_R1");
-		require1_8 = requireVersion("v1_8_R1");
-		require1_9 = requireVersion("v1_9_R1");
-		require1_10 = requireVersion("v1_10_R1");
-		useGameProfiles = requireVersion("v1_7_R3");
-		switch(versionCode) {
-			case "v1_5_R2":
-			case "v1_5_R3":
-			case "v1_6_R1":
-			case "v1_6_R2":
-			case "v1_6_R3":
-				String localVersionCode = versionCode.replace("v1_5_R3", "v1_5_R2").replace("v1_6_R3", "v1_6_R2");
-				Reflection.init("reflection/" + localVersionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
-				DisguiseManager.setInstance(new DisguiseManager());
-				PlayerHelper.setInstance(new PlayerHelper());
-				Sounds.init("sounds/15_16.txt");
-				break;
-			case "v1_7_R1":
-			case "v1_7_R2":
-				Reflection.init("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
-				DisguiseManager.setInstance(new DisguiseManager());
-				PlayerHelper.setInstance(new de.robingrether.idisguise.management.player.PlayerHelper17());
-				Sounds.init("sounds/17_18.txt");
-				break;
-			case "v1_7_R3":
-			case "v1_7_R4":
-				Reflection.init("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
-				DisguiseManager.setInstance(new DisguiseManager());
-				PlayerHelper.setInstance(new de.robingrether.idisguise.management.player.PlayerHelperUID17());
-				Sounds.init("sounds/17_18.txt");
-				break;
-			case "v1_8_R1":
-			case "v1_8_R2":
-			case "v1_8_R3":
-				Reflection.init("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
-				DisguiseManager.setInstance(new de.robingrether.idisguise.management.disguise.DisguiseManager18());
-				PlayerHelper.setInstance(new de.robingrether.idisguise.management.player.PlayerHelperUID18());
-				Sounds.init("sounds/17_18.txt");
-				break;
-			case "v1_9_R1":
-			case "v1_9_R2":
-				Reflection.init("reflection/v1_9_R1.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
-				DisguiseManager.setInstance(new DisguiseManager());
-				PlayerHelper.setInstance(new de.robingrether.idisguise.management.player.PlayerHelperUID18());
-				Sounds.init("sounds/19.txt");
-				break;
-			case "v1_10_R1":
-				Reflection.init("reflection/v1_10_R1.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
-				DisguiseManager.setInstance(new DisguiseManager());
-				PlayerHelper.setInstance(new de.robingrether.idisguise.management.player.PlayerHelperUID18());
-				Sounds.init("sounds/110.txt");
-				break;
-			default:
-				return false;
+		try {
+			versionCode = Bukkit.getServer().getClass().getPackage().getName().substring(orgBukkitCraftbukkit.length() + 1);
+			orgBukkitCraftbukkitVersioned = orgBukkitCraftbukkit + "." + versionCode;
+			netMinecraftServerVersioned = netMinecraftServer + "." + versionCode;
+			VersionHelper.debug = debug;
+			require1_6 = requireVersion("v1_6_R1");
+			require1_7 = requireVersion("v1_7_R1");
+			require1_8 = requireVersion("v1_8_R1");
+			require1_9 = requireVersion("v1_9_R1");
+			require1_10 = requireVersion("v1_10_R1");
+			useGameProfiles = requireVersion("v1_7_R3");
+			switch(versionCode) {
+				case "v1_5_R2":
+				case "v1_5_R3":
+				case "v1_6_R1":
+				case "v1_6_R2":
+				case "v1_6_R3":
+					String localVersionCode = versionCode.replace("v1_5_R3", "v1_5_R2").replace("v1_6_R3", "v1_6_R2");
+					Reflection.init("reflection/" + localVersionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
+					DisguiseManager.setInstance(new DisguiseManager());
+					PlayerHelper.setInstance(new PlayerHelper());
+					Sounds.init("sounds/15_16.txt");
+					break;
+				case "v1_7_R1":
+				case "v1_7_R2":
+					Reflection.init("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
+					DisguiseManager.setInstance(new DisguiseManager());
+					PlayerHelper.setInstance((PlayerHelper)Class.forName("de.robingrether.idisguise.management.player.PlayerHelper17").newInstance());
+					Sounds.init("sounds/17_18.txt");
+					break;
+				case "v1_7_R3":
+				case "v1_7_R4":
+					Reflection.init("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
+					DisguiseManager.setInstance(new DisguiseManager());
+					PlayerHelper.setInstance((PlayerHelper)Class.forName("de.robingrether.idisguise.management.player.PlayerHelperUID17").newInstance());
+					Sounds.init("sounds/17_18.txt");
+					break;
+				case "v1_8_R1":
+				case "v1_8_R2":
+				case "v1_8_R3":
+					Reflection.init("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
+					DisguiseManager.setInstance((DisguiseManager)Class.forName("de.robingrether.idisguise.management.disguise.DisguiseManager18").newInstance());
+					PlayerHelper.setInstance((PlayerHelper)Class.forName("de.robingrether.idisguise.management.player.PlayerHelperUID18").newInstance());
+					Sounds.init("sounds/17_18.txt");
+					break;
+				case "v1_9_R1":
+				case "v1_9_R2":
+					Reflection.init("reflection/v1_9_R1.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
+					DisguiseManager.setInstance(new DisguiseManager());
+					PlayerHelper.setInstance((PlayerHelper)Class.forName("de.robingrether.idisguise.management.player.PlayerHelperUID18").newInstance());
+					Sounds.init("sounds/19.txt");
+					break;
+				case "v1_10_R1":
+					Reflection.init("reflection/v1_10_R1.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
+					DisguiseManager.setInstance(new DisguiseManager());
+					PlayerHelper.setInstance((PlayerHelper)Class.forName("de.robingrether.idisguise.management.player.PlayerHelperUID18").newInstance());
+					Sounds.init("sounds/110.txt");
+					break;
+				default:
+					return false;
+			}
+			ChannelInjector.setInstance(new ChannelInjectorPC());
+			GhostFactory.setInstance(new GhostFactory());
+			PacketHandler.setInstance(new PacketHandler());
+			PacketHelper.setInstance(new PacketHelper());
+			initialized = true;
+			return true;
+		} catch(Exception e) {
+			initialized = false;
+			return false;
 		}
-		ChannelInjector.setInstance(new ChannelInjectorPC());
-		GhostFactory.setInstance(new GhostFactory());
-		PacketHandler.setInstance(new PacketHandler());
-		PacketHelper.setInstance(new PacketHelper());
-		initialized = true;
-		return true;
 	}
 	
 }
