@@ -1,6 +1,12 @@
 package de.robingrether.idisguise.management.hooks;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import de.robingrether.idisguise.iDisguise;
 
 public abstract class Holograms {
 	
@@ -11,7 +17,13 @@ public abstract class Holograms {
 	}
 	
 	public static boolean setup() {
-		//TODO: setup hook
+		if(Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
+			instance = new ImplHolographicDisplays();
+			return true;
+		} else if(Bukkit.getPluginManager().isPluginEnabled("Holograms")) {
+			instance = new ImplHolograms();
+			return true;
+		}
 		return false;
 	}
 	
@@ -21,34 +33,46 @@ public abstract class Holograms {
 	
 	public abstract void updateHologram(Player player);
 	
-	private class ImplHolographicDisplays extends Holograms {
+	private static class ImplHolographicDisplays extends Holograms {
+		
+		private Map<Player, com.gmail.filoghost.holographicdisplays.api.Hologram> holograms = new ConcurrentHashMap<Player, com.gmail.filoghost.holographicdisplays.api.Hologram>();
 		
 		public void createHologram(Player player) {
-			//TODO
+			com.gmail.filoghost.holographicdisplays.api.Hologram hologram = com.gmail.filoghost.holographicdisplays.api.HologramsAPI.createHologram(iDisguise.getInstance(), player.getEyeLocation());
+			hologram.appendTextLine(player.getName());
+			holograms.put(player, hologram);
 		}
 		
 		public void removeHologram(Player player) {
-			//TODO
+			holograms.remove(player).delete();
 		}
 		
 		public void updateHologram(Player player) {
-			//TODO
+			holograms.get(player).teleport(player.getEyeLocation());
 		}
 		
 	}
 	
-	private class ImplHolograms extends Holograms {
+	private static class ImplHolograms extends Holograms {
+		
+		private static int id = 0;
+		
+		private Map<Player, com.sainttx.holograms.api.Hologram> holograms = new ConcurrentHashMap<Player, com.sainttx.holograms.api.Hologram>();
+		private com.sainttx.holograms.api.HologramManager hologramManager = ((com.sainttx.holograms.HologramPlugin)Bukkit.getPluginManager().getPlugin("Holograms")).getHologramManager();
 		
 		public void createHologram(Player player) {
-			//TODO
+			com.sainttx.holograms.api.Hologram hologram = new com.sainttx.holograms.api.Hologram("iDisguise" + id++, player.getEyeLocation());
+			hologramManager.addActiveHologram(hologram);
+			hologram.addLine(new com.sainttx.holograms.api.line.TextLine(hologram, player.getName()));
+			holograms.put(player, hologram);
 		}
 		
 		public void removeHologram(Player player) {
-			//TODO
+			hologramManager.deleteHologram(holograms.remove(player));
 		}
 		
 		public void updateHologram(Player player) {
-			//TODO
+			holograms.get(player).teleport(player.getEyeLocation());
 		}
 		
 	}
