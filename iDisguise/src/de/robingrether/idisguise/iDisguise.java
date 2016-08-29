@@ -56,10 +56,12 @@ import de.robingrether.idisguise.io.UpdateCheck;
 import de.robingrether.idisguise.management.ChannelInjector;
 import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.GhostFactory;
+import de.robingrether.idisguise.management.PacketHandler;
 import de.robingrether.idisguise.management.PacketHelper;
 import de.robingrether.idisguise.management.Reflection;
 import de.robingrether.idisguise.management.Sounds;
 import de.robingrether.idisguise.management.VersionHelper;
+import de.robingrether.idisguise.management.hooks.Holograms;
 import de.robingrether.util.RandomUtil;
 import de.robingrether.util.StringUtil;
 import de.robingrether.util.Validate;
@@ -89,7 +91,18 @@ public class iDisguise extends JavaPlugin {
 		language = new Language(this);
 		language.loadData();
 		language.saveData();
-		PacketHelper.getInstance().setAttribute(0, configuration.NAME_TAG_SHOWN);
+		if(configuration.NAME_TAG_SHOWN) {
+			if(Holograms.setup()) {
+				PacketHandler.getInstance().setAttribute(0, true);
+				PacketHelper.getInstance().setAttribute(0, false);
+			} else {
+				PacketHandler.getInstance().setAttribute(0, false);
+				PacketHelper.getInstance().setAttribute(0, true);
+			}
+		} else {
+			PacketHandler.getInstance().setAttribute(0, true);
+			PacketHelper.getInstance().setAttribute(0, false);
+		}
 		PacketHelper.getInstance().setAttribute(1, configuration.MODIFY_PLAYER_LIST_ENTRY);
 		Sounds.setEnabled(configuration.REPLACE_SOUND_EFFECTS);
 		try {
