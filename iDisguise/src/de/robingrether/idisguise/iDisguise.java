@@ -195,11 +195,11 @@ public class iDisguise extends JavaPlugin {
 	}
 	
 	public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
-		if(!sender.hasPermission("iDisguise.help")) {
-			sender.sendMessage(language.NO_PERMISSION);
-			return true;
-		}
 		if(StringUtil.equalsIgnoreCase(command.getName(), "disguise", "odisguise")) {
+			if(!sender.hasPermission("iDisguise.help")) {
+				sender.sendMessage(language.NO_PERMISSION);
+				return true;
+			}
 			if(args.length == 0) {
 				sendHelpMessage(sender, command, alias);
 			} else if(args[0].equalsIgnoreCase("reload")) {
