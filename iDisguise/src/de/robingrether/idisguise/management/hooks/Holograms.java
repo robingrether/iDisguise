@@ -11,6 +11,7 @@ import de.robingrether.idisguise.iDisguise;
 public class Holograms {
 	
 	private static Holograms instance;
+	private static boolean enabled = false;
 	
 	public static Holograms getInstance() {
 		return instance;
@@ -24,10 +25,15 @@ public class Holograms {
 		return false;
 	}
 	
+	public static boolean isEnabled() {
+		return enabled;
+	}
+	
 	private Map<Player, com.gmail.filoghost.holographicdisplays.api.Hologram> holograms = new ConcurrentHashMap<Player, com.gmail.filoghost.holographicdisplays.api.Hologram>();
 	
 	public void createHologram(Player player) {
 		com.gmail.filoghost.holographicdisplays.api.Hologram hologram = com.gmail.filoghost.holographicdisplays.api.HologramsAPI.createHologram(iDisguise.getInstance(), player.getEyeLocation());
+		hologram.getVisibilityManager().setVisibleByDefault(false);
 		hologram.appendTextLine(player.getName());
 		holograms.put(player, hologram);
 	}
@@ -37,7 +43,11 @@ public class Holograms {
 	}
 	
 	public void showHologram(Player player, Player observer) {
-		//TODO
+		holograms.get(player).getVisibilityManager().showTo(observer);
+	}
+	
+	public void hideHologram(Player player, Player observer) {
+		holograms.get(player).getVisibilityManager().hideTo(observer);
 	}
 	
 	public void updateHologram(Player player) {
