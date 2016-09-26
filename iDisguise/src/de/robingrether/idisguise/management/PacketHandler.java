@@ -69,6 +69,10 @@ public class PacketHandler {
 					yaw -= 128;
 				}
 				PacketPlayOutSpawnEntityLiving_yaw.setByte(spawnPackets[0], yaw);
+			} else if(PacketPlayOutSpawnEntity.isInstance(spawnPackets[0]) && DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.FALLING_BLOCK)) {
+//				if(TODO) {
+//					PacketPlayOutSpawnEntity_x.set TODO
+//				}
 			}
 			return spawnPackets;
 		}
@@ -154,32 +158,56 @@ public class PacketHandler {
 	
 	public Object handlePacketPlayOutEntity(final Player observer, final Object packet) throws Exception {
 		final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayOutEntity_entityId.getInt(packet));
-		if(player != null && player != observer && DisguiseManager.getInstance().isDisguised(player) && DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
-			Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
-			byte yaw = PacketPlayOutEntity_yaw.getByte(customizablePacket);
-			if(yaw < 0) {
-				yaw += 128;
-			} else {
-				yaw -= 128;
+		if(player != null && player != observer && DisguiseManager.getInstance().isDisguised(player)) {
+			if(DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
+				Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
+				byte yaw = PacketPlayOutEntity_yaw.getByte(customizablePacket);
+				if(yaw < 0) {
+					yaw += 128;
+				} else {
+					yaw -= 128;
+				}
+				PacketPlayOutEntity_yaw.setByte(customizablePacket, yaw);
+				return customizablePacket;
+			} else if(DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.FALLING_BLOCK)) {
+//				if(TODO) {
+					Object customizablePacket = PacketPlayOutEntityTeleport_new.newInstance();
+					PacketPlayOutEntityTeleport_entityId.setInt(customizablePacket, player.getEntityId());
+					PacketPlayOutEntityTeleport_x.setDouble(customizablePacket, Math.floor(player.getLocation().getX()));
+					PacketPlayOutEntityTeleport_y.setDouble(customizablePacket, Math.floor(player.getLocation().getY()));
+					PacketPlayOutEntityTeleport_z.setDouble(customizablePacket, Math.floor(player.getLocation().getZ()));
+					PacketPlayOutEntityTeleport_yaw.setByte(customizablePacket, (byte)(player.getLocation().getYaw() * 256 / 360));
+					PacketPlayOutEntityTeleport_pitch.setByte(customizablePacket, (byte)(player.getLocation().getPitch() * 256 / 360));
+					PacketPlayOutEntityTeleport_isOnGround.setBoolean(customizablePacket, PacketPlayOutEntity_isOnGround.getBoolean(packet));
+					return customizablePacket;
+//				}
 			}
-			PacketPlayOutEntity_yaw.setByte(customizablePacket, yaw);
-			return customizablePacket;
 		}
 		return packet;
 	}
 	
 	public Object handlePacketPlayOutEntityTeleport(final Player observer, final Object packet) throws Exception {
 		final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayOutEntityTeleport_entityId.getInt(packet));
-		if(player != null && player != observer && DisguiseManager.getInstance().isDisguised(player) && DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
-			Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
-			byte yaw = PacketPlayOutEntityTeleport_yaw.getByte(customizablePacket);
-			if(yaw < 0) {
-				yaw += 128;
-			} else {
-				yaw -= 128;
+		if(player != null && player != observer && DisguiseManager.getInstance().isDisguised(player)) {
+			if(DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
+				Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
+				byte yaw = PacketPlayOutEntityTeleport_yaw.getByte(customizablePacket);
+				if(yaw < 0) {
+					yaw += 128;
+				} else {
+					yaw -= 128;
+				}
+				PacketPlayOutEntityTeleport_yaw.setByte(customizablePacket, yaw);
+				return customizablePacket;
+			} else if(DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.FALLING_BLOCK)) {
+//				if(TODO) {
+					Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
+					PacketPlayOutEntityTeleport_x.setDouble(customizablePacket, Math.floor(player.getLocation().getX()));
+					PacketPlayOutEntityTeleport_y.setDouble(customizablePacket, Math.floor(player.getLocation().getY()));
+					PacketPlayOutEntityTeleport_z.setDouble(customizablePacket, Math.floor(player.getLocation().getZ()));
+					return customizablePacket;
+//				}
 			}
-			PacketPlayOutEntityTeleport_yaw.setByte(customizablePacket, yaw);
-			return customizablePacket;
 		}
 		return packet;
 	}
