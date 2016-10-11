@@ -12,9 +12,10 @@ import org.bukkit.Material;
  */
 public class FallingBlockDisguise extends ObjectDisguise {
 	
-	private static final long serialVersionUID = -5052831499921781174L;
+	private static final long serialVersionUID = -7935017310299797038L;
 	private Material material;
 	private int data;
+	private final boolean behaviorEnabled;
 	
 	/**
 	 * Creates an instance.<br>
@@ -55,6 +56,29 @@ public class FallingBlockDisguise extends ObjectDisguise {
 		}
 		this.material = material;
 		this.data = data;
+		this.behaviorEnabled = false;
+	}
+	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 5.4.1
+	 * @param material the material
+	 * @param data the block data
+	 * @param behaviorEnabled TODO: find explanation
+	 * @throws IllegalArgumentException if the material is not a block, or if the data is negative
+	 */
+	public FallingBlockDisguise(Material material, int data, boolean behaviorEnabled) {
+		super(DisguiseType.FALLING_BLOCK);
+		if(!material.isBlock()) {
+			throw new IllegalArgumentException("Material must be a block");
+		}
+		if(data < 0) {
+			throw new IllegalArgumentException("Data must be positive");
+		}
+		this.material = material;
+		this.data = data;
+		this.behaviorEnabled = behaviorEnabled;
 	}
 	
 	/**
@@ -101,6 +125,10 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	 */
 	public void setData(int data) {
 		this.data = data;
+	}
+	
+	public boolean findNameForThis() {
+		return behaviorEnabled;
 	}
 	
 	/**
