@@ -12,6 +12,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.api.PlayerInteractDisguisedPlayerEvent;
 import de.robingrether.idisguise.disguise.DisguiseType;
+import de.robingrether.idisguise.disguise.FallingBlockDisguise;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.ObjectDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
@@ -70,11 +71,11 @@ public class PacketHandler {
 				}
 				PacketPlayOutSpawnEntityLiving_yaw.setByte(spawnPackets[0], yaw);
 			} else if(PacketPlayOutSpawnEntity.isInstance(spawnPackets[0]) && DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.FALLING_BLOCK)) {
-//				if(TODO) {
+				if(DisguiseManager.getInstance().getDisguise(player) instanceof FallingBlockDisguise && ((FallingBlockDisguise)DisguiseManager.getInstance().getDisguise(player)).findNameForThis()) {
 					PacketPlayOutSpawnEntity_x.setDouble(spawnPackets[0], Math.floor(player.getLocation().getX()));
 					PacketPlayOutSpawnEntity_y.setDouble(spawnPackets[0], Math.floor(player.getLocation().getY()));
 					PacketPlayOutSpawnEntity_z.setDouble(spawnPackets[0], Math.floor(player.getLocation().getZ()));
-//				}
+				}
 			}
 			return spawnPackets;
 		}
@@ -172,7 +173,7 @@ public class PacketHandler {
 				PacketPlayOutEntity_yaw.setByte(customizablePacket, yaw);
 				return customizablePacket;
 			} else if(DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.FALLING_BLOCK)) {
-//				if(TODO) {
+				if(DisguiseManager.getInstance().getDisguise(player) instanceof FallingBlockDisguise && ((FallingBlockDisguise)DisguiseManager.getInstance().getDisguise(player)).findNameForThis()) {
 					Object customizablePacket = PacketPlayOutEntityTeleport_new.newInstance();
 					PacketPlayOutEntityTeleport_entityId.setInt(customizablePacket, player.getEntityId());
 					PacketPlayOutEntityTeleport_x.setDouble(customizablePacket, Math.floor(player.getLocation().getX()));
@@ -182,7 +183,7 @@ public class PacketHandler {
 					PacketPlayOutEntityTeleport_pitch.setByte(customizablePacket, (byte)(player.getLocation().getPitch() * 256 / 360));
 					PacketPlayOutEntityTeleport_isOnGround.setBoolean(customizablePacket, PacketPlayOutEntity_isOnGround.getBoolean(packet));
 					return customizablePacket;
-//				}
+				}
 			}
 		}
 		return packet;
@@ -202,13 +203,13 @@ public class PacketHandler {
 				PacketPlayOutEntityTeleport_yaw.setByte(customizablePacket, yaw);
 				return customizablePacket;
 			} else if(DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.FALLING_BLOCK)) {
-//				if(TODO) {
+				if(DisguiseManager.getInstance().getDisguise(player) instanceof FallingBlockDisguise && ((FallingBlockDisguise)DisguiseManager.getInstance().getDisguise(player)).findNameForThis()) {
 					Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
 					PacketPlayOutEntityTeleport_x.setDouble(customizablePacket, Math.floor(player.getLocation().getX()));
 					PacketPlayOutEntityTeleport_y.setDouble(customizablePacket, Math.floor(player.getLocation().getY()));
 					PacketPlayOutEntityTeleport_z.setDouble(customizablePacket, Math.floor(player.getLocation().getZ()));
 					return customizablePacket;
-//				}
+				}
 			}
 		}
 		return packet;
