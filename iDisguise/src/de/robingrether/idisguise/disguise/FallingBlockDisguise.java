@@ -15,7 +15,7 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	private static final long serialVersionUID = -7935017310299797038L;
 	private Material material;
 	private int data;
-	private final boolean behaviorEnabled;
+	private boolean onlyBlockCoordinates;
 	
 	/**
 	 * Creates an instance.<br>
@@ -56,7 +56,7 @@ public class FallingBlockDisguise extends ObjectDisguise {
 		}
 		this.material = material;
 		this.data = data;
-		this.behaviorEnabled = false;
+		this.onlyBlockCoordinates = false;
 	}
 	
 	/**
@@ -65,10 +65,10 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	 * @since 5.4.1
 	 * @param material the material
 	 * @param data the block data
-	 * @param behaviorEnabled TODO: find explanation
+	 * @param onlyBlockCoordinates makes the disguise appear on block coordinates only, so it looks like an actual block that you can't target
 	 * @throws IllegalArgumentException if the material is not a block, or if the data is negative
 	 */
-	public FallingBlockDisguise(Material material, int data, boolean behaviorEnabled) {
+	public FallingBlockDisguise(Material material, int data, boolean onlyBlockCoordinates) {
 		super(DisguiseType.FALLING_BLOCK);
 		if(!material.isBlock()) {
 			throw new IllegalArgumentException("Material must be a block");
@@ -78,7 +78,7 @@ public class FallingBlockDisguise extends ObjectDisguise {
 		}
 		this.material = material;
 		this.data = data;
-		this.behaviorEnabled = behaviorEnabled;
+		this.onlyBlockCoordinates = onlyBlockCoordinates;
 	}
 	
 	/**
@@ -127,8 +127,24 @@ public class FallingBlockDisguise extends ObjectDisguise {
 		this.data = data;
 	}
 	
-	public boolean findNameForThis() {
-		return behaviorEnabled;
+	/**
+	 * Indicates whether this disguise may appear only on block coordinates.
+	 * 
+	 * @since 5.4.1
+	 * @return <code>true</code>, if this disguise may appear only on block coordinates
+	 */
+	public boolean onlyBlockCoordinates() {
+		return onlyBlockCoordinates;
+	}
+	
+	/**
+	 * Sets whether this disguise may appear only on block coordinates.
+	 * 
+	 * @since 5.4.1
+	 * @param onlyBlockCoordinates makes this disguise appear on block coordinates only
+	 */
+	public void setOnlyBlockCoordinates(boolean onlyBlockCoordinates) {
+		this.onlyBlockCoordinates = onlyBlockCoordinates;
 	}
 	
 	/**
@@ -161,6 +177,8 @@ public class FallingBlockDisguise extends ObjectDisguise {
 		for(int i = 0; i < 256; i++) {
 			Subtypes.registerSubtype(FallingBlockDisguise.class, "setData", i, Integer.toString(i));
 		}
+		Subtypes.registerSubtype(FallingBlockDisguise.class, "setOnlyBlockCoordinates", true, "block-coordinates");
+		Subtypes.registerSubtype(FallingBlockDisguise.class, "setOnlyBlockCoordinates", false, "all-coordinates");
 	}
 	
 }
