@@ -129,4 +129,14 @@ public class StringUtil {
 		return string.toLowerCase(Locale.ENGLISH).startsWith(prefix.toLowerCase(Locale.ENGLISH));
 	}
 	
+	/**
+	 * Indicates whether a string object (may be <code>null</code>) is blank or not.
+	 * 
+	 * @param string string to test
+	 * @return <code>true</code>, if and only if the given string is not <code>null</code> and contains at least one non-whitespace character
+	 */
+	public static boolean isNotBlank(String string) {
+		return string != null && !string.isEmpty() && !string.trim().isEmpty();
+	}
+	
 }
