@@ -3,6 +3,7 @@ package de.robingrether.idisguise;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -144,6 +145,10 @@ public class iDisguise extends JavaPlugin {
 		getServer().getServicesManager().register(DisguiseAPI.class, getAPI(), this, ServicePriority.Normal);
 		if(configuration.UPDATE_CHECK) {
 			getServer().getScheduler().runTaskLaterAsynchronously(this, new UpdateCheck(this, getServer().getConsoleSender(), configuration.UPDATE_DOWNLOAD), 20L);
+		}
+		Calendar today = Calendar.getInstance();
+		if(today.get(Calendar.MONTH) == Calendar.NOVEMBER && today.get(Calendar.DAY_OF_MONTH) == 6) {
+			getLogger().log(Level.INFO, String.format("YAAAY!!! Today is my birthday! I'm %s years old now.",  today.get(Calendar.YEAR) - 2012));
 		}
 		getLogger().log(Level.INFO, String.format("%s enabled!", getFullName()));
 		enabled = true;
@@ -595,8 +600,13 @@ public class iDisguise extends JavaPlugin {
 		String disguiseCommand = "/" + (self ? alias : alias + " <player>");
 		String undisguiseCommand = "/" + alias.replaceAll("o?disguise$", "undisguise").replaceAll("o?dis$", "undis").replaceAll("o?d$", "ud");
 		sender.sendMessage(language.HELP_INFO.replace("%name%", "iDisguise").replace("%version%", getVersion()));
-		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " help").replace("%description%", language.HELP_HELP));		
 		
+		Calendar today = Calendar.getInstance();
+		if(today.get(Calendar.MONTH) == Calendar.NOVEMBER && today.get(Calendar.DAY_OF_MONTH) == 6) {
+			sender.sendMessage(language.EASTER_EGG_BIRTHDAY.replace("%age%", Integer.toString(today.get(Calendar.YEAR) - 2012)));
+		}
+		
+		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " help").replace("%description%", language.HELP_HELP));		
 		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " player <name>").replace("%description%", self ? language.HELP_PLAYER_SELF : language.HELP_PLAYER_OTHER));
 		if(configuration.ENABLE_GHOST_DISGUISE) {
 			sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " ghost <name>").replace("%description%", self ? language.HELP_GHOST_SELF : language.HELP_GHOST_OTHER));
