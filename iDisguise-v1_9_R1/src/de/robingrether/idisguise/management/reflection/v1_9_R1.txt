@@ -206,6 +206,9 @@ PacketPlayOutRelEntityMoveLook->C{nms}.PacketPlayOutEntity$PacketPlayOutRelEntit
 
 PacketPlayOutSpawnEntity->C{nms}.PacketPlayOutSpawnEntity
 PacketPlayOutSpawnEntity_new->NPacketPlayOutSpawnEntity({nms}.Entity,int,int)
+PacketPlayOutSpawnEntity_x->FPacketPlayOutSpawnEntity$c
+PacketPlayOutSpawnEntity_y->FPacketPlayOutSpawnEntity$d
+PacketPlayOutSpawnEntity_z->FPacketPlayOutSpawnEntity$e
 
 PacketPlayOutSpawnEntityLiving->C{nms}.PacketPlayOutSpawnEntityLiving
 PacketPlayOutSpawnEntityLiving_new->NPacketPlayOutSpawnEntityLiving({nms}.EntityLiving)

@@ -180,6 +180,9 @@ PacketPlayOutRelEntityMoveLook->C{nms}.PacketPlayOutRelEntityMoveLook
 
 PacketPlayOutSpawnEntity->C{nms}.PacketPlayOutSpawnEntity
 PacketPlayOutSpawnEntity_new->NPacketPlayOutSpawnEntity({nms}.Entity,int,int)
+PacketPlayOutSpawnEntity_x->FPacketPlayOutSpawnEntity$b
+PacketPlayOutSpawnEntity_y->FPacketPlayOutSpawnEntity$c
+PacketPlayOutSpawnEntity_z->FPacketPlayOutSpawnEntity$d
 
 PacketPlayOutSpawnEntityLiving->C{nms}.PacketPlayOutSpawnEntityLiving
 PacketPlayOutSpawnEntityLiving_new->NPacketPlayOutSpawnEntityLiving({nms}.EntityLiving)
