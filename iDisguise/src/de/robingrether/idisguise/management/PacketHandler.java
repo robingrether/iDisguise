@@ -72,9 +72,15 @@ public class PacketHandler {
 				PacketPlayOutSpawnEntityLiving_yaw.setByte(spawnPackets[0], yaw);
 			} else if(PacketPlayOutSpawnEntity.isInstance(spawnPackets[0]) && DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.FALLING_BLOCK)) {
 				if(DisguiseManager.getInstance().getDisguise(player) instanceof FallingBlockDisguise && ((FallingBlockDisguise)DisguiseManager.getInstance().getDisguise(player)).onlyBlockCoordinates()) {
-					PacketPlayOutSpawnEntity_x.setDouble(spawnPackets[0], Math.floor(player.getLocation().getX()));
-					PacketPlayOutSpawnEntity_y.setDouble(spawnPackets[0], Math.floor(player.getLocation().getY()));
-					PacketPlayOutSpawnEntity_z.setDouble(spawnPackets[0], Math.floor(player.getLocation().getZ()));
+					if(VersionHelper.require1_9()) {
+						PacketPlayOutSpawnEntity_x.setDouble(spawnPackets[0], Math.floor(player.getLocation().getX()));
+						PacketPlayOutSpawnEntity_y.setDouble(spawnPackets[0], Math.floor(player.getLocation().getY()));
+						PacketPlayOutSpawnEntity_z.setDouble(spawnPackets[0], Math.floor(player.getLocation().getZ()));
+					} else {
+						PacketPlayOutSpawnEntity_x.setInt(spawnPackets[0], (int)Math.floor(player.getLocation().getX() * 32));
+						PacketPlayOutSpawnEntity_y.setInt(spawnPackets[0], (int)Math.floor(player.getLocation().getY() * 32));
+						PacketPlayOutSpawnEntity_z.setInt(spawnPackets[0], (int)Math.floor(player.getLocation().getZ() * 32));
+					}
 				}
 			}
 			return spawnPackets;
@@ -176,12 +182,20 @@ public class PacketHandler {
 				if(DisguiseManager.getInstance().getDisguise(player) instanceof FallingBlockDisguise && ((FallingBlockDisguise)DisguiseManager.getInstance().getDisguise(player)).onlyBlockCoordinates()) {
 					Object customizablePacket = PacketPlayOutEntityTeleport_new.newInstance();
 					PacketPlayOutEntityTeleport_entityId.setInt(customizablePacket, player.getEntityId());
-					PacketPlayOutEntityTeleport_x.setDouble(customizablePacket, Math.floor(player.getLocation().getX()));
-					PacketPlayOutEntityTeleport_y.setDouble(customizablePacket, Math.floor(player.getLocation().getY()));
-					PacketPlayOutEntityTeleport_z.setDouble(customizablePacket, Math.floor(player.getLocation().getZ()));
+					if(VersionHelper.require1_9()) {
+						PacketPlayOutEntityTeleport_x.setDouble(customizablePacket, Math.floor(player.getLocation().getX()));
+						PacketPlayOutEntityTeleport_y.setDouble(customizablePacket, Math.floor(player.getLocation().getY()));
+						PacketPlayOutEntityTeleport_z.setDouble(customizablePacket, Math.floor(player.getLocation().getZ()));
+					} else {
+						PacketPlayOutEntityTeleport_x.setInt(customizablePacket, (int)Math.floor(player.getLocation().getX() * 32));
+						PacketPlayOutEntityTeleport_y.setInt(customizablePacket, (int)Math.floor(player.getLocation().getY() * 32));
+						PacketPlayOutEntityTeleport_z.setInt(customizablePacket, (int)Math.floor(player.getLocation().getZ() * 32));
+					}
 					PacketPlayOutEntityTeleport_yaw.setByte(customizablePacket, (byte)(player.getLocation().getYaw() * 256 / 360));
 					PacketPlayOutEntityTeleport_pitch.setByte(customizablePacket, (byte)(player.getLocation().getPitch() * 256 / 360));
-					PacketPlayOutEntityTeleport_isOnGround.setBoolean(customizablePacket, PacketPlayOutEntity_isOnGround.getBoolean(packet));
+					if(VersionHelper.require1_8()) {
+						PacketPlayOutEntityTeleport_isOnGround.setBoolean(customizablePacket, PacketPlayOutEntity_isOnGround.getBoolean(packet));
+					}
 					return customizablePacket;
 				}
 			}
@@ -205,9 +219,15 @@ public class PacketHandler {
 			} else if(DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.FALLING_BLOCK)) {
 				if(DisguiseManager.getInstance().getDisguise(player) instanceof FallingBlockDisguise && ((FallingBlockDisguise)DisguiseManager.getInstance().getDisguise(player)).onlyBlockCoordinates()) {
 					Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
-					PacketPlayOutEntityTeleport_x.setDouble(customizablePacket, Math.floor(player.getLocation().getX()));
-					PacketPlayOutEntityTeleport_y.setDouble(customizablePacket, Math.floor(player.getLocation().getY()));
-					PacketPlayOutEntityTeleport_z.setDouble(customizablePacket, Math.floor(player.getLocation().getZ()));
+					if(VersionHelper.require1_9()) {
+						PacketPlayOutEntityTeleport_x.setDouble(customizablePacket, Math.floor(player.getLocation().getX()));
+						PacketPlayOutEntityTeleport_y.setDouble(customizablePacket, Math.floor(player.getLocation().getY()));
+						PacketPlayOutEntityTeleport_z.setDouble(customizablePacket, Math.floor(player.getLocation().getZ()));
+					} else {
+						PacketPlayOutEntityTeleport_x.setInt(customizablePacket, (int)Math.floor(player.getLocation().getX() * 32));
+						PacketPlayOutEntityTeleport_y.setInt(customizablePacket, (int)Math.floor(player.getLocation().getY() * 32));
+						PacketPlayOutEntityTeleport_z.setInt(customizablePacket, (int)Math.floor(player.getLocation().getZ() * 32));
+					}
 					return customizablePacket;
 				}
 			}
