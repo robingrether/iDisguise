@@ -77,9 +77,9 @@ public class PacketHandler {
 						PacketPlayOutSpawnEntity_y.setDouble(spawnPackets[0], Math.floor(player.getLocation().getY()));
 						PacketPlayOutSpawnEntity_z.setDouble(spawnPackets[0], Math.floor(player.getLocation().getZ()) + 0.5);
 					} else {
-						PacketPlayOutSpawnEntity_x.setInt(spawnPackets[0], (int)Math.floor((player.getLocation().getX() + 0.5) * 32));
-						PacketPlayOutSpawnEntity_y.setInt(spawnPackets[0], (int)Math.floor(player.getLocation().getY() * 32));
-						PacketPlayOutSpawnEntity_z.setInt(spawnPackets[0], (int)Math.floor((player.getLocation().getZ() + 0.5) * 32));
+						PacketPlayOutSpawnEntity_x.setInt(spawnPackets[0], (int)((Math.floor(player.getLocation().getX()) + 0.5) * 32));
+						PacketPlayOutSpawnEntity_y.setInt(spawnPackets[0], (int)(Math.floor(player.getLocation().getY()) * 32));
+						PacketPlayOutSpawnEntity_z.setInt(spawnPackets[0], (int)((Math.floor(player.getLocation().getZ()) + 0.5) * 32));
 					}
 				}
 			}
@@ -187,9 +187,9 @@ public class PacketHandler {
 						PacketPlayOutEntityTeleport_y.setDouble(customizablePacket, Math.floor(player.getLocation().getY()));
 						PacketPlayOutEntityTeleport_z.setDouble(customizablePacket, Math.floor(player.getLocation().getZ()) + 0.5);
 					} else {
-						PacketPlayOutEntityTeleport_x.setInt(customizablePacket, (int)Math.floor((player.getLocation().getX() + 0.5) * 32));
-						PacketPlayOutEntityTeleport_y.setInt(customizablePacket, (int)Math.floor(player.getLocation().getY() * 32));
-						PacketPlayOutEntityTeleport_z.setInt(customizablePacket, (int)Math.floor((player.getLocation().getZ() + 0.5) * 32));
+						PacketPlayOutEntityTeleport_x.setInt(customizablePacket, (int)((Math.floor(player.getLocation().getX()) + 0.5) * 32));
+						PacketPlayOutEntityTeleport_y.setInt(customizablePacket, (int)(Math.floor(player.getLocation().getY()) * 32));
+						PacketPlayOutEntityTeleport_z.setInt(customizablePacket, (int)((Math.floor(player.getLocation().getZ()) + 0.5) * 32));
 					}
 					PacketPlayOutEntityTeleport_yaw.setByte(customizablePacket, (byte)(player.getLocation().getYaw() * 256 / 360));
 					PacketPlayOutEntityTeleport_pitch.setByte(customizablePacket, (byte)(player.getLocation().getPitch() * 256 / 360));
@@ -224,9 +224,9 @@ public class PacketHandler {
 						PacketPlayOutEntityTeleport_y.setDouble(customizablePacket, Math.floor(player.getLocation().getY()));
 						PacketPlayOutEntityTeleport_z.setDouble(customizablePacket, Math.floor(player.getLocation().getZ()) + 0.5);
 					} else {
-						PacketPlayOutEntityTeleport_x.setInt(customizablePacket, (int)Math.floor((player.getLocation().getX() + 0.5) * 32));
-						PacketPlayOutEntityTeleport_y.setInt(customizablePacket, (int)Math.floor(player.getLocation().getY() * 32));
-						PacketPlayOutEntityTeleport_z.setInt(customizablePacket, (int)Math.floor((player.getLocation().getZ() + 0.5) * 32));
+						PacketPlayOutEntityTeleport_x.setInt(customizablePacket, (int)((Math.floor(player.getLocation().getX()) + 0.5) * 32));
+						PacketPlayOutEntityTeleport_y.setInt(customizablePacket, (int)(Math.floor(player.getLocation().getY()) * 32));
+						PacketPlayOutEntityTeleport_z.setInt(customizablePacket, (int)((Math.floor(player.getLocation().getZ()) + 0.5) * 32));
 					}
 					return customizablePacket;
 				}
