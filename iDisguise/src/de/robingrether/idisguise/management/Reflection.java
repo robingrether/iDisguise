@@ -232,6 +232,9 @@ public class Reflection {
 	
 	public static Class<?> PacketPlayOutSpawnEntity;
 	public static Constructor<?> PacketPlayOutSpawnEntity_new;
+	public static Field PacketPlayOutSpawnEntity_x;
+	public static Field PacketPlayOutSpawnEntity_y;
+	public static Field PacketPlayOutSpawnEntity_z;
 	
 	public static Class<?> EntityItem;
 	public static Method EntityItem_setItemStack;

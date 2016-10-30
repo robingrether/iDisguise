@@ -12,9 +12,10 @@ import org.bukkit.Material;
  */
 public class FallingBlockDisguise extends ObjectDisguise {
 	
-	private static final long serialVersionUID = -5052831499921781174L;
+	private static final long serialVersionUID = -7935017310299797038L;
 	private Material material;
 	private int data;
+	private boolean onlyBlockCoordinates;
 	
 	/**
 	 * Creates an instance.<br>
@@ -55,6 +56,29 @@ public class FallingBlockDisguise extends ObjectDisguise {
 		}
 		this.material = material;
 		this.data = data;
+		this.onlyBlockCoordinates = false;
+	}
+	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 5.4.1
+	 * @param material the material
+	 * @param data the block data
+	 * @param onlyBlockCoordinates makes the disguise appear on block coordinates only, so it looks like an actual block that you can't target
+	 * @throws IllegalArgumentException if the material is not a block, or if the data is negative
+	 */
+	public FallingBlockDisguise(Material material, int data, boolean onlyBlockCoordinates) {
+		super(DisguiseType.FALLING_BLOCK);
+		if(!material.isBlock()) {
+			throw new IllegalArgumentException("Material must be a block");
+		}
+		if(data < 0) {
+			throw new IllegalArgumentException("Data must be positive");
+		}
+		this.material = material;
+		this.data = data;
+		this.onlyBlockCoordinates = onlyBlockCoordinates;
 	}
 	
 	/**
@@ -104,24 +128,44 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	}
 	
 	/**
+	 * Indicates whether this disguise may appear only on block coordinates.
+	 * 
+	 * @since 5.4.1
+	 * @return <code>true</code>, if this disguise may appear only on block coordinates
+	 */
+	public boolean onlyBlockCoordinates() {
+		return onlyBlockCoordinates;
+	}
+	
+	/**
+	 * Sets whether this disguise may appear only on block coordinates.
+	 * 
+	 * @since 5.4.1
+	 * @param onlyBlockCoordinates makes this disguise appear on block coordinates only
+	 */
+	public void setOnlyBlockCoordinates(boolean onlyBlockCoordinates) {
+		this.onlyBlockCoordinates = onlyBlockCoordinates;
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public FallingBlockDisguise clone() {
-		return new FallingBlockDisguise(material, data);
+		return new FallingBlockDisguise(material, data, onlyBlockCoordinates);
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof FallingBlockDisguise && ((FallingBlockDisguise)object).material.equals(material) && ((FallingBlockDisguise)object).data == data;
+		return super.equals(object) && object instanceof FallingBlockDisguise && ((FallingBlockDisguise)object).material.equals(material) && ((FallingBlockDisguise)object).data == data && ((FallingBlockDisguise)object).onlyBlockCoordinates == onlyBlockCoordinates;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + material.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; " + data;
+		return super.toString() + "; " + material.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; " + data + "; " + (onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
 	}
 	
 	static {
@@ -133,6 +177,8 @@ public class FallingBlockDisguise extends ObjectDisguise {
 		for(int i = 0; i < 256; i++) {
 			Subtypes.registerSubtype(FallingBlockDisguise.class, "setData", i, Integer.toString(i));
 		}
+		Subtypes.registerSubtype(FallingBlockDisguise.class, "setOnlyBlockCoordinates", true, "block-coordinates");
+		Subtypes.registerSubtype(FallingBlockDisguise.class, "setOnlyBlockCoordinates", false, "all-coordinates");
 	}
 	
 }

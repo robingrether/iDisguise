@@ -158,6 +158,9 @@ PacketPlayOutRelEntityMoveLook->C{nms}.Packet33RelEntityMoveLook
 
 PacketPlayOutSpawnEntity->C{nms}.Packet23VehicleSpawn
 PacketPlayOutSpawnEntity_new->NPacketPlayOutSpawnEntity({nms}.Entity,int,int)
+PacketPlayOutSpawnEntity_x->FPacketPlayOutSpawnEntity$b
+PacketPlayOutSpawnEntity_y->FPacketPlayOutSpawnEntity$c
+PacketPlayOutSpawnEntity_z->FPacketPlayOutSpawnEntity$d
 
 PacketPlayOutSpawnEntityLiving->C{nms}.Packet24MobSpawn
 PacketPlayOutSpawnEntityLiving_new->NPacketPlayOutSpawnEntityLiving({nms}.EntityLiving)
