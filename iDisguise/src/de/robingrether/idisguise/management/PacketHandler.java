@@ -31,12 +31,6 @@ public class PacketHandler {
 		PacketHandler.instance = instance;
 	}
 	
-	private final boolean[] attributes = new boolean[1];
-	/*
-	 * attributes[0] -> create hologram
-	 * 
-	 */
-	
 	public Object handlePacketPlayInUseEntity(final Player observer, final Object packet) throws Exception {
 		final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayInUseEntity_entityId.getInt(packet));
 		boolean attack;
@@ -228,10 +222,6 @@ public class PacketHandler {
 			}
 		}
 		return packet;
-	}
-	
-	public void setAttribute(int index, boolean value) {
-		attributes[index] = value;
 	}
 	
 }

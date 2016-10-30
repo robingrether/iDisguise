@@ -92,15 +92,12 @@ public class iDisguise extends JavaPlugin {
 		language.loadData();
 		language.saveData();
 		if(configuration.NAME_TAG_SHOWN) {
-			if(Holograms.setup()) {
-				PacketHandler.getInstance().setAttribute(0, true);
+			if(Holograms.enable()) {
 				PacketHelper.getInstance().setAttribute(0, false);
 			} else {
-				PacketHandler.getInstance().setAttribute(0, false);
 				PacketHelper.getInstance().setAttribute(0, true);
 			}
 		} else {
-			PacketHandler.getInstance().setAttribute(0, true);
 			PacketHelper.getInstance().setAttribute(0, false);
 		}
 		PacketHelper.getInstance().setAttribute(1, configuration.MODIFY_PLAYER_LIST_ENTRY);
