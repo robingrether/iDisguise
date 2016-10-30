@@ -151,21 +151,21 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public FallingBlockDisguise clone() {
-		return new FallingBlockDisguise(material, data);
+		return new FallingBlockDisguise(material, data, onlyBlockCoordinates);
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof FallingBlockDisguise && ((FallingBlockDisguise)object).material.equals(material) && ((FallingBlockDisguise)object).data == data;
+		return super.equals(object) && object instanceof FallingBlockDisguise && ((FallingBlockDisguise)object).material.equals(material) && ((FallingBlockDisguise)object).data == data && ((FallingBlockDisguise)object).onlyBlockCoordinates == onlyBlockCoordinates;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + material.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; " + data;
+		return super.toString() + "; " + material.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; " + data + "; " + (onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
 	}
 	
 	static {
