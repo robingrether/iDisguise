@@ -17,9 +17,18 @@ public class Holograms {
 		return instance;
 	}
 	
-	public static boolean setup() {
-		if(Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
+	public static boolean enable() {
+		if(!enabled && Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
 			instance = new Holograms();
+			enabled = true;
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean disable() {
+		if(enabled) {
+			enabled = false;
 			return true;
 		}
 		return false;
@@ -31,23 +40,31 @@ public class Holograms {
 	
 	private Map<Player, com.gmail.filoghost.holographicdisplays.api.Hologram> holograms = new ConcurrentHashMap<Player, com.gmail.filoghost.holographicdisplays.api.Hologram>();
 	
-	public void createHologram(Player player) {
+	private void createHologram(Player player) {
 		com.gmail.filoghost.holographicdisplays.api.Hologram hologram = com.gmail.filoghost.holographicdisplays.api.HologramsAPI.createHologram(iDisguise.getInstance(), player.getEyeLocation());
 		hologram.getVisibilityManager().setVisibleByDefault(false);
 		hologram.appendTextLine(player.getName());
 		holograms.put(player, hologram);
 	}
 	
-	public void removeHologram(Player player) {
+	private void removeHologram(Player player) {
 		holograms.remove(player).delete();
 	}
 	
+	public boolean hasHologram(Player player) {
+		return holograms.containsKey(player);
+	}
+	
 	public void showHologram(Player player, Player observer) {
+		if(!hasHologram(player)) {
+			createHologram(player);
+		}
 		holograms.get(player).getVisibilityManager().showTo(observer);
 	}
 	
 	public void hideHologram(Player player, Player observer) {
 		holograms.get(player).getVisibilityManager().hideTo(observer);
+		//TODO
 	}
 	
 	public void updateHologram(Player player) {
