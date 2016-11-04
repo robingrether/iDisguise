@@ -51,14 +51,6 @@ public class Configuration {
 	}
 	
 	public void loadData() {
-		File configurationFile = new File(plugin.getDataFolder(), "config.yml");
-		File oldConfigurationFile = new File(plugin.getDataFolder(), "config.txt");
-		if(!configurationFile.exists()) {
-			plugin.saveDefaultConfig();
-		}
-		if(oldConfigurationFile.exists()) {
-			plugin.getLogger().log(Level.WARNING, "The config file is now called config.yml. Unfortunately the values cannot be imported automatically from the old file, so you might have to do this on your own. For more information visit http://dev.bukkit.org/bukkit-plugins/idisguise/pages/configuration/");
-		}
 		plugin.reloadConfig();
 		FileConfiguration fileConfiguration = plugin.getConfig();
 		try {
@@ -79,23 +71,18 @@ public class Configuration {
 		}
 	}
 	
-	public void saveData() {
-		FileConfiguration fileConfiguration = plugin.getConfig();
-		try {
-			for(Field pathField : getClass().getDeclaredFields()) {
-				if(pathField.getName().endsWith("_PATH")) {
-					Field valueField = getClass().getDeclaredField(pathField.getName().substring(0, pathField.getName().length() - 5));
-					if(valueField.getType() == boolean.class) {
-						fileConfiguration.set((String)pathField.get(null), valueField.getBoolean(this));
-					} else {
-						fileConfiguration.set((String)pathField.get(null), valueField.get(this));
-					}
-				}
-			}
-			plugin.saveConfig();
-		} catch(Exception e) {
-			plugin.getLogger().log(Level.SEVERE, "An error occured while saving the config file.", e);
+	public void updateFile() {
+		File configurationFile = new File(plugin.getDataFolder(), "config.yml");
+		File oldConfigurationFile = new File(plugin.getDataFolder(), "config.txt");
+		if(oldConfigurationFile.exists()) {
+			plugin.getLogger().log(Level.WARNING, "The config file is now called config.yml. Unfortunately the values cannot be imported automatically from the old file, so you might have to do this on your own. For more information visit http://dev.bukkit.org/bukkit-plugins/idisguise/pages/configuration/");
 		}
+		if(!configurationFile.exists()) {
+			plugin.saveDefaultConfig();
+		} else {
+			// put update things in here
+		}
+		plugin.reloadConfig();
 	}
 	
 }
