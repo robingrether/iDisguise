@@ -3,41 +3,42 @@ disguise:
    
    # May your players disguise as ghost
    # This feature might interfere with stats/scoreboard plugins
-   enable-ghost-disguise: false
+   enable-ghost-disguise: ENABLE_GHOST_DISGUISE
    
    # Do disguised players keep their disguise when they leave the server
-   keep-disguise-leave: true
+   keep-disguise-leave: KEEP_DISGUISE_LEAVE
    
    # Do disguised players keep their disguise when you shutdown the server
-   keep-disguise-shutdown: true
+   keep-disguise-shutdown: KEEP_DISGUISE_SHUTDOWN
    
    # Modify disguised players' death messages
    # e.g. 'RobinGrether tried to swim in lava' -> 'Notch tried to swim in lava' in case RobinGrether is disguised as a player called Notch
-   modify-message-death: false
+   modify-message-death: MODIFY_MESSAGE_DEATH
    
    # Modify disguised players' join message
    # e.g. 'RobinGrether joined the game' -> 'Dinnerbone joined the game' in case RobinGrether is disguise as a player called Dinnerbone
-   modify-message-join: false
+   modify-message-join: MODIFY_MESSAGE_JOIN
    
    # Modify disguised players' kill message
    # e.g. 'Notch was slain by RobinGrether' -> 'Notch was slain by Zombie' in case RobinGrether is disguised as a zombie
-   modify-message-kill: false
+   modify-message-kill: MODIFY_MESSAGE_KILL
    
    # Modify disguised players' leave message
    # e.g. 'RobinGrether left the game' -> 'Herobrine left the game' in case RobinGrether is disguised as a player called Herobrine
-   modify-message-leave: false
+   modify-message-leave: MODIFY_MESSAGE_LEAVE
    
    # Modify disguised players' player list entry
    # e.g. 'RobinGrether' -> 'Dinnerbone' in case RobinGrether is disguised as a player called Dinnerbone
    # e.g. RobinGrether is not shown on the player list in case he is disguised as anything but another player
-   modify-player-list-entry: false
+   modify-player-list-entry: MODIFY_PLAYER_LIST_ENTRY
    
-   # Show name tags with their original name for players disguised as living mobs
-   name-tag-shown: false
+   # Show name tags with their original name for disguised players
+   # This feature requires 'HolographicDisplays' to be installed
+   name-tag-shown: NAME_TAG_SHOWN
    
    # Do disguised players sound like actual mobs
    # e.g. a player disguised as a cow moos when he is hurt
-   replace-sound-effects: true
+   replace-sound-effects: REPLACE_SOUND_EFFECTS
    
 # Settings affecting the command and permission behavior of this plugin
 commands:
@@ -45,25 +46,21 @@ commands:
    # Restrict some player names so your players cannot disguise as them
    # Admins might get 'iDisguise.player.prohibited' permission to bypass this restriction
    # The names should be lower case (won't work otherwise)
-   restricted-player-names:
-   - player1
-   - player2
+   restricted-player-names: RESTRICTED_PLAYER_NAMES
    
    # Restrict some worlds so your players cannot disguise there
    # Admins might get 'iDisguise.everywhere' permission to bypass this restriction
-   restricted-worlds:
-   - world1
-   - world2
+   restricted-worlds: RESTRICTED_WORLDS
    
    # Do disguised players need to have 'iDisguise.undisguise' permission to be allowed to undisguise
-   undisguise-permission: false
+   undisguise-permission: UNDISGUISE_PERMISSION
    
 # Settings affecting the update checking feature
 updates:
    
    # Check whether an update is available at every server start
    # Admins might get 'iDisguise.update' permission to also trigger an update check and receive a notification if an update is available
-   check: true
+   check: UPDATE_CHECK
    
    # Automatically download a new update after checking whether one is available
-   download: false
+   download: UPDATE_DOWNLOAD

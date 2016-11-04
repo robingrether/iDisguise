@@ -1,5 +1,7 @@
 package de.robingrether.util;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 
 /**
@@ -137,6 +139,27 @@ public class StringUtil {
 	 */
 	public static boolean isNotBlank(String string) {
 		return string != null && !string.isEmpty() && !string.trim().isEmpty();
+	}
+	
+	/**
+	 * Reads a string from the given input stream.
+	 * 
+	 * @param input the input stream to read from
+	 * @return the string
+	 */
+	public static String readFrom(InputStream input) {
+		try {
+			StringOutputStream output = new StringOutputStream();
+			byte[] buffer = new byte[1024];
+			int read;
+			while((read = input.read(buffer)) > 0) {
+				output.write(buffer, 0, read);
+			}
+			output.close();
+			return output.toString();
+		} catch(IOException e) {
+			return "";
+		}
 	}
 	
 }

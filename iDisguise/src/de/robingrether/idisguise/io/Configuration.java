@@ -1,6 +1,8 @@
 package de.robingrether.idisguise.io;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.logging.Level;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import de.robingrether.idisguise.iDisguise;
+import de.robingrether.util.StringUtil;
 
 public class Configuration {
 	
@@ -71,18 +74,30 @@ public class Configuration {
 		}
 	}
 	
-	public void updateFile() {
+	public void saveData() {
 		File configurationFile = new File(plugin.getDataFolder(), "config.yml");
-		File oldConfigurationFile = new File(plugin.getDataFolder(), "config.txt");
-		if(oldConfigurationFile.exists()) {
-			plugin.getLogger().log(Level.WARNING, "The config file is now called config.yml. Unfortunately the values cannot be imported automatically from the old file, so you might have to do this on your own. For more information visit http://dev.bukkit.org/bukkit-plugins/idisguise/pages/configuration/");
+		String config = StringUtil.readFrom(plugin.getResource("config.yml"));
+		try {
+			for(Field pathField : getClass().getDeclaredFields()) {
+				if(pathField.getName().endsWith("_PATH")) {
+					Field valueField = getClass().getDeclaredField(pathField.getName().substring(0, pathField.getName().length() - 5));
+					if(valueField.getType() == List.class) {
+						StringBuilder builder = new StringBuilder();
+						for(Object object : ((List)valueField.get(this))) {
+							builder.append("\r\n   - " + object.toString());
+						}
+						config = config.replace(valueField.getName(), builder.toString());
+					} else {
+						config = config.replace(valueField.getName(), valueField.get(this).toString());
+					}
+				}
+			}
+			OutputStream output = new FileOutputStream(configurationFile);
+			output.write(config.getBytes());
+			output.close();
+		} catch(Exception e) {
+			plugin.getLogger().log(Level.SEVERE, "An error occured while saving the config file.", e);
 		}
-		if(!configurationFile.exists()) {
-			plugin.saveDefaultConfig();
-		} else {
-			// put update things in here
-		}
-		plugin.reloadConfig();
 	}
 	
 }

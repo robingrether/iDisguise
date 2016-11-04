@@ -86,8 +86,8 @@ public class iDisguise extends JavaPlugin {
 		checkDirectory();
 		listener = new EventListener(this);
 		configuration = new Configuration(this);
-		configuration.updateFile();
 		configuration.loadData();
+		configuration.saveData();
 		language = new Language(this);
 		language.loadData();
 		language.saveData();
