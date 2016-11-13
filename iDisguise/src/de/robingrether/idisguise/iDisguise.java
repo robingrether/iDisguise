@@ -185,6 +185,7 @@ public class iDisguise extends JavaPlugin {
 		}
 		enabled = false;
 		configuration.loadData();
+		configuration.saveData();
 		language.loadData();
 		language.saveData();
 		PacketHelper.getInstance().setAttribute(0, configuration.NAME_TAG_SHOWN);
