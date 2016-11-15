@@ -33,7 +33,6 @@ disguise:
    modify-player-list-entry: MODIFY_PLAYER_LIST_ENTRY
    
    # Show name tags with their original name for disguised players
-   # This feature requires 'HolographicDisplays' to be installed
    name-tag-shown: NAME_TAG_SHOWN
    
    # Do disguised players sound like actual mobs
