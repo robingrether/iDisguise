@@ -10,14 +10,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import de.robingrether.idisguise.api.UndisguiseEvent;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
@@ -95,21 +93,6 @@ public class EventListener implements Listener {
 		ChannelInjector.getInstance().remove(player);
 		GhostFactory.getInstance().removeGhost(player);
 		PlayerHelper.getInstance().removePlayer(player);
-	}
-	
-	@EventHandler
-	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
-		Player player = event.getPlayer();
-		if(DisguiseManager.getInstance().isDisguised(player)) {
-			if(!plugin.isDisguisingPermittedInWorld(player.getWorld()) && !player.hasPermission("iDisguise.everywhere")) {
-				UndisguiseEvent undisguiseEvent = new UndisguiseEvent(player, DisguiseManager.getInstance().getDisguise(player).clone(), false);
-				plugin.getServer().getPluginManager().callEvent(undisguiseEvent);
-				if(!undisguiseEvent.isCancelled()) {
-					DisguiseManager.getInstance().undisguise(player);
-					player.sendMessage(plugin.getLanguage().UNDISGUISE_WORLD_CHANGE);
-				}
-			}
-		}
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)

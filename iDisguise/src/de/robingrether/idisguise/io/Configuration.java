@@ -26,7 +26,6 @@ public class Configuration {
 	public static final String NAME_TAG_SHOWN_PATH = "disguise.name-tag-shown";
 	public static final String REPLACE_SOUND_EFFECTS_PATH = "disguise.replace-sound-effects";
 	public static final String RESTRICTED_PLAYER_NAMES_PATH = "commands.restricted-player-names";
-	public static final String RESTRICTED_WORLDS_PATH = "commands.restricted-worlds";
 	public static final String UNDISGUISE_PERMISSION_PATH = "commands.undisguise-permission";
 	public static final String UPDATE_CHECK_PATH = "updates.check";
 	public static final String UPDATE_DOWNLOAD_PATH = "updates.download";
@@ -42,7 +41,6 @@ public class Configuration {
 	public boolean NAME_TAG_SHOWN = false;
 	public boolean REPLACE_SOUND_EFFECTS = true;
 	public List<String> RESTRICTED_PLAYER_NAMES = Arrays.asList("player1", "player2");
-	public List<String> RESTRICTED_WORLDS = Arrays.asList("world1", "world2");
 	public boolean UNDISGUISE_PERMISSION = false;
 	public boolean UPDATE_CHECK = true;
 	public boolean UPDATE_DOWNLOAD = false;

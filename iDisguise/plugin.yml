@@ -27,15 +27,12 @@ permissions:
    iDisguise.admin:
       default: false
       children:
-         iDisguise.everywhere: true
          iDisguise.others: true
          iDisguise.player.prohibited: true
          iDisguise.reload: true
          iDisguise.undisguise.all: true
          iDisguise.undisguise.others: true
          iDisguise.update: true
-   iDisguise.everywhere:
-      default: false
    iDisguise.ghost:
       default: false
    iDisguise.help:

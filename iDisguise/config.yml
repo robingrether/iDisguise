@@ -48,10 +48,6 @@ commands:
    # The names should be lower case (won't work otherwise)
    restricted-player-names: RESTRICTED_PLAYER_NAMES
    
-   # Restrict some worlds so your players cannot disguise there
-   # Admins might get 'iDisguise.everywhere' permission to bypass this restriction
-   restricted-worlds: RESTRICTED_WORLDS
-   
    # Do disguised players need to have 'iDisguise.undisguise' permission to be allowed to undisguise
    undisguise-permission: UNDISGUISE_PERMISSION
    

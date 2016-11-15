@@ -13,7 +13,6 @@ import java.util.logging.Level;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -247,10 +246,6 @@ public class iDisguise extends JavaPlugin {
 					}
 				} else {
 					sendHelpMessage(sender, command, alias);
-					return true;
-				}
-				if(player.isOnline() && !isDisguisingPermittedInWorld(player.getPlayer().getWorld()) && !sender.hasPermission("iDisguise.everywhere")) {
-					sender.sendMessage(language.RESTRICTED_WORLD);
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("help")) {
@@ -902,14 +897,6 @@ public class iDisguise extends JavaPlugin {
 	
 	public Language getLanguage() {
 		return language;
-	}
-	
-	public boolean isDisguisingPermittedInWorld(World world) {
-		return isDisguisingPermittedInWorld(world.getName());
-	}
-	
-	public boolean isDisguisingPermittedInWorld(String world) {
-		return !getConfiguration().RESTRICTED_WORLDS.contains(world);
 	}
 	
 	public boolean isPlayerDisguisePermitted(String name) {

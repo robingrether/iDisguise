@@ -60,7 +60,6 @@ public class Language {
 	public String HELP_DISGUISE_OTHER = "Disguise a player as a mob with optional subtypes";
 	public String HELP_SUBTYPE = "Apply one (or multiple) subtypes";
 	public String UNDISGUISE_GHOST_DISABLED = ChatColor.GOLD + "You were undisguised because ghost disguises are disabled.";
-	public String UNDISGUISE_WORLD_CHANGE = ChatColor.GOLD + "You were undisguised because disguising is prohibited in this world.";
 	public String JOIN_DISGUISED = ChatColor.GOLD + "You are still disguised. Use " + ChatColor.ITALIC + "/disguise status" + ChatColor.RESET + ChatColor.GOLD + " to get more information.";
 	public String MOVE_AS_SHULKER = ChatColor.RED + "You must not move while you are disguised as a shulker.";
 	public String UPDATE_AVAILABLE = ChatColor.GOLD + "[iDisguise] An update is available: %version%";
