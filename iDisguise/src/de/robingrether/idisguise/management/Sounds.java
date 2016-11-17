@@ -105,45 +105,6 @@ public class Sounds {
 									
 								});
 								break;
-							case "HORSE":
-								setSoundsForEntity(DisguiseType.HORSE, new Sounds(null, arguments[0], arguments[1], null, arguments[2], arguments[3]) {
-									
-									public String death(MobDisguise disguise) {
-										if(disguise instanceof HorseDisguise) {
-											switch(((HorseDisguise)disguise).getVariant()) {
-												case HORSE:
-													return arguments[4];
-												case DONKEY:
-												case MULE:
-													return arguments[5];
-												case UNDEAD_HORSE:
-													return arguments[6];
-												case SKELETON_HORSE:
-													return arguments[7];
-											}
-										}
-										return arguments[4];
-									}
-									
-									public String hit(MobDisguise disguise) {
-										if(disguise instanceof HorseDisguise) {
-											switch(((HorseDisguise)disguise).getVariant()) {
-												case HORSE:
-													return arguments[8];
-												case DONKEY:
-												case MULE:
-													return arguments[9];
-												case UNDEAD_HORSE:
-													return arguments[10];
-												case SKELETON_HORSE:
-													return arguments[11];
-											}
-										}
-										return arguments[8];
-									}
-									
-								});
-								break;
 							case "MAGMA_CUBE":
 							case "SLIME":
 								setSoundsForEntity(DisguiseType.valueOf(name), new Sounds(null, arguments[0], arguments[1], null, arguments[2], arguments[3]) {

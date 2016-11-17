@@ -24,15 +24,17 @@ public enum DisguiseType {
 	CHICKEN(Type.MOB, "v1_5_R2", AgeableDisguise.class, "EntityChicken", "chicken", "chick"),
 	COW(Type.MOB, "v1_5_R2", AgeableDisguise.class, "EntityCow", "cow", "cattle", "ox"),
 	CREEPER(Type.MOB, "v1_5_R2", CreeperDisguise.class, "EntityCreeper", "creeper"),
+	DONKEY(Type.MOB, "v1_6_R1", ChestedHorseDisguise.class, "EntityHorseDonkey", "donkey"),
 	ENDER_DRAGON(Type.MOB, "v1_5_R2", MobDisguise.class, "EntityEnderDragon", "ender_dragon", "dragon", "ender-dragon", "enderdragon"),
 	ENDERMAN(Type.MOB, "v1_5_R2", EndermanDisguise.class, "EntityEnderman", "enderman", "endermen"),
 	ENDERMITE(Type.MOB, "v1_8_R1", MobDisguise.class, "EntityEndermite", "endermite", "mite"),
 	GHAST(Type.MOB, "v1_5_R2", MobDisguise.class, "EntityGhast", "ghast"),
 	GIANT(Type.MOB, "v1_5_R2", MobDisguise.class, "EntityGiantZombie", "giant", "giant_zombie", "giant-zombie", "giantzombie"),
 	GUARDIAN(Type.MOB, "v1_8_R1", GuardianDisguise.class, "EntityGuardian", "guardian"),
-	HORSE(Type.MOB, "v1_6_R1", HorseDisguise.class, "EntityHorse", "horse"),
+	HORSE(Type.MOB, "v1_6_R1", StyledHorseDisguise.class, "EntityHorse", "horse"),
 	IRON_GOLEM(Type.MOB, "v1_5_R2", MobDisguise.class, "EntityIronGolem", "iron_golem", "iron-golem", "irongolem", "golem"),
 	MAGMA_CUBE(Type.MOB, "v1_5_R2", SizedDisguise.class, "EntityMagmaCube", "magma_cube", "magma-cube", "magmacube", "magma", "lava_cube", "lava-cube", "lavacube", "lava", "magma_slime", "magma-slime", "magmaslime", "lava_slime", "lava-slime", "lavaslime"),
+	MULE(Type.MOB, "v1_6_R1", ChestedHorseDisguise.class, "EntityHorseMule", "mule"),
 	MUSHROOM_COW(Type.MOB, "v1_5_R2", AgeableDisguise.class, "EntityMushroomCow", "mushroom_cow", "mushroom-cow", "mushroomcow", "mushroom", "mooshroom"),
 	OCELOT(Type.MOB, "v1_5_R2", OcelotDisguise.class, "EntityOcelot", "ocelot", "cat"),
 	PIG(Type.MOB, "v1_5_R2", PigDisguise.class, "EntityPig", "pig"),
@@ -42,11 +44,13 @@ public enum DisguiseType {
 	SHEEP(Type.MOB, "v1_5_R2", SheepDisguise.class, "EntitySheep", "sheep"),
 	SHULKER(Type.MOB, "v1_9_R1", MobDisguise.class, "EntityShulker", "shulker"),
 	SILVERFISH(Type.MOB, "v1_5_R2", MobDisguise.class, "EntitySilverfish", "silverfish"),
+	SKELETAL_HORSE(Type.MOB, "v1_6_R1", HorseDisguise.class, "EntityHorseSkeleton", "skeletal_horse"),
 	SKELETON(Type.MOB, "v1_5_R2", SkeletonDisguise.class, "EntitySkeleton", "skeleton"),
 	SLIME(Type.MOB, "v1_5_R2", SizedDisguise.class, "EntitySlime", "slime", "cube"),
 	SNOWMAN(Type.MOB, "v1_5_R2", MobDisguise.class, "EntitySnowman", "snowman", "snow-man", "snow_man", "snow_golem", "snow-golem", "snowgolem"),
 	SPIDER(Type.MOB, "v1_5_R2", MobDisguise.class, "EntitySpider", "spider"),
 	SQUID(Type.MOB, "v1_5_R2", MobDisguise.class, "EntitySquid", "squid"),
+	UNDEAD_HORSE(Type.MOB, "v1_6_R1", HorseDisguise.class, "EntityHorseZombie", "undead_horse"),
 	VILLAGER(Type.MOB, "v1_5_R2", VillagerDisguise.class, "EntityVillager", "villager"),
 	WITCH(Type.MOB, "v1_5_R2", MobDisguise.class, "EntityWitch", "witch"),
 	WITHER(Type.MOB, "v1_5_R2", MobDisguise.class, "EntityWither", "witherboss", "wither-boss", "wither_boss"),
@@ -173,16 +177,8 @@ public enum DisguiseType {
 		}
 	}
 	
-	/**
-	 * Returns this disguise type's class file inside the given package.
-	 * 
-	 * @param packageName the package
-	 * @return this disguise type's class file, if one exists
-	 * @throws ClassNotFoundException if the class file is not found inside the given package.
-	 * @since 5.0.1
-	 */
-	public Class<?> getClass(String packageName) throws ClassNotFoundException {
-		return Class.forName(packageName + "." + nmsClass);
+	public String getNMSClass() {
+		return nmsClass;
 	}
 	
 	/**

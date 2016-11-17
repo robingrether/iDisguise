@@ -1,0 +1,82 @@
+package de.robingrether.idisguise.disguise;
+
+import java.util.Locale;
+
+public class StyledHorseDisguise extends HorseDisguise {
+	
+	private static final long serialVersionUID = -8573196849561021899L;
+	private Style style;
+	private Color color;
+	
+	public StyledHorseDisguise() {
+		this(true, Style.NONE, Color.BROWN, false, Armor.NONE);
+	}
+	
+	public StyledHorseDisguise(boolean adult, Style style, Color color, boolean saddled, Armor armor) {
+		super(DisguiseType.HORSE, adult, saddled, armor);
+		this.style = style;
+		this.color = color;
+	}
+	
+	public Color getColor() {
+		return color;
+	}
+	
+	public void setColor(Color color) {
+		this.color = color;
+	}
+	
+	public Style getStyle() {
+		return style;
+	}
+	
+	public void setStyle(Style style) {
+		this.style = style;
+	}
+	
+	public StyledHorseDisguise clone() {
+		StyledHorseDisguise clone = new StyledHorseDisguise(adult, style, color, isSaddled(), getArmor());
+		clone.setCustomName(customName);
+		return clone;
+	}
+	
+	public boolean equals(Object object) {
+		return super.equals(object) && object instanceof StyledHorseDisguise && ((StyledHorseDisguise)object).style.equals(style) && ((StyledHorseDisguise)object).color.equals(color);
+	}
+	
+	public String toString() {
+		return super.toString() + "; " + style.name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings") + "; " + color.name().toLowerCase(Locale.ENGLISH).replace('_', '-');
+	}
+	
+	static {
+		for(Style style : Style.values()) {
+			Subtypes.registerSubtype(StyledHorseDisguise.class, "setStyle", style, style.name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings"));
+		}
+		for(Color color : Color.values()) {
+			Subtypes.registerSubtype(StyledHorseDisguise.class, "setColor", color, color.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+		}
+	}
+	
+	public enum Style {
+		
+		NONE,
+		WHITE,
+		WHITEFIELD,
+		WHITE_DOTS,
+		BLACK_DOTS;
+		
+	}
+	
+	public enum Color {
+		
+		WHITE,
+		CREAMY,
+		CHESTNUT,
+		BROWN,
+		BLACK,
+		GRAY,
+		DARK_BROWN;
+		
+	}
+	
+}

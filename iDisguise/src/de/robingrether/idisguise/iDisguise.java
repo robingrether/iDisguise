@@ -33,7 +33,6 @@ import de.robingrether.idisguise.disguise.DisguiseType.Type;
 import de.robingrether.idisguise.disguise.EndermanDisguise;
 import de.robingrether.idisguise.disguise.FallingBlockDisguise;
 import de.robingrether.idisguise.disguise.GuardianDisguise;
-import de.robingrether.idisguise.disguise.HorseDisguise;
 import de.robingrether.idisguise.disguise.SheepDisguise;
 import de.robingrether.idisguise.disguise.OcelotDisguise;
 import de.robingrether.idisguise.disguise.OutdatedServerException;
@@ -651,6 +650,8 @@ public class iDisguise extends JavaPlugin {
 				return sender.hasPermission("iDisguise.mob.cow") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case CREEPER:
 				return sender.hasPermission("iDisguise.mob.creeper") && (!((CreeperDisguise)disguise).isPowered() || sender.hasPermission("iDisguise.mob.creeper.powered"));
+			case DONKEY:
+				return sender.hasPermission("iDisguise.mob.donkey") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case ENDER_DRAGON:
 				return sender.hasPermission("iDisguise.mob.ender_dragon");
 			case ENDERMAN:
@@ -666,11 +667,13 @@ public class iDisguise extends JavaPlugin {
 			case GUARDIAN:
 				return sender.hasPermission("iDisguise.mob.guardian") && (!((GuardianDisguise)disguise).isElder() || sender.hasPermission("iDisguise.mob.guardian.elder"));
 			case HORSE:
-				return sender.hasPermission("iDisguise.mob.horse") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && sender.hasPermission("iDisguise.mob.horse.variant." + ((HorseDisguise)disguise).getVariant().name().toLowerCase(Locale.ENGLISH).replace("_horse", "").replace("horse", "normal").replace("skeleton", "skeletal"));
+				return sender.hasPermission("iDisguise.mob.horse") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case IRON_GOLEM:
 				return sender.hasPermission("iDisguise.mob.iron_golem");
 			case MAGMA_CUBE:
 				return sender.hasPermission("iDisguise.mob.magma_cube") && (((SizedDisguise)disguise).getSize() < 5 || sender.hasPermission("iDisguise.mob.magma_cube.giant"));
+			case MULE:
+				return sender.hasPermission("iDisguise.mob.mule") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case MUSHROOM_COW:
 				return sender.hasPermission("iDisguise.mob.mushroom_cow") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case OCELOT:
@@ -691,6 +694,8 @@ public class iDisguise extends JavaPlugin {
 				return sender.hasPermission("iDisguise.mob.shulker");
 			case SILVERFISH:
 				return sender.hasPermission("iDisguise.mob.silverfish");
+			case SKELETAL_HORSE:
+				return sender.hasPermission("iDisguise.mob.skeletal_horse") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case SKELETON:
 				return sender.hasPermission("iDisguise.mob.skeleton") && (!((SkeletonDisguise)disguise).getSkeletonType().equals(SkeletonType.WITHER) || sender.hasPermission("iDisguise.mob.skeleton.wither")) && (!((SkeletonDisguise)disguise).getSkeletonType().name().equals("STRAY") || sender.hasPermission("iDisguise.mob.skeleton.stray"));
 			case SLIME:
@@ -701,6 +706,8 @@ public class iDisguise extends JavaPlugin {
 				return sender.hasPermission("iDisguise.mob.spider");
 			case SQUID:
 				return sender.hasPermission("iDisguise.mob.squid");
+			case UNDEAD_HORSE:
+				return sender.hasPermission("iDisguise.mob.undead_horse") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case VILLAGER:
 				return sender.hasPermission("iDisguise.mob.villager") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && sender.hasPermission("iDisguise.mob.villager.profession." + ((VillagerDisguise)disguise).getProfession().name().toLowerCase(Locale.ENGLISH));
 			case WITCH:

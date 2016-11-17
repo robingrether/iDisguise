@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.AgeableDisguise;
 import de.robingrether.idisguise.disguise.ArmorStandDisguise;
+import de.robingrether.idisguise.disguise.ChestedHorseDisguise;
 import de.robingrether.idisguise.disguise.CreeperDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
@@ -32,6 +33,7 @@ import de.robingrether.idisguise.disguise.RabbitDisguise;
 import de.robingrether.idisguise.disguise.SheepDisguise;
 import de.robingrether.idisguise.disguise.SizedDisguise;
 import de.robingrether.idisguise.disguise.SkeletonDisguise;
+import de.robingrether.idisguise.disguise.StyledHorseDisguise;
 import de.robingrether.idisguise.disguise.VillagerDisguise;
 import de.robingrether.idisguise.disguise.WolfDisguise;
 import de.robingrether.idisguise.disguise.ZombieDisguise;
@@ -67,7 +69,7 @@ public class PacketHelper {
 			List<Object> packets = new ArrayList<Object>();
 			if(disguise instanceof MobDisguise) {
 				MobDisguise mobDisguise = (MobDisguise)disguise;
-				Object entity = type.getClass(VersionHelper.getNMSPackage()).getConstructor(World).newInstance(Entity_world.get(entityPlayer));
+				Object entity = Class.forName(VersionHelper.getNMSPackage() + "." + (VersionHelper.require1_11() ? type.getNMSClass() : type.getNMSClass().replaceAll("Horse[A-Za-z]+", "Horse"))).getConstructor(World).newInstance(Entity_world.get(entityPlayer));
 				if(mobDisguise.getCustomName() != null && !mobDisguise.getCustomName().isEmpty()) {
 					EntityInsentient_setCustomName.invoke(entity, mobDisguise.getCustomName());
 					EntityInsentient_setCustomNameVisible.invoke(entity, true);
@@ -120,13 +122,19 @@ public class PacketHelper {
 				} else if(mobDisguise instanceof HorseDisguise) {
 					if(EntityHorse.isInstance(entity)) {
 						HorseDisguise horseDisguise = (HorseDisguise)mobDisguise;
-						if(VersionHelper.require1_9()) {
-							EntityHorse_setType.invoke(entity, EnumHorseType_fromIndex.invoke(null, horseDisguise.getVariant().ordinal()));
-						} else {
-							EntityHorse_setType.invoke(entity, horseDisguise.getVariant().ordinal());
+						if(!VersionHelper.require1_11()) {
+							if(VersionHelper.require1_9()) {
+								EntityHorse_setType.invoke(entity, EnumHorseType_fromIndex.invoke(null, horseDisguise.getVariant()));
+							} else {
+								EntityHorse_setType.invoke(entity, horseDisguise.getVariant());
+							}
 						}
-						EntityHorse_setVariant.invoke(entity, horseDisguise.getColor().ordinal() & 0xFF | horseDisguise.getStyle().ordinal() << 8);
-						EntityHorse_setHasChest.invoke(entity, horseDisguise.hasChest());
+						if(horseDisguise instanceof StyledHorseDisguise) {
+							EntityHorse_setVariant.invoke(entity, ((StyledHorseDisguise)horseDisguise).getColor().ordinal() & 0xFF | ((StyledHorseDisguise)horseDisguise).getStyle().ordinal() << 8);
+						}
+						if(horseDisguise instanceof ChestedHorseDisguise) {
+							EntityHorse_setHasChest.invoke(entity, ((ChestedHorseDisguise)horseDisguise).hasChest());
+						}
 						Object inventoryChest = EntityHorse_inventoryChest.get(entity);
 						if(VersionHelper.require1_7()) {
 							InventorySubcontainer_setItem.invoke(inventoryChest, 0, horseDisguise.isSaddled() ? ItemStack_new_Item.newInstance(Item_getById.invoke(null, 329), 1, 0) : null);
@@ -200,7 +208,7 @@ public class PacketHelper {
 				}
 			} else if(disguise instanceof ObjectDisguise) {
 				ObjectDisguise objectDisguise = (ObjectDisguise)disguise;
-				Object entity = type.getClass(VersionHelper.getNMSPackage()).getConstructor(World).newInstance(Entity_world.get(entityPlayer));
+				Object entity = Class.forName(VersionHelper.getNMSPackage() + "." + type.getNMSClass()).getConstructor(World).newInstance(Entity_world.get(entityPlayer));
 				Location location = player.getLocation();
 				Entity_setLocation.invoke(entity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 				if(VersionHelper.require1_7()) {

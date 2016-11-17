@@ -48,6 +48,7 @@ permissions:
          iDisguise.mob.cow: true
          iDisguise.mob.creeper: true
          iDisguise.mob.creeper.powered: true
+         iDisguise.mob.donkey: true
          iDisguise.mob.ender_dragon: true
          iDisguise.mob.enderman: true
          iDisguise.mob.enderman.block: true
@@ -57,10 +58,10 @@ permissions:
          iDisguise.mob.guardian: true
          iDisguise.mob.guardian.elder: true
          iDisguise.mob.horse: true
-         iDisguise.mob.horse.variant.*: true
          iDisguise.mob.iron_golem: true
          iDisguise.mob.magma_cube: true
          iDisguise.mob.magma_cube.giant: true
+         iDisguise.mob.mule: true
          iDisguise.mob.mushroom_cow: true
          iDisguise.mob.ocelot: true
          iDisguise.mob.ocelot.type.*: true
@@ -74,6 +75,7 @@ permissions:
          iDisguise.mob.sheep.color.*: true
          iDisguise.mob.shulker: true
          iDisguise.mob.silverfish: true
+         iDisguise.mob.skeletal_horse: true
          iDisguise.mob.skeleton: true
          iDisguise.mob.skeleton.stray: true
          iDisguise.mob.skeleton.wither: true
@@ -82,6 +84,7 @@ permissions:
          iDisguise.mob.snowman: true
          iDisguise.mob.spider: true
          iDisguise.mob.squid: true
+         iDisguise.mob.undead_horse: true
          iDisguise.mob.villager: true
          iDisguise.mob.villager.profession.*: true
          iDisguise.mob.witch: true
@@ -109,6 +112,8 @@ permissions:
       default: false
    iDisguise.mob.creeper.powered:
       default: false
+   iDisguise.mob.donkey:
+      default: false
    iDisguise.mob.ender_dragon:
       default: false
    iDisguise.mob.enderman:
@@ -127,31 +132,13 @@ permissions:
       default: false
    iDisguise.mob.horse:
       default: false
-      children:
-         iDisguise.mob.horse.variant.normal: true
-   iDisguise.mob.horse.variant.*:
-      default: false
-      children:
-         iDisguise.mob.horse.variant.donkey: true
-         iDisguise.mob.horse.variant.mule: true
-         iDisguise.mob.horse.variant.normal: true
-         iDisguise.mob.horse.variant.skeletal: true
-         iDisguise.mob.horse.variant.undead: true
-   iDisguise.mob.horse.variant.donkey:
-      default: false
-   iDisguise.mob.horse.variant.mule:
-      default: false
-   iDisguise.mob.horse.variant.normal:
-      default: false
-   iDisguise.mob.horse.variant.skeletal:
-      default: false
-   iDisguise.mob.horse.variant.undead:
-      default: false
    iDisguise.mob.iron_golem:
       default: false
    iDisguise.mob.magma_cube:
       default: false
    iDisguise.mob.magma_cube.giant:
+      default: false
+   iDisguise.mob.mule:
       default: false
    iDisguise.mob.mushroom_cow:
       default: false
@@ -269,6 +256,8 @@ permissions:
       default: false
    iDisguise.mob.silverfish:
       default: false
+   iDisguise.mob.skeletal_horse:
+      default: false
    iDisguise.mob.skeleton:
       default: false
    iDisguise.mob.skeleton.stray:
@@ -284,6 +273,8 @@ permissions:
    iDisguise.mob.spider:
       default: false
    iDisguise.mob.squid:
+      default: false
+   iDisguise.mob.undead_horse:
       default: false
    iDisguise.mob.villager:
       default: false
