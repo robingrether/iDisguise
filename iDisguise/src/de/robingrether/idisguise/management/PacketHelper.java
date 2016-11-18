@@ -20,7 +20,6 @@ import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.EndermanDisguise;
 import de.robingrether.idisguise.disguise.FallingBlockDisguise;
-import de.robingrether.idisguise.disguise.GuardianDisguise;
 import de.robingrether.idisguise.disguise.HorseDisguise;
 import de.robingrether.idisguise.disguise.ItemDisguise;
 import de.robingrether.idisguise.disguise.MinecartDisguise;
@@ -69,7 +68,7 @@ public class PacketHelper {
 			List<Object> packets = new ArrayList<Object>();
 			if(disguise instanceof MobDisguise) {
 				MobDisguise mobDisguise = (MobDisguise)disguise;
-				Object entity = Class.forName(VersionHelper.getNMSPackage() + "." + (VersionHelper.require1_11() ? type.getNMSClass() : type.getNMSClass().replaceAll("Horse[A-Za-z]+", "Horse"))).getConstructor(World).newInstance(Entity_world.get(entityPlayer));
+				Object entity = Class.forName(VersionHelper.getNMSPackage() + "." + (VersionHelper.require1_11() ? type.getNMSClass() : type.getNMSClass().replaceAll("Horse[A-Za-z]+", "Horse").replace("Elder", ""))).getConstructor(World).newInstance(Entity_world.get(entityPlayer));
 				if(mobDisguise.getCustomName() != null && !mobDisguise.getCustomName().isEmpty()) {
 					EntityInsentient_setCustomName.invoke(entity, mobDisguise.getCustomName());
 					EntityInsentient_setCustomNameVisible.invoke(entity, true);
@@ -77,6 +76,13 @@ public class PacketHelper {
 				if(EntityAgeable.isInstance(entity)) {
 					if(mobDisguise instanceof AgeableDisguise && !((AgeableDisguise)disguise).isAdult()) {
 						EntityAgeable_setAge.invoke(entity, -24000);
+					}
+				}
+				if(!VersionHelper.require1_11()) {
+					if(type.equals(DisguiseType.ELDER_GUARDIAN)) {
+						if(EntityGuardian.isInstance(entity)) {
+							EntityGuardian_setElder.invoke(entity, true);
+						}
 					}
 				}
 				if(mobDisguise instanceof SheepDisguise) {
@@ -114,10 +120,6 @@ public class PacketHelper {
 							EntityEnderman_setCarriedId.invoke(entity, endermanDisguise.getBlockInHand().getId());
 							EntityEnderman_setCarriedData.invoke(entity, endermanDisguise.getBlockInHandData());
 						}
-					}
-				} else if(mobDisguise instanceof GuardianDisguise) {
-					if(EntityGuardian.isInstance(entity)) {
-						EntityGuardian_setElder.invoke(entity, ((GuardianDisguise)mobDisguise).isElder());
 					}
 				} else if(mobDisguise instanceof HorseDisguise) {
 					if(EntityHorse.isInstance(entity)) {

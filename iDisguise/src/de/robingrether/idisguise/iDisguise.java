@@ -32,7 +32,6 @@ import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.DisguiseType.Type;
 import de.robingrether.idisguise.disguise.EndermanDisguise;
 import de.robingrether.idisguise.disguise.FallingBlockDisguise;
-import de.robingrether.idisguise.disguise.GuardianDisguise;
 import de.robingrether.idisguise.disguise.SheepDisguise;
 import de.robingrether.idisguise.disguise.OcelotDisguise;
 import de.robingrether.idisguise.disguise.OutdatedServerException;
@@ -652,6 +651,8 @@ public class iDisguise extends JavaPlugin {
 				return sender.hasPermission("iDisguise.mob.creeper") && (!((CreeperDisguise)disguise).isPowered() || sender.hasPermission("iDisguise.mob.creeper.powered"));
 			case DONKEY:
 				return sender.hasPermission("iDisguise.mob.donkey") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
+			case ELDER_GUARDIAN:
+				return sender.hasPermission("iDisguise.mob.elder_guardian");
 			case ENDER_DRAGON:
 				return sender.hasPermission("iDisguise.mob.ender_dragon");
 			case ENDERMAN:
@@ -665,7 +666,7 @@ public class iDisguise extends JavaPlugin {
 			case GIANT:
 				return sender.hasPermission("iDisguise.mob.giant");
 			case GUARDIAN:
-				return sender.hasPermission("iDisguise.mob.guardian") && (!((GuardianDisguise)disguise).isElder() || sender.hasPermission("iDisguise.mob.guardian.elder"));
+				return sender.hasPermission("iDisguise.mob.guardian");
 			case HORSE:
 				return sender.hasPermission("iDisguise.mob.horse") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case IRON_GOLEM:

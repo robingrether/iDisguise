@@ -14,7 +14,6 @@ import org.bukkit.entity.Skeleton.SkeletonType;
 
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
-import de.robingrether.idisguise.disguise.GuardianDisguise;
 import de.robingrether.idisguise.disguise.HorseDisguise;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.SizedDisguise;
@@ -91,19 +90,6 @@ public class Sounds {
 						switch(name) {
 							case "_":
 								soundsToReplace = arguments;
-								break;
-							case "GUARDIAN":
-								setSoundsForEntity(DisguiseType.GUARDIAN, new Sounds(null, arguments[0], arguments[1], null, arguments[2], arguments[3]) {
-									
-									public String death(MobDisguise disguise) {
-										return (disguise instanceof GuardianDisguise && ((GuardianDisguise)disguise).isElder()) ? arguments[4] : arguments[5];
-									}
-									
-									public String hit(MobDisguise disguise) {
-										return (disguise instanceof GuardianDisguise && ((GuardianDisguise)disguise).isElder()) ? arguments[6] : arguments[7];
-									}
-									
-								});
 								break;
 							case "MAGMA_CUBE":
 							case "SLIME":

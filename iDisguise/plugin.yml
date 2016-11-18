@@ -49,6 +49,7 @@ permissions:
          iDisguise.mob.creeper: true
          iDisguise.mob.creeper.powered: true
          iDisguise.mob.donkey: true
+         iDisguise.mob.elder_guardian: true
          iDisguise.mob.ender_dragon: true
          iDisguise.mob.enderman: true
          iDisguise.mob.enderman.block: true
@@ -56,7 +57,6 @@ permissions:
          iDisguise.mob.ghast: true
          iDisguise.mob.giant: true
          iDisguise.mob.guardian: true
-         iDisguise.mob.guardian.elder: true
          iDisguise.mob.horse: true
          iDisguise.mob.iron_golem: true
          iDisguise.mob.magma_cube: true
@@ -114,6 +114,8 @@ permissions:
       default: false
    iDisguise.mob.donkey:
       default: false
+   iDisguise.mob.elder_guardian:
+      default: false
    iDisguise.mob.ender_dragon:
       default: false
    iDisguise.mob.enderman:
@@ -127,8 +129,6 @@ permissions:
    iDisguise.mob.giant:
       default: false
    iDisguise.mob.guardian:
-      default: false
-   iDisguise.mob.guardian.elder:
       default: false
    iDisguise.mob.horse:
       default: false
