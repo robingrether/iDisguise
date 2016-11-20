@@ -2,10 +2,6 @@ package de.robingrether.idisguise.disguise;
 
 import java.util.Locale;
 
-import org.bukkit.entity.Villager.Profession;
-
-import de.robingrether.util.StringUtil;
-
 /**
  * Represents a disguise as a villager.
  * 
@@ -14,7 +10,7 @@ import de.robingrether.util.StringUtil;
  */
 public class VillagerDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = -8324476173444500691L;
+	private static final long serialVersionUID = 8847244844878844913L;
 	private Profession profession;
 	
 	/**
@@ -26,34 +22,15 @@ public class VillagerDisguise extends AgeableDisguise {
 		this(true, Profession.FARMER);
 	}
 	
-	/**
-	 * Creates an instance.
-	 * 
-	 * @since 3.0.1
-	 * @param adult should the disguise be an adult
-	 * @param profession the profession
-	 */
 	public VillagerDisguise(boolean adult, Profession profession) {
 		super(DisguiseType.VILLAGER, adult);
 		this.profession = profession;
 	}
 	
-	/**
-	 * Gets the profession.
-	 * 
-	 * @since 3.0.1
-	 * @return the profession
-	 */
 	public Profession getProfession() {
 		return profession;
 	}
 	
-	/**
-	 * Sets the profession.
-	 * 
-	 * @since 3.0.1
-	 * @param profession the profession
-	 */
 	public void setProfession(Profession profession) {
 		this.profession = profession;
 	}
@@ -83,10 +60,19 @@ public class VillagerDisguise extends AgeableDisguise {
 	
 	static {
 		for(Profession profession : Profession.values()) {
-			if(!StringUtil.equals(profession.name(), "NORMAL", "HUSK")) {
-				Subtypes.registerSubtype(VillagerDisguise.class, "setProfession", profession, profession.name().toLowerCase(Locale.ENGLISH));
-			}
+			Subtypes.registerSubtype(VillagerDisguise.class, "setProfession", profession, profession.name().toLowerCase(Locale.ENGLISH));
 		}
+	}
+	
+	public enum Profession {
+		
+		FARMER,
+		LIBRARIAN,
+		PRIEST,
+		BLACKSMITH,
+		BUTCHER,
+		NITWIT;
+		
 	}
 	
 }

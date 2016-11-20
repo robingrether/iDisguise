@@ -2,13 +2,12 @@ package de.robingrether.idisguise.disguise;
 
 import java.util.Locale;
 
-import org.bukkit.entity.Villager.Profession;
-
-import de.robingrether.util.StringUtil;
+import de.robingrether.idisguise.disguise.VillagerDisguise.Profession;
+import de.robingrether.idisguise.management.VersionHelper;
 
 public class ZombieVillagerDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = 5411908005613164697L;
+	private static final long serialVersionUID = 3798088734739067588L;
 	private Profession profession;
 	
 	public ZombieVillagerDisguise() {
@@ -52,8 +51,8 @@ public class ZombieVillagerDisguise extends AgeableDisguise {
 	}
 	
 	static {
-		for(Profession profession : Profession.values()) {
-			if(!StringUtil.equals(profession.name(), "NORMAL", "HUSK")) {
+		if(VersionHelper.require1_9()) {
+			for(Profession profession : Profession.values()) {
 				Subtypes.registerSubtype(ZombieVillagerDisguise.class, "setProfession", profession, profession.name().toLowerCase(Locale.ENGLISH));
 			}
 		}
