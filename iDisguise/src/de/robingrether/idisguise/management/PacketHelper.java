@@ -67,7 +67,7 @@ public class PacketHelper {
 			List<Object> packets = new ArrayList<Object>();
 			if(disguise instanceof MobDisguise) {
 				MobDisguise mobDisguise = (MobDisguise)disguise;
-				Object entity = Class.forName(VersionHelper.getNMSPackage() + "." + (VersionHelper.require1_11() ? type.getNMSClass() : type.getNMSClass().replaceAll("Horse[A-Za-z]+", "Horse").replace("Elder", ""))).getConstructor(World).newInstance(Entity_world.get(entityPlayer));
+				Object entity = Class.forName(VersionHelper.getNMSPackage() + "." + (VersionHelper.require1_11() ? type.getNMSClass() : type.getNMSClass().replaceAll("Horse[A-Za-z]+", "Horse").replace("Elder", "").replaceAll("Skeleton[A-Za-z]+", "Skeleton"))).getConstructor(World).newInstance(Entity_world.get(entityPlayer));
 				if(mobDisguise.getCustomName() != null && !mobDisguise.getCustomName().isEmpty()) {
 					EntityInsentient_setCustomName.invoke(entity, mobDisguise.getCustomName());
 					EntityInsentient_setCustomNameVisible.invoke(entity, true);
