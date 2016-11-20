@@ -25,17 +25,13 @@ public enum DisguiseType {
 	COW(Type.MOB, "v1_5_R2", AgeableDisguise.class, "EntityCow", "cow", "cattle", "ox"),
 	CREEPER(Type.MOB, "v1_5_R2", CreeperDisguise.class, "EntityCreeper", "creeper"),
 	DONKEY(Type.MOB, "v1_6_R1", ChestedHorseDisguise.class, "EntityHorseDonkey", "donkey"),
-	
 	ELDER_GUARDIAN(Type.MOB, "v1_8_R1", MobDisguise.class, "EntityGuardianElder", "elder_guardian"),
-	
 	ENDER_DRAGON(Type.MOB, "v1_5_R2", MobDisguise.class, "EntityEnderDragon", "ender_dragon", "dragon", "ender-dragon", "enderdragon"),
 	ENDERMAN(Type.MOB, "v1_5_R2", EndermanDisguise.class, "EntityEnderman", "enderman", "endermen"),
 	ENDERMITE(Type.MOB, "v1_8_R1", MobDisguise.class, "EntityEndermite", "endermite", "mite"),
 	GHAST(Type.MOB, "v1_5_R2", MobDisguise.class, "EntityGhast", "ghast"),
 	GIANT(Type.MOB, "v1_5_R2", MobDisguise.class, "EntityGiantZombie", "giant", "giant_zombie", "giant-zombie", "giantzombie"),
-	
 	GUARDIAN(Type.MOB, "v1_8_R1", MobDisguise.class, "EntityGuardian", "guardian"),
-	
 	HORSE(Type.MOB, "v1_6_R1", StyledHorseDisguise.class, "EntityHorse", "horse"),
 	IRON_GOLEM(Type.MOB, "v1_5_R2", MobDisguise.class, "EntityIronGolem", "iron_golem", "iron-golem", "irongolem", "golem"),
 	MAGMA_CUBE(Type.MOB, "v1_5_R2", SizedDisguise.class, "EntityMagmaCube", "magma_cube", "magma-cube", "magmacube", "magma", "lava_cube", "lava-cube", "lavacube", "lava", "magma_slime", "magma-slime", "magmaslime", "lava_slime", "lava-slime", "lavaslime"),
@@ -50,7 +46,13 @@ public enum DisguiseType {
 	SHULKER(Type.MOB, "v1_9_R1", MobDisguise.class, "EntityShulker", "shulker"),
 	SILVERFISH(Type.MOB, "v1_5_R2", MobDisguise.class, "EntitySilverfish", "silverfish"),
 	SKELETAL_HORSE(Type.MOB, "v1_6_R1", HorseDisguise.class, "EntityHorseSkeleton", "skeletal_horse"),
-	SKELETON(Type.MOB, "v1_5_R2", SkeletonDisguise.class, "EntitySkeleton", "skeleton"),
+	
+	SKELETON(Type.MOB, "v1_5_R2", MobDisguise.class, "EntitySkeleton", "skeleton"),
+	
+	WITHER_SKELETON(Type.MOB, "v1_5_R2", MobDisguise.class, "EntitySkeletonWither", "wither_skeleton"),
+	
+	STRAY(Type.MOB, "v1_10_R1", MobDisguise.class, "EntitySkeletonStray", "stray"),
+	
 	SLIME(Type.MOB, "v1_5_R2", SizedDisguise.class, "EntitySlime", "slime", "cube"),
 	SNOWMAN(Type.MOB, "v1_5_R2", MobDisguise.class, "EntitySnowman", "snowman", "snow-man", "snow_man", "snow_golem", "snow-golem", "snowgolem"),
 	SPIDER(Type.MOB, "v1_5_R2", MobDisguise.class, "EntitySpider", "spider"),

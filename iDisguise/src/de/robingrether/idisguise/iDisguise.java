@@ -16,7 +16,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -39,7 +38,6 @@ import de.robingrether.idisguise.disguise.PigDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.disguise.RabbitDisguise;
 import de.robingrether.idisguise.disguise.SizedDisguise;
-import de.robingrether.idisguise.disguise.SkeletonDisguise;
 import de.robingrether.idisguise.disguise.Subtypes;
 import de.robingrether.idisguise.disguise.VillagerDisguise;
 import de.robingrether.idisguise.disguise.WolfDisguise;
@@ -698,7 +696,7 @@ public class iDisguise extends JavaPlugin {
 			case SKELETAL_HORSE:
 				return sender.hasPermission("iDisguise.mob.skeletal_horse") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case SKELETON:
-				return sender.hasPermission("iDisguise.mob.skeleton") && (!((SkeletonDisguise)disguise).getSkeletonType().equals(SkeletonType.WITHER) || sender.hasPermission("iDisguise.mob.skeleton.wither")) && (!((SkeletonDisguise)disguise).getSkeletonType().name().equals("STRAY") || sender.hasPermission("iDisguise.mob.skeleton.stray"));
+				return sender.hasPermission("iDisguise.mob.skeleton");
 			case SLIME:
 				return sender.hasPermission("iDisguise.mob.slime") && (((SizedDisguise)disguise).getSize() < 5 || sender.hasPermission("iDisguise.mob.slime.giant"));
 			case SNOWMAN:
@@ -707,6 +705,8 @@ public class iDisguise extends JavaPlugin {
 				return sender.hasPermission("iDisguise.mob.spider");
 			case SQUID:
 				return sender.hasPermission("iDisguise.mob.squid");
+			case STRAY:
+				return sender.hasPermission("iDisguise.mob.stray");
 			case UNDEAD_HORSE:
 				return sender.hasPermission("iDisguise.mob.undead_horse") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case VILLAGER:
@@ -715,6 +715,8 @@ public class iDisguise extends JavaPlugin {
 				return sender.hasPermission("iDisguise.mob.witch");
 			case WITHER:
 				return sender.hasPermission("iDisguise.mob.witherboss");
+			case WITHER_SKELETON:
+				return sender.hasPermission("iDisguise.mob.wither_skeleton");
 			case WOLF:
 				return sender.hasPermission("iDisguise.mob.wolf") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && sender.hasPermission("iDisguise.mob.wolf.collar." + ((WolfDisguise)disguise).getCollarColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-')) && (!((WolfDisguise)disguise).isTamed() || sender.hasPermission("iDisguise.mob.wolf.tamed")) && (!((WolfDisguise)disguise).isAngry() || sender.hasPermission("iDisguise.mob.wolf.angry"));
 			case ZOMBIE:

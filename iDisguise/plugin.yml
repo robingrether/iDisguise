@@ -77,18 +77,18 @@ permissions:
          iDisguise.mob.silverfish: true
          iDisguise.mob.skeletal_horse: true
          iDisguise.mob.skeleton: true
-         iDisguise.mob.skeleton.stray: true
-         iDisguise.mob.skeleton.wither: true
          iDisguise.mob.slime: true
          iDisguise.mob.slime.giant: true
          iDisguise.mob.snowman: true
          iDisguise.mob.spider: true
          iDisguise.mob.squid: true
+         iDisguise.mob.stray: true
          iDisguise.mob.undead_horse: true
          iDisguise.mob.villager: true
          iDisguise.mob.villager.profession.*: true
          iDisguise.mob.witch: true
          iDisguise.mob.witherboss: true
+         iDisguise.mob.wither_skeleton: true
          iDisguise.mob.wolf: true
          iDisguise.mob.wolf.collar.*: true
          iDisguise.mob.wolf.tamed: true
@@ -260,10 +260,6 @@ permissions:
       default: false
    iDisguise.mob.skeleton:
       default: false
-   iDisguise.mob.skeleton.stray:
-      default: false
-   iDisguise.mob.skeleton.wither:
-      default: false
    iDisguise.mob.slime:
       default: false
    iDisguise.mob.slime.giant:
@@ -273,6 +269,8 @@ permissions:
    iDisguise.mob.spider:
       default: false
    iDisguise.mob.squid:
+      default: false
+   iDisguise.mob.stray:
       default: false
    iDisguise.mob.undead_horse:
       default: false
@@ -301,6 +299,8 @@ permissions:
    iDisguise.mob.witch:
       default: false
    iDisguise.mob.witherboss:
+      default: false
+   iDisguise.mob.wither_skeleton:
       default: false
    iDisguise.mob.wolf:
       default: false

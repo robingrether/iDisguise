@@ -31,7 +31,6 @@ import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.disguise.RabbitDisguise;
 import de.robingrether.idisguise.disguise.SheepDisguise;
 import de.robingrether.idisguise.disguise.SizedDisguise;
-import de.robingrether.idisguise.disguise.SkeletonDisguise;
 import de.robingrether.idisguise.disguise.StyledHorseDisguise;
 import de.robingrether.idisguise.disguise.VillagerDisguise;
 import de.robingrether.idisguise.disguise.WolfDisguise;
@@ -82,6 +81,22 @@ public class PacketHelper {
 					if(type.equals(DisguiseType.ELDER_GUARDIAN)) {
 						if(EntityGuardian.isInstance(entity)) {
 							EntityGuardian_setElder.invoke(entity, true);
+						}
+					} else if(type.equals(DisguiseType.WITHER_SKELETON)) {
+						if(EntitySkeleton.isInstance(entity)) {
+							if(VersionHelper.require1_10()) {
+								EntitySkeleton_setSkeletonType.invoke(entity, EnumSkeletonType_fromIndex.invoke(null, 1));
+							} else {	
+								EntitySkeleton_setSkeletonType.invoke(entity, 1);
+							}
+						}
+					} else if(type.equals(DisguiseType.STRAY)) {
+						if(EntitySkeleton.isInstance(entity)) {
+							if(VersionHelper.require1_10()) {
+								EntitySkeleton_setSkeletonType.invoke(entity, EnumSkeletonType_fromIndex.invoke(null, 2));
+							} else {	
+								EntitySkeleton_setSkeletonType.invoke(entity, 2);
+							}
 						}
 					}
 				}
@@ -160,14 +175,6 @@ public class PacketHelper {
 				} else if(mobDisguise instanceof SizedDisguise) {
 					if(EntitySlime.isInstance(entity)) {
 						EntitySlime_setSize.invoke(entity, ((SizedDisguise)mobDisguise).getSize());
-					}
-				} else if(mobDisguise instanceof SkeletonDisguise) {
-					if(EntitySkeleton.isInstance(entity)) {
-						if(VersionHelper.require1_10()) {
-							EntitySkeleton_setSkeletonType.invoke(entity, EnumSkeletonType_fromIndex.invoke(null, ((SkeletonDisguise)mobDisguise).getSkeletonType().ordinal()));
-						} else {	
-							EntitySkeleton_setSkeletonType.invoke(entity, ((SkeletonDisguise)mobDisguise).getSkeletonType().ordinal());
-						}
 					}
 				} else if(mobDisguise instanceof VillagerDisguise) {
 					if(EntityVillager.isInstance(entity)) {
