@@ -46,23 +46,22 @@ public enum DisguiseType {
 	SHULKER(Type.MOB, "v1_9_R1", MobDisguise.class, "EntityShulker", "shulker"),
 	SILVERFISH(Type.MOB, "v1_5_R2", MobDisguise.class, "EntitySilverfish", "silverfish"),
 	SKELETAL_HORSE(Type.MOB, "v1_6_R1", HorseDisguise.class, "EntityHorseSkeleton", "skeletal_horse"),
-	
 	SKELETON(Type.MOB, "v1_5_R2", MobDisguise.class, "EntitySkeleton", "skeleton"),
-	
-	WITHER_SKELETON(Type.MOB, "v1_5_R2", MobDisguise.class, "EntitySkeletonWither", "wither_skeleton"),
-	
-	STRAY(Type.MOB, "v1_10_R1", MobDisguise.class, "EntitySkeletonStray", "stray"),
-	
 	SLIME(Type.MOB, "v1_5_R2", SizedDisguise.class, "EntitySlime", "slime", "cube"),
 	SNOWMAN(Type.MOB, "v1_5_R2", MobDisguise.class, "EntitySnowman", "snowman", "snow-man", "snow_man", "snow_golem", "snow-golem", "snowgolem"),
 	SPIDER(Type.MOB, "v1_5_R2", MobDisguise.class, "EntitySpider", "spider"),
 	SQUID(Type.MOB, "v1_5_R2", MobDisguise.class, "EntitySquid", "squid"),
+	STRAY(Type.MOB, "v1_10_R1", MobDisguise.class, "EntitySkeletonStray", "stray"),
 	UNDEAD_HORSE(Type.MOB, "v1_6_R1", HorseDisguise.class, "EntityHorseZombie", "undead_horse"),
 	VILLAGER(Type.MOB, "v1_5_R2", VillagerDisguise.class, "EntityVillager", "villager"),
 	WITCH(Type.MOB, "v1_5_R2", MobDisguise.class, "EntityWitch", "witch"),
 	WITHER(Type.MOB, "v1_5_R2", MobDisguise.class, "EntityWither", "witherboss", "wither-boss", "wither_boss"),
+	WITHER_SKELETON(Type.MOB, "v1_5_R2", MobDisguise.class, "EntitySkeletonWither", "wither_skeleton"),
 	WOLF(Type.MOB, "v1_5_R2", WolfDisguise.class, "EntityWolf", "wolf", "dog"),
-	ZOMBIE(Type.MOB, "v1_5_R2", ZombieDisguise.class, "EntityZombie", "zombie"),
+	
+	ZOMBIE(Type.MOB, "v1_5_R2", AgeableDisguise.class, "EntityZombie", "zombie"),
+	HUSK(Type.MOB, "v1_10_R1", AgeableDisguise.class, "EntityZombieHusk", "husk"),
+	ZOMBIE_VILLAGER(Type.MOB, "v1_5_R2", ZombieVillagerDisguise.class, "EntityZombieVillager", "zombie_villager", "infected_villager"),
 	
 	GHOST(Type.PLAYER, "v1_5_R2", PlayerDisguise.class, "EntityPlayer"),
 	PLAYER(Type.PLAYER, "v1_5_R2", PlayerDisguise.class, "EntityPlayer"),

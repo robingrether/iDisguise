@@ -58,6 +58,7 @@ permissions:
          iDisguise.mob.giant: true
          iDisguise.mob.guardian: true
          iDisguise.mob.horse: true
+         iDisguise.mob.husk: true
          iDisguise.mob.iron_golem: true
          iDisguise.mob.magma_cube: true
          iDisguise.mob.magma_cube.giant: true
@@ -94,8 +95,7 @@ permissions:
          iDisguise.mob.wolf.tamed: true
          iDisguise.mob.wolf.angry: true
          iDisguise.mob.zombie: true
-         iDisguise.mob.zombie.husk: true
-         iDisguise.mob.zombie.infected: true
+         iDisguise.mob.zombie_villager: true
    iDisguise.mob.baby:
       default: false
    iDisguise.mob.bat:
@@ -131,6 +131,8 @@ permissions:
    iDisguise.mob.guardian:
       default: false
    iDisguise.mob.horse:
+      default: false
+   iDisguise.mob.husk:
       default: false
    iDisguise.mob.iron_golem:
       default: false
@@ -363,9 +365,7 @@ permissions:
       default: false
    iDisguise.mob.zombie:
       default: false
-   iDisguise.mob.zombie.husk:
-      default: false
-   iDisguise.mob.zombie.infected:
+   iDisguise.mob.zombie_villager:
       default: false
    iDisguise.object.*:
       default: false

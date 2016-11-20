@@ -34,7 +34,6 @@ import de.robingrether.idisguise.disguise.SizedDisguise;
 import de.robingrether.idisguise.disguise.StyledHorseDisguise;
 import de.robingrether.idisguise.disguise.VillagerDisguise;
 import de.robingrether.idisguise.disguise.WolfDisguise;
-import de.robingrether.idisguise.disguise.ZombieDisguise;
 
 public class PacketHelper {
 	
@@ -180,7 +179,7 @@ public class PacketHelper {
 					if(EntityVillager.isInstance(entity)) {
 						EntityVillager_setProfession.invoke(entity, VersionHelper.require1_10() ? ((VillagerDisguise)mobDisguise).getProfession().ordinal() - 1 : ((VillagerDisguise)mobDisguise).getProfession().ordinal());
 					}
-				} else if(mobDisguise instanceof ZombieDisguise) {
+				}/* else if(mobDisguise instanceof ZombieDisguise) { // TODO: 1.11 compatibility
 					if(EntityZombie.isInstance(entity)) {
 						ZombieDisguise zombieDisguise = (ZombieDisguise)mobDisguise;
 						EntityZombie_setBaby.invoke(entity, !zombieDisguise.isAdult());
@@ -192,7 +191,7 @@ public class PacketHelper {
 							EntityZombie_setVillager.invoke(entity, zombieDisguise.isVillager());
 						}
 					}
-				}
+				}*/
 				if(EntityBat.isInstance(entity)) {
 					EntityBat_setAsleep.invoke(entity, false);
 				}

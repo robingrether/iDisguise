@@ -13,7 +13,6 @@ import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.SizedDisguise;
-import de.robingrether.idisguise.disguise.ZombieDisguise;
 import de.robingrether.util.StringUtil;
 
 public class Sounds {
@@ -96,25 +95,6 @@ public class Sounds {
 									
 									public String hit(MobDisguise disguise) {
 										return (disguise instanceof SizedDisguise && ((SizedDisguise)disguise).getSize() > 1) ? arguments[6] : arguments[7];
-									}
-									
-								});
-								break;
-							case "ZOMBIE":
-								setSoundsForEntity(DisguiseType.ZOMBIE, new Sounds(null, arguments[0], arguments[1], null, arguments[2], arguments[3]) {
-									
-									public String death(MobDisguise disguise) {
-										if(disguise instanceof ZombieDisguise) {
-											return ((ZombieDisguise)disguise).isVillager() ? arguments[4] : ((ZombieDisguise)disguise).isHusk() ? arguments[5] : arguments[6];
-										}
-										return arguments[6];
-									}
-									
-									public String hit(MobDisguise disguise) {
-										if(disguise instanceof ZombieDisguise) {
-											return ((ZombieDisguise)disguise).isVillager() ? arguments[7] : ((ZombieDisguise)disguise).isHusk() ? arguments[8] : arguments[9];
-										}
-										return arguments[9];
 									}
 									
 								});

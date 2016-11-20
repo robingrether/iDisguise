@@ -41,7 +41,6 @@ import de.robingrether.idisguise.disguise.SizedDisguise;
 import de.robingrether.idisguise.disguise.Subtypes;
 import de.robingrether.idisguise.disguise.VillagerDisguise;
 import de.robingrether.idisguise.disguise.WolfDisguise;
-import de.robingrether.idisguise.disguise.ZombieDisguise;
 import de.robingrether.idisguise.io.Configuration;
 import de.robingrether.idisguise.io.Language;
 import de.robingrether.idisguise.io.Metrics.Graph;
@@ -667,6 +666,8 @@ public class iDisguise extends JavaPlugin {
 				return sender.hasPermission("iDisguise.mob.guardian");
 			case HORSE:
 				return sender.hasPermission("iDisguise.mob.horse") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
+			case HUSK:
+				return sender.hasPermission("iDisguise.mob.husk") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case IRON_GOLEM:
 				return sender.hasPermission("iDisguise.mob.iron_golem");
 			case MAGMA_CUBE:
@@ -720,7 +721,9 @@ public class iDisguise extends JavaPlugin {
 			case WOLF:
 				return sender.hasPermission("iDisguise.mob.wolf") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && sender.hasPermission("iDisguise.mob.wolf.collar." + ((WolfDisguise)disguise).getCollarColor().name().toLowerCase(Locale.ENGLISH).replace('_', '-')) && (!((WolfDisguise)disguise).isTamed() || sender.hasPermission("iDisguise.mob.wolf.tamed")) && (!((WolfDisguise)disguise).isAngry() || sender.hasPermission("iDisguise.mob.wolf.angry"));
 			case ZOMBIE:
-				return sender.hasPermission("iDisguise.mob.zombie") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && (!((ZombieDisguise)disguise).isVillager() || sender.hasPermission("iDisguise.mob.zombie.infected")) && (!((ZombieDisguise)disguise).isHusk() || sender.hasPermission("iDisguise.mob.zombie.husk"));
+				return sender.hasPermission("iDisguise.mob.zombie") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
+			case ZOMBIE_VILLAGER:
+				return sender.hasPermission("iDisguise.mob.zombie_villager") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case ARMOR_STAND:
 				return sender.hasPermission("iDisguise.object.armor_stand");
 			case BOAT:
