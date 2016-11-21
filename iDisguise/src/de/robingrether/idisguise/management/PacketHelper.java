@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.AgeableDisguise;
@@ -128,7 +130,7 @@ public class PacketHelper {
 					if(mobDisguise instanceof HorseDisguise) {
 						HorseDisguise horseDisguise = (HorseDisguise)mobDisguise;
 						Object inventoryChest = VersionHelper.require1_11() ? EntityHorseAbstract_inventoryChest.get(entity) : EntityHorse_inventoryChest.get(entity);
-						InventorySubcontainer_setItem.invoke(inventoryChest, 0, horseDisguise.isSaddled() ? ItemStack_new_Item.newInstance(Item_getById.invoke(null, 329), 1, 0) : null);
+						InventorySubcontainer_setItem.invoke(inventoryChest, 0, CraftItemStack_asNMSCopy.invoke(null, horseDisguise.isSaddled() ? new ItemStack(Material.SADDLE) : null));
 						InventorySubcontainer_setItem.invoke(inventoryChest, 1, CraftItemStack_asNMSCopy.invoke(null, horseDisguise.getArmor().getItem()));
 						if(horseDisguise instanceof StyledHorseDisguise) {
 							EntityHorse_setVariant.invoke(entity, ((StyledHorseDisguise)horseDisguise).getColor().ordinal() & 0xFF | ((StyledHorseDisguise)horseDisguise).getStyle().ordinal() << 8);
