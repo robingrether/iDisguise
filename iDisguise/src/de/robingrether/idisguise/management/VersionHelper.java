@@ -7,10 +7,10 @@ import de.robingrether.util.StringUtil;
 
 public class VersionHelper {
 	
-	private static final String[] versions = {"v1_5_R2", "v1_5_R3", "v1_6_R1", "v1_6_R2", "v1_6_R3", "v1_7_R1", "v1_7_R2", "v1_7_R3", "v1_7_R4", "v1_8_R1", "v1_8_R2", "v1_8_R3", "v1_9_R1", "v1_9_R2", "v1_10_R1", "v1_11_R1"};
+	private static final String[] versions = {"v1_7_R1", "v1_7_R2", "v1_7_R3", "v1_7_R4", "v1_8_R1", "v1_8_R2", "v1_8_R3", "v1_9_R1", "v1_9_R2", "v1_10_R1", "v1_11_R1"};
 	private static boolean initialized = false;
 	private static String versionCode, orgBukkitCraftbukkit = "org.bukkit.craftbukkit", netMinecraftServer = "net.minecraft.server", orgBukkitCraftbukkitVersioned, netMinecraftServerVersioned;
-	private static boolean debug, require1_6, require1_7, require1_8, require1_9, require1_10, require1_11, useGameProfiles;
+	private static boolean debug, require1_8, require1_9, require1_10, require1_11, useGameProfiles;
 	
 	public static String getVersionCode() {
 		return versionCode;
@@ -62,14 +62,6 @@ public class VersionHelper {
 		return require1_8;
 	}
 	
-	public static boolean require1_7() {
-		return require1_7;
-	}
-	
-	public static boolean require1_6() {
-		return require1_6;
-	}
-	
 	public static boolean init(boolean debug) {
 		if(initialized) {
 			return false;
@@ -79,25 +71,12 @@ public class VersionHelper {
 			orgBukkitCraftbukkitVersioned = orgBukkitCraftbukkit + "." + versionCode;
 			netMinecraftServerVersioned = netMinecraftServer + "." + versionCode;
 			VersionHelper.debug = debug;
-			require1_6 = requireVersion("v1_6_R1");
-			require1_7 = requireVersion("v1_7_R1");
 			require1_8 = requireVersion("v1_8_R1");
 			require1_9 = requireVersion("v1_9_R1");
 			require1_10 = requireVersion("v1_10_R1");
 			require1_11 = requireVersion("v1_11_R1");
 			useGameProfiles = requireVersion("v1_7_R3");
 			switch(versionCode) {
-				case "v1_5_R2":
-				case "v1_5_R3":
-				case "v1_6_R1":
-				case "v1_6_R2":
-				case "v1_6_R3":
-					String localVersionCode = versionCode.replace("v1_5_R3", "v1_5_R2").replace("v1_6_R3", "v1_6_R2");
-					Reflection.init("reflection/" + localVersionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
-					DisguiseManager.setInstance(new DisguiseManager());
-					PlayerHelper.setInstance(new PlayerHelper());
-					Sounds.init("sounds/15_16.txt");
-					break;
 				case "v1_7_R1":
 				case "v1_7_R2":
 					Reflection.init("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);

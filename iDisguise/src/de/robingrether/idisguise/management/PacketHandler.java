@@ -34,12 +34,7 @@ public class PacketHandler {
 	
 	public Object handlePacketPlayInUseEntity(final Player observer, final Object packet) throws Exception {
 		final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayInUseEntity_entityId.getInt(packet));
-		boolean attack;
-		if(VersionHelper.require1_7()) {
-			attack = PacketPlayInUseEntity_getAction.invoke(packet).equals(EnumEntityUseAction_ATTACK.get(null));
-		} else {
-			attack = PacketPlayInUseEntity_action.getInt(packet) == 1;
-		}
+		boolean attack = PacketPlayInUseEntity_getAction.invoke(packet).equals(EnumEntityUseAction_ATTACK.get(null));
 		if(player != null && player != observer && DisguiseManager.getInstance().isDisguised(player) && !attack) {
 			if(ObjectUtil.equals(DisguiseManager.getInstance().getDisguise(player).getType(), DisguiseType.SHEEP, DisguiseType.WOLF)) {
 				BukkitRunnable runnable = new BukkitRunnable() {
@@ -134,11 +129,11 @@ public class PacketHandler {
 		final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayOutAnimation_entityId.getInt(packet));
 		if(player != null && player != observer && DisguiseManager.getInstance().isDisguised(player) && !(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise)) {
 			if(DisguiseManager.getInstance().getDisguise(player) instanceof MobDisguise) {
-				if(VersionHelper.require1_7() ? PacketPlayOutAnimation_animationType.getInt(packet) == 2 : PacketPlayOutAnimation_animationType.getInt(packet) == 3) {
+				if(PacketPlayOutAnimation_animationType.getInt(packet) == 2) {
 					return null;
 				}
 			} else if(DisguiseManager.getInstance().getDisguise(player) instanceof ObjectDisguise) {
-				if(VersionHelper.require1_7() ? ObjectUtil.equals(PacketPlayOutAnimation_animationType.getInt(packet), 0, 2, 3) : ObjectUtil.equals(PacketPlayOutAnimation_animationType.getInt(packet),  1, 3, 5)) {
+				if(ObjectUtil.equals(PacketPlayOutAnimation_animationType.getInt(packet), 0, 2, 3)) {
 					return null;
 				}
 			}

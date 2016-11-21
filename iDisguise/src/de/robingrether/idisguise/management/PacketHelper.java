@@ -128,11 +128,7 @@ public class PacketHelper {
 					if(mobDisguise instanceof HorseDisguise) {
 						HorseDisguise horseDisguise = (HorseDisguise)mobDisguise;
 						Object inventoryChest = VersionHelper.require1_11() ? EntityHorseAbstract_inventoryChest.get(entity) : EntityHorse_inventoryChest.get(entity);
-						if(VersionHelper.require1_7()) {
-							InventorySubcontainer_setItem.invoke(inventoryChest, 0, horseDisguise.isSaddled() ? ItemStack_new_Item.newInstance(Item_getById.invoke(null, 329), 1, 0) : null);
-						} else {
-							InventorySubcontainer_setItem.invoke(inventoryChest, 0, horseDisguise.isSaddled() ? ItemStack_new_Item.newInstance(Array.get(Item_itemsById.get(null), 329), 1, 0) : null);
-						}
+						InventorySubcontainer_setItem.invoke(inventoryChest, 0, horseDisguise.isSaddled() ? ItemStack_new_Item.newInstance(Item_getById.invoke(null, 329), 1, 0) : null);
 						InventorySubcontainer_setItem.invoke(inventoryChest, 1, CraftItemStack_asNMSCopy.invoke(null, horseDisguise.getArmor().getItem()));
 						if(horseDisguise instanceof StyledHorseDisguise) {
 							EntityHorse_setVariant.invoke(entity, ((StyledHorseDisguise)horseDisguise).getColor().ordinal() & 0xFF | ((StyledHorseDisguise)horseDisguise).getStyle().ordinal() << 8);
@@ -181,11 +177,8 @@ public class PacketHelper {
 					EndermanDisguise endermanDisguise = (EndermanDisguise)mobDisguise;
 					if(VersionHelper.require1_8()) {
 						EntityEnderman_setCarried.invoke(entity, Block_fromLegacyData.invoke(Block_getById.invoke(null, endermanDisguise.getBlockInHand().getId()), endermanDisguise.getBlockInHandData()));
-					} else if(VersionHelper.require1_7()) {
-						EntityEnderman_setCarriedBlock.invoke(entity, Block_getById.invoke(null, endermanDisguise.getBlockInHand().getId()));
-						EntityEnderman_setCarriedData.invoke(entity, endermanDisguise.getBlockInHandData());
 					} else {
-						EntityEnderman_setCarriedId.invoke(entity, endermanDisguise.getBlockInHand().getId());
+						EntityEnderman_setCarriedBlock.invoke(entity, Block_getById.invoke(null, endermanDisguise.getBlockInHand().getId()));
 						EntityEnderman_setCarriedData.invoke(entity, endermanDisguise.getBlockInHandData());
 					}
 				} else if(mobDisguise instanceof SizedDisguise) {
@@ -202,11 +195,7 @@ public class PacketHelper {
 				
 				Location location = player.getLocation();
 				Entity_setLocation.invoke(entity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-				if(VersionHelper.require1_7()) {
-					Entity_setEntityId.invoke(entity, player.getEntityId());
-				} else {
-					Entity_entityId.setInt(entity, player.getEntityId());
-				}
+				Entity_setEntityId.invoke(entity, player.getEntityId());
 				if(attributes[0]) {
 					EntityInsentient_setCustomName.invoke(entity, player.getName());
 				}
@@ -214,21 +203,15 @@ public class PacketHelper {
 			} else if(disguise instanceof PlayerDisguise) {
 				packets.add(PacketPlayOutNamedEntitySpawn_new.newInstance(entityPlayer));
 				if(VersionHelper.require1_8()) {
-				} else if(VersionHelper.require1_7()) {
-					PacketPlayOutNamedEntitySpawn_gameProfile.set(packets.get(0), PlayerHelper.getInstance().getGameProfile(player.getUniqueId(), ((PlayerDisguise)disguise).getSkinName(), ((PlayerDisguise)disguise).getDisplayName()));
 				} else {
-					PacketPlayOutNamedEntitySpawn_playerName.set(packets.get(0), ((PlayerDisguise)disguise).getSkinName());
+					PacketPlayOutNamedEntitySpawn_gameProfile.set(packets.get(0), PlayerHelper.getInstance().getGameProfile(player.getUniqueId(), ((PlayerDisguise)disguise).getSkinName(), ((PlayerDisguise)disguise).getDisplayName()));
 				}
 			} else if(disguise instanceof ObjectDisguise) {
 				ObjectDisguise objectDisguise = (ObjectDisguise)disguise;
 				Object entity = Class.forName(VersionHelper.getNMSPackage() + "." + type.getNMSClass()).getConstructor(World).newInstance(Entity_world.get(entityPlayer));
 				Location location = player.getLocation();
 				Entity_setLocation.invoke(entity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-				if(VersionHelper.require1_7()) {
-					Entity_setEntityId.invoke(entity, player.getEntityId());
-				} else {
-					Entity_entityId.setInt(entity, player.getEntityId());
-				}
+				Entity_setEntityId.invoke(entity, player.getEntityId());
 				if(VersionHelper.require1_8()) {
 					if(attributes[0]) {
 						EntityInsentient_setCustomName.invoke(entity, player.getName());
@@ -298,7 +281,7 @@ public class PacketHelper {
 			if(disguise == null) {
 				return displayName;
 			} else if(disguise instanceof PlayerDisguise) {
-				return attributes[1] ? VersionHelper.require1_7() ? ((PlayerDisguise)disguise).getDisplayName() : ((PlayerDisguise)disguise).getSkinName() : displayName != null ? displayName : offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName();
+				return attributes[1] ? ((PlayerDisguise)disguise).getDisplayName() : displayName != null ? displayName : offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName();
 			} else if(!attributes[1]) {
 				return displayName;
 			}
