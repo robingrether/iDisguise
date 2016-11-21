@@ -133,6 +133,11 @@ public class VersionHelper {
 					PlayerHelper.setInstance((PlayerHelper)Class.forName("de.robingrether.idisguise.management.player.PlayerHelperUID18").newInstance());
 					Sounds.init("sounds/110.txt");
 					break;
+				case "v1_11_R1":
+					Reflection.init("reflection/v1_11_R1.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
+					DisguiseManager.setInstance(new DisguiseManager());
+					PlayerHelper.setInstance((PlayerHelper)Class.forName("de.robingrether.idisguise.management.player.PlayerHelperUID18").newInstance());
+					Sounds.init("sounds/111.txt");
 				default:
 					return false;
 			}

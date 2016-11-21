@@ -127,7 +127,7 @@ public class PacketHelper {
 					
 					if(mobDisguise instanceof HorseDisguise) {
 						HorseDisguise horseDisguise = (HorseDisguise)mobDisguise;
-						Object inventoryChest = EntityHorse_inventoryChest.get(entity);
+						Object inventoryChest = VersionHelper.require1_11() ? EntityHorseAbstract_inventoryChest.get(entity) : EntityHorse_inventoryChest.get(entity);
 						if(VersionHelper.require1_7()) {
 							InventorySubcontainer_setItem.invoke(inventoryChest, 0, horseDisguise.isSaddled() ? ItemStack_new_Item.newInstance(Item_getById.invoke(null, 329), 1, 0) : null);
 						} else {
@@ -137,7 +137,11 @@ public class PacketHelper {
 						if(horseDisguise instanceof StyledHorseDisguise) {
 							EntityHorse_setVariant.invoke(entity, ((StyledHorseDisguise)horseDisguise).getColor().ordinal() & 0xFF | ((StyledHorseDisguise)horseDisguise).getStyle().ordinal() << 8);
 						} else if(horseDisguise instanceof ChestedHorseDisguise) {
-							EntityHorse_setHasChest.invoke(entity, ((ChestedHorseDisguise)horseDisguise).hasChest());
+							if(VersionHelper.require1_11()) {
+								EntityHorseChestedAbstract_setCarryingChest.invoke(entity, ((ChestedHorseDisguise)horseDisguise).hasChest());
+							} else {
+								EntityHorse_setHasChest.invoke(entity, ((ChestedHorseDisguise)horseDisguise).hasChest());
+							}
 						}
 					} else if(mobDisguise instanceof OcelotDisguise) {
 						EntityOcelot_setCatType.invoke(entity, ((OcelotDisguise)mobDisguise).getCatType().getId());
@@ -147,23 +151,25 @@ public class PacketHelper {
 						EntityRabbit_setRabbitType.invoke(entity, ((RabbitDisguise)mobDisguise).getRabbitType().getId());
 					} else if(mobDisguise instanceof SheepDisguise) {
 						if(VersionHelper.require1_8()) {
-							EntitySheep_setColor.invoke(entity, EnumColor_fromColorIndex.invoke(null, ((SheepDisguise)mobDisguise).getColor().getData()));
+							EntitySheep_setColor.invoke(entity, EnumColor_fromColorIndex.invoke(null, ((SheepDisguise)mobDisguise).getColor().getWoolData()));
 						} else {
-							EntitySheep_setColor.invoke(entity, ((SheepDisguise)mobDisguise).getColor().getData());
+							EntitySheep_setColor.invoke(entity, ((SheepDisguise)mobDisguise).getColor().getWoolData());
 						}
 					} else if(mobDisguise instanceof VillagerDisguise) {
 						EntityVillager_setProfession.invoke(entity, ((VillagerDisguise)mobDisguise).getProfession().ordinal());
 					} else if(mobDisguise instanceof WolfDisguise) {
 						WolfDisguise wolfDisguise = (WolfDisguise)mobDisguise;
 						if(VersionHelper.require1_8()) {
-							EntityWolf_setCollarColor.invoke(entity, EnumColor_fromColorIndex.invoke(null, wolfDisguise.getCollarColor().getData()));
+							EntityWolf_setCollarColor.invoke(entity, EnumColor_fromColorIndex.invoke(null, wolfDisguise.getCollarColor().getWoolData()));
 						} else {
-							EntityWolf_setCollarColor.invoke(entity, wolfDisguise.getCollarColor().getData());
+							EntityWolf_setCollarColor.invoke(entity, wolfDisguise.getCollarColor().getWoolData());
 						}
 						EntityWolf_setTamed.invoke(entity, wolfDisguise.isTamed());
 						EntityWolf_setAngry.invoke(entity, wolfDisguise.isAngry());
 					} else if(mobDisguise instanceof ZombieVillagerDisguise) {
-						if(VersionHelper.require1_10()) {
+						if(VersionHelper.require1_11()) {
+							EntityZombieVillager_setProfession.invoke(entity, ((ZombieVillagerDisguise)mobDisguise).getProfession().ordinal());
+						} else if(VersionHelper.require1_10()) {
 							EntityZombie_setVillagerType.invoke(entity, EnumZombieType_fromIndex.invoke(null, ((ZombieVillagerDisguise)mobDisguise).getProfession().ordinal() + 1));
 						} else if(VersionHelper.require1_9()) {
 							EntityZombie_setVillagerType.invoke(entity, ((ZombieVillagerDisguise)mobDisguise).getProfession().ordinal());
@@ -183,7 +189,11 @@ public class PacketHelper {
 						EntityEnderman_setCarriedData.invoke(entity, endermanDisguise.getBlockInHandData());
 					}
 				} else if(mobDisguise instanceof SizedDisguise) {
-					EntitySlime_setSize.invoke(entity, ((SizedDisguise)mobDisguise).getSize());
+					if(VersionHelper.require1_11()) {
+						EntitySlime_setSize.invoke(entity, ((SizedDisguise)mobDisguise).getSize(), false);
+					} else {
+						EntitySlime_setSize.invoke(entity, ((SizedDisguise)mobDisguise).getSize());
+					}
 				}
 				
 				if(EntityBat.isInstance(entity)) {

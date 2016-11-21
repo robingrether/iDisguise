@@ -185,6 +185,12 @@ public class Reflection {
 	public static Method EntityHorse_setHasChest;
 	public static Field EntityHorse_inventoryChest;
 	
+	public static Class<?> EntityHorseAbstract;
+	public static Field EntityHorseAbstract_inventoryChest;
+	
+	public static Class<?> EntityHorseChestedAbstract;
+	public static Method EntityHorseChestedAbstract_setCarryingChest;
+	
 	public static Class<?> EnumHorseType;
 	public static Method EnumHorseType_fromIndex;
 	
@@ -224,6 +230,9 @@ public class Reflection {
 	public static Method EntityZombie_setBaby;
 	public static Method EntityZombie_setVillager;
 	public static Method EntityZombie_setVillagerType;
+	
+	public static Class<?> EntityZombieVillager;
+	public static Method EntityZombieVillager_setProfession;
 	
 	public static Class<?> EntityBat;
 	public static Method EntityBat_setAsleep;
