@@ -12,6 +12,10 @@ COW->mob.cow.hurt,game.neutral.hurt.fall.big,game.neutral.hurt.fall.small,mob.co
 
 CREEPER->mob.creeper.death,game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,mob.creeper.say,game.hostile.swim.splash,game.hostile.swim
 
+DONKEY->mob.horse.donkey.death,game.neutral.hurt.fall.big,game.neutral.hurt.fall.small,mob.horse.donkey.hit,game.neutral.swim.splash,game.neutral.swim
+
+ELDER_GUARDIAN->mob.guardian.elder.death,game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,mob.guardian.elder.hit,game.hostile.swim.splash,game.hostile.swim
+
 ENDER_DRAGON->mob.enderdragon.end,,,mob.enderdragon.hit,,
 
 ENDERMAN->mob.endermen.death,game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,mob.endermen.hit,game.hostile.swim.splash,game.hostile.swim
@@ -22,13 +26,15 @@ GHAST->mob.ghast.death,,,mob.ghast.scream,,
 
 GIANT->game.hostile.die,game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,game.hostile.hurt,game.hostile.swim.splash,game.hostile.swim
 
-GUARDIAN->game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,game.hostile.swim.splash,game.hostile.swim,mob.guardian.elder.death,mob.guardian.death,mob.guardian.elder.hit,mob.guardian.hit
+GUARDIAN->mob.guardian.death,game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,mob.guardian.hit,game.hostile.swim.splash,game.hostile.swim
 
-HORSE->game.neutral.hurt.fall.big,game.neutral.hurt.fall.small,game.neutral.swim.splash,game.neutral.swim,mob.horse.death,mob.horse.donkey.death,mob.horse.zombie.death,mob.horse.skeleton.death,mob.horse.hit,mob.horse.donkey.hit,mob.horse.zombie.hit,mob.horse.skeleton.hit
+HORSE->mob.horse.death,game.neutral.hurt.fall.big,game.neutral.hurt.fall.small,mob.horse.hit,game.neutral.swim.splash,game.neutral.swim
 
 IRON_GOLEM->mob.irongolem.death,game.neutral.hurt.fall.big,game.neutral.hurt.fall.small,mob.irongolem.hit,game.neutral.swim.splash,game.neutral.swim
 
 MAGMA_CUBE->game.neutral.hurt.fall.big,game.neutral.hurt.fall.small,game.neutral.swim.splash,game.neutral.swim,mob.slime.big,mob.slime.small,mob.slime.big,mob.slime.small
+
+MULE->mob.horse.donkey.death,game.neutral.hurt.fall.big,game.neutral.hurt.fall.small,mob.horse.donkey.hit,game.neutral.swim.splash,game.neutral.swim
 
 MUSHROOM_COW->mob.cow.hurt,game.neutral.hurt.fall.big,game.neutral.hurt.fall.small,mob.cow.hurt,game.neutral.swim.splash,game.neutral.swim
 
@@ -44,7 +50,9 @@ SHEEP->mob.sheep.say,game.neutral.hurt.fall.big,game.neutral.hurt.fall.small,mob
 
 SILVERFISH->mob.silverfish.kill,game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,mob.silverfish.hit,game.hostile.swim.splash,game.hostile.swim
 
-SKELETON->game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,game.hostile.swim.splash,game.hostile.swim,mob.skeleton.death,mob.skeleton.death,mob.skeleton.death,mob.skeleton.hurt,mob.skeleton.hurt,mob.skeleton.hurt
+SKELETAL_HORSE->mob.horse.skeleton.death,game.neutral.hurt.fall.big,game.neutral.hurt.fall.small,mob.horse.skeleton.hit,game.neutral.swim.splash,game.neutral.swim
+
+SKELETON->mob.skeleton.death,game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,mob.skeleton.hurt,game.hostile.swim.splash,game.hostile.swim
 
 SLIME->game.neutral.hurt.fall.big,game.neutral.hurt.fall.small,game.neutral.swim.splash,game.neutral.swim,mob.slime.big,mob.slime.small,mob.slime.big,mob.slime.small
 
@@ -54,12 +62,18 @@ SPIDER->mob.spider.death,game.hostile.hurt.fall.big,game.hostile.hurt.fall.small
 
 SQUID->,game.neutral.hurt.fall.big,game.neutral.hurt.fall.small,,game.neutral.swim.splash,game.neutral.swim
 
+UNDEAD_HORSE->mob.horse.zombie.death,game.neutral.hurt.fall.big,game.neutral.hurt.fall.small,mob.horse.zombie.hit,game.neutral.swim.splash,game.neutral.swim
+
 VILLAGER->mob.villager.death,game.neutral.hurt.fall.big,game.neutral.hurt.fall.small,mob.villager.hit,game.neutral.swim.splash,game.neutral.swim
 
 WITCH->,game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,,game.hostile.swim.splash,game.hostile.swim
 
 WITHER->mob.wither.death,,,mob.wither.hurt,game.hostile.swim.splash,game.hostile.swim
 
+WITHER_SKELETON->mob.skeleton.death,game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,mob.skeleton.hurt,game.hostile.swim.splash,game.hostile.swim
+
 WOLF->mob.wolf.death,game.neutral.hurt.fall.big,game.neutral.hurt.fall.small,mob.wolf.hurt,game.neutral.swim.splash,game.neutral.swim
 
-ZOMBIE->game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,game.hostile.swim.splash,game.hostile.swim,mob.zombie.death,mob.zombie.death,mob.zombie.death,mob.zombie.hurt,mob.zombie.hurt,mob.zombie.hurt
+ZOMBIE->mob.zombie.death,game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,mob.zombie.hurt,game.hostile.swim.splash,game.hostile.swim
+
+ZOMBIE_VILLAGER->mob.zombie.death,game.hostile.hurt.fall.big,game.hostile.hurt.fall.small,mob.zombie.hurt,game.hostile.swim.splash,game.hostile.swim
