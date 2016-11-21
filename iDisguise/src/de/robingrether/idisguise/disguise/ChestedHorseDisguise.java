@@ -23,7 +23,7 @@ public class ChestedHorseDisguise extends HorseDisguise {
 	}
 	
 	public ChestedHorseDisguise clone() {
-		ChestedHorseDisguise clone = new ChestedHorseDisguise(type, hasChest, hasChest, isSaddled(), getArmor());
+		ChestedHorseDisguise clone = new ChestedHorseDisguise(type, adult, hasChest, isSaddled(), getArmor());
 		clone.setCustomName(customName);
 		return clone;
 	}
