@@ -123,4 +123,11 @@ public class PlayerDisguise extends Disguise {
 		return super.equals(object) && object instanceof PlayerDisguise && ((PlayerDisguise)object).skinName.equalsIgnoreCase(skinName) && ((PlayerDisguise)object).displayName.equals(displayName);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toString() {
+		return String.format("%s; %s; %s", super.toString(), skinName, displayName);
+	}
+	
 }
