@@ -54,12 +54,14 @@ permissions:
          iDisguise.mob.enderman: true
          iDisguise.mob.enderman.block: true
          iDisguise.mob.endermite: true
+         iDisguise.mob.evoker: true
          iDisguise.mob.ghast: true
          iDisguise.mob.giant: true
          iDisguise.mob.guardian: true
          iDisguise.mob.horse: true
          iDisguise.mob.husk: true
          iDisguise.mob.iron_golem: true
+         iDisguise.mob.llama: true
          iDisguise.mob.magma_cube: true
          iDisguise.mob.magma_cube.giant: true
          iDisguise.mob.mule: true
@@ -85,8 +87,10 @@ permissions:
          iDisguise.mob.squid: true
          iDisguise.mob.stray: true
          iDisguise.mob.undead_horse: true
+         iDisguise.mob.vex: true
          iDisguise.mob.villager: true
          iDisguise.mob.villager.profession.*: true
+         iDisguise.mob.vindicator: true
          iDisguise.mob.witch: true
          iDisguise.mob.witherboss: true
          iDisguise.mob.wither_skeleton: true
@@ -124,6 +128,8 @@ permissions:
       default: false
    iDisguise.mob.endermite:
       default: false
+   iDisguise.mob.evoker:
+      default: false
    iDisguise.mob.ghast:
       default: false
    iDisguise.mob.giant:
@@ -135,6 +141,8 @@ permissions:
    iDisguise.mob.husk:
       default: false
    iDisguise.mob.iron_golem:
+      default: false
+   iDisguise.mob.llama:
       default: false
    iDisguise.mob.magma_cube:
       default: false
@@ -276,6 +284,8 @@ permissions:
       default: false
    iDisguise.mob.undead_horse:
       default: false
+   iDisguise.mob.vex:
+      default: false
    iDisguise.mob.villager:
       default: false
       children:
@@ -297,6 +307,8 @@ permissions:
    iDisguise.mob.villager.profession.librarian:
       default: false
    iDisguise.mob.villager.profession.priest:
+      default: false
+   iDisguise.mob.vindicator:
       default: false
    iDisguise.mob.witch:
       default: false

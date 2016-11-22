@@ -24,6 +24,7 @@ import de.robingrether.idisguise.disguise.EndermanDisguise;
 import de.robingrether.idisguise.disguise.FallingBlockDisguise;
 import de.robingrether.idisguise.disguise.HorseDisguise;
 import de.robingrether.idisguise.disguise.ItemDisguise;
+import de.robingrether.idisguise.disguise.LlamaDisguise;
 import de.robingrether.idisguise.disguise.MinecartDisguise;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.ObjectDisguise;
@@ -37,6 +38,7 @@ import de.robingrether.idisguise.disguise.StyledHorseDisguise;
 import de.robingrether.idisguise.disguise.VillagerDisguise;
 import de.robingrether.idisguise.disguise.WolfDisguise;
 import de.robingrether.idisguise.disguise.ZombieVillagerDisguise;
+import de.robingrether.idisguise.disguise.LlamaDisguise.SaddleColor;
 
 public class PacketHelper {
 	
@@ -141,6 +143,12 @@ public class PacketHelper {
 								EntityHorse_setHasChest.invoke(entity, ((ChestedHorseDisguise)horseDisguise).hasChest());
 							}
 						}
+					} else if(mobDisguise instanceof LlamaDisguise) {
+						LlamaDisguise llamaDisguise = (LlamaDisguise)mobDisguise;
+						EntityLlama_setVariant.invoke(entity, llamaDisguise.getColor().ordinal());
+						Object inventoryChest = EntityHorseAbstract_inventoryChest.get(entity);
+						InventorySubcontainer_setItem.invoke(inventoryChest, 1, CraftItemStack_asNMSCopy.invoke(null, llamaDisguise.getSaddle().equals(SaddleColor.NOT_SADDLED) ? null : new ItemStack(Material.CARPET, 1, (short)llamaDisguise.getSaddle().ordinal())));
+						EntityHorseChestedAbstract_setCarryingChest.invoke(entity, llamaDisguise.hasChest());
 					} else if(mobDisguise instanceof OcelotDisguise) {
 						EntityOcelot_setCatType.invoke(entity, ((OcelotDisguise)mobDisguise).getCatType().getId());
 					} else if(mobDisguise instanceof PigDisguise) {

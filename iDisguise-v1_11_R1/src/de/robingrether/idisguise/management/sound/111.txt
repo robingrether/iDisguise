@@ -22,6 +22,8 @@ ENDERMAN->entity.endermen.death,entity.hostile.big_fall,entity.hostile.small_fal
 
 ENDERMITE->entity.endermite.death,entity.hostile.big_fall,entity.hostile.small_fall,entity.endermite.hurt,entity.hostile.splash,entity.hostile.swim
 
+EVOKER->entity.evocation_illager.death,entity.hostile.big_fall,entity.hostile.small_fall,entity.evocation_illager.hurt,entity.hostile.splash,entity.hostile.swim
+
 GHAST->entity.ghast.death,,,entity.ghast.hurt,,
 
 GIANT->entity.hostile.death,entity.hostile.big_fall,entity.hostile.small_fall,entity.hostile.hurt,entity.hostile.splash,entity.hostile.swim
@@ -33,6 +35,8 @@ HORSE->entity.horse.death,entity.generic.big_fall,entity.generic.small_fall,enti
 HUSK->entity.husk.death,entity.hostile.big_fall,entity.hostile.small_fall,entity.husk.hurt,entity.hostile.splash,entity.hostile.swim
 
 IRON_GOLEM->entity.irongolem.death,entity.generic.big_fall,entity.generic.small_fall,entity.irongolem.hurt,entity.generic.splash,entity.generic.swim
+
+LLAMA->entity.llama.death,entity.generic.big_fall,entity.generic.small_fall,entity.llama.hurt,entity.generic.splash,entity.generic.swim
 
 MAGMA_CUBE->entity.generic.big_fall,entity.generic.small_fall,entity.generic.splash,entity.generic.swim,entity.magmacube.death,entity.small_magmacube.death,entity.magmacube.hurt,entity.small_magmacube.hurt
 
@@ -72,7 +76,11 @@ STRAY->entity.stray.death,entity.hostile.big_fall,entity.hostile.small_fall,enti
 
 UNDEAD_HORSE->entity.zombie_horse.death,entity.generic.big_fall,entity.generic.small_fall,entity.zombie_horse.hurt,entity.generic.splash,entity.generic.swim
 
+VEX->entity.vex.death,entity.hostile.big_fall,entity.hostile.small_fall,entity.vex.hurt,entity.hostile.splash,entity.hostile.swim
+
 VILLAGER->entity.villager.death,entity.generic.big_fall,entity.generic.small_fall,entity.villager.hurt,entity.generic.splash,entity.generic.swim
+
+VINDICATOR->entity.vindication_illager.death,entity.hostile.big_fall,entity.hostile.small_fall,entity.vindication_illager.hurt,entity.hostile.splash,entity.hostile.swim
 
 WITCH->entity.witch.death,entity.hostile.big_fall,entity.hostile.small_fall,entity.witch.hurt,entity.hostile.splash,entity.hostile.swim
 
