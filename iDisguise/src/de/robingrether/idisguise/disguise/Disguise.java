@@ -2,6 +2,8 @@ package de.robingrether.idisguise.disguise;
 
 import java.io.Serializable;
 
+import de.robingrether.util.StringUtil;
+
 /**
  * Represents a disguise.
  * 
@@ -56,6 +58,31 @@ public abstract class Disguise implements Serializable, Cloneable {
 	 */
 	public String toString() {
 		return type.toString();
+	}
+	
+	/**
+	 * Recreates a disguise from its string representation.
+	 * 
+	 * @since 5.5.1
+	 * @param string the exact string representation of the disguise
+	 * @throws IllegalArgumentException in case the given string cannot be evaluated to a valid disguise
+	 * @throws OutdatedServerException in case the Minecraft server does not support the disguise type
+	 */
+	public static Disguise fromString(String string) throws IllegalArgumentException, OutdatedServerException {
+		String[] args = string.split("; ");
+		DisguiseType type = DisguiseType.Matcher.match(args[0]);
+		if(type == null) {
+			if(StringUtil.equals(args[0], "player", "ghost")) {
+				return new PlayerDisguise(args[1], args[2], args[0].equals("ghost"));
+			}
+		} else {
+			Disguise disguise = type.newInstance();
+			for(int i = 1; i < args.length; i++) {
+				Subtypes.applySubtype(disguise, args[i]);
+			}
+			return disguise;
+		}
+		throw new IllegalArgumentException();
 	}
 	
 }
