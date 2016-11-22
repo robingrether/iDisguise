@@ -2,48 +2,85 @@ package de.robingrether.idisguise.disguise;
 
 import java.util.Locale;
 
+/**
+ * Represents a disguise as a normal horse that can be 'styled'.
+ * 
+ * @since 5.5.1
+ * @author RobinGrether
+ */
 public class StyledHorseDisguise extends HorseDisguise {
 	
 	private static final long serialVersionUID = -8573196849561021899L;
 	private Style style;
 	private Color color;
 	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 5.5.1
+	 */
 	public StyledHorseDisguise() {
 		this(true, Style.NONE, Color.BROWN, false, Armor.NONE);
 	}
 	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 5.5.1
+	 */
 	public StyledHorseDisguise(boolean adult, Style style, Color color, boolean saddled, Armor armor) {
 		super(DisguiseType.HORSE, adult, saddled, armor);
 		this.style = style;
 		this.color = color;
 	}
 	
+	/**
+	 * @since 5.5.1
+	 */
 	public Color getColor() {
 		return color;
 	}
-	
+
+	/**
+	 * @since 5.5.1
+	 */
 	public void setColor(Color color) {
 		this.color = color;
 	}
-	
+
+	/**
+	 * @since 5.5.1
+	 */
 	public Style getStyle() {
 		return style;
 	}
-	
+
+	/**
+	 * @since 5.5.1
+	 */
 	public void setStyle(Style style) {
 		this.style = style;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public StyledHorseDisguise clone() {
 		StyledHorseDisguise clone = new StyledHorseDisguise(adult, style, color, isSaddled(), getArmor());
 		clone.setCustomName(customName);
 		return clone;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean equals(Object object) {
 		return super.equals(object) && object instanceof StyledHorseDisguise && ((StyledHorseDisguise)object).style.equals(style) && ((StyledHorseDisguise)object).color.equals(color);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public String toString() {
 		return super.toString() + "; " + style.name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings") + "; " + color.name().toLowerCase(Locale.ENGLISH).replace('_', '-');
 	}
@@ -57,6 +94,12 @@ public class StyledHorseDisguise extends HorseDisguise {
 		}
 	}
 	
+	/**
+	 * Different styles a horse can be.
+	 * 
+	 * @since 5.5.1
+	 * @author RobinGrether
+	 */
 	public enum Style {
 		
 		NONE,
@@ -67,6 +110,12 @@ public class StyledHorseDisguise extends HorseDisguise {
 		
 	}
 	
+	/**
+	 * Different colors a horse can be.
+	 * 
+	 * @since 5.5.1
+	 * @author RobinGrether
+	 */
 	public enum Color {
 		
 		WHITE,

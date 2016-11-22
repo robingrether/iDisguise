@@ -22,15 +22,26 @@ public class VillagerDisguise extends AgeableDisguise {
 		this(true, Profession.FARMER);
 	}
 	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 5.5.1
+	 */
 	public VillagerDisguise(boolean adult, Profession profession) {
 		super(DisguiseType.VILLAGER, adult);
 		this.profession = profession;
 	}
 	
+	/**
+	 * @since 5.5.1
+	 */
 	public Profession getProfession() {
 		return profession;
 	}
 	
+	/**
+	 * @since 5.5.1
+	 */
 	public void setProfession(Profession profession) {
 		this.profession = profession;
 	}

@@ -19,10 +19,20 @@ public class HorseDisguise extends AgeableDisguise {
 	private boolean saddled;
 	private Armor armor;
 	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 5.5.1
+	 */
 	public HorseDisguise(DisguiseType type) {
 		this(type, true, false, Armor.NONE);
 	}
 	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 5.5.1
+	 */
 	public HorseDisguise(DisguiseType type, boolean adult, boolean saddled, Armor armor) {
 		super(type, adult);
 		if(!ObjectUtil.equals(type, DisguiseType.DONKEY, DisguiseType.HORSE, DisguiseType.MULE, DisguiseType.SKELETAL_HORSE, DisguiseType.UNDEAD_HORSE)) {
@@ -72,6 +82,9 @@ public class HorseDisguise extends AgeableDisguise {
 		this.armor = armor;
 	}
 	
+	/**
+	 * @since 5.5.1
+	 */
 	public int getVariant() {
 		switch(type) {
 			case HORSE: return 0;

@@ -186,6 +186,9 @@ public enum DisguiseType {
 		}
 	}
 	
+	/**
+	 * @since 5.5.1
+	 */
 	public String getNMSClass() {
 		return nmsClass;
 	}

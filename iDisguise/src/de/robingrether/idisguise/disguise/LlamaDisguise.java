@@ -2,6 +2,12 @@ package de.robingrether.idisguise.disguise;
 
 import java.util.Locale;
 
+/**
+ * Represents a disguise as a llama.
+ * 
+ * @since 5.5.1
+ * @author RobinGrether
+ */
 public class LlamaDisguise extends AgeableDisguise {
 	
 	private static final long serialVersionUID = -6219216156842365747L;
@@ -9,10 +15,20 @@ public class LlamaDisguise extends AgeableDisguise {
 	private SaddleColor saddle;
 	private boolean hasChest;
 	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 5.5.1
+	 */
 	public LlamaDisguise() {
-		this(true, Color.BROWN, SaddleColor.NOT_SADDLED, false);
+		this(true, Color.CREAMY, SaddleColor.NOT_SADDLED, false);
 	}
 	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 5.5.1
+	 */
 	public LlamaDisguise(boolean adult, Color color, SaddleColor saddle, boolean hasChest) {
 		super(DisguiseType.LLAMA, adult);
 		this.color = color;
@@ -114,6 +130,12 @@ public class LlamaDisguise extends AgeableDisguise {
 		Subtypes.registerSubtype(LlamaDisguise.class, "setHasChest", false, "no-chest");
 	}
 	
+	/**
+	 * Different colors a llama can be.
+	 * 
+	 * @since 5.5.1
+	 * @author RobinGrether
+	 */
 	public enum Color {
 		
 		CREAMY,
@@ -123,6 +145,13 @@ public class LlamaDisguise extends AgeableDisguise {
 		
 	}
 	
+	/**
+	 * Different saddle colors a llama can have.<br>
+	 * {@linkplain SaddleColor#NOT_SADDLED} means no saddle is shown.
+	 * 
+	 * @since 5.5.1
+	 * @author RobinGrether
+	 */
 	public enum SaddleColor {
 		
 		WHITE,
