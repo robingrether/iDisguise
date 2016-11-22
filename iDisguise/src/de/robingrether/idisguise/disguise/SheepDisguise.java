@@ -49,6 +49,7 @@ public class SheepDisguise extends AgeableDisguise {
 	/**
 	 * Sets the color.
 	 * 
+	 * @since 5.1.1
 	 * @param color the wool color
 	 */
 	public void setColor(DyeColor color) {
