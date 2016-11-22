@@ -723,7 +723,7 @@ public class iDisguise extends JavaPlugin {
 			case WITCH:
 				return sender.hasPermission("iDisguise.mob.witch");
 			case WITHER:
-				return sender.hasPermission("iDisguise.mob.witherboss");
+				return sender.hasPermission("iDisguise.mob.wither");
 			case WITHER_SKELETON:
 				return sender.hasPermission("iDisguise.mob.wither_skeleton");
 			case WOLF:

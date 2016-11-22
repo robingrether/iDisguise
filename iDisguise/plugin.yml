@@ -92,7 +92,7 @@ permissions:
          iDisguise.mob.villager.profession.*: true
          iDisguise.mob.vindicator: true
          iDisguise.mob.witch: true
-         iDisguise.mob.witherboss: true
+         iDisguise.mob.wither: true
          iDisguise.mob.wither_skeleton: true
          iDisguise.mob.wolf: true
          iDisguise.mob.wolf.collar.*: true
@@ -312,7 +312,7 @@ permissions:
       default: false
    iDisguise.mob.witch:
       default: false
-   iDisguise.mob.witherboss:
+   iDisguise.mob.wither:
       default: false
    iDisguise.mob.wither_skeleton:
       default: false

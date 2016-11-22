@@ -60,7 +60,7 @@ public enum DisguiseType {
 	VILLAGER(Type.MOB, "v1_7_R1", VillagerDisguise.class, "EntityVillager", "villager"),
 	VINDICATOR(Type.MOB, "v1_11_R1", MobDisguise.class, "EntityVindicator", "vindicator"),
 	WITCH(Type.MOB, "v1_7_R1", MobDisguise.class, "EntityWitch", "witch"),
-	WITHER(Type.MOB, "v1_7_R1", MobDisguise.class, "EntityWither", "witherboss", "wither-boss", "wither_boss"),
+	WITHER(Type.MOB, "v1_7_R1", MobDisguise.class, "EntityWither", "wither", "witherboss", "wither-boss", "wither_boss"),
 	WITHER_SKELETON(Type.MOB, "v1_7_R1", MobDisguise.class, "EntitySkeletonWither", "wither_skeleton"),
 	WOLF(Type.MOB, "v1_7_R1", WolfDisguise.class, "EntityWolf", "wolf", "dog"),
 	ZOMBIE(Type.MOB, "v1_7_R1", AgeableDisguise.class, "EntityZombie", "zombie"),
