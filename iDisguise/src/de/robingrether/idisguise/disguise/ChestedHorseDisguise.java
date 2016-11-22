@@ -1,5 +1,7 @@
 package de.robingrether.idisguise.disguise;
 
+import de.robingrether.util.ObjectUtil;
+
 public class ChestedHorseDisguise extends HorseDisguise {
 	
 	private static final long serialVersionUID = -5787356640489884627L;
@@ -11,6 +13,9 @@ public class ChestedHorseDisguise extends HorseDisguise {
 	
 	public ChestedHorseDisguise(DisguiseType type, boolean adult, boolean hasChest, boolean saddled, Armor armor) {
 		super(type, adult, saddled, armor);
+		if(!ObjectUtil.equals(type, DisguiseType.DONKEY, DisguiseType.MULE)) {
+			throw new IllegalArgumentException();
+		}
 		this.hasChest = hasChest;
 	}
 	

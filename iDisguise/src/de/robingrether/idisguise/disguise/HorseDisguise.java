@@ -5,6 +5,8 @@ import java.util.Locale;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import de.robingrether.util.ObjectUtil;
+
 /**
  * Represents a disguise as a horse.
  * 
@@ -23,6 +25,9 @@ public class HorseDisguise extends AgeableDisguise {
 	
 	public HorseDisguise(DisguiseType type, boolean adult, boolean saddled, Armor armor) {
 		super(type, adult);
+		if(!ObjectUtil.equals(type, DisguiseType.DONKEY, DisguiseType.HORSE, DisguiseType.MULE, DisguiseType.SKELETAL_HORSE, DisguiseType.UNDEAD_HORSE)) {
+			throw new IllegalArgumentException();
+		}
 		this.saddled = saddled;
 		this.armor = armor;
 	}

@@ -1,5 +1,7 @@
 package de.robingrether.idisguise.disguise;
 
+import de.robingrether.util.ObjectUtil;
+
 /**
  * Represents a disguise as a sized mob (e.g. slime, magma slime).
  * 
@@ -30,6 +32,9 @@ public class SizedDisguise extends MobDisguise {
 	 */
 	public SizedDisguise(DisguiseType type, int size) {
 		super(type);
+		if(!ObjectUtil.equals(type, DisguiseType.SLIME, DisguiseType.MAGMA_CUBE)) {
+			throw new IllegalArgumentException();
+		}
 		this.size = size;
 	}
 	
