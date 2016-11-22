@@ -25,49 +25,6 @@ public class MobDisguise extends Disguise {
 	}
 	
 	/**
-	 * Creates an instance.
-	 * 
-	 * @deprecated Functionality moved to {@linkplain AgeableDisguise}.
-	 * @since 2.1.3
-	 * @param type the type to disguise as
-	 * @param adult should the disguise be an adult
-	 * @throws IllegalArgumentException DisguiseType is not a mob.
-	 */
-	@Deprecated
-	public MobDisguise(DisguiseType type, boolean adult) {
-		this(type);
-	}
-	
-	/**
-	 * Checks whether the disguise is an adult.
-	 * 
-	 * @deprecated Functionality moved to {@linkplain AgeableDisguise}.
-	 * @since 2.1.3
-	 * @return true if it's an adult, false if not
-	 */
-	@Deprecated
-	public boolean isAdult() {
-		if(this instanceof AgeableDisguise) {
-			return ((AgeableDisguise)this).isAdult();
-		}
-		return true;
-	}
-	
-	/**
-	 * Sets if the disguise is an adult.
-	 * 
-	 * @deprecated Functionality moved to {@linkplain AgeableDisguise}.
-	 * @since 2.1.3
-	 * @param adult should the disguise be an adult
-	 */
-	@Deprecated
-	public void setAdult(boolean adult) {
-		if(this instanceof AgeableDisguise) {
-			((AgeableDisguise)this).setAdult(adult);
-		}
-	}
-	
-	/**
 	 * Gets the custom name of this entity.<br>
 	 * The default value is <code>null</code>.
 	 * 
