@@ -32,7 +32,6 @@ public class Language {
 	public String STATUS_NOT_DISGUISED_SELF = ChatColor.GOLD + "You are not disguised.";
 	public String STATUS_NOT_DISGUISED_OTHER = ChatColor.GOLD + "%player% is not disguised.";
 	public String OUTDATED_SERVER = ChatColor.RED + "Your Minecraft version does not support the given disguise type.";
-	public String RESTRICTED_WORLD = ChatColor.RED + "You are not allowed to use this plugin in this world.";
 	public String UNDISGUISE_CONSOLE = ChatColor.RED + "You are not a player so you cannot undisguise.";
 	public String UNDISGUISE_NOT_DISGUISED_SELF = ChatColor.RED + "You are not disguised.";
 	public String UNDISGUISE_NOT_DISGUISED_OTHER = ChatColor.RED + "%player% is not disguised.";
