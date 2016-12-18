@@ -117,7 +117,7 @@ public class WolfDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof WolfDisguise && ((WolfDisguise)object).collarColor.equals(collarColor) && ((WolfDisguise)object).angry == angry && ((WolfDisguise)object).tamed == tamed;
+		return super.equals(object) && ((WolfDisguise)object).collarColor.equals(collarColor) && ((WolfDisguise)object).angry == angry && ((WolfDisguise)object).tamed == tamed;
 	}
 	
 	/**

@@ -138,7 +138,7 @@ public class ItemDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof ItemDisguise && ((ItemDisguise)object).itemStack.equals(itemStack);
+		return super.equals(object) && ((ItemDisguise)object).itemStack.equals(itemStack);
 	}
 	
 	/**

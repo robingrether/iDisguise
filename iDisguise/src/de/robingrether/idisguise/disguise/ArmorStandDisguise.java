@@ -62,7 +62,7 @@ public class ArmorStandDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof ArmorStandDisguise && ((ArmorStandDisguise)object).showArms == showArms;
+		return super.equals(object) && ((ArmorStandDisguise)object).showArms == showArms;
 	}
 	
 	/**

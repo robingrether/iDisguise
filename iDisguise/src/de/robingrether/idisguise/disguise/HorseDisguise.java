@@ -109,7 +109,7 @@ public class HorseDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof HorseDisguise && ((HorseDisguise)object).saddled == saddled && ((HorseDisguise)object).armor == armor;
+		return super.equals(object) && ((HorseDisguise)object).saddled == saddled && ((HorseDisguise)object).armor == armor;
 	}
 	
 	/**

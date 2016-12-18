@@ -64,7 +64,7 @@ public class CreeperDisguise extends MobDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof CreeperDisguise && ((CreeperDisguise)object).powered == powered;
+		return super.equals(object) && ((CreeperDisguise)object).powered == powered;
 	}
 	
 	/**

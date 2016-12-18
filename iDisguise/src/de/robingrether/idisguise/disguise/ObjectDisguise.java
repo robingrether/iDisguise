@@ -37,7 +37,7 @@ public class ObjectDisguise extends Disguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof ObjectDisguise;
+		return super.equals(object);
 	}
 	
 	/**

@@ -124,7 +124,7 @@ public class PlayerDisguise extends Disguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof PlayerDisguise && ((PlayerDisguise)object).skinName.equalsIgnoreCase(skinName) && ((PlayerDisguise)object).displayName.equals(displayName);
+		return super.equals(object) && ((PlayerDisguise)object).skinName.equalsIgnoreCase(skinName) && ((PlayerDisguise)object).displayName.equals(displayName);
 	}
 	
 	/**

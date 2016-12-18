@@ -66,7 +66,7 @@ public class AgeableDisguise extends MobDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof AgeableDisguise && ((AgeableDisguise)object).adult == adult;
+		return super.equals(object) && ((AgeableDisguise)object).adult == adult;
 	}
 	
 	/**

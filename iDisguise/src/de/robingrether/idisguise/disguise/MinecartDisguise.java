@@ -121,7 +121,7 @@ public class MinecartDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof MinecartDisguise && ((MinecartDisguise)object).displayedBlock.equals(displayedBlock) && ((MinecartDisguise)object).displayedBlockData == displayedBlockData;
+		return super.equals(object) && ((MinecartDisguise)object).displayedBlock.equals(displayedBlock) && ((MinecartDisguise)object).displayedBlockData == displayedBlockData;
 	}
 	
 	/**

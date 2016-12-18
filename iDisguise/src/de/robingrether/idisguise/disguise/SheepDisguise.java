@@ -69,7 +69,7 @@ public class SheepDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof SheepDisguise && ((SheepDisguise)object).color.equals(color);
+		return super.equals(object) && ((SheepDisguise)object).color.equals(color);
 	}
 	
 	/**

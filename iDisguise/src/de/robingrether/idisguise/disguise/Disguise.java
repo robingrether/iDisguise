@@ -47,7 +47,7 @@ public abstract class Disguise implements Serializable, Cloneable {
 	 * @return <code>true</code> if this object is the same as the <code>object</code> argument; <code>false</code> otherwise
 	 */
 	public boolean equals(Object object) {
-		return object instanceof Disguise && ((Disguise)object).getType().equals(type);
+		return object != null && object.getClass().equals(getClass()) && ((Disguise)object).getType().equals(type);
 	}
 	
 	/**

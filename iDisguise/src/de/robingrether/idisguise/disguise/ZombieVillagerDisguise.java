@@ -62,7 +62,7 @@ public class ZombieVillagerDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof ZombieVillagerDisguise && ((ZombieVillagerDisguise)object).profession.equals(profession);
+		return super.equals(object) && ((ZombieVillagerDisguise)object).profession.equals(profession);
 	}
 	
 	/**

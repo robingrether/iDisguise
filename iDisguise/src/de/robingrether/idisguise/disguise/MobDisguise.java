@@ -62,7 +62,7 @@ public class MobDisguise extends Disguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof MobDisguise;
+		return super.equals(object);
 	}
 	
 }

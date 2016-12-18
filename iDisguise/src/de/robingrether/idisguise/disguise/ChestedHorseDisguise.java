@@ -68,7 +68,7 @@ public class ChestedHorseDisguise extends HorseDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof ChestedHorseDisguise && ((ChestedHorseDisguise)object).hasChest == hasChest;
+		return super.equals(object) && ((ChestedHorseDisguise)object).hasChest == hasChest;
 	}
 	
 	/**

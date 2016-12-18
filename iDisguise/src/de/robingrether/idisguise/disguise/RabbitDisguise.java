@@ -77,7 +77,7 @@ public class RabbitDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof RabbitDisguise && ((RabbitDisguise)object).rabbitType.equals(rabbitType);
+		return super.equals(object) && ((RabbitDisguise)object).rabbitType.equals(rabbitType);
 	}
 	
 	/**

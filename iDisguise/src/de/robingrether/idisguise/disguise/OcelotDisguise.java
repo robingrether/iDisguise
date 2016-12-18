@@ -69,7 +69,7 @@ public class OcelotDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof OcelotDisguise && ((OcelotDisguise)object).catType.equals(catType);
+		return super.equals(object) && ((OcelotDisguise)object).catType.equals(catType);
 	}
 	
 	/**

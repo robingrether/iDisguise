@@ -59,7 +59,7 @@ public class VillagerDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof VillagerDisguise && ((VillagerDisguise)object).profession.equals(profession);
+		return super.equals(object) && ((VillagerDisguise)object).profession.equals(profession);
 	}
 	
 	/**

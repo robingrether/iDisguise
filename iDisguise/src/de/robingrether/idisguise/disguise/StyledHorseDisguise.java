@@ -75,7 +75,7 @@ public class StyledHorseDisguise extends HorseDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof StyledHorseDisguise && ((StyledHorseDisguise)object).style.equals(style) && ((StyledHorseDisguise)object).color.equals(color);
+		return super.equals(object) && ((StyledHorseDisguise)object).style.equals(style) && ((StyledHorseDisguise)object).color.equals(color);
 	}
 	
 	/**

@@ -71,7 +71,7 @@ public class SizedDisguise extends MobDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof SizedDisguise && ((SizedDisguise)object).size == size;
+		return super.equals(object) && ((SizedDisguise)object).size == size;
 	}
 	
 	/**

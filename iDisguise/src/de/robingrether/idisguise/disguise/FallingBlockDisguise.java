@@ -158,7 +158,7 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof FallingBlockDisguise && ((FallingBlockDisguise)object).material.equals(material) && ((FallingBlockDisguise)object).data == data && ((FallingBlockDisguise)object).onlyBlockCoordinates == onlyBlockCoordinates;
+		return super.equals(object) && ((FallingBlockDisguise)object).material.equals(material) && ((FallingBlockDisguise)object).data == data && ((FallingBlockDisguise)object).onlyBlockCoordinates == onlyBlockCoordinates;
 	}
 	
 	/**

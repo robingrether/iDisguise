@@ -65,7 +65,7 @@ public class PigDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object) && object instanceof PigDisguise && ((PigDisguise)object).saddled == saddled;
+		return super.equals(object) && ((PigDisguise)object).saddled == saddled;
 	}
 	
 	/**
