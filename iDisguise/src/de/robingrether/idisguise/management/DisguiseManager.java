@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
@@ -29,7 +30,24 @@ public class DisguiseManager {
 	
 	protected DisguiseMap disguiseMap = DisguiseMap.emptyMap();
 	
-	public synchronized void disguise(OfflinePlayer offlinePlayer, Disguise disguise) {
+	public synchronized void disguise(final OfflinePlayer offlinePlayer, final Disguise disguise) {
+		if(disguise instanceof PlayerDisguise && !PlayerHelper.getInstance().isGameProfileLoaded(((PlayerDisguise)disguise).getSkinName())) {
+			Bukkit.getScheduler().runTaskAsynchronously(iDisguise.getInstance(), new Runnable() {
+				
+				public void run() {
+					PlayerHelper.getInstance().waitForGameProfile(((PlayerDisguise)disguise).getSkinName());
+					Bukkit.getScheduler().runTask(iDisguise.getInstance(), new Runnable() {
+						
+						public void run() {
+							disguise(offlinePlayer, disguise);
+						}
+						
+					});
+				}
+				
+			});
+			return;
+		}
 		if(offlinePlayer.isOnline()) {
 			Player player = offlinePlayer.getPlayer();
 			Disguise oldDisguise = disguiseMap.getDisguise(player);

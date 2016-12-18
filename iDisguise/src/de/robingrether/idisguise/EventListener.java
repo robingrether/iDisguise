@@ -46,6 +46,7 @@ public class EventListener implements Listener {
 		Player player = event.getPlayer();
 		ChannelInjector.getInstance().inject(player);
 		PlayerHelper.getInstance().addPlayer(player);
+		PlayerHelper.getInstance().loadGameProfileAsynchronously(player.getName());
 		GhostFactory.getInstance().addPlayer(player.getName());
 		if(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise && ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).isGhost()) {
 			if(plugin.getConfiguration().ENABLE_GHOST_DISGUISE) {

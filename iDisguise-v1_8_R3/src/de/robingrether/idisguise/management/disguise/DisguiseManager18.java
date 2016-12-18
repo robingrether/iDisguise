@@ -10,6 +10,7 @@ import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.GhostFactory;
+import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.Reflection;
 
 public class DisguiseManager18 extends DisguiseManager {
@@ -31,7 +32,24 @@ public class DisguiseManager18 extends DisguiseManager {
 		}, 40L);
 	}
 	
-	public synchronized void disguise(OfflinePlayer offlinePlayer, Disguise disguise) {
+	public synchronized void disguise(final OfflinePlayer offlinePlayer, final Disguise disguise) {
+		if(disguise instanceof PlayerDisguise && !PlayerHelper.getInstance().isGameProfileLoaded(((PlayerDisguise)disguise).getSkinName())) {
+			Bukkit.getScheduler().runTaskAsynchronously(iDisguise.getInstance(), new Runnable() {
+				
+				public void run() {
+					PlayerHelper.getInstance().waitForGameProfile(((PlayerDisguise)disguise).getSkinName());
+					Bukkit.getScheduler().runTask(iDisguise.getInstance(), new Runnable() {
+						
+						public void run() {
+							disguise(offlinePlayer, disguise);
+						}
+						
+					});
+				}
+				
+			});
+			return;
+		}
 		if(offlinePlayer.isOnline()) {
 			Player player = offlinePlayer.getPlayer();
 			Disguise oldDisguise = disguiseMap.getDisguise(player);

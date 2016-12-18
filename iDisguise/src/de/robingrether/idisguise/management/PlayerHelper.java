@@ -91,4 +91,14 @@ public class PlayerHelper {
 		return null;
 	}
 	
+	public void loadGameProfileAsynchronously(String skinName) {
+	}
+	
+	public boolean isGameProfileLoaded(String skinName) {
+		return true;
+	}
+	
+	public void waitForGameProfile(String skinName) {
+	}
+	
 }

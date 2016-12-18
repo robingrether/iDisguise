@@ -1,5 +1,7 @@
 package de.robingrether.idisguise.management.player;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,66 +14,84 @@ import static de.robingrether.idisguise.management.Reflection.*;
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.VersionHelper;
+
 import net.minecraft.util.com.mojang.authlib.Agent;
 import net.minecraft.util.com.mojang.authlib.GameProfile;
 import net.minecraft.util.com.mojang.authlib.ProfileLookupCallback;
 
 public class PlayerHelperUID17 extends PlayerHelper {
 	
+	// only lower case names
 	private final Map<String, GameProfile> gameProfiles = new ConcurrentHashMap<String, GameProfile>();
+	private final Map<String, Object> currentlyLoading =  new ConcurrentHashMap<String, Object>();
 	
-	public synchronized String getCaseCorrectedName(String name) {
-		try {
-			ProfileLookupCallbackImpl callback = new ProfileLookupCallbackImpl();
-			GameProfileRepository_findProfilesByNames.invoke(MinecraftServer_getGameProfileRepository.invoke(MinecraftServer_getServer.invoke(null)), new String[] {name}, Agent.MINECRAFT, callback);
-			return callback.getGameProfile().getName();
-		} catch(Exception e) {
-			if(VersionHelper.debug()) {
-				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot retrieve the required profile information.", e);
-			}
-		}
-		return name;
+	public String getCaseCorrectedName(String name) {
+		return Bukkit.getOfflinePlayer(name).getName();
 	}
 	
-	public synchronized UUID getUniqueId(String name) {
-		try {
-			ProfileLookupCallbackImpl callback = new ProfileLookupCallbackImpl();
-			GameProfileRepository_findProfilesByNames.invoke(MinecraftServer_getGameProfileRepository.invoke(MinecraftServer_getServer.invoke(null)), new String[] {name}, Agent.MINECRAFT, callback);
-			return callback.getGameProfile().getId();
-		} catch(Exception e) {
-			if(VersionHelper.debug()) {
-				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot retrieve the required profile information.", e);
-			}
-		}
-		return UUID.fromString("ffffffff-ffff-ffff-ffff-ffffffffffff");
+	public UUID getUniqueId(String name) {
+		return Bukkit.getOfflinePlayer(name).getUniqueId();
 	}
 	
-	public synchronized String getName(UUID uniqueId) {
+	public String getName(UUID uniqueId) {
 		return Bukkit.getOfflinePlayer(uniqueId).getName();
 	}
 	
-	public synchronized GameProfile getGameProfile(UUID uniqueId, String skinName, String displayName) {
-		if(gameProfiles.containsKey(skinName)) {
-			GameProfile gameProfile = gameProfiles.get(skinName);
-			GameProfile localGameProfile = new GameProfile(uniqueId, displayName.length() <= 16 ? displayName : skinName);
-			localGameProfile.getProperties().putAll(gameProfile.getProperties());
-			return localGameProfile;
-		} else {
+	public GameProfile getGameProfile(UUID uniqueId, String skinName, String displayName) {
+		GameProfile localGameProfile = new GameProfile(uniqueId, displayName.length() <= 16 ? displayName : skinName);
+		if(gameProfiles.containsKey(skinName.toLowerCase(Locale.ENGLISH))) {
+			localGameProfile.getProperties().putAll(gameProfiles.get(skinName.toLowerCase(Locale.ENGLISH)).getProperties());
+		}
+		return localGameProfile;
+	}
+	
+	public synchronized void loadGameProfileAsynchronously(final String skinName) {
+		if(gameProfiles.containsKey(skinName.toLowerCase(Locale.ENGLISH)) || currentlyLoading.containsKey(skinName.toLowerCase(Locale.ENGLISH))) {
+			return;
+		}
+		currentlyLoading.put(skinName.toLowerCase(Locale.ENGLISH), new Object());
+		Bukkit.getScheduler().runTaskAsynchronously(iDisguise.getInstance(), new Runnable() {
+			
+			public void run() {
+				GameProfile gameProfile = loadGameProfile(skinName);
+				if(gameProfile != null) {
+					gameProfiles.put(skinName.toLowerCase(Locale.ENGLISH), gameProfile);
+				}
+				synchronized(currentlyLoading.get(skinName.toLowerCase(Locale.ENGLISH))) {
+					currentlyLoading.remove(skinName.toLowerCase(Locale.ENGLISH)).notifyAll();
+				}
+			}
+			
+		});
+	}
+	
+	public boolean isGameProfileLoaded(String skinName) {
+		return gameProfiles.containsKey(skinName.toLowerCase(Locale.ENGLISH));
+	}
+	
+	public void waitForGameProfile(String skinName) {
+		if(currentlyLoading.containsKey(skinName.toLowerCase(Locale.ENGLISH))) {
 			try {
-				ProfileLookupCallbackImpl callback = new ProfileLookupCallbackImpl();
-				GameProfileRepository_findProfilesByNames.invoke(MinecraftServer_getGameProfileRepository.invoke(MinecraftServer_getServer.invoke(null)), new String[] {skinName}, Agent.MINECRAFT, callback);
-				GameProfile gameProfile = callback.getGameProfile();
-				if(gameProfile.getProperties().isEmpty()) {
-					MinecraftSessionService_fillProfileProperties.invoke(MinecraftServer_getSessionService.invoke(MinecraftServer_getServer.invoke(null)), gameProfile, true);
+				synchronized(currentlyLoading.get(skinName.toLowerCase(Locale.ENGLISH))) {
+					currentlyLoading.get(skinName.toLowerCase(Locale.ENGLISH)).wait(10000L);
 				}
-				gameProfiles.put(skinName, gameProfile);
-				GameProfile localGameProfile = new GameProfile(uniqueId, displayName.length() <= 16 ? displayName : skinName);
-				localGameProfile.getProperties().putAll(gameProfile.getProperties());
-				return localGameProfile;
-			} catch(Exception e) {
-				if(VersionHelper.debug()) {
-					iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot retrieve the required profile information.", e);
-				}
+			} catch(InterruptedException e) {
+			}
+		}
+	}
+	
+	private GameProfile loadGameProfile(String skinName) {
+		try {
+			ProfileLookupCallbackImpl callback = new ProfileLookupCallbackImpl();
+			GameProfileRepository_findProfilesByNames.invoke(MinecraftServer_getGameProfileRepository.invoke(MinecraftServer_getServer.invoke(null)), new String[] {skinName}, Agent.MINECRAFT, callback);
+			GameProfile gameProfile = callback.getGameProfile();
+			if(gameProfile.getProperties().isEmpty()) {
+				MinecraftSessionService_fillProfileProperties.invoke(MinecraftServer_getSessionService.invoke(MinecraftServer_getServer.invoke(null)), gameProfile, true);
+			}
+			return gameProfile;
+		} catch(Exception e) {
+			if(VersionHelper.debug()) {
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot retrieve the required profile information.", e);
 			}
 		}
 		return null;
@@ -86,7 +106,7 @@ public class PlayerHelperUID17 extends PlayerHelper {
 		}
 		
 		public void onProfileLookupFailed(GameProfile gameProfile, Exception exception) {
-			this.gameProfile = new GameProfile(UUID.fromString("ffffffff-ffff-ffff-ffff-ffffffffffff"), gameProfile.getName());
+			this.gameProfile = new GameProfile(UUID.nameUUIDFromBytes(("OfflinePlayer:" + gameProfile.getName()).getBytes(StandardCharsets.UTF_8)), gameProfile.getName());
 		}
 		
 		public GameProfile getGameProfile() {

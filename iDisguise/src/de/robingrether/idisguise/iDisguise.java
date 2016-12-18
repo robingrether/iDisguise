@@ -52,6 +52,7 @@ import de.robingrether.idisguise.management.ChannelInjector;
 import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.GhostFactory;
 import de.robingrether.idisguise.management.PacketHelper;
+import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.Reflection;
 import de.robingrether.idisguise.management.Sounds;
 import de.robingrether.idisguise.management.VersionHelper;
@@ -147,6 +148,10 @@ public class iDisguise extends JavaPlugin {
 		}
 		getLogger().log(Level.INFO, String.format("%s enabled!", getFullName()));
 		enabled = true;
+		for(Player player : Reflection.getOnlinePlayers()) {
+			PlayerHelper.getInstance().addPlayer(player);
+			PlayerHelper.getInstance().loadGameProfileAsynchronously(player.getName());
+		}
 		ChannelInjector.getInstance().injectOnlinePlayers();
 		DisguiseManager.getInstance().resendPackets();
 	}
@@ -661,7 +666,7 @@ public class iDisguise extends JavaPlugin {
 			case GHAST:
 				return sender.hasPermission("iDisguise.mob.ghast");
 			case GHOST:
-				return sender.hasPermission("iDisguise.ghost") && (sender.hasPermission("iDisguise.player.name.*") || sender.hasPermission("iDisguise.player.name." + ((PlayerDisguise)disguise).getSkinName().toLowerCase(Locale.ENGLISH))) && (isPlayerDisguisePermitted(((PlayerDisguise)disguise).getSkinName().toLowerCase(Locale.ENGLISH)) || sender.hasPermission("iDisguise.player.prohibited"));
+				return sender.hasPermission("iDisguise.ghost") && (sender.hasPermission("iDisguise.player.name.*") || sender.hasPermission("iDisguise.player.name." + ((PlayerDisguise)disguise).getSkinName())) && (isPlayerDisguisePermitted(((PlayerDisguise)disguise).getSkinName()) || sender.hasPermission("iDisguise.player.prohibited"));
 			case GIANT:
 				return sender.hasPermission("iDisguise.mob.giant");
 			case GUARDIAN:
@@ -687,7 +692,7 @@ public class iDisguise extends JavaPlugin {
 			case PIG_ZOMBIE:
 				return sender.hasPermission("iDisguise.mob.pig_zombie") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case PLAYER:
-				return (sender.hasPermission("iDisguise.player.name.*") || sender.hasPermission("iDisguise.player.name." + ((PlayerDisguise)disguise).getSkinName().toLowerCase(Locale.ENGLISH))) && (isPlayerDisguisePermitted(((PlayerDisguise)disguise).getSkinName().toLowerCase(Locale.ENGLISH)) || sender.hasPermission("iDisguise.player.prohibited"));
+				return (sender.hasPermission("iDisguise.player.name.*") || sender.hasPermission("iDisguise.player.name." + ((PlayerDisguise)disguise).getSkinName())) && (isPlayerDisguisePermitted(((PlayerDisguise)disguise).getSkinName()) || sender.hasPermission("iDisguise.player.prohibited"));
 			case POLAR_BEAR:
 				return sender.hasPermission("iDisguise.mob.polar_bear") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case RABBIT:

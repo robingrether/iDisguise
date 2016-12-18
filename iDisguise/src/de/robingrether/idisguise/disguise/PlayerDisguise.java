@@ -1,5 +1,7 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Locale;
+
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.util.Validate;
 
@@ -53,8 +55,9 @@ public class PlayerDisguise extends Disguise {
 		if(!Validate.minecraftUsername(skinName)) {
 			throw new IllegalArgumentException("The given skin name is invalid!");
 		}
-		this.skinName = PlayerHelper.getInstance().getCaseCorrectedName(skinName);
+		this.skinName = skinName.toLowerCase(Locale.ENGLISH);
 		this.displayName = displayName;
+		PlayerHelper.getInstance().loadGameProfileAsynchronously(this.skinName);
 	}
 	
 	/**
@@ -70,10 +73,11 @@ public class PlayerDisguise extends Disguise {
 	}
 	
 	/**
-	 * Returns the skin name.
+	 * Returns the skin name.<br>
+	 * This is always lower case as of 5.5.2.
 	 * 
 	 * @since 5.2.2
-	 * @return the player skin
+	 * @return the skin name
 	 */
 	public String getSkinName() {
 		return skinName;
