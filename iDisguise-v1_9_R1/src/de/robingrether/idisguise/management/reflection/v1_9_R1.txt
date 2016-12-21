@@ -116,9 +116,6 @@ EnumHorseType_fromIndex->MEnumHorseType$a(int)
 GameProfile->Ccom.mojang.authlib.GameProfile
 GameProfile_getProfileId->MGameProfile$getId()
 
-GameProfileRepository->Ccom.mojang.authlib.GameProfileRepository
-GameProfileRepository_findProfilesByNames->MGameProfileRepository$findProfilesByNames(java.lang.String[],com.mojang.authlib.Agent,com.mojang.authlib.ProfileLookupCallback)
-
 InventorySubcontainer->C{nms}.InventorySubcontainer
 InventorySubcontainer_setItem->MInventorySubcontainer$setItem(int,{nms}.ItemStack)
 
@@ -134,7 +131,6 @@ MinecraftKey_getName->MMinecraftKey$a()
 MinecraftKey_new->NMinecraftKey(java.lang.String)
 
 MinecraftServer->C{nms}.MinecraftServer
-MinecraftServer_getGameProfileRepository->MMinecraftServer$getGameProfileRepository()
 MinecraftServer_getServer->MMinecraftServer$getServer()
 MinecraftServer_getSessionService->MMinecraftServer$ay()
 

@@ -266,11 +266,7 @@ public class Reflection {
 	
 	public static Class<?> MinecraftServer;
 	public static Method MinecraftServer_getServer;
-	public static Method MinecraftServer_getGameProfileRepository;
 	public static Method MinecraftServer_getSessionService;
-	
-	public static Class<?> GameProfileRepository;
-	public static Method GameProfileRepository_findProfilesByNames;
 	
 	public static Class<?> MinecraftSessionService;
 	public static Method MinecraftSessionService_fillProfileProperties;

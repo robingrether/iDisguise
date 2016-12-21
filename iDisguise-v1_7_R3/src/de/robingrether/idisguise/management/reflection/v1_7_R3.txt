@@ -95,9 +95,6 @@ EnumEntityUseAction_ATTACK->FEnumEntityUseAction$ATTACK
 GameProfile->Cnet.minecraft.util.com.mojang.authlib.GameProfile
 GameProfile_getProfileId->MGameProfile$getId()
 
-GameProfileRepository->Cnet.minecraft.util.com.mojang.authlib.GameProfileRepository
-GameProfileRepository_findProfilesByNames->MGameProfileRepository$findProfilesByNames(java.lang.String[],net.minecraft.util.com.mojang.authlib.Agent,net.minecraft.util.com.mojang.authlib.ProfileLookupCallback)
-
 InventorySubcontainer->C{nms}.InventorySubcontainer
 InventorySubcontainer_setItem->MInventorySubcontainer$setItem(int,{nms}.ItemStack)
 
@@ -109,7 +106,6 @@ ItemStack_new_Block->NItemStack({nms}.Block,int,int)
 ItemStack_new_Item->NItemStack({nms}.Item,int,int)
 
 MinecraftServer->C{nms}.MinecraftServer
-MinecraftServer_getGameProfileRepository->MMinecraftServer$getGameProfileRepository()
 MinecraftServer_getServer->MMinecraftServer$getServer()
 MinecraftServer_getSessionService->MMinecraftServer$av()
 
