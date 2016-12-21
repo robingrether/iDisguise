@@ -29,7 +29,7 @@ public class DisguiseManager18 extends DisguiseManager {
 				}
 			}
 			
-		}, 40L);
+		}, 10L);
 	}
 	
 	public synchronized void disguise(final OfflinePlayer offlinePlayer, final Disguise disguise) {
