@@ -1,6 +1,5 @@
 package de.robingrether.idisguise.management.player;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -8,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 import static de.robingrether.idisguise.management.Reflection.*;
 
@@ -15,9 +15,7 @@ import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.VersionHelper;
 
-import net.minecraft.util.com.mojang.authlib.Agent;
 import net.minecraft.util.com.mojang.authlib.GameProfile;
-import net.minecraft.util.com.mojang.authlib.ProfileLookupCallback;
 
 public class PlayerHelperUID17 extends PlayerHelper {
 	
@@ -82,9 +80,8 @@ public class PlayerHelperUID17 extends PlayerHelper {
 	
 	private GameProfile loadGameProfile(String skinName) {
 		try {
-			ProfileLookupCallbackImpl callback = new ProfileLookupCallbackImpl();
-			GameProfileRepository_findProfilesByNames.invoke(MinecraftServer_getGameProfileRepository.invoke(MinecraftServer_getServer.invoke(null)), new String[] {skinName}, Agent.MINECRAFT, callback);
-			GameProfile gameProfile = callback.getGameProfile();
+			OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(skinName);
+			GameProfile gameProfile = (GameProfile)(offlinePlayer.isOnline() ? CraftPlayer_getProfile.invoke(offlinePlayer) : CraftOfflinePlayer_getProfile.invoke(offlinePlayer));
 			if(gameProfile.getProperties().isEmpty()) {
 				MinecraftSessionService_fillProfileProperties.invoke(MinecraftServer_getSessionService.invoke(MinecraftServer_getServer.invoke(null)), gameProfile, true);
 			}
@@ -95,24 +92,6 @@ public class PlayerHelperUID17 extends PlayerHelper {
 			}
 		}
 		return null;
-	}
-	
-	private class ProfileLookupCallbackImpl implements ProfileLookupCallback {
-		
-		private GameProfile gameProfile;
-		
-		public void onProfileLookupSucceeded(GameProfile gameProfile) {
-			this.gameProfile = gameProfile;
-		}
-		
-		public void onProfileLookupFailed(GameProfile gameProfile, Exception exception) {
-			this.gameProfile = new GameProfile(UUID.nameUUIDFromBytes(("OfflinePlayer:" + gameProfile.getName()).getBytes(StandardCharsets.UTF_8)), gameProfile.getName());
-		}
-		
-		public GameProfile getGameProfile() {
-			return gameProfile;
-		}
-		
 	}
 	
 }
