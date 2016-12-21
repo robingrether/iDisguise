@@ -35,8 +35,6 @@ permissions:
          iDisguise.update: true
    iDisguise.ghost:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.help:
       default: true
    iDisguise.mob.*:
@@ -106,102 +104,57 @@ permissions:
       default: false
    iDisguise.mob.bat:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.blaze:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.cave_spider:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.chicken:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.cow:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.creeper:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.creeper.powered:
       default: false
    iDisguise.mob.donkey:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.elder_guardian:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.ender_dragon:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.enderman:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.enderman.block:
       default: false
    iDisguise.mob.endermite:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.evoker:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.ghast:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.giant:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.guardian:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.horse:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.husk:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.iron_golem:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.llama:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.magma_cube:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.magma_cube.giant:
       default: false
    iDisguise.mob.mule:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.mushroom_cow:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.ocelot:
       default: false
       children:
-         iDisguise.help: true
          iDisguise.mob.ocelot.type.wild: true
    iDisguise.mob.ocelot.type.*:
       default: false
@@ -220,22 +173,15 @@ permissions:
       default: false
    iDisguise.mob.pig:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.pig.saddled:
       default: false
    iDisguise.mob.pig_zombie:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.polar_bear:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.rabbit:
       default: false
       children:
-         iDisguise.help: true
          iDisguise.mob.rabbit.type.brown: true
    iDisguise.mob.rabbit.type.*:
       default: false
@@ -264,7 +210,6 @@ permissions:
    iDisguise.mob.sheep:
       default: false
       children:
-         iDisguise.help: true
          iDisguise.mob.sheep.color.white: true
    iDisguise.mob.sheep.color.*:
       default: false
@@ -319,54 +264,31 @@ permissions:
       default: false
    iDisguise.mob.shulker:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.silverfish:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.skeletal_horse:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.skeleton:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.slime:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.slime.giant:
       default: false
    iDisguise.mob.snowman:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.spider:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.squid:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.stray:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.undead_horse:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.vex:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.villager:
       default: false
       children:
-         iDisguise.help: true
          iDisguise.mob.villager.profession.farmer: true
    iDisguise.mob.villager.profession.*:
       default: false
@@ -388,24 +310,15 @@ permissions:
       default: false
    iDisguise.mob.vindicator:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.witch:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.wither:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.wither_skeleton:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.wolf:
       default: false
       children:
-         iDisguise.help: true
          iDisguise.mob.wolf.collar.red: true
    iDisguise.mob.wolf.collar.*:
       default: false
@@ -464,12 +377,8 @@ permissions:
       default: false
    iDisguise.mob.zombie:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.mob.zombie_villager:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.object.*:
       default: false
       children:
@@ -482,31 +391,20 @@ permissions:
          iDisguise.object.minecart: true
    iDisguise.object.armor_stand:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.object.boat:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.object.ender_crystal:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.object.falling_block:
       default: false
       children:
-         iDisguise.help: true
          iDisguise.object.falling_block.material.stone: true
    iDisguise.object.falling_block.material.*:
       default: false
    iDisguise.object.item:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.object.minecart:
       default: false
-      children:
-         iDisguise.help: true
    iDisguise.others:
       default: false
    iDisguise.player.name.*:

@@ -202,10 +202,6 @@ public class iDisguise extends JavaPlugin {
 	
 	public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
 		if(StringUtil.equalsIgnoreCase(command.getName(), "disguise", "odisguise")) {
-			if(!sender.hasPermission("iDisguise.help")) {
-				sender.sendMessage(language.NO_PERMISSION);
-				return true;
-			}
 			if(args.length == 0) {
 				sendHelpMessage(sender, command, alias);
 			} else if(args[0].equalsIgnoreCase("reload")) {
@@ -592,6 +588,10 @@ public class iDisguise extends JavaPlugin {
 	}
 	
 	private void sendHelpMessage(CommandSender sender, Command command, String alias) {
+		if(!sender.hasPermission("iDisguise.help")) {
+			sender.sendMessage(language.NO_PERMISSION);
+			return;
+		}
 		alias = alias.toLowerCase(Locale.ENGLISH);
 		boolean self = command.getName().equalsIgnoreCase("disguise");
 		String disguiseCommand = "/" + (self ? alias : alias + " <player>");
