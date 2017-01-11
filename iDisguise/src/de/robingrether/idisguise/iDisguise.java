@@ -899,6 +899,14 @@ public class iDisguise extends JavaPlugin {
 				Sounds.setEnabled(enabled);
 			}
 			
+			public boolean hasPermission(Player player, DisguiseType type) {
+				return hasPermission(player, type.newInstance());
+			}
+			
+			public boolean hasPermission(Player player, Disguise disguise) {
+				return iDisguise.this.hasPermission(player, disguise);
+			}
+			
 		};
 	}
 	

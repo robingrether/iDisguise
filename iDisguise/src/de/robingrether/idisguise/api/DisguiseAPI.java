@@ -185,4 +185,24 @@ public interface DisguiseAPI {
 	 */
 	public void setSoundsEnabled(boolean enabled);
 	
+	/**
+	 * Indicates whether a given player has the required permissions to disguise as the given disguise type.
+	 * 
+	 * @since 5.5.4
+	 * @param player the player
+	 * @param type the disguise type
+	 * @return <code>true</code>, if and only if the player has the required permissions
+	 */
+	public boolean hasPermission(Player player, DisguiseType type);
+	
+	/**
+	 * Indicates whether a given player has the required permissions to carry the given disguise.
+	 * 
+	 * @since 5.5.4
+	 * @param player the player
+	 * @param disguise the disguise
+	 * @return <code>true</code>, if and only if the player has all required permissions for the given disguise (including subtype permissions)
+	 */
+	public boolean hasPermission(Player player, Disguise disguise);
+	
 }
