@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.DigestInputStream;
@@ -23,6 +24,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import de.robingrether.idisguise.iDisguise;
+import de.robingrether.util.ObjectUtil;
 
 public class UpdateCheck implements Runnable {
 	
@@ -111,11 +113,20 @@ public class UpdateCheck implements Runnable {
 			InputStream input = null;
 			OutputStream output = null;
 			try {
-				toBeNotified.sendMessage(plugin.getLanguage().UPDATE_DOWNLOADING);
 				URL url = new URL(downloadUrl);
-				URLConnection connection = url.openConnection();
+				HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 				connection.addRequestProperty("User-Agent", pluginVersion.replace(' ', '/') + " (by RobinGrether)");
 				connection.setDoOutput(true);
+				if(ObjectUtil.equals(connection.getResponseCode(), 301, 302)) {
+					downloadUrl = connection.getHeaderField("Location");
+					downloadUpdate();
+					return;
+				} else if(connection.getResponseCode() != 200) {
+					toBeNotified.sendMessage(plugin.getLanguage().UPDATE_DOWNLOAD_FAILED);
+					plugin.getLogger().log(Level.WARNING, "Update download failed: HTTP error");
+					return;
+				}
+				toBeNotified.sendMessage(plugin.getLanguage().UPDATE_DOWNLOADING);
 				MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 				input = new DigestInputStream(connection.getInputStream(), messageDigest);
 				plugin.getServer().getUpdateFolderFile().mkdir();
