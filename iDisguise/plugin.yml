@@ -19,6 +19,7 @@ permissions:
       children:
          iDisguise.admin: true
          iDisguise.ghost: true
+         iDisguise.help: true
          iDisguise.mob.*: true
          iDisguise.object.*: true
          iDisguise.player.name.*: true
