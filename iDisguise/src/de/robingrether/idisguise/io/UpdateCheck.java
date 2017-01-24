@@ -90,7 +90,7 @@ public class UpdateCheck implements Runnable {
 			latestVersion = null;
 			JSONObject object = (JSONObject)array.get(array.size() - 1);
 			latestVersion = (String)object.get(API_NAME);
-			downloadUrl = ((String)object.get(API_DOWNLOAD_URL)).replace("servermods.cursecdn.com", "addons-origin.cursecdn.com");
+			downloadUrl = ((String)object.get(API_DOWNLOAD_URL));
 			checksum = (String)object.get(API_CHECKSUM);
 		} catch(Exception e) {
 			plugin.getLogger().log(Level.WARNING, "Update checking failed: " + e.getClass().getSimpleName());
