@@ -15,6 +15,7 @@ import de.robingrether.util.StringUtil;
 
 public class Configuration {
 	
+	/* Configuration options start here */
 	public static final String ENABLE_GHOST_DISGUISE_PATH = "disguise.enable-ghost-disguise";
 	public static final String KEEP_DISGUISE_LEAVE_PATH = "disguise.keep-disguise-leave";
 	public static final String KEEP_DISGUISE_SHUTDOWN_PATH = "disguise.keep-disguise-shutdown";
@@ -44,6 +45,7 @@ public class Configuration {
 	public boolean UNDISGUISE_PERMISSION = false;
 	public boolean UPDATE_CHECK = true;
 	public boolean UPDATE_DOWNLOAD = false;
+	/* Configuration options end here */
 	
 	private iDisguise plugin;
 	
