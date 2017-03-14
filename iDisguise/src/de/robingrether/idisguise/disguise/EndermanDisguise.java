@@ -126,18 +126,20 @@ public class EndermanDisguise extends MobDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + blockInHand.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; " + blockInHandData;
+		return super.toString() + "; block=" + blockInHand.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; block-data=" + blockInHandData;
 	}
 	
 	static {
-		for(Material material : Material.values()) {
-			if(material.isBlock()) {
-				Subtypes.registerSubtype(EndermanDisguise.class, "setBlockInHand", material, material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-			}
-		}
-		for(int i = 0; i < 256; i++) {
-			Subtypes.registerSubtype(EndermanDisguise.class, "setBlockInHandData", i, Integer.toString(i));
-		}
+//		for(Material material : Material.values()) {
+//			if(material.isBlock()) {
+//				Subtypes.registerSubtype(EndermanDisguise.class, "setBlockInHand", material, material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+//			}
+//		}
+		Subtypes.registerParameterizedSubtype(EndermanDisguise.class, "setBlockInHand", "block", Material.class);
+//		for(int i = 0; i < 256; i++) {
+//			Subtypes.registerSubtype(EndermanDisguise.class, "setBlockInHandData", i, Integer.toString(i));
+//		}
+		Subtypes.registerParameterizedSubtype(EndermanDisguise.class, "setBlockInHandData", "block-data", int.class);
 	}
 	
 }

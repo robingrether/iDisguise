@@ -23,6 +23,7 @@ import de.robingrether.idisguise.management.VersionHelper;
 public class Subtypes {
 	
 	private static Map<Class<? extends Disguise>, Map<String, Subtype>> registeredClasses = new ConcurrentHashMap<Class<? extends Disguise>, Map<String, Subtype>>();
+	private static Map<Class<? extends Disguise>, Map<String, ParameterizedSubtype>> registeredClasses2 = new ConcurrentHashMap<Class<? extends Disguise>, Map<String, ParameterizedSubtype>>();
 	
 	/**
 	 * Registers a new subtype.
@@ -94,6 +95,29 @@ public class Subtypes {
 	}
 	
 	/**
+	 * Registers a new parameterized subtype.
+	 * 
+	 * @since 5.6.1
+	 * @param disguiseClass the disguise class
+	 * @param methodName the method to call
+	 * @param argument the command argument to bind this to
+	 * @param parameterType the parameter type to pass to the method (int.class, String.class and enum classes are supported)
+	 */
+	public static void registerParameterizedSubtype(Class<? extends Disguise> disguiseClass, String methodName, String argument, Class<?> parameterType) {
+		if(!registeredClasses2.containsKey(disguiseClass)) {
+			registeredClasses2.put(disguiseClass, new LinkedHashMap<String, ParameterizedSubtype>());
+		}
+		Map<String, ParameterizedSubtype> registeredSubtypes = registeredClasses2.get(disguiseClass);
+		try {
+			registeredSubtypes.put(argument, new ParameterizedSubtype(disguiseClass, methodName, parameterType));
+		} catch(Exception e) {
+			if(VersionHelper.debug()) {
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot register the given subtype: " + disguiseClass.getSimpleName() + "/" + argument, e);
+			}
+		}
+	}
+	
+	/**
 	 * Applies a subtype to a given disguise based on the given argument.
 	 * 
 	 * @since 5.3.1
@@ -108,15 +132,35 @@ public class Subtypes {
 			classes.add((Class<? extends Disguise>)clazz);
 			clazz = clazz.getSuperclass();
 		}
-		for(Class<? extends Disguise> disguiseClass : classes) {
-			Map<String, Subtype> registeredSubtypes = registeredClasses.get(disguiseClass);
-			if(registeredSubtypes != null) {
-				Subtype subtype = registeredSubtypes.get(argument.toLowerCase(Locale.ENGLISH).replace('_', '-'));
-				if(subtype != null) {
-					try {
-						subtype.apply(disguise);
-						return true;
-					} catch(Exception e) {
+		if(argument.contains("=")) {
+			String parameter = argument.substring(argument.indexOf("=") + 1);
+			argument = argument.substring(0, argument.indexOf("="));
+			for(Class<? extends Disguise> disguiseClass : classes) {
+				Map<String, ParameterizedSubtype> registeredSubtypes = registeredClasses2.get(disguiseClass);
+				if(registeredSubtypes != null) {
+					ParameterizedSubtype subtype = registeredSubtypes.get(argument.toLowerCase(Locale.ENGLISH).replace('_', '-'));
+					if(subtype != null) {
+						try {
+							subtype.apply(disguise, parameter);
+							return true;
+						} catch(Exception e) {
+							return false;
+						}
+					}
+				}
+			}
+		} else {
+			for(Class<? extends Disguise> disguiseClass : classes) {
+				Map<String, Subtype> registeredSubtypes = registeredClasses.get(disguiseClass);
+				if(registeredSubtypes != null) {
+					Subtype subtype = registeredSubtypes.get(argument.toLowerCase(Locale.ENGLISH).replace('_', '-'));
+					if(subtype != null) {
+						try {
+							subtype.apply(disguise);
+							return true;
+						} catch(Exception e) {
+							return false;
+						}
 					}
 				}
 			}
@@ -140,9 +184,14 @@ public class Subtypes {
 		}
 		List<String> subtypeArguments = new ArrayList<String>();
 		while(!classes.isEmpty()) {
-			Map<String, Subtype> registeredSubtypes = registeredClasses.get(classes.pop());
-			if(registeredSubtypes != null) {
-				subtypeArguments.addAll(registeredSubtypes.keySet());
+			Class<? extends Disguise> disguiseClass = classes.pop();
+			if(registeredClasses.containsKey(disguiseClass)) {
+				subtypeArguments.addAll(registeredClasses.get(disguiseClass).keySet());
+			}
+			if(registeredClasses2.containsKey(disguiseClass)) {
+				for(String subtypeArgument : registeredClasses2.get(disguiseClass).keySet()) {
+					subtypeArguments.add(subtypeArgument + "=");
+				}
 			}
 		}
 		return subtypeArguments;
@@ -170,6 +219,28 @@ public class Subtypes {
 		
 		private void apply(Disguise disguise) throws InvocationTargetException, IllegalAccessException {
 			method.invoke(disguise, parameter);
+		}
+		
+	}
+	
+	private static class ParameterizedSubtype {
+		
+		private Method method;
+		private Class<?> parameterType;
+		
+		private ParameterizedSubtype(Class<? extends Disguise> disguiseClass, String methodName, Class<?> parameterType) throws NoSuchMethodException {
+			this.method = disguiseClass.getDeclaredMethod(methodName, parameterType);
+			this.parameterType = parameterType;
+		}
+		
+		private void apply(Disguise disguise, String parameter) throws InvocationTargetException, IllegalAccessException {
+			if(parameterType == int.class) {
+				method.invoke(disguise, Integer.parseInt(parameter));
+			} else if(parameterType == String.class) {
+				method.invoke(disguise, parameter);
+			} else if(Enum.class.isAssignableFrom(parameterType)) {
+				method.invoke(disguise, Enum.valueOf((Class<? extends Enum>)parameterType, parameter.toUpperCase(Locale.ENGLISH).replace('-', '_')));
+			}
 		}
 		
 	}

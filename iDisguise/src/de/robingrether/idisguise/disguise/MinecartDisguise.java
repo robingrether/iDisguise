@@ -128,18 +128,20 @@ public class MinecartDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + displayedBlock.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; " + displayedBlockData;
+		return super.toString() + "; block=" + displayedBlock.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; block-data=" + displayedBlockData;
 	}
 	
 	static {
-		for(Material material : Material.values()) {
-			if(material.isBlock()) {
-				Subtypes.registerSubtype(MinecartDisguise.class, "setDisplayedBlock", material, material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-			}
-		}
-		for(int i = 0; i < 256; i++) {
-			Subtypes.registerSubtype(MinecartDisguise.class, "setDisplayedBlockData", i, Integer.toString(i));
-		}
+//		for(Material material : Material.values()) {
+//			if(material.isBlock()) {
+//				Subtypes.registerSubtype(MinecartDisguise.class, "setDisplayedBlock", material, material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+//			}
+//		}
+		Subtypes.registerParameterizedSubtype(MinecartDisguise.class, "setDisplayedBlock", "block", Material.class);
+//		for(int i = 0; i < 256; i++) {
+//			Subtypes.registerSubtype(MinecartDisguise.class, "setDisplayedBlockData", i, Integer.toString(i));
+//		}
+		Subtypes.registerParameterizedSubtype(MinecartDisguise.class, "setDisplayedBlockData", "block-data", int.class);
 	}
 	
 }

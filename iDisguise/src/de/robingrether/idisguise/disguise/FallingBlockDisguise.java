@@ -124,6 +124,9 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	 * @param data the block data
 	 */
 	public void setData(int data) {
+		if(data < 0) {
+			throw new IllegalArgumentException("Data must be positive");
+		}
 		this.data = data;
 	}
 	
@@ -165,18 +168,20 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + material.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; " + data + "; " + (onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
+		return super.toString() + "; material=" + material.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; material-data=" + data + "; " + (onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
 	}
 	
 	static {
-		for(Material material : Material.values()) {
-			if(material.isBlock()) {
-				Subtypes.registerSubtype(FallingBlockDisguise.class, "setMaterial", material, material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-			}
-		}
-		for(int i = 0; i < 256; i++) {
-			Subtypes.registerSubtype(FallingBlockDisguise.class, "setData", i, Integer.toString(i));
-		}
+//		for(Material material : Material.values()) {
+//			if(material.isBlock()) {
+//				Subtypes.registerSubtype(FallingBlockDisguise.class, "setMaterial", material, material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+//			}
+//		}
+		Subtypes.registerParameterizedSubtype(FallingBlockDisguise.class, "setMaterial", "material", Material.class);
+//		for(int i = 0; i < 256; i++) {
+//			Subtypes.registerSubtype(FallingBlockDisguise.class, "setData", i, Integer.toString(i));
+//		}
+		Subtypes.registerParameterizedSubtype(FallingBlockDisguise.class, "setData", "material-data", int.class);
 		Subtypes.registerSubtype(FallingBlockDisguise.class, "setOnlyBlockCoordinates", true, "block-coordinates");
 		Subtypes.registerSubtype(FallingBlockDisguise.class, "setOnlyBlockCoordinates", false, "all-coordinates");
 	}

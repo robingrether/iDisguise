@@ -124,6 +124,9 @@ public class ItemDisguise extends ObjectDisguise {
 	 * @param amount the amount
 	 */
 	public void setAmount(int amount) {
+		if(amount < 1 || amount > 64) {
+			throw new IllegalArgumentException("Invalid item stack amount");
+		}
 		itemStack.setAmount(amount);
 	}
 	
@@ -145,21 +148,24 @@ public class ItemDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + itemStack.getType().name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; " + Short.toString(itemStack.getDurability()) + "; " + (itemStack.getAmount() < 2 ? "single" : itemStack.getAmount() < 17 ? "double" : itemStack.getAmount() < 33 ? "triple" : itemStack.getAmount() < 49 ? "quadruple" : "quintuple");
+		return super.toString() + "; material=" + itemStack.getType().name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; material-data=" + itemStack.getDurability() + "; amount=" + itemStack.getAmount();
 	}
 	
 	static {
-		for(Material material : Material.values()) {
-			Subtypes.registerSubtype(ItemDisguise.class, "setMaterial", material, material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-		}
-		for(int i = 0; i < 256; i++) {
-			Subtypes.registerSubtype(ItemDisguise.class, "setData", i, Integer.toString(i));
-		}
-		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 1, "single");
-		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 2, "double");
-		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 17, "triple");
-		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 33, "quadruple");
-		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 49, "quintuple");
+//		for(Material material : Material.values()) {
+//			Subtypes.registerSubtype(ItemDisguise.class, "setMaterial", material, material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+//		}
+		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setMaterial", "material", Material.class);
+//		for(int i = 0; i < 256; i++) {
+//			Subtypes.registerSubtype(ItemDisguise.class, "setData", i, Integer.toString(i));
+//		}
+		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setData", "material-data", int.class);
+//		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 1, "single");
+//		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 2, "double");
+//		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 17, "triple");
+//		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 33, "quadruple");
+//		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 49, "quintuple");
+		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setAmount", "amount", int.class);
 	}
 	
 }
