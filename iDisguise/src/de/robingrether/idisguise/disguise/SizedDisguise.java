@@ -81,7 +81,7 @@ public class SizedDisguise extends MobDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + size + (size == 1 ? " (tiny)" : size == 2 ? " (normal)" : size == 4 ? " (big)" : "");
+		return super.toString() + "; size=" + size;
 	}
 	
 	static {
