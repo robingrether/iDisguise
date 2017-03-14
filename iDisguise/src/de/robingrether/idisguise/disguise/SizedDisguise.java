@@ -52,9 +52,12 @@ public class SizedDisguise extends MobDisguise {
 	 * Sets the size.
 	 * 
 	 * @since 3.0.1
-	 * @param size the size (must not be negative)
+	 * @param size the size (must be between 1 and 100)
 	 */
 	public void setSize(int size) {
+		if(size < 1 || size > 100) {
+			throw new IllegalArgumentException("Invalid size");
+		}
 		this.size = size;
 	}
 	
@@ -85,9 +88,10 @@ public class SizedDisguise extends MobDisguise {
 		Subtypes.registerSubtype(SizedDisguise.class, "setSize", 1, "tiny");
 		Subtypes.registerSubtype(SizedDisguise.class, "setSize", 2, "normal");
 		Subtypes.registerSubtype(SizedDisguise.class, "setSize", 4, "big");
-		for(int i = 1; i <= 100; i++) {
-			Subtypes.registerSubtype(SizedDisguise.class, "setSize", i, Integer.toString(i));
-		}
+//		for(int i = 1; i <= 100; i++) {
+//			Subtypes.registerSubtype(SizedDisguise.class, "setSize", i, Integer.toString(i));
+//		}
+		Subtypes.registerParameterizedSubtype(SizedDisguise.class, "setSize", "size", int.class);
 	}
 	
 }

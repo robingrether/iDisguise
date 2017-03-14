@@ -9,7 +9,7 @@ package de.robingrether.idisguise.disguise;
 public class MobDisguise extends Disguise {
 	
 	private static final long serialVersionUID = 7587147403290078928L;
-	protected String customName = null;
+	protected String customName = "";
 	
 	/**
 	 * Creates an instance.
@@ -37,13 +37,15 @@ public class MobDisguise extends Disguise {
 	
 	/**
 	 * Sets the custom name of this entity.<br>
-	 * The default value is <code>null</code>.
+	 * The default value is <code>""</code>.
 	 * 
 	 * @since 3.0.1
 	 * @param customName the custom name
 	 */
 	public void setCustomName(String customName) {
-		if(customName != null && customName.length() > 64) {
+		if(customName == null) {
+			customName = "";
+		} else if(customName.length() > 64) {
 			customName = customName.substring(0, 64);
 		}
 		this.customName = customName;
@@ -63,6 +65,17 @@ public class MobDisguise extends Disguise {
 	 */
 	public boolean equals(Object object) {
 		return super.equals(object);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toString() {
+		return super.toString() + "; custom-name=" + customName;
+	}
+	
+	static {
+		Subtypes.registerParameterizedSubtype(MobDisguise.class, "setCustomName", "custom-name", String.class);
 	}
 	
 }
