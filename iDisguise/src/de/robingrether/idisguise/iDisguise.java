@@ -72,7 +72,7 @@ public class iDisguise extends JavaPlugin {
 	public iDisguise() { instance = this; }
 	
 	public void onEnable() {
-		if(!VersionHelper.init(false)) {
+		if(!VersionHelper.init(true)) {
 			getLogger().log(Level.SEVERE, String.format("%s is not compatible with your server version!", getFullName()));
 			getServer().getPluginManager().disablePlugin(this);
 			return;
@@ -88,36 +88,34 @@ public class iDisguise extends JavaPlugin {
 		PacketHelper.getInstance().setAttribute(0, configuration.NAME_TAG_SHOWN);
 		PacketHelper.getInstance().setAttribute(1, configuration.MODIFY_PLAYER_LIST_ENTRY);
 		Sounds.setEnabled(configuration.REPLACE_SOUND_EFFECTS);
-		try {
-			metrics = new Metrics(this);
-			metrics.addCustomChart(new Metrics.SingleLineChart("Disguised Players") {
-				
-				public int getValue() {
-					return DisguiseManager.getInstance().getNumberOfDisguisedPlayers();
-				}
-				
-			});
-			metrics.addCustomChart(new Metrics.MultiLineChart("Used Features") {
-				
-				public HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap) {
-					valueMap.put("update checking", configuration.UPDATE_CHECK ? 1 : 0);
-					valueMap.put("realistic sounds", configuration.REPLACE_SOUND_EFFECTS ? 1 : 0);
-					valueMap.put("undisguise permission", configuration.UNDISGUISE_PERMISSION ? 1 : 0);
-					valueMap.put("ghost disguises", configuration.ENABLE_GHOST_DISGUISE ? 1 : 0);
-					valueMap.put("automatic updates", configuration.UPDATE_DOWNLOAD ? 1 : 0);
-					return valueMap;
-				}
-				
-			});
-			metrics.addCustomChart(new Metrics.SimplePie("Storage Type") {
-				
-				public String getValue() {
-					return configuration.KEEP_DISGUISE_SHUTDOWN ? "file" : "none";
-				}
-				
-			});
-		} catch(Exception e) {
-		}
+		metrics = new Metrics(this);
+		metrics.addCustomChart(new Metrics.SingleLineChart("disguisedPlayers") {
+			
+			public int getValue() {
+				return DisguiseManager.getInstance().getNumberOfDisguisedPlayers();
+			}
+			
+		});
+//		# not available so far
+//		metrics.addCustomChart(new Metrics.MultiLineChart("usedFeatures") {
+//			
+//			public HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap) {
+//				valueMap.put("update checking", configuration.UPDATE_CHECK ? 1 : 0);
+//				valueMap.put("realistic sounds", configuration.REPLACE_SOUND_EFFECTS ? 1 : 0);
+//				valueMap.put("undisguise permission", configuration.UNDISGUISE_PERMISSION ? 1 : 0);
+//				valueMap.put("ghost disguises", configuration.ENABLE_GHOST_DISGUISE ? 1 : 0);
+//				valueMap.put("automatic updates", configuration.UPDATE_DOWNLOAD ? 1 : 0);
+//				return valueMap;
+//			}
+//			
+//		});
+		metrics.addCustomChart(new Metrics.SimplePie("storageType") {
+			
+			public String getValue() {
+				return configuration.KEEP_DISGUISE_SHUTDOWN ? "file" : "none";
+			}
+			
+		});
 		if(configuration.KEEP_DISGUISE_SHUTDOWN) {
 			loadData();
 		}
