@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -43,8 +44,6 @@ import de.robingrether.idisguise.disguise.VillagerDisguise;
 import de.robingrether.idisguise.disguise.WolfDisguise;
 import de.robingrether.idisguise.io.Configuration;
 import de.robingrether.idisguise.io.Language;
-import de.robingrether.idisguise.io.Metrics.Graph;
-import de.robingrether.idisguise.io.Metrics.Plotter;
 import de.robingrether.idisguise.io.Metrics;
 import de.robingrether.idisguise.io.SLAPI;
 import de.robingrether.idisguise.io.UpdateCheck;
@@ -91,44 +90,32 @@ public class iDisguise extends JavaPlugin {
 		Sounds.setEnabled(configuration.REPLACE_SOUND_EFFECTS);
 		try {
 			metrics = new Metrics(this);
-			Graph graphDisguiseCount = metrics.createGraph("Disguise Count");
-			graphDisguiseCount.addPlotter(new Plotter("Disguise Count") {
+			metrics.addCustomChart(new Metrics.SingleLineChart("Disguised Players") {
+				
 				public int getValue() {
-					return DisguiseManager.getInstance().getOnlineDisguiseCount();
+					return DisguiseManager.getInstance().getNumberOfDisguisedPlayers();
 				}
+				
 			});
-			Graph graphFeatures = metrics.createGraph("Used Features");
-			graphFeatures.addPlotter(new Plotter("store disguises") {
-				public int getValue() {
-					return configuration.KEEP_DISGUISE_SHUTDOWN ? 1 : 0;
+			metrics.addCustomChart(new Metrics.MultiLineChart("Used Features") {
+				
+				public HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap) {
+					valueMap.put("update checking", configuration.UPDATE_CHECK ? 1 : 0);
+					valueMap.put("realistic sounds", configuration.REPLACE_SOUND_EFFECTS ? 1 : 0);
+					valueMap.put("undisguise permission", configuration.UNDISGUISE_PERMISSION ? 1 : 0);
+					valueMap.put("ghost disguises", configuration.ENABLE_GHOST_DISGUISE ? 1 : 0);
+					valueMap.put("automatic updates", configuration.UPDATE_DOWNLOAD ? 1 : 0);
+					return valueMap;
 				}
+				
 			});
-			graphFeatures.addPlotter(new Plotter("update checking") {
-				public int getValue() {
-					return configuration.UPDATE_CHECK ? 1 : 0;
+			metrics.addCustomChart(new Metrics.SimplePie("Storage Type") {
+				
+				public String getValue() {
+					return configuration.KEEP_DISGUISE_SHUTDOWN ? "file" : "none";
 				}
+				
 			});
-			graphFeatures.addPlotter(new Plotter("realistic sounds") {
-				public int getValue() {
-					return configuration.REPLACE_SOUND_EFFECTS ? 1 : 0;
-				}
-			});
-			graphFeatures.addPlotter(new Plotter("undisguise permission") {
-				public int getValue() {
-					return configuration.UNDISGUISE_PERMISSION ? 1 : 0;
-				}
-			});
-			graphFeatures.addPlotter(new Plotter("ghost disguises") {
-				public int getValue() {
-					return configuration.ENABLE_GHOST_DISGUISE ? 1 : 0;
-				}
-			});
-			graphFeatures.addPlotter(new Plotter("automatic updates") {
-				public int getValue() {
-					return configuration.UPDATE_DOWNLOAD ? 1 : 0;
-				}
-			});
-			metrics.start();
 		} catch(Exception e) {
 		}
 		if(configuration.KEEP_DISGUISE_SHUTDOWN) {
@@ -880,7 +867,11 @@ public class iDisguise extends JavaPlugin {
 			}
 			
 			public int getOnlineDisguiseCount() {
-				return DisguiseManager.getInstance().getOnlineDisguiseCount();
+				return getNumberOfDisguisedPlayers();
+			}
+			
+			public int getNumberOfDisguisedPlayers() {
+				return DisguiseManager.getInstance().getNumberOfDisguisedPlayers();
 			}
 			
 			public Sounds getSoundsForEntity(DisguiseType type) {

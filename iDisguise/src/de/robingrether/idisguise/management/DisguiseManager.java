@@ -125,14 +125,14 @@ public class DisguiseManager {
 		return disguiseMap.getDisguise(offlinePlayer);
 	}
 	
-	public int getOnlineDisguiseCount() {
-		int count = 0;
+	public int getNumberOfDisguisedPlayers() {
+		int i = 0;
 		for(Player player : Reflection.getOnlinePlayers()) {
 			if(isDisguised(player)) {
-				count++;
+				i++;
 			}
 		}
-		return count;
+		return i;
 	}
 	
 	public Set<OfflinePlayer> getDisguisedPlayers() {

@@ -145,10 +145,20 @@ public interface DisguiseAPI {
 	/**
 	 * Counts the amount of online players who are disguised.
 	 * 
+	 * @deprecated replaced by <code>getNumberOfDisguisedPlayers()</code>
 	 * @since 2.1.3
 	 * @return the counted amount
 	 */
+	@Deprecated
 	public int getOnlineDisguiseCount();
+	
+	/**
+	 * Gets the number of <strong>online</strong> players who are disguised.
+	 * 
+	 * @since 5.6.1
+	 * @return the number of online players who are disguised
+	 */
+	public int getNumberOfDisguisedPlayers();
 	
 	/**
 	 * Gets the {@link Sounds} for a specific entity type.
