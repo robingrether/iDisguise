@@ -208,6 +208,7 @@ public class PacketHelper {
 				Entity_setEntityId.invoke(entity, player.getEntityId());
 				if(attributes[0]) {
 					EntityInsentient_setCustomName.invoke(entity, player.getName());
+					EntityInsentient_setCustomNameVisible.invoke(entity, true);
 				}
 				packets.add(PacketPlayOutSpawnEntityLiving_new.newInstance(entity));
 			} else if(disguise instanceof PlayerDisguise) {
@@ -225,6 +226,10 @@ public class PacketHelper {
 				if(VersionHelper.require1_8()) {
 					if(attributes[0]) {
 						EntityInsentient_setCustomName.invoke(entity, player.getName());
+						EntityInsentient_setCustomNameVisible.invoke(entity, true);
+					} else if(objectDisguise.getCustomName() != null && !objectDisguise.getCustomName().isEmpty()) {
+						EntityInsentient_setCustomName.invoke(entity, objectDisguise.getCustomName());
+						EntityInsentient_setCustomNameVisible.invoke(entity, true);
 					}
 				}
 				if(EntityFallingBlock.isInstance(entity)) {

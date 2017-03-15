@@ -10,6 +10,7 @@ public class ObjectDisguise extends Disguise {
 	
 	private static final long serialVersionUID = 7999903708957650848L;
 	private final int typeId;
+	protected String customName = "";
 	
 	/**
 	 * Creates an instance.
@@ -27,17 +28,53 @@ public class ObjectDisguise extends Disguise {
 	}
 	
 	/**
+	 * Gets the custom name of this entity.<br>
+	 * The default value is <code>""</code>.
+	 * 
+	 * @since 5.6.1
+	 * @return the custom name
+	 */
+	public String getCustomName() {
+		return customName;
+	}
+	
+	/**
+	 * Sets the custom name of this entity.<br>
+	 * The default value is <code>""</code>.
+	 * 
+	 * @since 5.6.1
+	 * @param customName the custom name
+	 */
+	public void setCustomName(String customName) {
+		if(customName == null) {
+			customName = "";
+		} else if(customName.length() > 64) {
+			customName = customName.substring(0, 64);
+		}
+		this.customName = customName;
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public ObjectDisguise clone() {
-		return new ObjectDisguise(type);
+		ObjectDisguise clone = new ObjectDisguise(type);
+		clone.setCustomName(customName);
+		return clone;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object);
+		return super.equals(object) && ((ObjectDisguise)object).customName.equals(customName);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toString() {
+		return super.toString() + "; custom-name=" + customName;
 	}
 	
 	/**
@@ -80,6 +117,10 @@ public class ObjectDisguise extends Disguise {
 			default:
 				return 0;
 		}
+	}
+	
+	static {
+		Subtypes.registerParameterizedSubtype(ObjectDisguise.class, "setCustomName", "custom-name", String.class);
 	}
 	
 }

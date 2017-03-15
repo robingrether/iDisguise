@@ -154,7 +154,9 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public FallingBlockDisguise clone() {
-		return new FallingBlockDisguise(material, data, onlyBlockCoordinates);
+		FallingBlockDisguise clone = new FallingBlockDisguise(material, data, onlyBlockCoordinates);
+		clone.setCustomName(customName);
+		return clone;
 	}
 	
 	/**

@@ -26,7 +26,7 @@ public class MobDisguise extends Disguise {
 	
 	/**
 	 * Gets the custom name of this entity.<br>
-	 * The default value is <code>null</code>.
+	 * The default value is <code>""</code>.
 	 * 
 	 * @since 3.0.1
 	 * @return the custom name
@@ -64,7 +64,7 @@ public class MobDisguise extends Disguise {
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object object) {
-		return super.equals(object);
+		return super.equals(object) && ((MobDisguise)object).customName.equals(customName);
 	}
 	
 	/**

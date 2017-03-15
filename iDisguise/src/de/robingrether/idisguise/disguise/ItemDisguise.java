@@ -134,7 +134,9 @@ public class ItemDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public ItemDisguise clone() {
-		return new ItemDisguise(itemStack.clone());
+		ItemDisguise clone = new ItemDisguise(itemStack.clone());
+		clone.setCustomName(customName);
+		return clone;
 	}
 	
 	/**

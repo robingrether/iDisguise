@@ -114,7 +114,9 @@ public class MinecartDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public MinecartDisguise clone() {
-		return new MinecartDisguise(displayedBlock, displayedBlockData);
+		MinecartDisguise clone = new MinecartDisguise(displayedBlock, displayedBlockData);
+		clone.setCustomName(customName);
+		return clone;
 	}
 	
 	/**

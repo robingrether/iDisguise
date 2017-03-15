@@ -55,7 +55,9 @@ public class ArmorStandDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public ArmorStandDisguise clone() {
-		return new ArmorStandDisguise(showArms);
+		ArmorStandDisguise clone = new ArmorStandDisguise(showArms);
+		clone.setCustomName(customName);
+		return clone;
 	}
 	
 	/**
