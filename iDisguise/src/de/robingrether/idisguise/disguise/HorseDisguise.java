@@ -90,8 +90,8 @@ public class HorseDisguise extends AgeableDisguise {
 			case HORSE: return 0;
 			case DONKEY: return 1;
 			case MULE: return 2;
-			case SKELETAL_HORSE: return 3;
-			case UNDEAD_HORSE: return 4;
+			case UNDEAD_HORSE: return 3;
+			case SKELETAL_HORSE: return 4;
 			default: return -1;
 		}
 	}
