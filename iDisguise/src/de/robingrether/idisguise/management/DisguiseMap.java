@@ -6,7 +6,6 @@ import java.util.Set;
 import org.bukkit.OfflinePlayer;
 
 import de.robingrether.idisguise.disguise.Disguise;
-import de.robingrether.idisguise.management.disguise.DisguiseMapName;
 import de.robingrether.idisguise.management.disguise.DisguiseMapUID;
 
 public abstract class DisguiseMap {
@@ -24,19 +23,11 @@ public abstract class DisguiseMap {
 	public abstract Disguise removeDisguise(OfflinePlayer offlinePlayer);
 	
 	public static DisguiseMap emptyMap() {
-		if(VersionHelper.useGameProfiles()) {
-			return new DisguiseMapUID(null);
-		} else {
-			return new DisguiseMapName(null);
-		}
+		return new DisguiseMapUID(null);
 	}
 	
 	public static DisguiseMap fromMap(Map<?, Disguise> map) {
-		if(VersionHelper.useGameProfiles()) {
-			return new DisguiseMapUID(map);
-		} else {
-			return new DisguiseMapName(map);
-		}
+		return new DisguiseMapUID(map);
 	}
 	
 }
