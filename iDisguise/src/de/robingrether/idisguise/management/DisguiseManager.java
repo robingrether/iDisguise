@@ -1,7 +1,6 @@
 package de.robingrether.idisguise.management;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -28,7 +27,7 @@ public class DisguiseManager {
 		DisguiseManager.instance = instance;
 	}
 	
-	protected DisguiseMap disguiseMap = DisguiseMap.emptyMap();
+	protected DisguiseMap disguiseMap = new DisguiseMap();
 	
 	public synchronized void disguise(final OfflinePlayer offlinePlayer, final Disguise disguise) {
 		if(disguise instanceof PlayerDisguise && !PlayerHelper.getInstance().isGameProfileLoaded(((PlayerDisguise)disguise).getSkinName())) {
@@ -145,14 +144,6 @@ public class DisguiseManager {
 		} catch(Exception e) {
 		}
 		return destination;
-	}
-	
-	public Map<?, Disguise> getDisguises() {
-		return disguiseMap.getMap();
-	}
-	
-	public void updateDisguises(Map<?, Disguise> map) {
-		disguiseMap = DisguiseMap.fromMap(map);
 	}
 	
 	public void resendPackets(Player player) {

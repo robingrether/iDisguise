@@ -746,7 +746,7 @@ public class iDisguise extends JavaPlugin {
 	}
 	
 	private void loadData() {
-		File dataFile = new File(getDataFolder(), "disguises.dat");
+		/*File dataFile = new File(getDataFolder(), "disguises.dat");
 		File oldDataFile = new File(getDataFolder(), "data.bin");
 		if(dataFile.exists()) {
 			DisguiseManager.getInstance().updateDisguises(SLAPI.loadMap(dataFile));
@@ -756,12 +756,14 @@ public class iDisguise extends JavaPlugin {
 				DisguiseManager.getInstance().updateDisguises((Map<?, Disguise>)map);
 			}
 			oldDataFile.delete();
-		}
+		}*/
+		// TODO: load Data
 	}
 	
 	private void saveData() {
-		File dataFile = new File(getDataFolder(), "disguises.dat");
-		SLAPI.saveMap(DisguiseManager.getInstance().getDisguises(), dataFile);
+		/*File dataFile = new File(getDataFolder(), "disguises.dat");
+		SLAPI.saveMap(DisguiseManager.getInstance().getDisguises(), dataFile);*/
+		// TODO: save Data
 	}
 	
 	public DisguiseAPI getAPI() {
