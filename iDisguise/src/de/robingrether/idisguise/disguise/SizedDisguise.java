@@ -64,22 +64,6 @@ public class SizedDisguise extends MobDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public SizedDisguise clone() {
-		SizedDisguise clone = new SizedDisguise(type, size);
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((SizedDisguise)object).size == size;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; size=" + size;
 	}

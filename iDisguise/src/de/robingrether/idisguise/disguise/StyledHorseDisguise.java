@@ -65,22 +65,6 @@ public class StyledHorseDisguise extends HorseDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public StyledHorseDisguise clone() {
-		StyledHorseDisguise clone = new StyledHorseDisguise(adult, style, color, isSaddled(), getArmor());
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((StyledHorseDisguise)object).style.equals(style) && ((StyledHorseDisguise)object).color.equals(color);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; " + style.name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings") + "; " + color.name().toLowerCase(Locale.ENGLISH).replace('_', '-');
 	}

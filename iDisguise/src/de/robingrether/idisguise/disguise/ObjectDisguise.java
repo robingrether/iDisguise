@@ -57,22 +57,6 @@ public class ObjectDisguise extends Disguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public ObjectDisguise clone() {
-		ObjectDisguise clone = new ObjectDisguise(type);
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((ObjectDisguise)object).customName.equals(customName);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; custom-name=" + customName;
 	}

@@ -54,22 +54,6 @@ public class ArmorStandDisguise extends ObjectDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public ArmorStandDisguise clone() {
-		ArmorStandDisguise clone = new ArmorStandDisguise(showArms);
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((ArmorStandDisguise)object).showArms == showArms;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; " + (showArms ? "show-arms" : "hide-arms");
 	}

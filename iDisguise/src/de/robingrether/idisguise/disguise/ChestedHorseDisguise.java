@@ -58,22 +58,6 @@ public class ChestedHorseDisguise extends HorseDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public ChestedHorseDisguise clone() {
-		ChestedHorseDisguise clone = new ChestedHorseDisguise(type, adult, hasChest, isSaddled(), getArmor());
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((ChestedHorseDisguise)object).hasChest == hasChest;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; " + (hasChest ? "chest" : "no-chest");
 	}

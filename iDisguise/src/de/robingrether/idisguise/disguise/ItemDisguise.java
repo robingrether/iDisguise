@@ -133,22 +133,6 @@ public class ItemDisguise extends ObjectDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public ItemDisguise clone() {
-		ItemDisguise clone = new ItemDisguise(itemStack.clone());
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((ItemDisguise)object).itemStack.equals(itemStack);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; material=" + itemStack.getType().name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; material-data=" + itemStack.getDurability() + "; amount=" + itemStack.getAmount();
 	}

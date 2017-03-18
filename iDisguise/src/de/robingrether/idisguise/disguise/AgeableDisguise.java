@@ -56,22 +56,6 @@ public class AgeableDisguise extends MobDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public AgeableDisguise clone() {
-		AgeableDisguise clone = new AgeableDisguise(type, adult);
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((AgeableDisguise)object).adult == adult;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; " + (adult ? "adult" : "baby");
 	}

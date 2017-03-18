@@ -59,22 +59,6 @@ public class OcelotDisguise extends AgeableDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public OcelotDisguise clone() {
-		OcelotDisguise clone = new OcelotDisguise(catType, adult);
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((OcelotDisguise)object).catType.equals(catType);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; " + catType.name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", "");
 	}

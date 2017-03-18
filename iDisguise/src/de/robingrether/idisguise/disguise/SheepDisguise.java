@@ -59,22 +59,6 @@ public class SheepDisguise extends AgeableDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public SheepDisguise clone() {
-		SheepDisguise clone = new SheepDisguise(adult, color);
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((SheepDisguise)object).color.equals(color);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; " + color.name().toLowerCase(Locale.ENGLISH).replace('_', '-');
 	}

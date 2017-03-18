@@ -52,22 +52,6 @@ public class ZombieVillagerDisguise extends AgeableDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public ZombieVillagerDisguise clone() {
-		ZombieVillagerDisguise clone = new ZombieVillagerDisguise(adult, profession);
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((ZombieVillagerDisguise)object).profession.equals(profession);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; " + profession.name().toLowerCase(Locale.ENGLISH);
 	}

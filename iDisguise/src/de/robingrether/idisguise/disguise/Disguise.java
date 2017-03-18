@@ -38,7 +38,9 @@ public abstract class Disguise implements Serializable, Cloneable {
 	 * @since 3.0.1
 	 * @return a clone of this instance
 	 */
-	public abstract Disguise clone();
+	public final Disguise clone() {
+		return fromString(toString());
+	}
 	
 	/**
 	 * Indicates whether some other object is "equal to" this one.
@@ -46,8 +48,12 @@ public abstract class Disguise implements Serializable, Cloneable {
 	 * @since 3.0.1
 	 * @return <code>true</code> if this object is the same as the <code>object</code> argument; <code>false</code> otherwise
 	 */
-	public boolean equals(Object object) {
-		return object != null && object.getClass().equals(getClass()) && ((Disguise)object).getType().equals(type);
+	public final boolean equals(Object object) {
+		return object != null && object.getClass().equals(getClass()) && toString().equals(object.toString());
+	}
+	
+	public final int hashCode() {
+		return toString().hashCode();
 	}
 	
 	/**
@@ -72,7 +78,7 @@ public abstract class Disguise implements Serializable, Cloneable {
 		String[] args = string.split("; ");
 		DisguiseType type = DisguiseType.Matcher.match(args[0]);
 		if(type == null) {
-			if(StringUtil.equals(args[0], "player", "ghost")) {
+			if(StringUtil.equals(args[0], "player", "ghost") && args.length == 3) {
 				return new PlayerDisguise(args[1], args[2], args[0].equals("ghost"));
 			}
 		} else {

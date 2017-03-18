@@ -116,20 +116,6 @@ public class PlayerDisguise extends Disguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public PlayerDisguise clone() {
-		return new PlayerDisguise(new String(skinName), isGhost());
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((PlayerDisguise)object).skinName.equalsIgnoreCase(skinName) && ((PlayerDisguise)object).displayName.equals(displayName);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return String.format("%s; %s; %s", super.toString(), skinName, displayName);
 	}

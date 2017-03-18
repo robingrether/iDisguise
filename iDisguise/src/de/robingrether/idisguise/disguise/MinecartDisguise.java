@@ -113,22 +113,6 @@ public class MinecartDisguise extends ObjectDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public MinecartDisguise clone() {
-		MinecartDisguise clone = new MinecartDisguise(displayedBlock, displayedBlockData);
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((MinecartDisguise)object).displayedBlock.equals(displayedBlock) && ((MinecartDisguise)object).displayedBlockData == displayedBlockData;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; block=" + displayedBlock.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; block-data=" + displayedBlockData;
 	}

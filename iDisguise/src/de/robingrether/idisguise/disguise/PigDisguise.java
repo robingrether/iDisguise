@@ -55,22 +55,6 @@ public class PigDisguise extends AgeableDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public PigDisguise clone() {
-		PigDisguise clone = new PigDisguise(adult, saddled);
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((PigDisguise)object).saddled == saddled;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; " + (saddled ? "saddled" : "not-saddled");
 	}

@@ -67,22 +67,6 @@ public class RabbitDisguise extends AgeableDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public RabbitDisguise clone() {
-		RabbitDisguise clone = new RabbitDisguise(adult, rabbitType);
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((RabbitDisguise)object).rabbitType.equals(rabbitType);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; " + rabbitType.name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer");
 	}

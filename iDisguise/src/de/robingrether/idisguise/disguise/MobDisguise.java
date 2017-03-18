@@ -54,22 +54,6 @@ public class MobDisguise extends Disguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public MobDisguise clone() {
-		MobDisguise clone = new MobDisguise(type);
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((MobDisguise)object).customName.equals(customName);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; custom-name=" + customName;
 	}

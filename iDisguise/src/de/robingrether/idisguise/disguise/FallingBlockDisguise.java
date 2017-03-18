@@ -153,22 +153,6 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public FallingBlockDisguise clone() {
-		FallingBlockDisguise clone = new FallingBlockDisguise(material, data, onlyBlockCoordinates);
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((FallingBlockDisguise)object).material.equals(material) && ((FallingBlockDisguise)object).data == data && ((FallingBlockDisguise)object).onlyBlockCoordinates == onlyBlockCoordinates;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; material=" + material.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; material-data=" + data + "; " + (onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
 	}

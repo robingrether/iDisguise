@@ -109,22 +109,6 @@ public class EndermanDisguise extends MobDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public EndermanDisguise clone() {
-		EndermanDisguise clone = new EndermanDisguise(blockInHand, blockInHandData);
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((EndermanDisguise)object).blockInHand.equals(blockInHand) && ((EndermanDisguise)object).blockInHandData == blockInHandData;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; block=" + blockInHand.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; block-data=" + blockInHandData;
 	}

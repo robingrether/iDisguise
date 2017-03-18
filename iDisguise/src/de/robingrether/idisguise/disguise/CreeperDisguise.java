@@ -54,22 +54,6 @@ public class CreeperDisguise extends MobDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public CreeperDisguise clone() {
-		CreeperDisguise clone = new CreeperDisguise(powered);
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((CreeperDisguise)object).powered == powered;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; " + (powered ? "powered" : "not-powered");
 	}

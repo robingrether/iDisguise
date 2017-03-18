@@ -49,22 +49,6 @@ public class VillagerDisguise extends AgeableDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public VillagerDisguise clone() {
-		VillagerDisguise clone = new VillagerDisguise(adult, profession);
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((VillagerDisguise)object).profession.equals(profession);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; " + profession.name().toLowerCase(Locale.ENGLISH);
 	}

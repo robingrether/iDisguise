@@ -99,22 +99,6 @@ public class LlamaDisguise extends AgeableDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public LlamaDisguise clone() {
-		LlamaDisguise clone = new LlamaDisguise(adult, color, saddle, hasChest);
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((LlamaDisguise)object).color.equals(color) && ((LlamaDisguise)object).saddle.equals(saddle) && ((LlamaDisguise)object).hasChest == hasChest;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; " + color.name().toLowerCase(Locale.ENGLISH) + "; " + saddle.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; " + (hasChest ? "chest" : "no-chest");
 	}

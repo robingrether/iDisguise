@@ -107,22 +107,6 @@ public class WolfDisguise extends AgeableDisguise {
 	/**
 	 * {@inheritDoc}
 	 */
-	public WolfDisguise clone() {
-		WolfDisguise clone = new WolfDisguise(adult, collarColor, tamed, angry);
-		clone.setCustomName(customName);
-		return clone;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object object) {
-		return super.equals(object) && ((WolfDisguise)object).collarColor.equals(collarColor) && ((WolfDisguise)object).angry == angry && ((WolfDisguise)object).tamed == tamed;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return super.toString() + "; " + collarColor.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; " + (tamed ? "tamed" : "not-tamed") + "; " + (angry ? "angry" : "not-angry");
 	}
