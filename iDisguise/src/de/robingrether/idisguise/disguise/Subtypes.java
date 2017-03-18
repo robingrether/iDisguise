@@ -11,6 +11,8 @@ import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
+import org.bukkit.ChatColor;
+
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.management.VersionHelper;
 
@@ -126,7 +128,7 @@ public class Subtypes {
 	 * @return <code>true</code>, if and only if a matching subtype has been found <strong>AND</strong> successfully applied
 	 */
 	public static boolean applySubtype(Disguise disguise, String argument) {
-		if(argument.contains(";") || argument.contains(" ")) return false;
+		if(argument.contains(";")) return false;
 		Class<?> clazz = disguise.getClass();
 		List<Class<? extends Disguise>> classes = new ArrayList<Class<? extends Disguise>>();
 		while(clazz != Object.class) {
@@ -134,7 +136,7 @@ public class Subtypes {
 			clazz = clazz.getSuperclass();
 		}
 		if(argument.contains("=")) {
-			String parameter = argument.substring(argument.indexOf("=") + 1);
+			String parameter = ChatColor.translateAlternateColorCodes('&', argument.substring(argument.indexOf("=") + 1).replace("\\s", " "));
 			argument = argument.substring(0, argument.indexOf("="));
 			for(Class<? extends Disguise> disguiseClass : classes) {
 				Map<String, ParameterizedSubtype> registeredSubtypes = registeredClasses2.get(disguiseClass);
