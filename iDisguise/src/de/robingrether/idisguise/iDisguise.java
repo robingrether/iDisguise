@@ -55,6 +55,8 @@ import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.Reflection;
 import de.robingrether.idisguise.management.Sounds;
 import de.robingrether.idisguise.management.VersionHelper;
+import de.robingrether.idisguise.management.storage.FileStorage;
+import de.robingrether.idisguise.management.storage.Storage;
 import de.robingrether.util.RandomUtil;
 import de.robingrether.util.StringUtil;
 import de.robingrether.util.Validate;
@@ -758,12 +760,15 @@ public class iDisguise extends JavaPlugin {
 			oldDataFile.delete();
 		}*/
 		// TODO: load Data
+		Storage.setInstance(new FileStorage(getDataFolder()));
+		Storage.getInstance().enable();
 	}
 	
 	private void saveData() {
 		/*File dataFile = new File(getDataFolder(), "disguises.dat");
 		SLAPI.saveMap(DisguiseManager.getInstance().getDisguises(), dataFile);*/
 		// TODO: save Data
+		Storage.getInstance().disable();
 	}
 	
 	public DisguiseAPI getAPI() {

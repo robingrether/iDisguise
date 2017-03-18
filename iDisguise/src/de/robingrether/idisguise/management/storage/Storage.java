@@ -6,7 +6,7 @@ import de.robingrether.idisguise.disguise.Disguise;
 
 public class Storage {
 	
-	private static Storage instance;
+	private static Storage instance = new Storage();
 	
 	public static Storage getInstance() {
 		return instance;
