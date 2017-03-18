@@ -101,7 +101,7 @@ public class Subtypes {
 	 * @param disguiseClass the disguise class
 	 * @param methodName the method to call
 	 * @param argument the command argument to bind this to
-	 * @param parameterType the parameter type to pass to the method (int.class, String.class and enum classes are supported)
+	 * @param parameterType the parameter type to pass to the method (<code>int.class</code>, <code>String.class</code>, <code>String[].class</code> and enum classes are supported)
 	 */
 	public static void registerParameterizedSubtype(Class<? extends Disguise> disguiseClass, String methodName, String argument, Class<?> parameterType) {
 		if(!registeredClasses2.containsKey(disguiseClass)) {
@@ -128,7 +128,7 @@ public class Subtypes {
 	public static boolean applySubtype(Disguise disguise, String argument) {
 		Class<?> clazz = disguise.getClass();
 		List<Class<? extends Disguise>> classes = new ArrayList<Class<? extends Disguise>>();
-		while(clazz != Disguise.class) {
+		while(clazz != Object.class) {
 			classes.add((Class<? extends Disguise>)clazz);
 			clazz = clazz.getSuperclass();
 		}
@@ -178,7 +178,7 @@ public class Subtypes {
 	public static List<String> listSubtypeArguments(Disguise disguise) {
 		Class<?> clazz = disguise.getClass();
 		Stack<Class<? extends Disguise>> classes = new Stack<Class<? extends Disguise>>();
-		while(clazz != Disguise.class) {
+		while(clazz != Object.class) {
 			classes.add((Class<? extends Disguise>)clazz);
 			clazz = clazz.getSuperclass();
 		}
@@ -238,6 +238,8 @@ public class Subtypes {
 				method.invoke(disguise, Integer.parseInt(parameter));
 			} else if(parameterType == String.class) {
 				method.invoke(disguise, parameter);
+			} else if(parameterType == String[].class) {
+				method.invoke(disguise, (Object)parameter.split(","));
 			} else if(Enum.class.isAssignableFrom(parameterType)) {
 				method.invoke(disguise, Enum.valueOf((Class<? extends Enum>)parameterType, parameter.toUpperCase(Locale.ENGLISH).replace('-', '_')));
 			}
