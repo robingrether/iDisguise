@@ -126,6 +126,7 @@ public class Subtypes {
 	 * @return <code>true</code>, if and only if a matching subtype has been found <strong>AND</strong> successfully applied
 	 */
 	public static boolean applySubtype(Disguise disguise, String argument) {
+		if(argument.contains(";") || argument.contains(" ")) return false;
 		Class<?> clazz = disguise.getClass();
 		List<Class<? extends Disguise>> classes = new ArrayList<Class<? extends Disguise>>();
 		while(clazz != Object.class) {
