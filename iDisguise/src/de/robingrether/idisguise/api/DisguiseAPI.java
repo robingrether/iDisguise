@@ -207,7 +207,8 @@ public interface DisguiseAPI {
 	public void setSoundsEnabled(boolean enabled);
 	
 	/**
-	 * Indicates whether a given player has the required permissions to disguise as the given disguise type.
+	 * Indicates whether a given player has the required permissions to disguise as the given disguise type.<br>
+	 * This function will always return <code>false</code> for <code>DisguiseType.PLAYER</code> and <code>DisguiseType.GHOST</code>.
 	 * 
 	 * @since 5.5.4
 	 * @param player the player

@@ -618,11 +618,127 @@ public class iDisguise extends JavaPlugin {
 		String color = ChatColor.getLastColors(language.HELP_TYPES);
 		for(DisguiseType type : DisguiseType.values()) {
 			if(!type.isPlayer()) {
-				builder.append((type.isAvailable() && hasPermission(sender, type.newInstance()) ? "" : ChatColor.STRIKETHROUGH) + type.getDefaultCommandArgument());
-				builder.append(color + ", ");
+				String format = !type.isAvailable() ? language.HELP_TYPES_NOT_SUPPORTED : hasPermission(sender, type) ? language.HELP_TYPES_AVAILABLE : language.HELP_TYPES_NO_PERMISSION;
+				if(format.contains("%type%")) {	
+					builder.append(format.replace("%type%", type.getDefaultCommandArgument()));
+					builder.append(color + ", ");
+				}
 			}
 		}
 		sender.sendMessage(language.HELP_TYPES.replace("%types%", builder.substring(0, builder.length() - 2)));
+	}
+	
+	private boolean hasPermission(CommandSender sender, DisguiseType type) {
+		switch(type) {
+			case BAT:
+				return sender.hasPermission("iDisguise.mob.bat");
+			case BLAZE:
+				return sender.hasPermission("iDisguise.mob.blaze");
+			case CAVE_SPIDER:
+				return sender.hasPermission("iDisguise.mob.cave_spider");
+			case CHICKEN:
+				return sender.hasPermission("iDisguise.mob.chicken");
+			case COW:
+				return sender.hasPermission("iDisguise.mob.cow");
+			case CREEPER:
+				return sender.hasPermission("iDisguise.mob.creeper");
+			case DONKEY:
+				return sender.hasPermission("iDisguise.mob.donkey");
+			case ELDER_GUARDIAN:
+				return sender.hasPermission("iDisguise.mob.elder_guardian");
+			case ENDER_DRAGON:
+				return sender.hasPermission("iDisguise.mob.ender_dragon");
+			case ENDERMAN:
+				return sender.hasPermission("iDisguise.mob.enderman");
+			case ENDERMITE:
+				return sender.hasPermission("iDisguise.mob.endermite");
+			case EVOKER:
+				return sender.hasPermission("iDisguise.mob.evoker");
+			case GHAST:
+				return sender.hasPermission("iDisguise.mob.ghast");
+			case GIANT:
+				return sender.hasPermission("iDisguise.mob.giant");
+			case GUARDIAN:
+				return sender.hasPermission("iDisguise.mob.guardian");
+			case HORSE:
+				return sender.hasPermission("iDisguise.mob.horse");
+			case HUSK:
+				return sender.hasPermission("iDisguise.mob.husk");
+			case IRON_GOLEM:
+				return sender.hasPermission("iDisguise.mob.iron_golem");
+			case LLAMA:
+				return sender.hasPermission("iDisguise.mob.llama");
+			case MAGMA_CUBE:
+				return sender.hasPermission("iDisguise.mob.magma_cube");
+			case MULE:
+				return sender.hasPermission("iDisguise.mob.mule");
+			case MUSHROOM_COW:
+				return sender.hasPermission("iDisguise.mob.mushroom_cow");
+			case OCELOT:
+				return sender.hasPermission("iDisguise.mob.ocelot");
+			case PIG:
+				return sender.hasPermission("iDisguise.mob.pig");
+			case PIG_ZOMBIE:
+				return sender.hasPermission("iDisguise.mob.pig_zombie");
+			case POLAR_BEAR:
+				return sender.hasPermission("iDisguise.mob.polar_bear");
+			case RABBIT:
+				return sender.hasPermission("iDisguise.mob.rabbit");
+			case SHEEP:
+				return sender.hasPermission("iDisguise.mob.sheep");
+			case SHULKER:
+				return sender.hasPermission("iDisguise.mob.shulker");
+			case SILVERFISH:
+				return sender.hasPermission("iDisguise.mob.silverfish");
+			case SKELETAL_HORSE:
+				return sender.hasPermission("iDisguise.mob.skeletal_horse");
+			case SKELETON:
+				return sender.hasPermission("iDisguise.mob.skeleton");
+			case SLIME:
+				return sender.hasPermission("iDisguise.mob.slime");
+			case SNOWMAN:
+				return sender.hasPermission("iDisguise.mob.snowman");
+			case SPIDER:
+				return sender.hasPermission("iDisguise.mob.spider");
+			case SQUID:
+				return sender.hasPermission("iDisguise.mob.squid");
+			case STRAY:
+				return sender.hasPermission("iDisguise.mob.stray");
+			case UNDEAD_HORSE:
+				return sender.hasPermission("iDisguise.mob.undead_horse");
+			case VEX:
+				return sender.hasPermission("iDisguise.mob.vex");
+			case VILLAGER:
+				return sender.hasPermission("iDisguise.mob.villager");
+			case VINDICATOR:
+				return sender.hasPermission("iDisguise.mob.vindicator");
+			case WITCH:
+				return sender.hasPermission("iDisguise.mob.witch");
+			case WITHER:
+				return sender.hasPermission("iDisguise.mob.wither");
+			case WITHER_SKELETON:
+				return sender.hasPermission("iDisguise.mob.wither_skeleton");
+			case WOLF:
+				return sender.hasPermission("iDisguise.mob.wolf");
+			case ZOMBIE:
+				return sender.hasPermission("iDisguise.mob.zombie");
+			case ZOMBIE_VILLAGER:
+				return sender.hasPermission("iDisguise.mob.zombie_villager");
+			case ARMOR_STAND:
+				return sender.hasPermission("iDisguise.object.armor_stand");
+			case BOAT:
+				return sender.hasPermission("iDisguise.object.boat");
+			case ENDER_CRYSTAL:
+				return sender.hasPermission("iDisguise.object.ender_crystal");
+			case FALLING_BLOCK:
+				return sender.hasPermission("iDisguise.object.falling_block");
+			case ITEM:
+				return sender.hasPermission("iDisguise.object.item");
+			case MINECART:
+				return sender.hasPermission("iDisguise.object.minecart");
+			default:
+				return false;
+		}
 	}
 	
 	private boolean hasPermission(CommandSender sender, Disguise disguise) {
@@ -899,7 +1015,7 @@ public class iDisguise extends JavaPlugin {
 			}
 			
 			public boolean hasPermission(Player player, DisguiseType type) {
-				return hasPermission(player, type.newInstance());
+				return hasPermission(player, type);
 			}
 			
 			public boolean hasPermission(Player player, Disguise disguise) {

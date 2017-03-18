@@ -42,6 +42,9 @@ public class Language {
 	public String HELP_INFO = ChatColor.GREEN + "%name% %version% - Help";
 	public String HELP_BASE = ChatColor.GOLD + (ChatColor.ITALIC + " %command% " + ChatColor.GOLD + "- %description%");
 	public String HELP_TYPES = ChatColor.GRAY + "Types: %types%";
+	public String HELP_TYPES_AVAILABLE = "%type%";
+	public String HELP_TYPES_NOT_SUPPORTED = ChatColor.STRIKETHROUGH + "%type%";
+	public String HELP_TYPES_NO_PERMISSION = ChatColor.STRIKETHROUGH + "%type%";
 	public String HELP_HELP = "Shows this message";
 	public String HELP_PLAYER_SELF = "Disguise yourself as a player";
 	public String HELP_PLAYER_OTHER = "Disguise a player as a player";
