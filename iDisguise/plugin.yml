@@ -25,6 +25,7 @@ permissions:
          iDisguise.player.name.*: true
          iDisguise.random: true
          iDisguise.undisguise: true
+         iDisguise.visibility.*: true
    iDisguise.admin:
       default: false
       children:
@@ -423,4 +424,13 @@ permissions:
    iDisguise.undisguise.others:
       default: false
    iDisguise.update:
+      default: false
+   iDisguise.visibility.*:
+      default: false
+      children:
+         iDisguise.visibility.list: true
+         iDisguise.visibility.permission: true
+   iDisguise.visibility.list:
+      default: false
+   iDisguise.visibility.permission:
       default: false

@@ -123,6 +123,17 @@ public interface DisguiseAPI {
 	public boolean isDisguised(OfflinePlayer player);
 	
 	/**
+	 * Check whether a player is disguised <strong>and</strong> the disguise is visible to a given observer.<br>
+	 * Calling this function is similar to: <code>api.isDisguised(player) && api.getDisguise(player).isVisibleTo(observer)</code>
+	 * 
+	 * @since 5.6.1
+	 * @param player the player (or offline player) to check
+	 * @param observer the observing player
+	 * @return <code>true</true>, if and only if the player is disguised <strong>and</strong> the disguise is visible to the observer
+	 */
+	public boolean isDisguisedTo(OfflinePlayer player, Player observer);
+	
+	/**
 	 * Gets a copy of a player's disguise.
 	 * 
 	 * @deprecated replaced by <code>getDisguise(OfflinePlayer)</code>

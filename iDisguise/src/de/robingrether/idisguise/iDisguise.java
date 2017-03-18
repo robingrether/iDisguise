@@ -28,6 +28,7 @@ import de.robingrether.idisguise.api.UndisguiseEvent;
 import de.robingrether.idisguise.disguise.AgeableDisguise;
 import de.robingrether.idisguise.disguise.CreeperDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
+import de.robingrether.idisguise.disguise.Disguise.Visibility;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.DisguiseType.Type;
 import de.robingrether.idisguise.disguise.EndermanDisguise;
@@ -55,6 +56,7 @@ import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.Reflection;
 import de.robingrether.idisguise.management.Sounds;
 import de.robingrether.idisguise.management.VersionHelper;
+import de.robingrether.util.ObjectUtil;
 import de.robingrether.util.RandomUtil;
 import de.robingrether.util.StringUtil;
 import de.robingrether.util.Validate;
@@ -624,6 +626,8 @@ public class iDisguise extends JavaPlugin {
 	}
 	
 	private boolean hasPermission(CommandSender sender, Disguise disguise) {
+		if(ObjectUtil.equals(disguise.getVisibility(), Visibility.ONLY_LIST, Visibility.NOT_LIST) && !sender.hasPermission("iDisguise.visibility.list")) return false;
+		if(ObjectUtil.equals(disguise.getVisibility(), Visibility.ONLY_PERMISSION, Visibility.NOT_PERMISSION) && !sender.hasPermission("iDisguise.visibility.permission")) return false;
 		switch(disguise.getType()) {
 			case BAT:
 				return sender.hasPermission("iDisguise.mob.bat");
@@ -856,6 +860,10 @@ public class iDisguise extends JavaPlugin {
 				return DisguiseManager.getInstance().isDisguised(player);
 			}
 			
+			public boolean isDisguisedTo(OfflinePlayer player, Player observer) {
+				return DisguiseManager.getInstance().isDisguisedTo(player, observer);
+			}
+			
 			@Deprecated
 			public Disguise getDisguise(Player player) {
 				return getDisguise((OfflinePlayer)player);
@@ -865,6 +873,7 @@ public class iDisguise extends JavaPlugin {
 				return DisguiseManager.getInstance().getDisguise(player).clone();
 			}
 			
+			@Deprecated
 			public int getOnlineDisguiseCount() {
 				return getNumberOfDisguisedPlayers();
 			}

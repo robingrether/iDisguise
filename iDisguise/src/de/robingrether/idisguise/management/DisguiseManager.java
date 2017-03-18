@@ -121,6 +121,10 @@ public class DisguiseManager {
 		return disguiseMap.isDisguised(offlinePlayer);
 	}
 	
+	public boolean isDisguisedTo(OfflinePlayer offlinePlayer, Player observer) {
+		return disguiseMap.isDisguised(offlinePlayer) && disguiseMap.getDisguise(offlinePlayer).isVisibleTo(observer);
+	}
+	
 	public Disguise getDisguise(OfflinePlayer offlinePlayer) {
 		return disguiseMap.getDisguise(offlinePlayer);
 	}

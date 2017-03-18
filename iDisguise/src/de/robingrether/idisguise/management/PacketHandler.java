@@ -35,7 +35,7 @@ public class PacketHandler {
 	public Object handlePacketPlayInUseEntity(final Player observer, final Object packet) throws Exception {
 		final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayInUseEntity_entityId.getInt(packet));
 		boolean attack = PacketPlayInUseEntity_getAction.invoke(packet).equals(EnumEntityUseAction_ATTACK.get(null));
-		if(player != null && player != observer && DisguiseManager.getInstance().isDisguised(player) && !attack) {
+		if(player != null && player != observer && DisguiseManager.getInstance().isDisguisedTo(player, observer) && !attack) {
 			if(ObjectUtil.equals(DisguiseManager.getInstance().getDisguise(player).getType(), DisguiseType.SHEEP, DisguiseType.WOLF)) {
 				BukkitRunnable runnable = new BukkitRunnable() {
 					
@@ -55,7 +55,7 @@ public class PacketHandler {
 	
 	public Object[] handlePacketPlayOutNamedEntitySpawn(final Player observer, final Object packet) throws Exception {
 		final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayOutNamedEntitySpawn_entityId.getInt(packet));
-		if(player != null && player != observer && DisguiseManager.getInstance().isDisguised(player)) {
+		if(player != null && player != observer && DisguiseManager.getInstance().isDisguisedTo(player, observer)) {
 			Object[] spawnPackets = PacketHelper.getInstance().getPackets(player);
 			if(PacketPlayOutSpawnEntityLiving.isInstance(spawnPackets[0]) && DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
 				byte yaw = PacketPlayOutSpawnEntityLiving_yaw.getByte(spawnPackets[0]);
@@ -91,7 +91,7 @@ public class PacketHandler {
 			List itemsToRemove = new ArrayList();
 			for(Object playerInfo : playerInfoList) {
 				OfflinePlayer offlinePlayer = (OfflinePlayer)Bukkit_getOfflinePlayer.invoke(null, GameProfile_getProfileId.invoke(PlayerInfoData_getProfile.invoke(playerInfo)));
-				if(offlinePlayer != null && offlinePlayer != observer && DisguiseManager.getInstance().isDisguised(offlinePlayer)) {
+				if(offlinePlayer != null && offlinePlayer != observer && DisguiseManager.getInstance().isDisguisedTo(offlinePlayer, observer)) {
 					Object newPlayerInfo = PacketHelper.getInstance().getPlayerInfo(offlinePlayer, customizablePacket, (Integer)PlayerInfoData_getPing.invoke(playerInfo), PlayerInfoData_getGamemode.invoke(playerInfo), PlayerInfoData_getDisplayName.invoke(playerInfo));
 					itemsToRemove.add(playerInfo);
 					if(newPlayerInfo != null) {
@@ -104,7 +104,7 @@ public class PacketHandler {
 			return customizablePacket;
 		} else {
 			OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(ChatColor.stripColor((String)PacketPlayOutPlayerInfo_playerName.get(packet)));
-			if(offlinePlayer != null && offlinePlayer != observer && DisguiseManager.getInstance().isDisguised(offlinePlayer)) {
+			if(offlinePlayer != null && offlinePlayer != observer && DisguiseManager.getInstance().isDisguisedTo(offlinePlayer, observer)) {
 				String name = (String)PacketHelper.getInstance().getPlayerInfo(offlinePlayer, null, 0, null, PacketPlayOutPlayerInfo_playerName.get(packet));
 				if(name != null) {
 					Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
@@ -119,7 +119,7 @@ public class PacketHandler {
 	
 	public Object handlePacketPlayOutBed(final Player observer, final Object packet) throws Exception {
 		final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayOutBed_entityId.getInt(packet));
-		if(player != null && player != observer && DisguiseManager.getInstance().isDisguised(player) && !(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise)) {
+		if(player != null && player != observer && DisguiseManager.getInstance().isDisguisedTo(player, observer) && !(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise)) {
 			return null;
 		}
 		return packet;
@@ -127,7 +127,7 @@ public class PacketHandler {
 	
 	public Object handlePacketPlayOutAnimation(final Player observer, final Object packet) throws Exception {
 		final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayOutAnimation_entityId.getInt(packet));
-		if(player != null && player != observer && DisguiseManager.getInstance().isDisguised(player) && !(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise)) {
+		if(player != null && player != observer && DisguiseManager.getInstance().isDisguisedTo(player, observer) && !(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise)) {
 			if(DisguiseManager.getInstance().getDisguise(player) instanceof MobDisguise) {
 				if(PacketPlayOutAnimation_animationType.getInt(packet) == 2) {
 					return null;
@@ -143,7 +143,7 @@ public class PacketHandler {
 	
 	public Object handlePacketPlayOutEntityMetadata(final Player observer, final Object packet) throws Exception {
 		final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayOutEntityMetadata_entityId.getInt(packet));
-		if(player != null && player != observer && DisguiseManager.getInstance().isDisguised(player) && !(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise)) {
+		if(player != null && player != observer && DisguiseManager.getInstance().isDisguisedTo(player, observer) && !(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise)) {
 			Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
 			boolean living = DisguiseManager.getInstance().getDisguise(player) instanceof MobDisguise;
 			List metadataList = (List)PacketPlayOutEntityMetadata_metadataList.get(customizablePacket);
@@ -162,7 +162,7 @@ public class PacketHandler {
 	
 	public Object handlePacketPlayOutEntity(final Player observer, final Object packet) throws Exception {
 		final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayOutEntity_entityId.getInt(packet));
-		if(player != null && player != observer && DisguiseManager.getInstance().isDisguised(player)) {
+		if(player != null && player != observer && DisguiseManager.getInstance().isDisguisedTo(player, observer)) {
 			if(DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
 				Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
 				byte yaw = PacketPlayOutEntity_yaw.getByte(customizablePacket);
@@ -200,7 +200,7 @@ public class PacketHandler {
 	
 	public Object handlePacketPlayOutEntityTeleport(final Player observer, final Object packet) throws Exception {
 		final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayOutEntityTeleport_entityId.getInt(packet));
-		if(player != null && player != observer && DisguiseManager.getInstance().isDisguised(player)) {
+		if(player != null && player != observer && DisguiseManager.getInstance().isDisguisedTo(player, observer)) {
 			if(DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
 				Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
 				byte yaw = PacketPlayOutEntityTeleport_yaw.getByte(customizablePacket);
@@ -232,7 +232,7 @@ public class PacketHandler {
 	
 	public Object handlePacketPlayOutUpdateAttributes(final Player observer, final Object packet) throws Exception {
 		final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayOutUpdateAttributes_entityId.getInt(packet));
-		if(player != null && player != observer && DisguiseManager.getInstance().getDisguise(player) instanceof ObjectDisguise) {
+		if(player != null && player != observer && DisguiseManager.getInstance().isDisguisedTo(player, observer) && DisguiseManager.getInstance().getDisguise(player) instanceof ObjectDisguise) {
 			return null;
 		}
 		return packet;
@@ -240,7 +240,7 @@ public class PacketHandler {
 	
 	public Object handlePacketPlayOutCollect(final Player observer, final Object packet) throws Exception {
 		final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayOutCollect_entityId.getInt(packet));
-		if(player != null && player != observer && DisguiseManager.getInstance().getDisguise(player) instanceof ObjectDisguise) {
+		if(player != null && player != observer && DisguiseManager.getInstance().isDisguisedTo(player, observer) && DisguiseManager.getInstance().getDisguise(player) instanceof ObjectDisguise) {
 			return null;
 		}
 		return packet;
@@ -252,7 +252,7 @@ public class PacketHandler {
 			Object entityHuman = VersionHelper.require1_9() ? World_findNearbyPlayer.invoke(Entity_world.get(CraftPlayer_getHandle.invoke(observer)), PacketPlayOutNamedSoundEffect_x.getInt(packet) / 8.0, PacketPlayOutNamedSoundEffect_y.getInt(packet) / 8.0, PacketPlayOutNamedSoundEffect_z.getInt(packet) / 8.0, 1.0, false) : World_findNearbyPlayer.invoke(Entity_world.get(CraftPlayer_getHandle.invoke(observer)), PacketPlayOutNamedSoundEffect_x.getInt(packet) / 8.0, PacketPlayOutNamedSoundEffect_y.getInt(packet) / 8.0, PacketPlayOutNamedSoundEffect_z.getInt(packet) / 8.0, 1.0);
 			if(EntityPlayer.isInstance(entityHuman)) {
 				final Player player = (Player)EntityPlayer_getBukkitEntity.invoke(entityHuman);
-				if(player != null && player != observer) {
+				if(player != null && player != observer && DisguiseManager.getInstance().isDisguisedTo(player, observer)) {
 					if(DisguiseManager.getInstance().getDisguise(player) instanceof MobDisguise) {
 						String newSoundEffect = Sounds.replaceSoundFromPlayer(soundEffect, ((MobDisguise)DisguiseManager.getInstance().getDisguise(player)));
 						if(newSoundEffect != null) {
