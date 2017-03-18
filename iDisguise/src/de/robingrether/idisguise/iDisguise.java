@@ -292,6 +292,7 @@ public class iDisguise extends JavaPlugin {
 						if(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise) {
 							PlayerDisguise disguise = (PlayerDisguise)DisguiseManager.getInstance().getDisguise(player);
 							sender.sendMessage((disguiseSelf ? language.STATUS_PLAYER_SELF : language.STATUS_PLAYER_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()).replace("%name%", disguise.getDisplayName()));
+							sender.sendMessage(language.STATUS_SUBTYPES.replace("%subtypes%", disguise.toString()));
 						} else {
 							Disguise disguise = DisguiseManager.getInstance().getDisguise(player);
 							sender.sendMessage((disguiseSelf ? language.STATUS_SELF : language.STATUS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()));
