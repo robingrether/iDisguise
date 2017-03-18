@@ -38,19 +38,44 @@ public abstract class Disguise implements Serializable, Cloneable {
 		return this.type;
 	}
 	
+	/**
+	 * Gets the visibility mode.
+	 * 
+	 * @since 5.6.1
+	 * @return the visibility mode
+	 */
 	public Visibility getVisibility() {
 		return visibility;
 	}
 	
+	/**
+	 * Sets the visibility mode.<br>
+	 * Calling this function will reset the visibility parameters.
+	 * 
+	 * @since 5.6.1
+	 * @param visibility the visibility mode
+	 */
 	public void setVisibility(Visibility visibility) {
 		this.visibility = visibility;
 		visibilityParameter.clear();
 	}
 	
+	/**
+	 * Gets the visibility parameters.
+	 * 
+	 * @since 5.6.1
+	 * @return the visibility parameters
+	 */
 	public String[] getVisibilityParameter() {
 		return visibilityParameter.toArray(new String[0]);
 	}
 	
+	/**
+	 * Sets the visibility parameters.
+	 * 
+	 * @since 5.6.1
+	 * @param visibilityParameter the visibility parameters
+	 */
 	public void setVisibilityParameter(String... visibilityParameter) {
 		this.visibilityParameter.clear();
 		for(String parameter : visibilityParameter) {
@@ -58,6 +83,13 @@ public abstract class Disguise implements Serializable, Cloneable {
 		}
 	}
 	
+	/**
+	 * Indicates whether this disguise is visible to a certain player.
+	 * 
+	 * @since 5.6.1
+	 * @param player the viewer to indicate for
+	 * @return <code>true</code> in case this disguise is visible to the given player, <code>false</code> otherwise
+	 */
 	public boolean isVisibleTo(Player player) {
 		switch(visibility) {
 			case EVERYONE:
@@ -95,6 +127,13 @@ public abstract class Disguise implements Serializable, Cloneable {
 		return object != null && object.getClass().equals(getClass()) && toString().equals(object.toString());
 	}
 	
+	/**
+	 * Returns a hash code value for this object.<br>
+	 * The hash code is obtained by executing <code>disguise.toString().hashCode()</code>
+	 * 
+	 * @since 5.6.1
+	 * @return a hash code value for this instance
+	 */
 	public final int hashCode() {
 		return toString().hashCode();
 	}
@@ -142,12 +181,38 @@ public abstract class Disguise implements Serializable, Cloneable {
 		throw new IllegalArgumentException();
 	}
 	
+	/**
+	 * This enum represents the different visibility modes.
+	 * 
+	 * @since 5.6.1
+	 * @author RobinGrether
+	 */
 	public enum Visibility {
 		
+		/**
+		 * The disguise is visible to any player (except the disguised player himself).<br>
+		 * The visibility parameter is ignored.
+		 */
 		EVERYONE,
+		/**
+		 * The disguise is visible to any player whose name is in the list.<br>
+		 * The visibility parameter represents this list.
+		 */
 		ONLY_LIST,
+		/**
+		 * The disguise is visible to anyone but those players whose names are in the list.<br>
+		 * The visibility parameter represents this list.
+		 */
 		NOT_LIST,
+		/**
+		 * The disguise is visible to any player who has a certain permission.<br>
+		 * The first entry of the visibility parameter is this permission.
+		 */
 		ONLY_PERMISSION,
+		/**
+		 * The disguise is visible to any player who does not have a certain permission.<br>
+		 * The first entry of the visibility parameter is this permission.
+		 */
 		NOT_PERMISSION;
 		
 	}
