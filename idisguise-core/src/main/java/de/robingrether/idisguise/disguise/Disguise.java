@@ -145,7 +145,7 @@ public abstract class Disguise implements Serializable, Cloneable {
 	 * @return a string representation of the object
 	 */
 	public String toString() {
-		return type.toString() + "; visibility=" + visibility.name().toLowerCase(Locale.ENGLISH) + "; visibility-param=" + String.join(",", visibilityParameter.toArray(new String[0]));
+		return type.toString() + "; visibility=" + visibility.name().toLowerCase(Locale.ENGLISH) + "; visibility-param=" + StringUtil.join(",", visibilityParameter.toArray(new String[0]));
 	}
 	
 	static {
