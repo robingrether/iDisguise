@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.robingrether.idisguise</groupId>
   <artifactId>idisguise-core</artifactId>
-  <version>5.6.2</version>
+  <version>5.6.3-SNAPSHOT</version>
   <name>iDisguise</name>
   
   <properties>
@@ -77,6 +77,7 @@
   						<shadedPattern>de.robingrether.idisguise.io.bstats</shadedPattern>
   					</relocation>
   				</relocations>
+  				<createDependencyReducedPom>false</createDependencyReducedPom>
   			</configuration>
   			<executions>
   				<execution>

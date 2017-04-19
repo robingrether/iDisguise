@@ -13,12 +13,12 @@ More information can be found here: https://www.spigotmc.org/resources/idisguise
 </repository>
 ````
 
-If you need the core plugin (API and so):
+If you need the core plugin (API...):
 ````
 <dependency>
   <groupId>de.robingrether.idisguise</groupId>
   <artifactId>idisguise-core</artifactId>
-  <version>5.6.1</version>
+  <version>5.6.2</version>
 </dependency>
 ````
 
@@ -27,10 +27,10 @@ If you need everything:
 <dependency>
   <groupId>de.robingrether.idisguise</groupId>
   <artifactId>idisguise-full</artifactId>
-  <version>5.6.1</version>
+  <version>5.6.2</version>
 </dependency>
 ````
 
 ## Compiling
 In order to compile the whole plugin you have to clone/download this repository and build the project _idisguise-full_ using Maven.  
-Run _mvn build package_ and you will find the final jar file under _/idisguise-full/target/idisguise-full-&lt;VERSION&gt;-jar-with-dependencies.jar_.
+Run _mvn build package_ and you will find the final jar file under _/idisguise-full/target/iDisguise-&lt;VERSION&gt;-&lt;TIMESTAMP&gt;.jar_.
