@@ -333,7 +333,6 @@ public class iDisguise extends JavaPlugin {
 								disguise = type.newInstance();
 								match = true;
 								iterator.remove();
-								break;
 							} catch(OutdatedServerException e) {
 								sender.sendMessage(language.OUTDATED_SERVER);
 								return true;
