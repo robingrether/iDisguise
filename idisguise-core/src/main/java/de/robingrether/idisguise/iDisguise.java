@@ -136,7 +136,7 @@ public class iDisguise extends JavaPlugin {
 		getLogger().log(Level.INFO, String.format("%s enabled!", getFullName()));
 		enabled = true;
 		for(Player player : Reflection.getOnlinePlayers()) {
-			PlayerHelper.getInstance().addPlayer(player);
+			PlayerHelper.getInstance().addEntity(player);
 			PlayerHelper.getInstance().loadGameProfileAsynchronously(player.getName());
 		}
 		ChannelInjector.getInstance().injectOnlinePlayers();

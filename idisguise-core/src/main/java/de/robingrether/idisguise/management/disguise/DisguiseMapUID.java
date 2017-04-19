@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Entity;
 
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.management.DisguiseMap;
@@ -37,8 +38,16 @@ public class DisguiseMapUID extends DisguiseMap {
 		return disguises.containsKey(offlinePlayer.getUniqueId());
 	}
 	
+	public boolean isDisguised(Entity entity) {
+		return disguises.containsKey(entity.getUniqueId());
+	}
+	
 	public Disguise getDisguise(OfflinePlayer offlinePlayer) {
 		return disguises.get(offlinePlayer.getUniqueId());
+	}
+	
+	public Disguise getDisguise(Entity entity) {
+		return disguises.get(entity.getUniqueId());
 	}
 	
 	public Map<UUID, Disguise> getMap() {
@@ -53,8 +62,16 @@ public class DisguiseMapUID extends DisguiseMap {
 		disguises.put(offlinePlayer.getUniqueId(), disguise);
 	}
 	
+	public void updateDisguise(Entity entity, Disguise disguise) {
+		disguises.put(entity.getUniqueId(), disguise);
+	}
+	
 	public Disguise removeDisguise(OfflinePlayer offlinePlayer) {
 		return disguises.remove(offlinePlayer.getUniqueId());
+	}
+	
+	public Disguise removeDisguise(Entity entity) {
+		return disguises.remove(entity.getUniqueId());
 	}
 	
 }

@@ -45,7 +45,7 @@ public class EventListener implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		ChannelInjector.getInstance().inject(player);
-		PlayerHelper.getInstance().addPlayer(player);
+		PlayerHelper.getInstance().addEntity(player);
 		PlayerHelper.getInstance().loadGameProfileAsynchronously(player.getName());
 		GhostFactory.getInstance().addPlayer(player.getName());
 		if(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise && ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).isGhost()) {
@@ -93,7 +93,7 @@ public class EventListener implements Listener {
 		}
 		ChannelInjector.getInstance().remove(player);
 		GhostFactory.getInstance().removeGhost(player);
-		PlayerHelper.getInstance().removePlayer(player);
+		PlayerHelper.getInstance().removeEntity(player);
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)

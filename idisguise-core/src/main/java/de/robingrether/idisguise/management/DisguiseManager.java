@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import de.robingrether.idisguise.iDisguise;
@@ -50,7 +51,7 @@ public class DisguiseManager {
 		}
 		if(offlinePlayer.isOnline()) {
 			Player player = offlinePlayer.getPlayer();
-			Disguise oldDisguise = disguiseMap.getDisguise(player);
+			Disguise oldDisguise = disguiseMap.getDisguise(offlinePlayer);
 			for(Player observer : Reflection.getOnlinePlayers()) {
 				if(observer == player) {
 					continue;
@@ -62,7 +63,7 @@ public class DisguiseManager {
 					GhostFactory.getInstance().removeGhost(player);
 				}
 			}
-			disguiseMap.updateDisguise(player, disguise);
+			disguiseMap.updateDisguise(offlinePlayer, disguise);
 			if(disguise instanceof PlayerDisguise) {
 				if(((PlayerDisguise)disguise).isGhost()) {
 					GhostFactory.getInstance().addPlayer(((PlayerDisguise)disguise).getSkinName());
@@ -80,10 +81,57 @@ public class DisguiseManager {
 		}
 	}
 	
+	public synchronized void disguise(Player player, Disguise disguise) {
+		disguise((OfflinePlayer)player, disguise);
+	}
+	
+	public synchronized void disguise(final Entity entity, final Disguise disguise) {
+		if(entity instanceof Player) {
+			disguise((OfflinePlayer)entity, disguise);
+			return;
+		}
+		if(disguise instanceof PlayerDisguise && !PlayerHelper.getInstance().isGameProfileLoaded(((PlayerDisguise)disguise).getSkinName())) {
+			Bukkit.getScheduler().runTaskAsynchronously(iDisguise.getInstance(), new Runnable() {
+				
+				public void run() {
+					PlayerHelper.getInstance().waitForGameProfile(((PlayerDisguise)disguise).getSkinName());
+					Bukkit.getScheduler().runTask(iDisguise.getInstance(), new Runnable() {
+						
+						public void run() {
+							disguise(entity, disguise);
+						}
+						
+					});
+				}
+				
+			});
+			return;
+		}
+		Disguise oldDisguise = disguiseMap.getDisguise(entity);
+		for(Player observer : Reflection.getOnlinePlayers()) {
+			hideEntityFromPlayer(observer, entity);
+		}
+		if(oldDisguise instanceof PlayerDisguise) {
+			if(oldDisguise.getType().equals(DisguiseType.GHOST)) {
+				//TODO: GhostFactory.getInstance().removeGhost(entity);
+			}
+		}
+		disguiseMap.updateDisguise(entity, disguise);
+		if(disguise instanceof PlayerDisguise) {
+			if(((PlayerDisguise)disguise).isGhost()) {
+				GhostFactory.getInstance().addPlayer(((PlayerDisguise)disguise).getSkinName());
+				//TODO: GhostFactory.getInstance().addGhost(entity);
+			}
+		}
+		for(Player observer : Reflection.getOnlinePlayers()) {
+			showEntityToPlayer(observer, entity);
+		}
+	}
+	
 	public synchronized Disguise undisguise(OfflinePlayer offlinePlayer) {
 		if(offlinePlayer.isOnline()) {
 			Player player = offlinePlayer.getPlayer();
-			Disguise disguise = disguiseMap.getDisguise(player);
+			Disguise disguise = disguiseMap.getDisguise(offlinePlayer);
 			if(disguise == null) {
 				return null;
 			}
@@ -98,7 +146,7 @@ public class DisguiseManager {
 					GhostFactory.getInstance().removeGhost(player);
 				}
 			}
-			disguiseMap.removeDisguise(player);
+			disguiseMap.removeDisguise(offlinePlayer);
 			for(Player observer : Reflection.getOnlinePlayers()) {
 				if(observer == player) {
 					continue;
@@ -109,6 +157,33 @@ public class DisguiseManager {
 		} else {
 			return disguiseMap.removeDisguise(offlinePlayer);
 		}
+	}
+	
+	public synchronized Disguise undisguise(Player player) {
+		return undisguise((OfflinePlayer)player);
+	}
+	
+	public synchronized Disguise undisguise(Entity entity) {
+		if(entity instanceof Player) {
+			return undisguise((OfflinePlayer)entity);
+		}
+		Disguise disguise = disguiseMap.getDisguise(entity);
+		if(disguise == null) {
+			return null;
+		}
+		for(Player observer : Reflection.getOnlinePlayers()) {
+			hideEntityFromPlayer(observer, entity);
+		}
+		if(disguise instanceof PlayerDisguise) {
+			if(disguise.getType().equals(DisguiseType.GHOST)) {
+				//TODO: GhostFactory.getInstance().removeGhost(player);
+			}
+		}
+		disguiseMap.removeDisguise(entity);
+		for(Player observer : Reflection.getOnlinePlayers()) {
+			showEntityToPlayer(observer, entity);
+		}
+		return disguise;
 	}
 	
 	public synchronized void undisguiseAll() {
@@ -192,6 +267,14 @@ public class DisguiseManager {
 				}
 			}
 		}
+	}
+	
+	public void hideEntityFromPlayer(Player observer, Entity entity) {
+		//TODO
+	}
+	
+	public void showEntityToPlayer(Player observer, Entity entity) {
+		//TODO
 	}
 	
 }

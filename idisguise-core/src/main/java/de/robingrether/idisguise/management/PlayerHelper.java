@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -30,25 +31,29 @@ public class PlayerHelper {
 	}
 	
 	private final String API_URL = "https://api.mojang.com/user/profiles/";
-	private Map<Integer, Player> players;
+	private Map<Integer, Entity> entities;
 	
 	public PlayerHelper() {
-		players = new HashMap<Integer, Player>();
+		entities = new HashMap<Integer, Entity>();
 		for(Player player : Reflection.getOnlinePlayers()) {
-			players.put(player.getEntityId(), player);
+			entities.put(player.getEntityId(), player);
 		}
 	}
 	
-	public synchronized void addPlayer(Player player) {
-		players.put(player.getEntityId(), player);
+	public synchronized void addEntity(Entity entity) {
+		entities.put(entity.getEntityId(), entity);
 	}
 	
-	public synchronized void removePlayer(Player player) {
-		players.remove(player.getEntityId());
+	public synchronized void removeEntity(Entity entity) {
+		entities.remove(entity.getEntityId());
+	}
+	
+	public Entity getEntityById(int entityId) {
+		return entities.get(entityId);
 	}
 	
 	public Player getPlayerByEntityId(int entityId) {
-		return players.get(entityId);
+		return entities.get(entityId) instanceof Player ? (Player)entities.get(entityId) : null;
 	}
 	
 	public String getCaseCorrectedName(String name) {
