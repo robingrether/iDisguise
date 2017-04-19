@@ -2,8 +2,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.robingrether.idisguise</groupId>
   <artifactId>idisguise-core</artifactId>
-  <version>5.6.1</version>
+  <version>5.6.2-SNAPSHOT</version>
   <name>iDisguise</name>
+  
+  <properties>
+  	<maven.build.timestamp.format>yyyy_MM_dd-HH_mm_ss</maven.build.timestamp.format>
+  </properties>
   
   <repositories>
   	<repository>
@@ -42,6 +46,15 @@
   </dependencies>
   
   <build>
+  	<resources>
+  		<resource>
+  			<directory>src/main/resources</directory>
+  			<filtering>true</filtering>
+  			<includes>
+  				<include>plugin.yml</include>
+  			</includes>
+  		</resource>
+  	</resources>
   	<plugins>
   		<plugin>
         	<artifactId>maven-compiler-plugin</artifactId>
