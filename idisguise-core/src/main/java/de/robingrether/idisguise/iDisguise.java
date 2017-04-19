@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-//import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -98,23 +97,38 @@ public class iDisguise extends JavaPlugin {
 			}
 			
 		});
-//		# not available so far
-//		metrics.addCustomChart(new Metrics.MultiLineChart("usedFeatures") {
-//			
-//			public HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap) {
-//				valueMap.put("update checking", configuration.UPDATE_CHECK ? 1 : 0);
-//				valueMap.put("realistic sounds", configuration.REPLACE_SOUND_EFFECTS ? 1 : 0);
-//				valueMap.put("undisguise permission", configuration.UNDISGUISE_PERMISSION ? 1 : 0);
-//				valueMap.put("ghost disguises", configuration.ENABLE_GHOST_DISGUISE ? 1 : 0);
-//				valueMap.put("automatic updates", configuration.UPDATE_DOWNLOAD ? 1 : 0);
-//				return valueMap;
-//			}
-//			
-//		});
 		metrics.addCustomChart(new Metrics.SimplePie("storageType") {
 			
 			public String getValue() {
 				return configuration.KEEP_DISGUISE_SHUTDOWN ? "file" : "none";
+			}
+			
+		});
+		metrics.addCustomChart(new Metrics.SimplePie("updateChecking") {
+			
+			public String getValue() {
+				return configuration.UPDATE_CHECK ? configuration.UPDATE_DOWNLOAD ? "check and download" : "check only" : "disabled";
+			}
+			
+		});
+		metrics.addCustomChart(new Metrics.SimplePie("realisticSoundEffects") {
+			
+			public String getValue() {
+				return configuration.REPLACE_SOUND_EFFECTS ? "enabled" : "disabled";
+			}
+			
+		});
+		metrics.addCustomChart(new Metrics.SimplePie("undisguisePermission") {
+			
+			public String getValue() {
+				return configuration.UNDISGUISE_PERMISSION ? "enabled" : "disabled";
+			}
+			
+		});
+		metrics.addCustomChart(new Metrics.SimplePie("ghostDisguise") {
+			
+			public String getValue() {
+				return configuration.ENABLE_GHOST_DISGUISE ? "enabled" : "disabled";
 			}
 			
 		});
