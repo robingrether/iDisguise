@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -320,25 +321,34 @@ public class iDisguise extends JavaPlugin {
 				} else {
 					Disguise disguise = DisguiseManager.getInstance().isDisguised(player) ? DisguiseManager.getInstance().getDisguise(player).clone() : null;
 					boolean match = false;
-					for(String argument : args) {
-						DisguiseType type = DisguiseType.Matcher.match(argument.toLowerCase(Locale.ENGLISH));
+					List<String> unknown_args = new ArrayList<String>(Arrays.asList(args));
+					for(Iterator<String> iterator = unknown_args.iterator(); iterator.hasNext(); ) {
+						DisguiseType type = DisguiseType.Matcher.match(iterator.next().toLowerCase(Locale.ENGLISH));
 						if(type != null) {
+							if(match) {
+								sender.sendMessage(language.WRONG_USAGE_TWO_DISGUISE_TYPES);
+								return true;
+							}
 							try {
 								disguise = type.newInstance();
 								match = true;
+								iterator.remove();
 								break;
 							} catch(OutdatedServerException e) {
 								sender.sendMessage(language.OUTDATED_SERVER);
 								return true;
-							} catch(UnsupportedOperationException e) {
-								sendHelpMessage(sender, command, alias);
-								return true;
+//							} catch(UnsupportedOperationException e) {
+//								sendHelpMessage(sender, command, alias);
+//								return true;
 							}
 						}
 					}
 					if(disguise != null) {
-						for(String argument : args) {
-							match |= Subtypes.applySubtype(disguise, argument);
+						for(Iterator<String> iterator = unknown_args.iterator(); iterator.hasNext(); ) {
+							if(Subtypes.applySubtype(disguise, iterator.next())) {
+								match = true;
+								iterator.remove();
+							}
 						}
 					}
 					if(match) {
@@ -365,8 +375,9 @@ public class iDisguise extends JavaPlugin {
 						} else {
 							sender.sendMessage(language.NO_PERMISSION);
 						}
-					} else {
-						sendHelpMessage(sender, command, alias);
+					}
+					if(!unknown_args.isEmpty()) {
+						sender.sendMessage(language.WRONG_USAGE_UNKNOWN_ARGUMENTS.replace("%arguments%", StringUtil.join(", ", unknown_args.toArray(new String[0]))));
 					}
 				}
 			}
