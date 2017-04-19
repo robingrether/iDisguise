@@ -17,9 +17,6 @@
       <resource>
         <filtering>true</filtering>
         <directory>src/main/resources</directory>
-        <includes>
-          <include>plugin.yml</include>
-        </includes>
       </resource>
     </resources>
     <plugins>
@@ -108,7 +105,7 @@
     <dependency>
       <groupId>de.robingrether.util</groupId>
       <artifactId>utility</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
