@@ -61,8 +61,14 @@ public class Configuration {
 				if(pathField.getName().endsWith("_PATH")) {
 					Field valueField = getClass().getDeclaredField(pathField.getName().substring(0, pathField.getName().length() - 5));
 					if(fileConfiguration.isSet((String)pathField.get(null))) {
-						if(fileConfiguration.isBoolean((String)pathField.get(null))) {
+						if(fileConfiguration.isString((String)pathField.get(null))) {
+							valueField.set(this, fileConfiguration.getString((String)pathField.get(null), (String)valueField.get(this)));
+						} else if(fileConfiguration.isBoolean((String)pathField.get(null))) {
 							valueField.setBoolean(this, fileConfiguration.getBoolean((String)pathField.get(null), valueField.getBoolean(this)));
+						} else if(fileConfiguration.isDouble((String)pathField.get(null))) {
+							valueField.setDouble(this, fileConfiguration.getDouble((String)pathField.get(null), valueField.getDouble(this)));
+						} else if(fileConfiguration.isInt((String)pathField.get(null))) {
+							valueField.setInt(this, fileConfiguration.getInt((String)pathField.get(null), valueField.getInt(this)));
 						} else if(fileConfiguration.isList((String)pathField.get(null))) {
 							valueField.set(this, fileConfiguration.getList((String)pathField.get(null), (List<String>)valueField.get(this)));
 						}
