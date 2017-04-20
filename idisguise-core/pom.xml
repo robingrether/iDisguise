@@ -77,7 +77,6 @@
   						<shadedPattern>de.robingrether.idisguise.io.bstats</shadedPattern>
   					</relocation>
   				</relocations>
-  				<createDependencyReducedPom>false</createDependencyReducedPom>
   			</configuration>
   			<executions>
   				<execution>
