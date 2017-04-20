@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-//import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -98,23 +98,38 @@ public class iDisguise extends JavaPlugin {
 			}
 			
 		});
-//		# not available so far
-//		metrics.addCustomChart(new Metrics.MultiLineChart("usedFeatures") {
-//			
-//			public HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap) {
-//				valueMap.put("update checking", configuration.UPDATE_CHECK ? 1 : 0);
-//				valueMap.put("realistic sounds", configuration.REPLACE_SOUND_EFFECTS ? 1 : 0);
-//				valueMap.put("undisguise permission", configuration.UNDISGUISE_PERMISSION ? 1 : 0);
-//				valueMap.put("ghost disguises", configuration.ENABLE_GHOST_DISGUISE ? 1 : 0);
-//				valueMap.put("automatic updates", configuration.UPDATE_DOWNLOAD ? 1 : 0);
-//				return valueMap;
-//			}
-//			
-//		});
 		metrics.addCustomChart(new Metrics.SimplePie("storageType") {
 			
 			public String getValue() {
 				return configuration.KEEP_DISGUISE_SHUTDOWN ? "file" : "none";
+			}
+			
+		});
+		metrics.addCustomChart(new Metrics.SimplePie("updateChecking") {
+			
+			public String getValue() {
+				return configuration.UPDATE_CHECK ? configuration.UPDATE_DOWNLOAD ? "check and download" : "check only" : "disabled";
+			}
+			
+		});
+		metrics.addCustomChart(new Metrics.SimplePie("realisticSoundEffects") {
+			
+			public String getValue() {
+				return configuration.REPLACE_SOUND_EFFECTS ? "enabled" : "disabled";
+			}
+			
+		});
+		metrics.addCustomChart(new Metrics.SimplePie("undisguisePermission") {
+			
+			public String getValue() {
+				return configuration.UNDISGUISE_PERMISSION ? "enabled" : "disabled";
+			}
+			
+		});
+		metrics.addCustomChart(new Metrics.SimplePie("ghostDisguise") {
+			
+			public String getValue() {
+				return configuration.ENABLE_GHOST_DISGUISE ? "enabled" : "disabled";
 			}
 			
 		});
@@ -306,25 +321,33 @@ public class iDisguise extends JavaPlugin {
 				} else {
 					Disguise disguise = DisguiseManager.getInstance().isDisguised(player) ? DisguiseManager.getInstance().getDisguise(player).clone() : null;
 					boolean match = false;
-					for(String argument : args) {
-						DisguiseType type = DisguiseType.Matcher.match(argument.toLowerCase(Locale.ENGLISH));
+					List<String> unknown_args = new ArrayList<String>(Arrays.asList(args));
+					for(Iterator<String> iterator = unknown_args.iterator(); iterator.hasNext(); ) {
+						DisguiseType type = DisguiseType.Matcher.match(iterator.next().toLowerCase(Locale.ENGLISH));
 						if(type != null) {
+							if(match) {
+								sender.sendMessage(language.WRONG_USAGE_TWO_DISGUISE_TYPES);
+								return true;
+							}
 							try {
 								disguise = type.newInstance();
 								match = true;
-								break;
+								iterator.remove();
 							} catch(OutdatedServerException e) {
 								sender.sendMessage(language.OUTDATED_SERVER);
 								return true;
-							} catch(UnsupportedOperationException e) {
-								sendHelpMessage(sender, command, alias);
-								return true;
+//							} catch(UnsupportedOperationException e) {
+//								sendHelpMessage(sender, command, alias);
+//								return true;
 							}
 						}
 					}
 					if(disguise != null) {
-						for(String argument : args) {
-							match |= Subtypes.applySubtype(disguise, argument);
+						for(Iterator<String> iterator = unknown_args.iterator(); iterator.hasNext(); ) {
+							if(Subtypes.applySubtype(disguise, iterator.next())) {
+								match = true;
+								iterator.remove();
+							}
 						}
 					}
 					if(match) {
@@ -351,8 +374,9 @@ public class iDisguise extends JavaPlugin {
 						} else {
 							sender.sendMessage(language.NO_PERMISSION);
 						}
-					} else {
-						sendHelpMessage(sender, command, alias);
+					}
+					if(!unknown_args.isEmpty()) {
+						sender.sendMessage(language.WRONG_USAGE_UNKNOWN_ARGUMENTS.replace("%arguments%", StringUtil.join(", ", unknown_args.toArray(new String[0]))));
 					}
 				}
 			}

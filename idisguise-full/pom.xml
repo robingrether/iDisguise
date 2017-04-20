@@ -2,8 +2,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.robingrether.idisguise</groupId>
   <artifactId>idisguise-full</artifactId>
-  <version>5.6.1</version>
+  <version>5.6.3-SNAPSHOT</version>
   <name>iDisguise full plugin</name>
+  
+  <properties>
+  	<maven.build.timestamp.format>yyyy_MM_dd-HH_mm_ss</maven.build.timestamp.format>
+  </properties>
   
   <repositories>
   	<repository>
@@ -16,7 +20,7 @@
   	<dependency>
   		<groupId>de.robingrether.idisguise</groupId>
   		<artifactId>idisguise-core</artifactId>
-  		<version>5.6.1</version>
+  		<version>${project.version}</version>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
@@ -99,6 +103,8 @@
         		<descriptorRefs>
         			<descriptorRef>jar-with-dependencies</descriptorRef>
         		</descriptorRefs>
+        		<finalName>iDisguise-${project.version}-${maven.build.timestamp}</finalName>
+        		<appendAssemblyId>false</appendAssemblyId>
         	</configuration>
         </plugin>
     </plugins>

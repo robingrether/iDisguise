@@ -67,7 +67,7 @@ public class UpdateCheck implements Runnable {
 	private boolean isUpdateAvailable() {
 		if(latestVersion != null && !pluginVersion.equals(latestVersion)) {
 			try {
-				int current = Integer.parseInt(pluginVersion.split(" ")[1].replace(".", ""));
+				int current = Integer.parseInt(pluginVersion.split(" |-")[1].replace(".", "")) - (pluginVersion.endsWith("-SNAPSHOT") ? 1 : 0);
 				int latest = Integer.parseInt(latestVersion.split(" ")[1].replace(".", ""));
 				return latest > current;
 			} catch(NumberFormatException e) {

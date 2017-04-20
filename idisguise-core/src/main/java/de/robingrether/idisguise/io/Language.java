@@ -18,6 +18,8 @@ public class Language {
 	public String CONSOLE_USE_OTHER_COMMAND = ChatColor.RED + "Use /odisguise from the server console.";
 	public String CANNOT_FIND_PLAYER = ChatColor.RED + "Cannot find player %player%.";
 	public String WRONG_USAGE_NO_NAME = ChatColor.RED + "Wrong usage: account name required";
+	public String WRONG_USAGE_TWO_DISGUISE_TYPES = ChatColor.RED + "Wrong usage: two disguise types given";
+	public String WRONG_USAGE_UNKNOWN_ARGUMENTS = ChatColor.RED + "Wrong usage: unknown arguments " + ChatColor.ITALIC + "%arguments%";
 	public String INVALID_NAME = ChatColor.RED + "The given account name is invalid.";
 	public String EVENT_CANCELLED = ChatColor.RED + "Another plugin prohibits you to do that.";
 	public String DISGUISE_PLAYER_SUCCESS_SELF = ChatColor.GOLD + "You disguised as a %type% called %name%.";
