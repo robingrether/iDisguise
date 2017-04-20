@@ -52,7 +52,7 @@ public class DisguiseManager18 extends DisguiseManager {
 		}
 		if(offlinePlayer.isOnline()) {
 			Player player = offlinePlayer.getPlayer();
-			Disguise oldDisguise = disguiseMap.getDisguise(player);
+			Disguise oldDisguise = disguiseMap.getDisguise(offlinePlayer);
 			for(Player observer : Reflection.getOnlinePlayers()) {
 				if(observer == player) {
 					continue;
@@ -64,7 +64,7 @@ public class DisguiseManager18 extends DisguiseManager {
 					GhostFactory.getInstance().removeGhost(player);
 				}
 			}
-			disguiseMap.updateDisguise(player, disguise);
+			disguiseMap.updateDisguise(offlinePlayer, disguise);
 			if(disguise instanceof PlayerDisguise) {
 				if(((PlayerDisguise)disguise).isGhost()) {
 					GhostFactory.getInstance().addPlayer(((PlayerDisguise)disguise).getSkinName());
@@ -80,7 +80,7 @@ public class DisguiseManager18 extends DisguiseManager {
 	public synchronized Disguise undisguise(OfflinePlayer offlinePlayer) {
 		if(offlinePlayer.isOnline()) {
 			Player player = offlinePlayer.getPlayer();
-			Disguise disguise = disguiseMap.getDisguise(player);
+			Disguise disguise = disguiseMap.getDisguise(offlinePlayer);
 			if(disguise == null) {
 				return null;
 			}
@@ -95,7 +95,7 @@ public class DisguiseManager18 extends DisguiseManager {
 					GhostFactory.getInstance().removeGhost(player);
 				}
 			}
-			disguiseMap.removeDisguise(player);
+			disguiseMap.removeDisguise(offlinePlayer);
 			showPlayerLater(player);
 			return disguise;
 		} else {
