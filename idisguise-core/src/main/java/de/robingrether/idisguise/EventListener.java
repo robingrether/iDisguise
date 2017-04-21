@@ -4,7 +4,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -100,23 +102,41 @@ public class EventListener implements Listener {
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		if(event.getDeathMessage() != null) {
 			Player player = event.getEntity();
-			if(DisguiseManager.getInstance().isDisguised(player)) {
-				if(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise) {
-					event.setDeathMessage(event.getDeathMessage().replaceAll("(" + player.getDisplayName() + "|" + player.getName() + ")", ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getDisplayName()));
-				} else {
-					event.setDeathMessage(null);
-					return;
-				}
-			}
-			if(player.getLastDamageCause() instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent)player.getLastDamageCause()).getDamager() instanceof Player) {
-				Player killer = (Player)((EntityDamageByEntityEvent)player.getLastDamageCause()).getDamager();
-				if(DisguiseManager.getInstance().isDisguised(killer)) {
-					if(DisguiseManager.getInstance().getDisguise(killer) instanceof PlayerDisguise) {
-						event.setDeathMessage(event.getDeathMessage().replaceAll("(" + killer.getDisplayName() + "|" + killer.getName() + ")", ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(killer)).getDisplayName()));
-					} else if(DisguiseManager.getInstance().getDisguise(killer) instanceof MobDisguise) {
-						event.setDeathMessage(event.getDeathMessage().replaceAll("(" + killer.getDisplayName() + "|" + killer.getName() + ")", StringUtil.capitalizeFully(DisguiseManager.getInstance().getDisguise(killer).getType().name().replace('_', ' '))));
+			if(plugin.getConfiguration().MODIFY_MESSAGE_DEATH) {
+				if(DisguiseManager.getInstance().isDisguised(player)) {
+					if(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise) {
+						event.setDeathMessage(event.getDeathMessage().replaceAll("(" + player.getDisplayName() + "|" + player.getName() + ")", ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getDisplayName()));
 					} else {
 						event.setDeathMessage(null);
+						return;
+					}
+				}
+			}
+			if(plugin.getConfiguration().MODIFY_MESSAGE_KILL) {
+				if(player.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
+					Entity damager = ((EntityDamageByEntityEvent)player.getLastDamageCause()).getDamager();
+					if(damager instanceof Player) {
+						Player killer = (Player)damager;
+						if(DisguiseManager.getInstance().isDisguised(killer)) {
+							if(DisguiseManager.getInstance().getDisguise(killer) instanceof PlayerDisguise) {
+								event.setDeathMessage(event.getDeathMessage().replaceAll("(" + killer.getDisplayName() + "|" + killer.getName() + ")", ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(killer)).getDisplayName()));
+							} else if(DisguiseManager.getInstance().getDisguise(killer) instanceof MobDisguise) {
+								event.setDeathMessage(event.getDeathMessage().replaceAll("(" + killer.getDisplayName() + "|" + killer.getName() + ")", StringUtil.capitalizeFully(DisguiseManager.getInstance().getDisguise(killer).getType().name().replace('_', ' '))));
+							} else {
+								event.setDeathMessage(null);
+							}
+						}
+					} else if(damager instanceof Projectile && ((Projectile)damager).getShooter() instanceof Player) {
+						Player killer = (Player)((Projectile)damager).getShooter();
+						if(DisguiseManager.getInstance().isDisguised(killer)) {
+							if(DisguiseManager.getInstance().getDisguise(killer) instanceof PlayerDisguise) {
+								event.setDeathMessage(event.getDeathMessage().replaceAll("(" + killer.getDisplayName() + "|" + killer.getName() + ")", ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(killer)).getDisplayName()));
+							} else if(DisguiseManager.getInstance().getDisguise(killer) instanceof MobDisguise) {
+								event.setDeathMessage(event.getDeathMessage().replaceAll("(" + killer.getDisplayName() + "|" + killer.getName() + ")", StringUtil.capitalizeFully(DisguiseManager.getInstance().getDisguise(killer).getType().name().replace('_', ' '))));
+							} else {
+								event.setDeathMessage(null);
+							}
+						}
 					}
 				}
 			}
