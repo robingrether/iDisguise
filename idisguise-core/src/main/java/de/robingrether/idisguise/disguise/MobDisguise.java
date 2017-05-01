@@ -9,7 +9,8 @@ package de.robingrether.idisguise.disguise;
 public class MobDisguise extends Disguise {
 	
 	private static final long serialVersionUID = 7587147403290078928L;
-	protected String customName = "";
+	private String customName = "";
+	private boolean customNameVisible = true;
 	
 	/**
 	 * Creates an instance.
@@ -52,14 +53,39 @@ public class MobDisguise extends Disguise {
 	}
 	
 	/**
+	 * Indicates whether the custom name of this entity is visible all the time.<br>
+	 * The default value is <code>true</code>.
+	 * 
+	 * @since 5.6.3
+	 * @return <code>true</code>, if the custom name is visible all the time
+	 */
+	public boolean isCustomNameVisible() {
+		return customNameVisible;
+	}
+	
+	/**
+	 * Sets whether the custom name of this entity is visible all the time.<br>
+	 * The default value is <code>true</code>.<br>
+	 * This value has no effect if the custom name is empty.
+	 * 
+	 * @since 5.6.3
+	 * @param customNameVisible <code>true</code>, if the custom name shall be visible all the time
+	 */
+	public void setCustomNameVisible(boolean customNameVisible) {
+		this.customNameVisible = customNameVisible;
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; custom-name=" + customName;
+		return super.toString() + "; custom-name=" + customName + "; " + (customNameVisible ? "custom-name-visible" : "custom-name-invisible");
 	}
 	
 	static {
 		Subtypes.registerParameterizedSubtype(MobDisguise.class, "setCustomName", "custom-name", String.class);
+		Subtypes.registerSubtype(MobDisguise.class, "setCustomNameVisible", true, "custom-name-visible");
+		Subtypes.registerSubtype(MobDisguise.class, "setCustomNameVisible", false, "custom-name-invisible");
 	}
 	
 }

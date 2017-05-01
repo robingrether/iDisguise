@@ -117,7 +117,7 @@ public class PacketHelper {
 				}
 				if(mobDisguise.getCustomName() != null && !mobDisguise.getCustomName().isEmpty()) {
 					EntityInsentient_setCustomName.invoke(entity, mobDisguise.getCustomName());
-					EntityInsentient_setCustomNameVisible.invoke(entity, true);
+					EntityInsentient_setCustomNameVisible.invoke(entity, mobDisguise.isCustomNameVisible());
 				}
 				
 				if(mobDisguise instanceof AgeableDisguise) {
@@ -229,7 +229,7 @@ public class PacketHelper {
 						EntityInsentient_setCustomNameVisible.invoke(entity, true);
 					} else if(objectDisguise.getCustomName() != null && !objectDisguise.getCustomName().isEmpty()) {
 						EntityInsentient_setCustomName.invoke(entity, objectDisguise.getCustomName());
-						EntityInsentient_setCustomNameVisible.invoke(entity, true);
+						EntityInsentient_setCustomNameVisible.invoke(entity, objectDisguise.isCustomNameVisible());
 					}
 				}
 				if(EntityFallingBlock.isInstance(entity)) {

@@ -10,7 +10,8 @@ public class ObjectDisguise extends Disguise {
 	
 	private static final long serialVersionUID = 7999903708957650848L;
 	private final int typeId;
-	protected String customName = "";
+	private String customName = "";
+	private boolean customNameVisible = true;
 	
 	/**
 	 * Creates an instance.
@@ -55,10 +56,33 @@ public class ObjectDisguise extends Disguise {
 	}
 	
 	/**
+	 * Indicates whether the custom name of this entity is visible all the time.<br>
+	 * The default value is <code>true</code>.
+	 * 
+	 * @since 5.6.3
+	 * @return <code>true</code>, if the custom name is visible all the time
+	 */
+	public boolean isCustomNameVisible() {
+		return customNameVisible;
+	}
+	
+	/**
+	 * Sets whether the custom name of this entity is visible all the time.<br>
+	 * The default value is <code>true</code>.
+	 * This value has no effect if the custom name is empty.
+	 * 
+	 * @since 5.6.3
+	 * @param customNameVisible <code>true</code>, if the custom name shall be visible all the time
+	 */
+	public void setCustomNameVisible(boolean customNameVisible) {
+		this.customNameVisible = customNameVisible;
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; custom-name=" + customName;
+		return super.toString() + "; custom-name=" + customName + "; " + (customNameVisible ? "custom-name-visible" : "custom-name-invisible");
 	}
 	
 	/**
@@ -105,6 +129,8 @@ public class ObjectDisguise extends Disguise {
 	
 	static {
 		Subtypes.registerParameterizedSubtype(ObjectDisguise.class, "setCustomName", "custom-name", String.class);
+		Subtypes.registerSubtype(ObjectDisguise.class, "setCustomNameVisible", true, "custom-name-visible");
+		Subtypes.registerSubtype(ObjectDisguise.class, "setCustomNameVisible", false, "custom-name-invisible");
 	}
 	
 }
