@@ -251,32 +251,35 @@ public class iDisguise extends JavaPlugin {
 				} else if(StringUtil.equalsIgnoreCase(args[0], "player", "p") || (configuration.ENABLE_GHOST_DISGUISE && StringUtil.equalsIgnoreCase(args[0], "ghost", "g"))) {
 					if(args.length < 2) {
 						sender.sendMessage(language.WRONG_USAGE_NO_NAME);
-					} else if(!Validate.minecraftUsername(args[1].replaceAll("&[0-9a-fk-or]", ""))) {
-						sender.sendMessage(language.INVALID_NAME);
 					} else {
-						PlayerDisguise disguise = new PlayerDisguise(args[1].replaceAll("&[0-9a-fk-or]", ""), args[1].replace('&', ChatColor.COLOR_CHAR), StringUtil.equalsIgnoreCase(args[0], "ghost", "g"));
-						if(hasPermission(sender, disguise)) {
-							if(player.isOnline()) {
-								DisguiseEvent event = new DisguiseEvent(player.getPlayer(), disguise);
-								getServer().getPluginManager().callEvent(event);
-								if(event.isCancelled()) {
-									sender.sendMessage(language.EVENT_CANCELLED);
+						String skinName = args.length == 2 ? args[1].replaceAll("&[0-9a-fk-or]", "") : args[1], displayName = args.length == 2 ? ChatColor.translateAlternateColorCodes('&', args[1]) : ChatColor.translateAlternateColorCodes('&', args[2]);
+						if(!Validate.minecraftUsername(skinName)) {
+							sender.sendMessage(language.INVALID_NAME);
+						} else {
+							PlayerDisguise disguise = new PlayerDisguise(skinName, displayName, StringUtil.equalsIgnoreCase(args[0], "ghost", "g"));
+							if(hasPermission(sender, disguise)) {
+								if(player.isOnline()) {
+									DisguiseEvent event = new DisguiseEvent(player.getPlayer(), disguise);
+									getServer().getPluginManager().callEvent(event);
+									if(event.isCancelled()) {
+										sender.sendMessage(language.EVENT_CANCELLED);
+									} else {
+										DisguiseManager.getInstance().disguise(player, disguise);
+										sender.sendMessage((disguiseSelf ? language.DISGUISE_PLAYER_SUCCESS_SELF : language.DISGUISE_PLAYER_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()).replace("%name%", disguise.getDisplayName()));
+									}
 								} else {
-									DisguiseManager.getInstance().disguise(player, disguise);
-									sender.sendMessage((disguiseSelf ? language.DISGUISE_PLAYER_SUCCESS_SELF : language.DISGUISE_PLAYER_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()).replace("%name%", disguise.getDisplayName()));
+									OfflinePlayerDisguiseEvent event = new OfflinePlayerDisguiseEvent(player, disguise);
+									getServer().getPluginManager().callEvent(event);
+									if(event.isCancelled()) {
+										sender.sendMessage(language.EVENT_CANCELLED);
+									} else {
+										DisguiseManager.getInstance().disguise(player, disguise);
+										sender.sendMessage((disguiseSelf ? language.DISGUISE_PLAYER_SUCCESS_SELF : language.DISGUISE_PLAYER_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()).replace("%name%", disguise.getDisplayName()));
+									}
 								}
 							} else {
-								OfflinePlayerDisguiseEvent event = new OfflinePlayerDisguiseEvent(player, disguise);
-								getServer().getPluginManager().callEvent(event);
-								if(event.isCancelled()) {
-									sender.sendMessage(language.EVENT_CANCELLED);
-								} else {
-									DisguiseManager.getInstance().disguise(player, disguise);
-									sender.sendMessage((disguiseSelf ? language.DISGUISE_PLAYER_SUCCESS_SELF : language.DISGUISE_PLAYER_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()).replace("%name%", disguise.getDisplayName()));
-								}
+								sender.sendMessage(language.NO_PERMISSION);
 							}
-						} else {
-							sender.sendMessage(language.NO_PERMISSION);
 						}
 					}
 				} else if(args[0].equalsIgnoreCase("random")) {
@@ -616,9 +619,9 @@ public class iDisguise extends JavaPlugin {
 		}
 		
 		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " help").replace("%description%", language.HELP_HELP));		
-		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " player <name>").replace("%description%", self ? language.HELP_PLAYER_SELF : language.HELP_PLAYER_OTHER));
+		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " player [skin] <name>").replace("%description%", self ? language.HELP_PLAYER_SELF : language.HELP_PLAYER_OTHER));
 		if(configuration.ENABLE_GHOST_DISGUISE) {
-			sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " ghost <name>").replace("%description%", self ? language.HELP_GHOST_SELF : language.HELP_GHOST_OTHER));
+			sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " ghost [skin] <name>").replace("%description%", self ? language.HELP_GHOST_SELF : language.HELP_GHOST_OTHER));
 		}
 		if(sender.hasPermission("iDisguise.random")) {
 			sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " random").replace("%description%", self ? language.HELP_RANDOM_SELF : language.HELP_RANDOM_OTHER));
