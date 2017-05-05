@@ -5,6 +5,9 @@ Plugin for CraftBukkit and Spigot
 This plugin allows you to turn into almost every entity that exists in Minecraft.  
 More information can be found here: https://www.spigotmc.org/resources/idisguise.5509/
 
+## Snapshot files
+Compiled snapshot files may be downloaded over here: https://www.robingrether.de/idisguise/
+
 ## Maven repository
 ````
 <repository>
