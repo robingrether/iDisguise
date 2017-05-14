@@ -7,10 +7,10 @@ import de.robingrether.util.StringUtil;
 
 public class VersionHelper {
 	
-	private static final String[] versions = {"v1_7_R3", "v1_7_R4", "v1_8_R1", "v1_8_R2", "v1_8_R3", "v1_9_R1", "v1_9_R2", "v1_10_R1", "v1_11_R1"};
+	private static final String[] versions = {"v1_7_R3", "v1_7_R4", "v1_8_R1", "v1_8_R2", "v1_8_R3", "v1_9_R1", "v1_9_R2", "v1_10_R1", "v1_11_R1", "v1_12_R1"};
 	private static boolean initialized = false;
 	private static String versionCode, orgBukkitCraftbukkit = "org.bukkit.craftbukkit", netMinecraftServer = "net.minecraft.server", orgBukkitCraftbukkitVersioned, netMinecraftServerVersioned;
-	private static boolean debug, require1_8, require1_9, require1_10, require1_11;
+	private static boolean debug, require1_8, require1_9, require1_10, require1_11, require1_12;
 	
 	public static String getVersionCode() {
 		return versionCode;
@@ -42,6 +42,10 @@ public class VersionHelper {
 		return false;
 	}
 	
+	public static boolean require1_12() {
+		return require1_12;
+	}
+	
 	public static boolean require1_11() {
 		return require1_11;
 	}
@@ -71,6 +75,7 @@ public class VersionHelper {
 			require1_9 = requireVersion("v1_9_R1");
 			require1_10 = requireVersion("v1_10_R1");
 			require1_11 = requireVersion("v1_11_R1");
+			require1_12 = requireVersion("v1_12_R1");
 			switch(versionCode) {
 				case "v1_7_R3":
 				case "v1_7_R4":
@@ -102,6 +107,12 @@ public class VersionHelper {
 					break;
 				case "v1_11_R1":
 					Reflection.init("reflection/v1_11_R1.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
+					DisguiseManager.setInstance(new DisguiseManager());
+					PlayerHelper.setInstance((PlayerHelper)Class.forName("de.robingrether.idisguise.management.player.PlayerHelperUID18").newInstance());
+					Sounds.init("sounds/111.txt");
+					break;
+				case "v1_12_R1":
+					Reflection.init("reflection/v1_12_R1.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
 					DisguiseManager.setInstance(new DisguiseManager());
 					PlayerHelper.setInstance((PlayerHelper)Class.forName("de.robingrether.idisguise.management.player.PlayerHelperUID18").newInstance());
 					Sounds.init("sounds/111.txt");
