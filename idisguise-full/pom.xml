@@ -56,7 +56,7 @@
   	<dependency>
   		<groupId>de.robingrether.idisguise</groupId>
   		<artifactId>idisguise-impl-v1_8_R3</artifactId>
-  		<version>1.0.0</version>
+  		<version>1.0.1-SNAPSHOT</version>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
