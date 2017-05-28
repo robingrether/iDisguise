@@ -84,37 +84,23 @@ public class PacketHandler {
 	}
 	
 	public Object handlePacketPlayOutPlayerInfo(final Player observer, final Object packet) throws Exception {
-		if(VersionHelper.require1_8()) {
-			Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
-			List playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(customizablePacket);
-			List itemsToAdd = new ArrayList();
-			List itemsToRemove = new ArrayList();
-			for(Object playerInfo : playerInfoList) {
-				OfflinePlayer offlinePlayer = (OfflinePlayer)Bukkit_getOfflinePlayer.invoke(null, GameProfile_getProfileId.invoke(PlayerInfoData_getProfile.invoke(playerInfo)));
-				if(offlinePlayer != null && offlinePlayer != observer && DisguiseManager.getInstance().isDisguisedTo(offlinePlayer, observer)) {
-					Object newPlayerInfo = PacketHelper.getInstance().getPlayerInfo(offlinePlayer, customizablePacket, (Integer)PlayerInfoData_getPing.invoke(playerInfo), PlayerInfoData_getGamemode.invoke(playerInfo), PlayerInfoData_getDisplayName.invoke(playerInfo));
-					itemsToRemove.add(playerInfo);
-					if(newPlayerInfo != null) {
-						itemsToAdd.add(newPlayerInfo);
-					}
-				}
-			}
-			playerInfoList.removeAll(itemsToRemove);
-			playerInfoList.addAll(itemsToAdd);
-			return customizablePacket;
-		} else {
-			OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(ChatColor.stripColor((String)PacketPlayOutPlayerInfo_playerName.get(packet)));
+		Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
+		List playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(customizablePacket);
+		List itemsToAdd = new ArrayList();
+		List itemsToRemove = new ArrayList();
+		for(Object playerInfo : playerInfoList) {
+			OfflinePlayer offlinePlayer = (OfflinePlayer)Bukkit_getOfflinePlayer.invoke(null, GameProfile_getProfileId.invoke(PlayerInfoData_getProfile.invoke(playerInfo)));
 			if(offlinePlayer != null && offlinePlayer != observer && DisguiseManager.getInstance().isDisguisedTo(offlinePlayer, observer)) {
-				String name = (String)PacketHelper.getInstance().getPlayerInfo(offlinePlayer, null, 0, null, PacketPlayOutPlayerInfo_playerName.get(packet));
-				if(name != null) {
-					Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
-					PacketPlayOutPlayerInfo_playerName.set(customizablePacket, name);
-					return customizablePacket;
+				Object newPlayerInfo = PacketHelper.getInstance().getPlayerInfo(offlinePlayer, customizablePacket, (Integer)PlayerInfoData_getPing.invoke(playerInfo), PlayerInfoData_getGamemode.invoke(playerInfo), PlayerInfoData_getDisplayName.invoke(playerInfo));
+				itemsToRemove.add(playerInfo);
+				if(newPlayerInfo != null) {
+					itemsToAdd.add(newPlayerInfo);
 				}
-				return null;
 			}
-			return packet;
 		}
+		playerInfoList.removeAll(itemsToRemove);
+		playerInfoList.addAll(itemsToAdd);
+		return customizablePacket;
 	}
 	
 	public Object handlePacketPlayOutBed(final Player observer, final Object packet) throws Exception {
@@ -188,9 +174,7 @@ public class PacketHandler {
 					}
 					PacketPlayOutEntityTeleport_yaw.setByte(customizablePacket, (byte)(player.getLocation().getYaw() * 256 / 360));
 					PacketPlayOutEntityTeleport_pitch.setByte(customizablePacket, (byte)(player.getLocation().getPitch() * 256 / 360));
-					if(VersionHelper.require1_8()) {
-						PacketPlayOutEntityTeleport_isOnGround.setBoolean(customizablePacket, PacketPlayOutEntity_isOnGround.getBoolean(packet));
-					}
+					PacketPlayOutEntityTeleport_isOnGround.setBoolean(customizablePacket, PacketPlayOutEntity_isOnGround.getBoolean(packet));
 					return customizablePacket;
 				}
 			}

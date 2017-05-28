@@ -71,18 +71,6 @@
   		<version>1.0.0</version>
   		<scope>compile</scope>
   	</dependency>
-  	<dependency>
-  		<groupId>de.robingrether.idisguise</groupId>
-  		<artifactId>idisguise-impl-v1_7_R4</artifactId>
-  		<version>1.0.0</version>
-  		<scope>compile</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>de.robingrether.idisguise</groupId>
-  		<artifactId>idisguise-impl-v1_7_R3</artifactId>
-  		<version>1.0.0</version>
-  		<scope>compile</scope>
-  	</dependency>
   </dependencies>
   
   <build>

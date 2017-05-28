@@ -156,20 +156,12 @@ public class PacketHelper {
 					} else if(mobDisguise instanceof RabbitDisguise) {
 						EntityRabbit_setRabbitType.invoke(entity, ((RabbitDisguise)mobDisguise).getRabbitType().getId());
 					} else if(mobDisguise instanceof SheepDisguise) {
-						if(VersionHelper.require1_8()) {
-							EntitySheep_setColor.invoke(entity, EnumColor_fromColorIndex.invoke(null, ((SheepDisguise)mobDisguise).getColor().getWoolData()));
-						} else {
-							EntitySheep_setColor.invoke(entity, ((SheepDisguise)mobDisguise).getColor().getWoolData());
-						}
+						EntitySheep_setColor.invoke(entity, EnumColor_fromColorIndex.invoke(null, ((SheepDisguise)mobDisguise).getColor().getWoolData()));
 					} else if(mobDisguise instanceof VillagerDisguise) {
 						EntityVillager_setProfession.invoke(entity, ((VillagerDisguise)mobDisguise).getProfession().ordinal());
 					} else if(mobDisguise instanceof WolfDisguise) {
 						WolfDisguise wolfDisguise = (WolfDisguise)mobDisguise;
-						if(VersionHelper.require1_8()) {
-							EntityWolf_setCollarColor.invoke(entity, EnumColor_fromColorIndex.invoke(null, wolfDisguise.getCollarColor().getWoolData()));
-						} else {
-							EntityWolf_setCollarColor.invoke(entity, wolfDisguise.getCollarColor().getWoolData());
-						}
+						EntityWolf_setCollarColor.invoke(entity, EnumColor_fromColorIndex.invoke(null, wolfDisguise.getCollarColor().getWoolData()));
 						EntityWolf_setTamed.invoke(entity, wolfDisguise.isTamed());
 						EntityWolf_setAngry.invoke(entity, wolfDisguise.isAngry());
 					} else if(mobDisguise instanceof ZombieVillagerDisguise) {
@@ -185,12 +177,7 @@ public class PacketHelper {
 					EntityCreeper_setPowered.invoke(entity, ((CreeperDisguise)mobDisguise).isPowered());
 				} else if(mobDisguise instanceof EndermanDisguise) {
 					EndermanDisguise endermanDisguise = (EndermanDisguise)mobDisguise;
-					if(VersionHelper.require1_8()) {
-						EntityEnderman_setCarried.invoke(entity, Block_fromLegacyData.invoke(Block_getById.invoke(null, endermanDisguise.getBlockInHand().getId()), endermanDisguise.getBlockInHandData()));
-					} else {
-						EntityEnderman_setCarriedBlock.invoke(entity, Block_getById.invoke(null, endermanDisguise.getBlockInHand().getId()));
-						EntityEnderman_setCarriedData.invoke(entity, endermanDisguise.getBlockInHandData());
-					}
+					EntityEnderman_setCarried.invoke(entity, Block_fromLegacyData.invoke(Block_getById.invoke(null, endermanDisguise.getBlockInHand().getId()), endermanDisguise.getBlockInHandData()));
 				} else if(mobDisguise instanceof SizedDisguise) {
 					if(VersionHelper.require1_11()) {
 						EntitySlime_setSize.invoke(entity, ((SizedDisguise)mobDisguise).getSize(), false);
@@ -213,31 +200,22 @@ public class PacketHelper {
 				packets.add(PacketPlayOutSpawnEntityLiving_new.newInstance(entity));
 			} else if(disguise instanceof PlayerDisguise) {
 				packets.add(PacketPlayOutNamedEntitySpawn_new.newInstance(entityPlayer));
-				if(VersionHelper.require1_8()) {
-				} else {
-					PacketPlayOutNamedEntitySpawn_gameProfile.set(packets.get(0), PlayerHelper.getInstance().getGameProfile(player.getUniqueId(), ((PlayerDisguise)disguise).getSkinName(), ((PlayerDisguise)disguise).getDisplayName()));
-				}
+				// don't do anything here, skin is applied via player list item packet
 			} else if(disguise instanceof ObjectDisguise) {
 				ObjectDisguise objectDisguise = (ObjectDisguise)disguise;
 				Object entity = Class.forName(VersionHelper.getNMSPackage() + "." + type.getNMSClass()).getConstructor(World).newInstance(Entity_world.get(entityPlayer));
 				Location location = player.getLocation();
 				Entity_setLocation.invoke(entity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 				Entity_setEntityId.invoke(entity, player.getEntityId());
-				if(VersionHelper.require1_8()) {
-					if(attributes[0]) {
-						EntityInsentient_setCustomName.invoke(entity, player.getName());
-						EntityInsentient_setCustomNameVisible.invoke(entity, true);
-					} else if(objectDisguise.getCustomName() != null && !objectDisguise.getCustomName().isEmpty()) {
-						EntityInsentient_setCustomName.invoke(entity, objectDisguise.getCustomName());
-						EntityInsentient_setCustomNameVisible.invoke(entity, objectDisguise.isCustomNameVisible());
-					}
+				if(attributes[0]) {
+					EntityInsentient_setCustomName.invoke(entity, player.getName());
+					EntityInsentient_setCustomNameVisible.invoke(entity, true);
+				} else if(objectDisguise.getCustomName() != null && !objectDisguise.getCustomName().isEmpty()) {
+					EntityInsentient_setCustomName.invoke(entity, objectDisguise.getCustomName());
+					EntityInsentient_setCustomNameVisible.invoke(entity, objectDisguise.isCustomNameVisible());
 				}
 				if(EntityFallingBlock.isInstance(entity)) {
-					if(VersionHelper.require1_8()) {
-						packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), objectDisguise instanceof FallingBlockDisguise ? ((FallingBlockDisguise)objectDisguise).getMaterial().getId() | (((FallingBlockDisguise)objectDisguise).getData() << 12) : 1));
-					} else {
-						packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), objectDisguise instanceof FallingBlockDisguise ? ((FallingBlockDisguise)objectDisguise).getMaterial().getId() | (((FallingBlockDisguise)objectDisguise).getData() << 16) : 1));
-					}
+					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), objectDisguise instanceof FallingBlockDisguise ? ((FallingBlockDisguise)objectDisguise).getMaterial().getId() | (((FallingBlockDisguise)objectDisguise).getData() << 12) : 1));
 				} else if(EntityItem.isInstance(entity)) {
 					if(objectDisguise instanceof ItemDisguise) {
 						ItemDisguise itemDisguise = (ItemDisguise)objectDisguise;
@@ -248,12 +226,7 @@ public class PacketHelper {
 				} else if(EntityMinecartAbstract.isInstance(entity)) {
 					if(objectDisguise instanceof MinecartDisguise) {
 						MinecartDisguise minecartDisguise = (MinecartDisguise)objectDisguise;
-						if(VersionHelper.require1_8()) {
-							EntityMinecartAbstract_setDisplayBlock.invoke(entity, Block_fromLegacyData.invoke(Block_getById.invoke(null, minecartDisguise.getDisplayedBlock().getId()), minecartDisguise.getDisplayedBlockData()));
-						} else {
-							EntityMinecartAbstract_setDisplayBlockId.invoke(entity, minecartDisguise.getDisplayedBlock().getId());
-							EntityMinecartAbstract_setDisplayBlockData.invoke(entity, minecartDisguise.getDisplayedBlockData());
-						}
+						EntityMinecartAbstract_setDisplayBlock.invoke(entity, Block_fromLegacyData.invoke(Block_getById.invoke(null, minecartDisguise.getDisplayedBlock().getId()), minecartDisguise.getDisplayedBlockData()));
 					}
 					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), 0));
 					packets.add(PacketPlayOutEntityMetadata_new_full.newInstance(player.getEntityId(), Entity_getDataWatcher.invoke(entity), true));
@@ -278,27 +251,17 @@ public class PacketHelper {
 	
 	public Object getPlayerInfo(OfflinePlayer offlinePlayer, Object context, int ping, Object gamemode, Object displayName) {
 		Disguise disguise = DisguiseManager.getInstance().getDisguise(offlinePlayer);
-		if(VersionHelper.require1_8()) {
-			try {
-				if(disguise == null) {
-					return PlayerInfoData_new.newInstance(context, offlinePlayer.isOnline() ? CraftPlayer_getProfile.invoke(offlinePlayer) : CraftOfflinePlayer_getProfile.invoke(offlinePlayer), ping, gamemode, displayName);
-				} else if(disguise instanceof PlayerDisguise) {
-					return PlayerInfoData_new.newInstance(context, PlayerHelper.getInstance().getGameProfile(offlinePlayer.getUniqueId(), ((PlayerDisguise)disguise).getSkinName(), ((PlayerDisguise)disguise).getDisplayName()), ping, gamemode, attributes[1] ? Array.get(CraftChatMessage_fromString.invoke(null, ((PlayerDisguise)disguise).getDisplayName()), 0) : displayName != null ? displayName : Array.get(CraftChatMessage_fromString.invoke(null, offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName()), 0));
-				} else if(!attributes[1]) {
-					return PlayerInfoData_new.newInstance(context, offlinePlayer.isOnline() ? CraftPlayer_getProfile.invoke(offlinePlayer) : CraftOfflinePlayer_getProfile.invoke(offlinePlayer), ping, gamemode, displayName);
-				}
-			} catch(Exception e) {
-				if(VersionHelper.debug()) {
-					iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot construct the required player info.", e);
-				}
-			}
-		} else {
+		try {
 			if(disguise == null) {
-				return displayName;
+				return PlayerInfoData_new.newInstance(context, offlinePlayer.isOnline() ? CraftPlayer_getProfile.invoke(offlinePlayer) : CraftOfflinePlayer_getProfile.invoke(offlinePlayer), ping, gamemode, displayName);
 			} else if(disguise instanceof PlayerDisguise) {
-				return attributes[1] ? ((PlayerDisguise)disguise).getDisplayName() : displayName != null ? displayName : offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName();
+				return PlayerInfoData_new.newInstance(context, PlayerHelper.getInstance().getGameProfile(offlinePlayer.getUniqueId(), ((PlayerDisguise)disguise).getSkinName(), ((PlayerDisguise)disguise).getDisplayName()), ping, gamemode, attributes[1] ? Array.get(CraftChatMessage_fromString.invoke(null, ((PlayerDisguise)disguise).getDisplayName()), 0) : displayName != null ? displayName : Array.get(CraftChatMessage_fromString.invoke(null, offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName()), 0));
 			} else if(!attributes[1]) {
-				return displayName;
+				return PlayerInfoData_new.newInstance(context, offlinePlayer.isOnline() ? CraftPlayer_getProfile.invoke(offlinePlayer) : CraftOfflinePlayer_getProfile.invoke(offlinePlayer), ping, gamemode, displayName);
+			}
+		} catch(Exception e) {
+			if(VersionHelper.debug()) {
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot construct the required player info.", e);
 			}
 		}
 		return null;
@@ -354,14 +317,8 @@ public class PacketHelper {
 		try {
 			if(PacketPlayOutPlayerInfo.isInstance(packet)) {
 				clone = PacketPlayOutPlayerInfo_new.newInstance();
-				if(VersionHelper.require1_8()) {
-					PacketPlayOutPlayerInfo_action.set(clone, PacketPlayOutPlayerInfo_action.get(packet));
-					PacketPlayOutPlayerInfo_playerInfoList.set(clone, ((ArrayList<?>)PacketPlayOutPlayerInfo_playerInfoList.get(packet)).clone());
-				} else {
-					PacketPlayOutPlayerInfo_playerName.set(clone, PacketPlayOutPlayerInfo_playerName.get(packet));
-					PacketPlayOutPlayerInfo_ping.setInt(clone, PacketPlayOutPlayerInfo_ping.getInt(packet));
-					PacketPlayOutPlayerInfo_isOnline.setBoolean(clone, PacketPlayOutPlayerInfo_isOnline.getBoolean(packet));
-				}
+				PacketPlayOutPlayerInfo_action.set(clone, PacketPlayOutPlayerInfo_action.get(packet));
+				PacketPlayOutPlayerInfo_playerInfoList.set(clone, ((ArrayList<?>)PacketPlayOutPlayerInfo_playerInfoList.get(packet)).clone());
 			} else if(PacketPlayOutEntityMetadata.isInstance(packet)) {
 				clone = PacketPlayOutEntityMetadata_new_empty.newInstance();
 				PacketPlayOutEntityMetadata_entityId.setInt(clone, PacketPlayOutEntityMetadata_entityId.getInt(packet));
@@ -383,9 +340,7 @@ public class PacketHelper {
 				PacketPlayOutEntityTeleport_z.set(clone, PacketPlayOutEntityTeleport_z.get(packet));
 				PacketPlayOutEntityTeleport_yaw.setByte(clone, PacketPlayOutEntityTeleport_yaw.getByte(packet));
 				PacketPlayOutEntityTeleport_pitch.setByte(clone, PacketPlayOutEntityTeleport_pitch.getByte(packet));
-				if(VersionHelper.require1_8()) {
-					PacketPlayOutEntityTeleport_isOnGround.setBoolean(clone, PacketPlayOutEntityTeleport_isOnGround.getBoolean(packet));
-				}
+				PacketPlayOutEntityTeleport_isOnGround.setBoolean(clone, PacketPlayOutEntityTeleport_isOnGround.getBoolean(packet));
 			} else if(PacketPlayOutNamedSoundEffect.isInstance(packet)) {
 				clone = PacketPlayOutNamedSoundEffect_new.newInstance();
 				PacketPlayOutNamedSoundEffect_soundEffect.set(clone, PacketPlayOutNamedSoundEffect_soundEffect.get(packet));
