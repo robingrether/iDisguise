@@ -8,7 +8,7 @@ import java.util.Locale;
  * @since 5.6.3
  * @author RobinGrether
  */
-public class ParrotDisguise extends AgeableDisguise {
+public class ParrotDisguise extends MobDisguise {
 	
 	private static final long serialVersionUID = -6569588312342758585L;
 	private Variant variant;
@@ -19,7 +19,7 @@ public class ParrotDisguise extends AgeableDisguise {
 	 * @since 5.6.3
 	 */
 	public ParrotDisguise() {
-		this(true, Variant.RED);
+		this(Variant.RED);
 	}
 	
 	/**
@@ -27,8 +27,8 @@ public class ParrotDisguise extends AgeableDisguise {
 	 * 
 	 * @since 5.6.3
 	 */
-	public ParrotDisguise(boolean adult, Variant variant) {
-		super(DisguiseType.PARROT, adult);
+	public ParrotDisguise(Variant variant) {
+		super(DisguiseType.PARROT);
 		this.variant = variant;
 	}
 	

@@ -35,7 +35,7 @@ public enum DisguiseType {
 	GUARDIAN(Type.MOB, "v1_8_R1", MobDisguise.class, "EntityGuardian", "guardian"),
 	HORSE(Type.MOB, "v1_8_R1", StyledHorseDisguise.class, "EntityHorse", "horse"),
 	HUSK(Type.MOB, "v1_10_R1", AgeableDisguise.class, "EntityZombieHusk", "husk"),
-	ILLUSIONER(Type.MOB, "v1_12_R1", MobDisguise.class, "EntityIllusioner", "illusioner"),
+	ILLUSIONER(Type.MOB, "v1_12_R1", MobDisguise.class, "EntityIllagerIllusioner", "illusioner"),
 	IRON_GOLEM(Type.MOB, "v1_8_R1", MobDisguise.class, "EntityIronGolem", "iron_golem", "iron-golem", "irongolem", "golem"),
 	LLAMA(Type.MOB, "v1_11_R1", LlamaDisguise.class, "EntityLlama", "llama"),
 	MAGMA_CUBE(Type.MOB, "v1_8_R1", SizedDisguise.class, "EntityMagmaCube", "magma_cube", "magma-cube", "magmacube", "magma", "lava_cube", "lava-cube", "lavacube", "lava", "magma_slime", "magma-slime", "magmaslime", "lava_slime", "lava-slime", "lavaslime"),
