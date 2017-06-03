@@ -152,8 +152,6 @@ public class PacketHelper {
 						EntityHorseChestedAbstract_setCarryingChest.invoke(entity, llamaDisguise.hasChest());
 					} else if(mobDisguise instanceof OcelotDisguise) {
 						EntityOcelot_setCatType.invoke(entity, ((OcelotDisguise)mobDisguise).getCatType().getId());
-					} else if(mobDisguise instanceof ParrotDisguise) { 
-						EntityParrot_setVariant.invoke(entity, ((ParrotDisguise)mobDisguise).getVariant().ordinal());
 					} else if(mobDisguise instanceof PigDisguise) {
 						EntityPig_setSaddle.invoke(entity, ((PigDisguise)mobDisguise).isSaddled());
 					} else if(mobDisguise instanceof RabbitDisguise) {
@@ -181,6 +179,8 @@ public class PacketHelper {
 				} else if(mobDisguise instanceof EndermanDisguise) {
 					EndermanDisguise endermanDisguise = (EndermanDisguise)mobDisguise;
 					EntityEnderman_setCarried.invoke(entity, Block_fromLegacyData.invoke(Block_getById.invoke(null, endermanDisguise.getBlockInHand().getId()), endermanDisguise.getBlockInHandData()));
+				} else if(mobDisguise instanceof ParrotDisguise) {
+					EntityParrot_setVariant.invoke(entity, ((ParrotDisguise)mobDisguise).getVariant().ordinal());
 				} else if(mobDisguise instanceof SizedDisguise) {
 					if(VersionHelper.require1_11()) {
 						EntitySlime_setSize.invoke(entity, ((SizedDisguise)mobDisguise).getSize(), false);
