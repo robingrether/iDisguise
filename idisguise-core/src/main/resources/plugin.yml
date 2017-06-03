@@ -72,6 +72,7 @@ permissions:
          iDisguise.mob.ocelot: true
          iDisguise.mob.ocelot.type.*: true
          iDisguise.mob.parrot: true
+         iDisguise.mob.parrot.variant.*: true
          iDisguise.mob.pig: true
          iDisguise.mob.pig.saddled: true
          iDisguise.mob.pig_zombie: true
@@ -178,6 +179,26 @@ permissions:
    iDisguise.mob.ocelot.type.wild:
       default: false
    iDisguise.mob.parrot:
+      default: false
+      children:
+         iDisguise.mob.parrot.variant.red: true
+   iDisguise.mob.parrot.variant.*:
+      default: false
+      children:
+         iDisguise.mob.parrot.variant.blue: true
+         iDisguise.mob.parrot.variant.cyan: true
+         iDisguise.mob.parrot.variant.gray: true
+         iDisguise.mob.parrot.variant.green: true
+         iDisguise.mob.parrot.variant.red: true
+   iDisguise.mob.parrot.variant.blue:
+      default: false
+   iDisguise.mob.parrot.variant.cyan:
+      default: false
+   iDisguise.mob.parrot.variant.gray:
+      default: false
+   iDisguise.mob.parrot.variant.green:
+      default: false
+   iDisguise.mob.parrot.variant.red:
       default: false
    iDisguise.mob.pig:
       default: false
