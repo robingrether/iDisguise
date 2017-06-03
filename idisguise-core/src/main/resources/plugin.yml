@@ -62,6 +62,7 @@ permissions:
          iDisguise.mob.guardian: true
          iDisguise.mob.horse: true
          iDisguise.mob.husk: true
+         iDisguise.mob.illusioner: true
          iDisguise.mob.iron_golem: true
          iDisguise.mob.llama: true
          iDisguise.mob.magma_cube: true
@@ -70,6 +71,7 @@ permissions:
          iDisguise.mob.mushroom_cow: true
          iDisguise.mob.ocelot: true
          iDisguise.mob.ocelot.type.*: true
+         iDisguise.mob.parrot: true
          iDisguise.mob.pig: true
          iDisguise.mob.pig.saddled: true
          iDisguise.mob.pig_zombie: true
@@ -142,6 +144,8 @@ permissions:
       default: false
    iDisguise.mob.husk:
       default: false
+   iDisguise.mob.illusioner:
+      default: false
    iDisguise.mob.iron_golem:
       default: false
    iDisguise.mob.llama:
@@ -172,6 +176,8 @@ permissions:
    iDisguise.mob.ocelot.type.siamese:
       default: false
    iDisguise.mob.ocelot.type.wild:
+      default: false
+   iDisguise.mob.parrot:
       default: false
    iDisguise.mob.pig:
       default: false

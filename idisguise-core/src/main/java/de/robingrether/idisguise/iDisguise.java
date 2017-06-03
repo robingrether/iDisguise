@@ -808,6 +808,8 @@ public class iDisguise extends JavaPlugin {
 				return sender.hasPermission("iDisguise.mob.horse") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case HUSK:
 				return sender.hasPermission("iDisguise.mob.husk") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
+			case ILLUSIONER:
+				return sender.hasPermission("iDisguise.mob.illusioner");
 			case IRON_GOLEM:
 				return sender.hasPermission("iDisguise.mob.iron_golem");
 			case LLAMA:
@@ -820,6 +822,8 @@ public class iDisguise extends JavaPlugin {
 				return sender.hasPermission("iDisguise.mob.mushroom_cow") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby"));
 			case OCELOT:
 				return sender.hasPermission("iDisguise.mob.ocelot") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && sender.hasPermission("iDisguise.mob.ocelot.type." + ((OcelotDisguise)disguise).getCatType().name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", ""));
+			case PARROT:
+				return sender.hasPermission("iDisguise.mob.parrot");
 			case PIG:
 				return sender.hasPermission("iDisguise.mob.pig") && (((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) && (!((PigDisguise)disguise).isSaddled() || sender.hasPermission("iDisguise.mob.pig.saddled"));
 			case PIG_ZOMBIE:
