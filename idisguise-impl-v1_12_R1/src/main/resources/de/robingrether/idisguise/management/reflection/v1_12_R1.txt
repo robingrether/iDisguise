@@ -78,6 +78,9 @@ EntityMinecartAbstract_setDisplayBlock->MEntityMinecartAbstract$setDisplayBlock(
 EntityOcelot->C{nms}.EntityOcelot
 EntityOcelot_setCatType->MEntityOcelot$setCatType(int)
 
+EntityParrot->C{nms}.EntityParrot
+EntityParrot_setVariant->MEntityParrot$setVariant(int)
+
 EntityPig->C{nms}.EntityPig
 EntityPig_setSaddle->MEntityPig$setSaddle(boolean)
 

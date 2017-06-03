@@ -29,6 +29,7 @@ import de.robingrether.idisguise.disguise.MinecartDisguise;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.ObjectDisguise;
 import de.robingrether.idisguise.disguise.OcelotDisguise;
+import de.robingrether.idisguise.disguise.ParrotDisguise;
 import de.robingrether.idisguise.disguise.PigDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.disguise.RabbitDisguise;
@@ -151,6 +152,8 @@ public class PacketHelper {
 						EntityHorseChestedAbstract_setCarryingChest.invoke(entity, llamaDisguise.hasChest());
 					} else if(mobDisguise instanceof OcelotDisguise) {
 						EntityOcelot_setCatType.invoke(entity, ((OcelotDisguise)mobDisguise).getCatType().getId());
+					} else if(mobDisguise instanceof ParrotDisguise) { 
+						EntityParrot_setVariant.invoke(entity, ((ParrotDisguise)mobDisguise).getVariant().ordinal());
 					} else if(mobDisguise instanceof PigDisguise) {
 						EntityPig_setSaddle.invoke(entity, ((PigDisguise)mobDisguise).isSaddled());
 					} else if(mobDisguise instanceof RabbitDisguise) {
