@@ -60,9 +60,11 @@ public class PlayerHelperUID18 extends PlayerHelper {
 			connection.setDoOutput(true);
 			reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			String response = reader.readLine();
-			JSONObject object = (JSONObject)JSONValue.parse(response);
-			UUID uniqueId = UUID.fromString(((String)object.get(API_NAME_ID)).replaceFirst("([0-9a-f]{8})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{12})", "$1-$2-$3-$4-$5"));
-			loadGameProfile(uniqueId);
+			if(response != null && !response.isEmpty()) {
+				JSONObject object = (JSONObject)JSONValue.parse(response);
+				UUID uniqueId = UUID.fromString(((String)object.get(API_NAME_ID)).replaceFirst("([0-9a-f]{8})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{12})", "$1-$2-$3-$4-$5"));
+				loadGameProfile(uniqueId);
+			}
 			synchronized(currentlyLoadingByName.get(name)) {
 				currentlyLoadingByName.remove(name).notifyAll();
 			}
@@ -97,17 +99,19 @@ public class PlayerHelperUID18 extends PlayerHelper {
 			connection.setDoOutput(true);
 			reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			String response = reader.readLine();
-			JSONObject object = (JSONObject)JSONValue.parse(response);
-			String name = (String)object.get(API_UID_NAME);
-			GameProfile profile = new GameProfile(uniqueId, name);
-			JSONArray array = (JSONArray)object.get(API_UID_PROPERTIES);
-			for(Object obj : array) {
-				JSONObject property = (JSONObject)obj;
-				String propertyName = (String)property.get(API_UID_NAME);
-				profile.getProperties().put(propertyName, new Property(propertyName, (String)property.get(API_UID_VALUE), (String)property.get(API_UID_SIGNATURE)));
+			if(response != null && !response.isEmpty()) {
+				JSONObject object = (JSONObject)JSONValue.parse(response);
+				String name = (String)object.get(API_UID_NAME);
+				GameProfile profile = new GameProfile(uniqueId, name);
+				JSONArray array = (JSONArray)object.get(API_UID_PROPERTIES);
+				for(Object obj : array) {
+					JSONObject property = (JSONObject)obj;
+					String propertyName = (String)property.get(API_UID_NAME);
+					profile.getProperties().put(propertyName, new Property(propertyName, (String)property.get(API_UID_VALUE), (String)property.get(API_UID_SIGNATURE)));
+				}
+				profilesById.put(uniqueId, profile);
+				profilesByName.put(name.toLowerCase(Locale.ENGLISH), profile);
 			}
-			profilesById.put(uniqueId, profile);
-			profilesByName.put(name.toLowerCase(Locale.ENGLISH), profile);
 			synchronized(currentlyLoadingById.get(uniqueId)) {
 				currentlyLoadingById.remove(uniqueId).notifyAll();
 			}
