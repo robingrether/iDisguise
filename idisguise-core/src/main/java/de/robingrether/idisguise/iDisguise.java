@@ -155,7 +155,7 @@ public class iDisguise extends JavaPlugin {
 		enabled = true;
 		for(Player player : Reflection.getOnlinePlayers()) {
 			PlayerHelper.getInstance().addPlayer(player);
-			PlayerHelper.getInstance().loadGameProfileAsynchronously(player.getName());
+			PlayerHelper.getInstance().loadGameProfileAsynchronously(player.getUniqueId());
 		}
 		ChannelInjector.getInstance().injectOnlinePlayers();
 		DisguiseManager.getInstance().resendPackets();
