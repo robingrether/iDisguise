@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import org.bstats.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -56,7 +57,6 @@ import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.GhostFactory;
 import de.robingrether.idisguise.management.PacketHelper;
 import de.robingrether.idisguise.management.PlayerHelper;
-import de.robingrether.idisguise.management.Reflection;
 import de.robingrether.idisguise.management.Sounds;
 import de.robingrether.idisguise.management.VersionHelper;
 import de.robingrether.util.ObjectUtil;
@@ -153,7 +153,7 @@ public class iDisguise extends JavaPlugin {
 		}
 		getLogger().log(Level.INFO, String.format("%s enabled!", getFullName()));
 		enabled = true;
-		for(Player player : Reflection.getOnlinePlayers()) {
+		for(Player player : Bukkit.getOnlinePlayers()) {
 			PlayerHelper.getInstance().addPlayer(player);
 			PlayerHelper.getInstance().loadGameProfileAsynchronously(player.getUniqueId());
 		}
@@ -533,7 +533,7 @@ public class iDisguise extends JavaPlugin {
 					completions.add("reload");
 				}
 				if(sender.hasPermission("iDisguise.others")) {
-					for(Player player : Reflection.getOnlinePlayers()) {
+					for(Player player : Bukkit.getOnlinePlayers()) {
 						completions.add(player.getName());
 					}
 				}
@@ -584,7 +584,7 @@ public class iDisguise extends JavaPlugin {
 					completions.add("*");
 				}
 				if(sender.hasPermission("iDisguise.undisguise.others")) {
-					for(Player player : Reflection.getOnlinePlayers()) {
+					for(Player player : Bukkit.getOnlinePlayers()) {
 						if(DisguiseManager.getInstance().isDisguised(player)) {
 							completions.add(player.getName());
 						}

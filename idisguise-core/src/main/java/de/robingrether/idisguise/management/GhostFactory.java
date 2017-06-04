@@ -44,7 +44,7 @@ public class GhostFactory {
 			ghostTeam = scoreboard.registerNewTeam(GHOST_TEAM_NAME);
 		}
 		ghostTeam.setCanSeeFriendlyInvisibles(true);
-		for(Player player : Reflection.getOnlinePlayers()) {
+		for(Player player : Bukkit.getOnlinePlayers()) {
 			addPlayer(player.getName());
 		}
 		for(OfflinePlayer offlinePlayer : DisguiseManager.getInstance().getDisguisedPlayers()) {

@@ -7,14 +7,9 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.bukkit.entity.Player;
 
 import de.robingrether.idisguise.iDisguise;
 
@@ -468,22 +463,6 @@ public class Reflection {
 			if(VersionHelper.debug()) {
 				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot load the required reflection configuration.", e);
 			}
-		}
-	}
-	
-	public static Collection<Player> getOnlinePlayers() {
-		try {
-			Object object = Bukkit_getOnlinePlayers.invoke(null);
-			if(object instanceof Collection) {
-				return (Collection<Player>)object;
-			} else {
-				return Arrays.asList((Player[])object);
-			}
-		} catch(Exception e) {
-			if(VersionHelper.debug()) {
-				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot access org.bukkit.Bukkit$getOnlinePlayers()", e);
-			}
-			return new ArrayList<Player>();
 		}
 	}
 	

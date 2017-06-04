@@ -51,7 +51,7 @@ public class DisguiseManager {
 		if(offlinePlayer.isOnline()) {
 			Player player = offlinePlayer.getPlayer();
 			Disguise oldDisguise = disguiseMap.getDisguise(player);
-			for(Player observer : Reflection.getOnlinePlayers()) {
+			for(Player observer : Bukkit.getOnlinePlayers()) {
 				if(observer == player) {
 					continue;
 				}
@@ -69,7 +69,7 @@ public class DisguiseManager {
 					GhostFactory.getInstance().addGhost(player);
 				}
 			}
-			for(Player observer : Reflection.getOnlinePlayers()) {
+			for(Player observer : Bukkit.getOnlinePlayers()) {
 				if(observer == player) {
 					continue;
 				}
@@ -87,7 +87,7 @@ public class DisguiseManager {
 			if(disguise == null) {
 				return null;
 			}
-			for(Player observer : Reflection.getOnlinePlayers()) {
+			for(Player observer : Bukkit.getOnlinePlayers()) {
 				if(observer == player) {
 					continue;
 				}
@@ -99,7 +99,7 @@ public class DisguiseManager {
 				}
 			}
 			disguiseMap.removeDisguise(player);
-			for(Player observer : Reflection.getOnlinePlayers()) {
+			for(Player observer : Bukkit.getOnlinePlayers()) {
 				if(observer == player) {
 					continue;
 				}
@@ -131,7 +131,7 @@ public class DisguiseManager {
 	
 	public int getNumberOfDisguisedPlayers() {
 		int i = 0;
-		for(Player player : Reflection.getOnlinePlayers()) {
+		for(Player player : Bukkit.getOnlinePlayers()) {
 			if(isDisguised(player)) {
 				i++;
 			}
@@ -160,13 +160,13 @@ public class DisguiseManager {
 	}
 	
 	public void resendPackets(Player player) {
-		for(Player observer : Reflection.getOnlinePlayers()) {
+		for(Player observer : Bukkit.getOnlinePlayers()) {
 			if(observer == player) {
 				continue;
 			}
 			observer.hidePlayer(player);
 		}
-		for(Player observer : Reflection.getOnlinePlayers()) {
+		for(Player observer : Bukkit.getOnlinePlayers()) {
 			if(observer == player) {
 				continue;
 			}
@@ -178,13 +178,13 @@ public class DisguiseManager {
 		for(OfflinePlayer offlinePlayer : getDisguisedPlayers()) {
 			if(offlinePlayer.isOnline()) {
 				Player player = offlinePlayer.getPlayer();
-				for(Player observer : Reflection.getOnlinePlayers()) {
+				for(Player observer : Bukkit.getOnlinePlayers()) {
 					if(observer == player) {
 						continue;
 					}
 					observer.hidePlayer(player);
 				}
-				for(Player observer : Reflection.getOnlinePlayers()) {
+				for(Player observer : Bukkit.getOnlinePlayers()) {
 					if(observer == player) {
 						continue;
 					}

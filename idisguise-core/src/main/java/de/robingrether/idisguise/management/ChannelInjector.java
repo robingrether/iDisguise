@@ -1,5 +1,6 @@
 package de.robingrether.idisguise.management;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public abstract class ChannelInjector {
@@ -19,13 +20,13 @@ public abstract class ChannelInjector {
 	public abstract void remove(Player player);
 	
 	public void injectOnlinePlayers() {
-		for(Player player : Reflection.getOnlinePlayers()) {
+		for(Player player : Bukkit.getOnlinePlayers()) {
 			inject(player);
 		}
 	}
 	
 	public void removeOnlinePlayers() {
-		for(Player player : Reflection.getOnlinePlayers()) {
+		for(Player player : Bukkit.getOnlinePlayers()) {
 			remove(player);
 		}
 	}
