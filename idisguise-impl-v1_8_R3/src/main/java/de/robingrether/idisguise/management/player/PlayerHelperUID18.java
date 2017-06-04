@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -40,6 +42,8 @@ public class PlayerHelperUID18 extends PlayerHelper {
 	private final Map<String, Object> currentlyLoadingByName = new ConcurrentHashMap<String, Object>();
 	private final Map<UUID, Object> currentlyLoadingById = new ConcurrentHashMap<UUID, Object>();
 	
+	private final Set<String> nonExistingProfiles = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+	
 	private void loadGameProfile(String name) {
 		name = name.toLowerCase(Locale.ENGLISH);
 		if(currentlyLoadingByName.containsKey(name)) {
@@ -64,6 +68,8 @@ public class PlayerHelperUID18 extends PlayerHelper {
 				JSONObject object = (JSONObject)JSONValue.parse(response);
 				UUID uniqueId = UUID.fromString(((String)object.get(API_NAME_ID)).replaceFirst("([0-9a-f]{8})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{12})", "$1-$2-$3-$4-$5"));
 				loadGameProfile(uniqueId);
+			} else {
+				nonExistingProfiles.add(name);
 			}
 			synchronized(currentlyLoadingByName.get(name)) {
 				currentlyLoadingByName.remove(name).notifyAll();
@@ -204,7 +210,8 @@ public class PlayerHelperUID18 extends PlayerHelper {
 	}
 	
 	public boolean isGameProfileLoaded(String name) {
-		return profilesByName.containsKey(name.toLowerCase(Locale.ENGLISH));
+		name = name.toLowerCase(Locale.ENGLISH);
+		return profilesByName.containsKey(name) || nonExistingProfiles.contains(name);
 	}
 	
 	public void waitForGameProfile(String name) {
