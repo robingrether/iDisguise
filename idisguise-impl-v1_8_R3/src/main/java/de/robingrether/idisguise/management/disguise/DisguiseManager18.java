@@ -20,7 +20,7 @@ public class DisguiseManager18 extends DisguiseManager {
 			
 			public void run() {
 				if(player != null) {
-					for(Player observer : Reflection.getOnlinePlayers()) {
+					for(Player observer : Bukkit.getOnlinePlayers()) {
 						if(observer == player) {
 							continue;
 						}
@@ -53,7 +53,7 @@ public class DisguiseManager18 extends DisguiseManager {
 		if(offlinePlayer.isOnline()) {
 			Player player = offlinePlayer.getPlayer();
 			Disguise oldDisguise = disguiseMap.getDisguise(player);
-			for(Player observer : Reflection.getOnlinePlayers()) {
+			for(Player observer : Bukkit.getOnlinePlayers()) {
 				if(observer == player) {
 					continue;
 				}
@@ -84,7 +84,7 @@ public class DisguiseManager18 extends DisguiseManager {
 			if(disguise == null) {
 				return null;
 			}
-			for(Player observer : Reflection.getOnlinePlayers()) {
+			for(Player observer : Bukkit.getOnlinePlayers()) {
 				if(observer == player) {
 					continue;
 				}
@@ -104,7 +104,7 @@ public class DisguiseManager18 extends DisguiseManager {
 	}
 	
 	public void resendPackets(Player player) {
-		for(Player observer : Reflection.getOnlinePlayers()) {
+		for(Player observer : Bukkit.getOnlinePlayers()) {
 			if(observer == player) {
 				continue;
 			}
@@ -117,7 +117,7 @@ public class DisguiseManager18 extends DisguiseManager {
 		for(OfflinePlayer offlinePlayer : getDisguisedPlayers()) {
 			if(offlinePlayer.isOnline()) {
 				Player player = offlinePlayer.getPlayer();
-				for(Player observer : Reflection.getOnlinePlayers()) {
+				for(Player observer : Bukkit.getOnlinePlayers()) {
 					if(observer == player) {
 						continue;
 					}
