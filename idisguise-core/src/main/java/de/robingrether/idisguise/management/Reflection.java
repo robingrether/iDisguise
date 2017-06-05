@@ -286,6 +286,19 @@ public class Reflection {
 	public static Class<?> EntityParrot;
 	public static Method EntityParrot_setVariant;
 	
+	public static Class<?> PacketPlayOutScoreboardTeam;
+	public static Constructor<?> PacketPlayOutScoreboardTeam_new;
+	public static Field PacketPlayOutScoreboardTeam_teamName;
+	public static Field PacketPlayOutScoreboardTeam_displayName;
+	public static Field PacketPlayOutScoreboardTeam_prefix;
+	public static Field PacketPlayOutScoreboardTeam_suffix;
+	public static Field PacketPlayOutScoreboardTeam_nameTagVisibility;
+	public static Field PacketPlayOutScoreboardTeam_collisionRule;
+	public static Field PacketPlayOutScoreboardTeam_color;
+	public static Field PacketPlayOutScoreboardTeam_entries;
+	public static Field PacketPlayOutScoreboardTeam_action;
+	public static Field PacketPlayOutScoreboardTeam_friendlyFlags;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");

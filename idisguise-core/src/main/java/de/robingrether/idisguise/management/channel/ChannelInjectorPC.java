@@ -75,6 +75,8 @@ public class ChannelInjectorPC extends ChannelInjector {
 				return new Object[] {PacketHandler.getInstance().handlePacketPlayOutUpdateAttributes(observer, packet)};
 			} else if(PacketPlayOutCollect.isInstance(packet)) {
 				return new Object[] {PacketHandler.getInstance().handlePacketPlayOutCollect(observer, packet)};
+			} else if(PacketPlayOutScoreboardTeam.isInstance(packet)) {
+				return new Object[] {PacketHandler.getInstance().handlePacketPlayOutScoreboardTeam(observer, packet)};
 			} else if(Sounds.isEnabled() && PacketPlayOutNamedSoundEffect.isInstance(packet)) {
 				return new Object[] {PacketHandler.getInstance().handlePacketPlayOutNamedSoundEffect(observer, packet)};
 			}

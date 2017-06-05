@@ -4,6 +4,7 @@ import static de.robingrether.idisguise.management.Reflection.*;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -355,6 +356,20 @@ public class PacketHelper {
 				PacketPlayOutNamedSoundEffect_z.setInt(clone, PacketPlayOutNamedSoundEffect_z.getInt(packet));
 				PacketPlayOutNamedSoundEffect_volume.setFloat(clone, PacketPlayOutNamedSoundEffect_volume.getFloat(packet));
 				PacketPlayOutNamedSoundEffect_pitch.setInt(clone, PacketPlayOutNamedSoundEffect_pitch.getInt(packet));
+			} else if(PacketPlayOutScoreboardTeam.isInstance(packet)) {
+				clone = PacketPlayOutScoreboardTeam_new.newInstance();
+				PacketPlayOutScoreboardTeam_teamName.set(clone, PacketPlayOutScoreboardTeam_teamName.get(packet));
+				PacketPlayOutScoreboardTeam_displayName.set(clone, PacketPlayOutScoreboardTeam_displayName.get(packet));
+				PacketPlayOutScoreboardTeam_prefix.set(clone, PacketPlayOutScoreboardTeam_prefix.get(packet));
+				PacketPlayOutScoreboardTeam_suffix.set(clone, PacketPlayOutScoreboardTeam_suffix.get(packet));
+				PacketPlayOutScoreboardTeam_nameTagVisibility.set(clone, PacketPlayOutScoreboardTeam_nameTagVisibility.get(packet));
+				if(VersionHelper.require1_9()) {
+					PacketPlayOutScoreboardTeam_collisionRule.set(clone, PacketPlayOutScoreboardTeam_collisionRule.get(packet));
+				}
+				PacketPlayOutScoreboardTeam_color.setInt(clone, PacketPlayOutScoreboardTeam_color.getInt(packet));
+				((Collection<String>)PacketPlayOutScoreboardTeam_entries.get(clone)).addAll((Collection<String>)PacketPlayOutScoreboardTeam_entries.get(packet));
+				PacketPlayOutScoreboardTeam_action.setInt(clone, PacketPlayOutScoreboardTeam_action.getInt(packet));
+				PacketPlayOutScoreboardTeam_friendlyFlags.setInt(clone, PacketPlayOutScoreboardTeam_friendlyFlags.getInt(packet));
 			}
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {
