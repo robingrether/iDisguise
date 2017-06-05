@@ -1,7 +1,5 @@
 package de.robingrether.idisguise.management.channel;
 
-import static de.robingrether.idisguise.management.Reflection.*;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.logging.Level;
@@ -25,7 +23,7 @@ public class InjectedPlayerConnection183 extends PlayerConnection implements Inj
 	private final Player observer;
 	
 	public InjectedPlayerConnection183(ChannelInjectorPC channelInjector, Player observer, Object originalConnection) throws Exception {
-		super((MinecraftServer)MinecraftServer_getServer.invoke(null), ((PlayerConnection)originalConnection).networkManager, ((CraftPlayer)observer).getHandle());
+		super(MinecraftServer.getServer(), ((PlayerConnection)originalConnection).networkManager, ((CraftPlayer)observer).getHandle());
 		this.channelInjector = channelInjector;
 		this.observer = observer;
 		for(Field field : PlayerConnection.class.getDeclaredFields()) {
@@ -37,7 +35,7 @@ public class InjectedPlayerConnection183 extends PlayerConnection implements Inj
 	}
 	
 	public void resetToDefaultConnection() throws Exception {
-		PlayerConnection defaultConnection = new PlayerConnection((MinecraftServer)MinecraftServer_getServer.invoke(null), networkManager, player);
+		PlayerConnection defaultConnection = new PlayerConnection(MinecraftServer.getServer(), networkManager, player);
 		for(Field field : PlayerConnection.class.getDeclaredFields()) {
 			if(!Modifier.isFinal(field.getModifiers()) && !Modifier.isStatic(field.getModifiers())) {
 				field.setAccessible(true);

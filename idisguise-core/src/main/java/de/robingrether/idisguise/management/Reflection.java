@@ -15,10 +15,6 @@ import de.robingrether.idisguise.iDisguise;
 
 public class Reflection {
 	
-	public static Class<?> Bukkit_reflect;
-	public static Method Bukkit_getOnlinePlayers;
-	public static Method Bukkit_getOfflinePlayer;
-	
 	public static Class<?> GameProfile;
 	public static Method GameProfile_getProfileId;
 	
@@ -35,10 +31,6 @@ public class Reflection {
 	public static Class<?> EntityPlayer;
 	public static Method EntityPlayer_getBukkitEntity;
 	public static Field EntityPlayer_playerConnection;
-	
-	public static Class<?> EntityLiving;
-	
-	public static Class<?> DataWatcher;
 	
 	public static Class<?> DataWatcherItem;
 	public static Field DataWatcherItem_dataWatcherObject;
@@ -58,8 +50,6 @@ public class Reflection {
 	public static Constructor<?> PacketPlayOutNamedEntitySpawn_new;
 	public static Field PacketPlayOutNamedEntitySpawn_entityId;
 	public static Field PacketPlayOutNamedEntitySpawn_profileId;
-	public static Field PacketPlayOutNamedEntitySpawn_gameProfile;
-	public static Field PacketPlayOutNamedEntitySpawn_playerName;
 	
 	public static Class<?> PacketPlayOutSpawnEntityLiving;
 	public static Constructor<?> PacketPlayOutSpawnEntityLiving_new;
@@ -69,9 +59,6 @@ public class Reflection {
 	public static Constructor<?> PacketPlayOutPlayerInfo_new;
 	public static Field PacketPlayOutPlayerInfo_action;
 	public static Field PacketPlayOutPlayerInfo_playerInfoList;
-	public static Field PacketPlayOutPlayerInfo_playerName;
-	public static Field PacketPlayOutPlayerInfo_ping;
-	public static Field PacketPlayOutPlayerInfo_isOnline;
 	
 	public static Class<?> PacketPlayOutBed;
 	public static Field PacketPlayOutBed_entityId;
@@ -85,10 +72,6 @@ public class Reflection {
 	public static Constructor<?> PacketPlayOutEntityMetadata_new_full;
 	public static Field PacketPlayOutEntityMetadata_entityId;
 	public static Field PacketPlayOutEntityMetadata_metadataList;
-	
-	public static Class<?> PacketPlayOutEntityLook;
-	
-	public static Class<?> PacketPlayOutRelEntityMoveLook;
 	
 	public static Class<?> PacketPlayOutEntity;
 	public static Field PacketPlayOutEntity_entityId;
@@ -137,11 +120,8 @@ public class Reflection {
 	public static Method Entity_setLocation;
 	public static Method Entity_setEntityId;
 	public static Method Entity_getDataWatcher;
-	public static Field Entity_entityId;
-	
-	public static Class<?> EntityInsentient;
-	public static Method EntityInsentient_setCustomName;
-	public static Method EntityInsentient_setCustomNameVisible;
+	public static Method Entity_setCustomName;
+	public static Method Entity_setCustomNameVisible;
 	
 	public static Class<?> EntityAgeable;
 	public static Method EntityAgeable_setAge;
@@ -162,14 +142,10 @@ public class Reflection {
 	
 	public static Class<?> EntityEnderman;
 	public static Method EntityEnderman_setCarried;
-	public static Method EntityEnderman_setCarriedId;
-	public static Method EntityEnderman_setCarriedBlock;
-	public static Method EntityEnderman_setCarriedData;
 	
 	public static Class<?> Block;
 	public static Method Block_getById;
 	public static Method Block_fromLegacyData;
-	public static Field Block_blocksById;
 	
 	public static Class<?> EntityGuardian;
 	public static Method EntityGuardian_setElder;
@@ -191,14 +167,6 @@ public class Reflection {
 	
 	public static Class<?> InventorySubcontainer;
 	public static Method InventorySubcontainer_setItem;
-	
-	public static Class<?> Item;
-	public static Method Item_getById;
-	public static Field Item_itemsById;
-	
-	public static Class<?> ItemStack;
-	public static Constructor<?> ItemStack_new_Block;
-	public static Constructor<?> ItemStack_new_Item;
 	
 	public static Class<?> CraftItemStack;
 	public static Method CraftItemStack_asNMSCopy;
@@ -245,8 +213,6 @@ public class Reflection {
 	
 	public static Class<?> EntityMinecartAbstract;
 	public static Method EntityMinecartAbstract_setDisplayBlock;
-	public static Method EntityMinecartAbstract_setDisplayBlockId;
-	public static Method EntityMinecartAbstract_setDisplayBlockData;
 	
 	public static Class<?> MinecraftKey;
 	public static Constructor<?> MinecraftKey_new;
@@ -258,15 +224,6 @@ public class Reflection {
 	
 	public static Class<?> SoundEffect;
 	public static Field SoundEffect_registry;
-	
-	public static Class<?> MinecraftServer;
-	public static Method MinecraftServer_getServer;
-	public static Method MinecraftServer_getSessionService;
-	
-	public static Class<?> MinecraftSessionService;
-	public static Method MinecraftSessionService_fillProfileProperties;
-	
-	public static Class<?> EntityTameableAnimal;
 	
 	public static Class<?> EntityArmorStand;
 	public static Method EntityArmorStand_setArms;

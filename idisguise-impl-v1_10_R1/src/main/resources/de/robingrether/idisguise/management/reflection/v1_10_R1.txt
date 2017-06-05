@@ -2,10 +2,6 @@ Block->C{nms}.Block
 Block_fromLegacyData->MBlock$fromLegacyData(int)
 Block_getById->MBlock$getById(int)
 
-Bukkit_reflect->Corg.bukkit.Bukkit
-Bukkit_getOfflinePlayer->MBukkit_reflect$getOfflinePlayer(java.util.UUID)
-Bukkit_getOnlinePlayers->MBukkit_reflect$getOnlinePlayers()
-
 CraftChatMessage->C{obc}.util.CraftChatMessage
 CraftChatMessage_fromString->MCraftChatMessage$fromString(java.lang.String)
 
@@ -18,8 +14,6 @@ CraftOfflinePlayer_getProfile->MCraftOfflinePlayer$getProfile()
 CraftPlayer->C{obc}.entity.CraftPlayer
 CraftPlayer_getHandle->MCraftPlayer$getHandle()
 CraftPlayer_getProfile->MCraftPlayer$getProfile()
-
-DataWatcher->C{nms}.DataWatcher
 
 DataWatcherItem->C{nms}.DataWatcher$Item
 DataWatcherItem_dataWatcherObject->FDataWatcherItem$a
@@ -59,13 +53,11 @@ EntityHorse_setHasChest->MEntityHorse$setHasChest(boolean)
 EntityHorse_setType->MEntityHorse$setType({nms}.EnumHorseType)
 EntityHorse_setVariant->MEntityHorse$setVariant(int)
 
-EntityInsentient_setCustomName->MEntity$setCustomName(java.lang.String)
-EntityInsentient_setCustomNameVisible->MEntity$setCustomNameVisible(boolean)
+Entity_setCustomName->MEntity$setCustomName(java.lang.String)
+Entity_setCustomNameVisible->MEntity$setCustomNameVisible(boolean)
 
 EntityItem->C{nms}.EntityItem
 EntityItem_setItemStack->MEntityItem$setItemStack({nms}.ItemStack)
-
-EntityLiving->C{nms}.EntityLiving
 
 EntityMinecartAbstract->C{nms}.EntityMinecartAbstract
 EntityMinecartAbstract_setDisplayBlock->MEntityMinecartAbstract$setDisplayBlock({nms}.IBlockData)
@@ -125,23 +117,9 @@ GameProfile_getProfileId->MGameProfile$getId()
 InventorySubcontainer->C{nms}.InventorySubcontainer
 InventorySubcontainer_setItem->MInventorySubcontainer$setItem(int,{nms}.ItemStack)
 
-Item->C{nms}.Item
-Item_getById->MItem$getById(int)
-
-ItemStack->C{nms}.ItemStack
-ItemStack_new_Block->NItemStack({nms}.Block,int,int)
-ItemStack_new_Item->NItemStack({nms}.Item,int,int)
-
 MinecraftKey->C{nms}.MinecraftKey
 MinecraftKey_getName->MMinecraftKey$a()
 MinecraftKey_new->NMinecraftKey(java.lang.String)
-
-MinecraftServer->C{nms}.MinecraftServer
-MinecraftServer_getServer->MMinecraftServer$getServer()
-MinecraftServer_getSessionService->MMinecraftServer$ay()
-
-MinecraftSessionService->Ccom.mojang.authlib.minecraft.MinecraftSessionService
-MinecraftSessionService_fillProfileProperties->MMinecraftSessionService$fillProfileProperties(com.mojang.authlib.GameProfile,boolean)
 
 PacketPlayInUseEntity->C{nms}.PacketPlayInUseEntity
 PacketPlayInUseEntity_entityId->FPacketPlayInUseEntity$a
@@ -165,8 +143,6 @@ PacketPlayOutEntity_entityId->FPacketPlayOutEntity$a
 PacketPlayOutEntity_isOnGround->FPacketPlayOutEntity$g
 PacketPlayOutEntity_pitch->FPacketPlayOutEntity$f
 PacketPlayOutEntity_yaw->FPacketPlayOutEntity$e
-
-PacketPlayOutEntityLook->C{nms}.PacketPlayOutEntity$PacketPlayOutEntityLook
 
 PacketPlayOutEntityMetadata->C{nms}.PacketPlayOutEntityMetadata
 PacketPlayOutEntityMetadata_entityId->FPacketPlayOutEntityMetadata$a
@@ -203,8 +179,6 @@ PacketPlayOutPlayerInfo->C{nms}.PacketPlayOutPlayerInfo
 PacketPlayOutPlayerInfo_action->FPacketPlayOutPlayerInfo$a
 PacketPlayOutPlayerInfo_new->NPacketPlayOutPlayerInfo()
 PacketPlayOutPlayerInfo_playerInfoList->FPacketPlayOutPlayerInfo$b
-
-PacketPlayOutRelEntityMoveLook->C{nms}.PacketPlayOutEntity$PacketPlayOutRelEntityMoveLook
 
 PacketPlayOutScoreboardTeam->C{nms}.PacketPlayOutScoreboardTeam
 PacketPlayOutScoreboardTeam_new->NPacketPlayOutScoreboardTeam()

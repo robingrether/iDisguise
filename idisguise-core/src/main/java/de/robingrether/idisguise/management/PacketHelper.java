@@ -118,8 +118,8 @@ public class PacketHelper {
 					}
 				}
 				if(mobDisguise.getCustomName() != null && !mobDisguise.getCustomName().isEmpty()) {
-					EntityInsentient_setCustomName.invoke(entity, mobDisguise.getCustomName());
-					EntityInsentient_setCustomNameVisible.invoke(entity, mobDisguise.isCustomNameVisible());
+					Entity_setCustomName.invoke(entity, mobDisguise.getCustomName());
+					Entity_setCustomNameVisible.invoke(entity, mobDisguise.isCustomNameVisible());
 				}
 				
 				if(mobDisguise instanceof AgeableDisguise) {
@@ -198,8 +198,8 @@ public class PacketHelper {
 				Entity_setLocation.invoke(entity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 				Entity_setEntityId.invoke(entity, player.getEntityId());
 				if(attributes[0]) {
-					EntityInsentient_setCustomName.invoke(entity, player.getName());
-					EntityInsentient_setCustomNameVisible.invoke(entity, true);
+					Entity_setCustomName.invoke(entity, player.getName());
+					Entity_setCustomNameVisible.invoke(entity, true);
 				}
 				packets.add(PacketPlayOutSpawnEntityLiving_new.newInstance(entity));
 			} else if(disguise instanceof PlayerDisguise) {
@@ -212,11 +212,11 @@ public class PacketHelper {
 				Entity_setLocation.invoke(entity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 				Entity_setEntityId.invoke(entity, player.getEntityId());
 				if(attributes[0]) {
-					EntityInsentient_setCustomName.invoke(entity, player.getName());
-					EntityInsentient_setCustomNameVisible.invoke(entity, true);
+					Entity_setCustomName.invoke(entity, player.getName());
+					Entity_setCustomNameVisible.invoke(entity, true);
 				} else if(objectDisguise.getCustomName() != null && !objectDisguise.getCustomName().isEmpty()) {
-					EntityInsentient_setCustomName.invoke(entity, objectDisguise.getCustomName());
-					EntityInsentient_setCustomNameVisible.invoke(entity, objectDisguise.isCustomNameVisible());
+					Entity_setCustomName.invoke(entity, objectDisguise.getCustomName());
+					Entity_setCustomNameVisible.invoke(entity, objectDisguise.isCustomNameVisible());
 				}
 				if(EntityFallingBlock.isInstance(entity)) {
 					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), objectDisguise instanceof FallingBlockDisguise ? ((FallingBlockDisguise)objectDisguise).getMaterial().getId() | (((FallingBlockDisguise)objectDisguise).getData() << 12) : 1));

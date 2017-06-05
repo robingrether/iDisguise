@@ -2,6 +2,7 @@ package de.robingrether.idisguise.management;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -89,7 +90,7 @@ public class PacketHandler {
 		List itemsToAdd = new ArrayList();
 		List itemsToRemove = new ArrayList();
 		for(Object playerInfo : playerInfoList) {
-			OfflinePlayer offlinePlayer = (OfflinePlayer)Bukkit_getOfflinePlayer.invoke(null, GameProfile_getProfileId.invoke(PlayerInfoData_getProfile.invoke(playerInfo)));
+			OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer((UUID)GameProfile_getProfileId.invoke(PlayerInfoData_getProfile.invoke(playerInfo)));
 			if(offlinePlayer != null && offlinePlayer != observer && DisguiseManager.getInstance().isDisguisedTo(offlinePlayer, observer)) {
 				Object newPlayerInfo = PacketHelper.getInstance().getPlayerInfo(offlinePlayer, customizablePacket, (Integer)PlayerInfoData_getPing.invoke(playerInfo), PlayerInfoData_getGamemode.invoke(playerInfo), PlayerInfoData_getDisplayName.invoke(playerInfo));
 				itemsToRemove.add(playerInfo);

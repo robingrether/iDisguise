@@ -144,7 +144,7 @@ public class DisguiseManager {
 		Set<OfflinePlayer> destination = new HashSet<OfflinePlayer>();
 		try {
 			for(Object offlinePlayer : origin) {
-				destination.add(offlinePlayer instanceof UUID ? (OfflinePlayer)Bukkit_getOfflinePlayer.invoke(null, offlinePlayer) : Bukkit.getOfflinePlayer((String)offlinePlayer));
+				destination.add(offlinePlayer instanceof UUID ? Bukkit.getOfflinePlayer((UUID)offlinePlayer) : Bukkit.getOfflinePlayer((String)offlinePlayer));
 			}
 		} catch(Exception e) {
 		}
