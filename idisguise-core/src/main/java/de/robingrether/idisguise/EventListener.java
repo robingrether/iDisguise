@@ -24,7 +24,6 @@ import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.io.UpdateCheck;
 import de.robingrether.idisguise.management.ChannelInjector;
 import de.robingrether.idisguise.management.DisguiseManager;
-import de.robingrether.idisguise.management.GhostFactory;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.util.StringUtil;
 
@@ -49,15 +48,11 @@ public class EventListener implements Listener {
 		ChannelInjector.getInstance().inject(player);
 		PlayerHelper.getInstance().addPlayer(player);
 		PlayerHelper.getInstance().loadGameProfileAsynchronously(player.getUniqueId());
-		GhostFactory.getInstance().addPlayer(player.getName());
-		if(DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise && ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).isGhost()) {
-			if(plugin.getConfiguration().ENABLE_GHOST_DISGUISE) {
-				GhostFactory.getInstance().addPlayer(((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getSkinName());
-				GhostFactory.getInstance().addGhost(player);
-			} else {
-				DisguiseManager.getInstance().undisguise(player);
-				player.sendMessage(plugin.getLanguage().UNDISGUISE_GHOST_DISABLED);
-			}
+		if(plugin.getConfiguration().ENABLE_GHOST_DISGUISE) {
+			DisguiseManager.getInstance().addToGhostTeam(player);
+		} else if(DisguiseManager.getInstance().isDisguised(player) && DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.GHOST)) {
+			DisguiseManager.getInstance().undisguise(player);
+			player.sendMessage(plugin.getLanguage().UNDISGUISE_GHOST_DISABLED);
 		}
 		if(DisguiseManager.getInstance().isDisguised(player)) {
 			player.sendMessage(plugin.getLanguage().JOIN_DISGUISED);
@@ -94,7 +89,6 @@ public class EventListener implements Listener {
 			}
 		}
 		ChannelInjector.getInstance().remove(player);
-		GhostFactory.getInstance().removeGhost(player);
 		PlayerHelper.getInstance().removePlayer(player);
 	}
 	

@@ -128,6 +128,14 @@ PacketPlayOutEntity_isOnGround->FPacketPlayOutEntity$g
 PacketPlayOutEntity_pitch->FPacketPlayOutEntity$f
 PacketPlayOutEntity_yaw->FPacketPlayOutEntity$e
 
+PacketPlayOutEntityEffect->C{nms}.PacketPlayOutEntityEffect
+PacketPlayOutEntityEffect_new->NPacketPlayOutEntityEffect()
+PacketPlayOutEntityEffect_entityId->FPacketPlayOutEntityEffect$a
+PacketPlayOutEntityEffect_effectId->FPacketPlayOutEntityEffect$b
+PacketPlayOutEntityEffect_amplifier->FPacketPlayOutEntityEffect$c
+PacketPlayOutEntityEffect_duration->FPacketPlayOutEntityEffect$d
+PacketPlayOutEntityEffect_flags->FPacketPlayOutEntityEffect$e
+
 PacketPlayOutEntityMetadata->C{nms}.PacketPlayOutEntityMetadata
 PacketPlayOutEntityMetadata_entityId->FPacketPlayOutEntityMetadata$a
 PacketPlayOutEntityMetadata_metadataList->FPacketPlayOutEntityMetadata$b

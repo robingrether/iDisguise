@@ -54,7 +54,7 @@ import de.robingrether.idisguise.io.SLAPI;
 import de.robingrether.idisguise.io.UpdateCheck;
 import de.robingrether.idisguise.management.ChannelInjector;
 import de.robingrether.idisguise.management.DisguiseManager;
-import de.robingrether.idisguise.management.GhostFactory;
+import de.robingrether.idisguise.management.PacketHandler;
 import de.robingrether.idisguise.management.PacketHelper;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.Sounds;
@@ -90,6 +90,7 @@ public class iDisguise extends JavaPlugin {
 		language = new Language(this);
 		language.loadData();
 		language.saveData();
+		PacketHandler.getInstance().setAttribute(0, configuration.ENABLE_GHOST_DISGUISE);
 		PacketHelper.getInstance().setAttribute(0, configuration.NAME_TAG_SHOWN);
 		PacketHelper.getInstance().setAttribute(1, configuration.MODIFY_PLAYER_LIST_ENTRY);
 		Sounds.setEnabled(configuration.REPLACE_SOUND_EFFECTS);
@@ -140,9 +141,6 @@ public class iDisguise extends JavaPlugin {
 			loadData();
 		}
 		getServer().getPluginManager().registerEvents(listener, this);
-		if(configuration.ENABLE_GHOST_DISGUISE) {
-			GhostFactory.getInstance().enable(this);
-		}
 		getServer().getServicesManager().register(DisguiseAPI.class, getAPI(), this, ServicePriority.Normal);
 		if(configuration.UPDATE_CHECK) {
 			getServer().getScheduler().runTaskLaterAsynchronously(this, new UpdateCheck(this, getServer().getConsoleSender(), configuration.UPDATE_DOWNLOAD), 20L);
@@ -165,9 +163,6 @@ public class iDisguise extends JavaPlugin {
 		if(!enabled) {
 			return;
 		}
-		if(configuration.ENABLE_GHOST_DISGUISE) {
-			GhostFactory.getInstance().disable();
-		}
 		getServer().getScheduler().cancelTasks(this);
 		if(configuration.KEEP_DISGUISE_SHUTDOWN) {
 			saveData();
@@ -181,9 +176,6 @@ public class iDisguise extends JavaPlugin {
 		if(!enabled) {
 			return;
 		}
-		if(configuration.ENABLE_GHOST_DISGUISE) {
-			GhostFactory.getInstance().disable();
-		}
 		if(configuration.KEEP_DISGUISE_SHUTDOWN) {
 			saveData();
 		}
@@ -192,14 +184,12 @@ public class iDisguise extends JavaPlugin {
 		configuration.saveData();
 		language.loadData();
 		language.saveData();
+		PacketHandler.getInstance().setAttribute(0, configuration.ENABLE_GHOST_DISGUISE);
 		PacketHelper.getInstance().setAttribute(0, configuration.NAME_TAG_SHOWN);
 		PacketHelper.getInstance().setAttribute(1, configuration.MODIFY_PLAYER_LIST_ENTRY);
 		Sounds.setEnabled(configuration.REPLACE_SOUND_EFFECTS);
 		if(configuration.KEEP_DISGUISE_SHUTDOWN) {
 			loadData();
-		}
-		if(configuration.ENABLE_GHOST_DISGUISE) {
-			GhostFactory.getInstance().enable(this);
 		}
 		enabled = true;
 		DisguiseManager.getInstance().resendPackets();

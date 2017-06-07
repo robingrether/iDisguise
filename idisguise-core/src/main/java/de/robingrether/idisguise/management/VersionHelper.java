@@ -88,19 +88,9 @@ public class VersionHelper {
 					Sounds.init("sounds/111.txt");
 					break;
 				case "v1_10_R1":
-					Reflection.init("reflection/v1_10_R1.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
-					DisguiseManager.setInstance(new DisguiseManager());
-					PlayerHelper.setInstance((PlayerHelper)Class.forName("de.robingrether.idisguise.management.player.PlayerHelperUID18").newInstance());
-					Sounds.init("sounds/111.txt");
-					break;
 				case "v1_11_R1":
-					Reflection.init("reflection/v1_11_R1.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
-					DisguiseManager.setInstance(new DisguiseManager());
-					PlayerHelper.setInstance((PlayerHelper)Class.forName("de.robingrether.idisguise.management.player.PlayerHelperUID18").newInstance());
-					Sounds.init("sounds/111.txt");
-					break;
 				case "v1_12_R1":
-					Reflection.init("reflection/v1_12_R1.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
+					Reflection.init("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
 					DisguiseManager.setInstance(new DisguiseManager());
 					PlayerHelper.setInstance((PlayerHelper)Class.forName("de.robingrether.idisguise.management.player.PlayerHelperUID18").newInstance());
 					Sounds.init("sounds/111.txt");
@@ -109,7 +99,6 @@ public class VersionHelper {
 					return false;
 			}
 			ChannelInjector.setInstance(new ChannelInjectorPC());
-			GhostFactory.setInstance(new GhostFactory());
 			PacketHandler.setInstance(new PacketHandler());
 			PacketHelper.setInstance(new PacketHelper());
 			initialized = true;

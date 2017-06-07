@@ -55,18 +55,7 @@ public class DisguiseManager {
 			Player player = offlinePlayer.getPlayer();
 			Disguise oldDisguise = disguiseMap.getDisguise(player);
 			hidePlayer(player);
-			if(oldDisguise instanceof PlayerDisguise) {
-				if(oldDisguise.getType().equals(DisguiseType.GHOST)) {
-					GhostFactory.getInstance().removeGhost(player);
-				}
-			}
 			disguiseMap.updateDisguise(player, disguise);
-			if(disguise instanceof PlayerDisguise) {
-				if(((PlayerDisguise)disguise).isGhost()) {
-					GhostFactory.getInstance().addPlayer(((PlayerDisguise)disguise).getSkinName());
-					GhostFactory.getInstance().addGhost(player);
-				}
-			}
 			showPlayer(player);
 		} else {
 			disguiseMap.updateDisguise(offlinePlayer, disguise);
@@ -81,11 +70,6 @@ public class DisguiseManager {
 				return null;
 			}
 			hidePlayer(player);
-			if(disguise instanceof PlayerDisguise) {
-				if(disguise.getType().equals(DisguiseType.GHOST)) {
-					GhostFactory.getInstance().removeGhost(player);
-				}
-			}
 			disguiseMap.removeDisguise(player);
 			showPlayer(player);
 			return disguise;
@@ -202,6 +186,33 @@ public class DisguiseManager {
 				hidePlayer(player);
 				showPlayer(player);
 			}
+		}
+	}
+	
+	public void addToGhostTeam(Player player) {
+		try {
+			Object packet = PacketPlayOutScoreboardTeam_new.newInstance();
+			PacketPlayOutScoreboardTeam_teamName.set(packet, "Ghosts");
+			PacketPlayOutScoreboardTeam_displayName.set(packet, "Players");
+			PacketPlayOutScoreboardTeam_prefix.set(packet, "");
+			PacketPlayOutScoreboardTeam_suffix.set(packet, "");
+			PacketPlayOutScoreboardTeam_friendlyFlags.setInt(packet, 0b11);
+			PacketPlayOutScoreboardTeam_action.setInt(packet, 0);
+			Collection<String> entries = (Collection<String>)PacketPlayOutScoreboardTeam_entries.get(packet);
+			for(Player entry : Bukkit.getOnlinePlayers()) {
+				entries.add(entry.getName());
+			}
+			((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(player))).sendPacket(packet);
+			
+			packet = PacketPlayOutScoreboardTeam_new.newInstance();
+			PacketPlayOutScoreboardTeam_teamName.set(packet, "Ghosts");
+			PacketPlayOutScoreboardTeam_action.setInt(packet, 3);
+			((Collection<String>)PacketPlayOutScoreboardTeam_entries.get(packet)).add(player.getName());
+			for(Player observer : Bukkit.getOnlinePlayers()) {
+				if(observer == player) continue;
+				((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacket(packet);
+			}
+		} catch(Exception e) {
 		}
 	}
 	
