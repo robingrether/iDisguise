@@ -1,5 +1,6 @@
 package de.robingrether.idisguise.management;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -8,11 +9,13 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Team;
 
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
+import de.robingrether.idisguise.management.channel.InjectedPlayerConnection;
 
 import static de.robingrether.idisguise.management.Reflection.*;
 
@@ -51,12 +54,7 @@ public class DisguiseManager {
 		if(offlinePlayer.isOnline()) {
 			Player player = offlinePlayer.getPlayer();
 			Disguise oldDisguise = disguiseMap.getDisguise(player);
-			for(Player observer : Bukkit.getOnlinePlayers()) {
-				if(observer == player) {
-					continue;
-				}
-				observer.hidePlayer(player);
-			}
+			hidePlayer(player);
 			if(oldDisguise instanceof PlayerDisguise) {
 				if(oldDisguise.getType().equals(DisguiseType.GHOST)) {
 					GhostFactory.getInstance().removeGhost(player);
@@ -69,12 +67,7 @@ public class DisguiseManager {
 					GhostFactory.getInstance().addGhost(player);
 				}
 			}
-			for(Player observer : Bukkit.getOnlinePlayers()) {
-				if(observer == player) {
-					continue;
-				}
-				observer.showPlayer(player);
-			}
+			showPlayer(player);
 		} else {
 			disguiseMap.updateDisguise(offlinePlayer, disguise);
 		}
@@ -87,24 +80,14 @@ public class DisguiseManager {
 			if(disguise == null) {
 				return null;
 			}
-			for(Player observer : Bukkit.getOnlinePlayers()) {
-				if(observer == player) {
-					continue;
-				}
-				observer.hidePlayer(player);
-			}
+			hidePlayer(player);
 			if(disguise instanceof PlayerDisguise) {
 				if(disguise.getType().equals(DisguiseType.GHOST)) {
 					GhostFactory.getInstance().removeGhost(player);
 				}
 			}
 			disguiseMap.removeDisguise(player);
-			for(Player observer : Bukkit.getOnlinePlayers()) {
-				if(observer == player) {
-					continue;
-				}
-				observer.showPlayer(player);
-			}
+			showPlayer(player);
 			return disguise;
 		} else {
 			return disguiseMap.removeDisguise(offlinePlayer);
@@ -159,37 +142,65 @@ public class DisguiseManager {
 		disguiseMap = DisguiseMap.fromMap(map);
 	}
 	
+	protected void hidePlayer(Player player) {
+		if(Bukkit.getScoreboardManager().getMainScoreboard().getEntryTeam(player.getName()) != null) {
+			Object packet = null;
+			Team team = Bukkit.getScoreboardManager().getMainScoreboard().getEntryTeam(player.getName());
+			try {
+				packet = PacketPlayOutScoreboardTeam_new.newInstance();
+				PacketPlayOutScoreboardTeam_teamName.set(packet, team.getName());
+				PacketPlayOutScoreboardTeam_action.setInt(packet, 4);
+				((Collection<String>)PacketPlayOutScoreboardTeam_entries.get(packet)).add(player.getName());
+				for(Player observer : Bukkit.getOnlinePlayers()) {
+					if(observer == player) continue;
+					observer.hidePlayer(player);
+					((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacket(packet);
+				}
+			} catch(Exception e) {
+			}
+		} else {
+			for(Player observer : Bukkit.getOnlinePlayers()) {
+				if(observer == player) continue;
+				observer.hidePlayer(player);
+			}
+		}
+	}
+	
+	protected void showPlayer(Player player) {
+		if(Bukkit.getScoreboardManager().getMainScoreboard().getEntryTeam(player.getName()) != null) {
+			Object packet = null;
+			Team team = Bukkit.getScoreboardManager().getMainScoreboard().getEntryTeam(player.getName());
+			try {
+				packet = PacketPlayOutScoreboardTeam_new.newInstance();
+				PacketPlayOutScoreboardTeam_teamName.set(packet, team.getName());
+				PacketPlayOutScoreboardTeam_action.setInt(packet, 3);
+				((Collection<String>)PacketPlayOutScoreboardTeam_entries.get(packet)).add(player.getName());
+				for(Player observer : Bukkit.getOnlinePlayers()) {
+					if(observer == player) continue;
+					observer.showPlayer(player);
+					((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacket(packet);
+				}
+			} catch(Exception e) {
+			}
+		} else {
+			for(Player observer : Bukkit.getOnlinePlayers()) {
+				if(observer == player) continue;
+				observer.showPlayer(player);
+			}
+		}
+	}
+	
 	public void resendPackets(Player player) {
-		for(Player observer : Bukkit.getOnlinePlayers()) {
-			if(observer == player) {
-				continue;
-			}
-			observer.hidePlayer(player);
-		}
-		for(Player observer : Bukkit.getOnlinePlayers()) {
-			if(observer == player) {
-				continue;
-			}
-			observer.showPlayer(player);
-		}
+		hidePlayer(player);
+		showPlayer(player);
 	}
 	
 	public void resendPackets() {
 		for(OfflinePlayer offlinePlayer : getDisguisedPlayers()) {
 			if(offlinePlayer.isOnline()) {
 				Player player = offlinePlayer.getPlayer();
-				for(Player observer : Bukkit.getOnlinePlayers()) {
-					if(observer == player) {
-						continue;
-					}
-					observer.hidePlayer(player);
-				}
-				for(Player observer : Bukkit.getOnlinePlayers()) {
-					if(observer == player) {
-						continue;
-					}
-					observer.showPlayer(player);
-				}
+				hidePlayer(player);
+				showPlayer(player);
 			}
 		}
 	}

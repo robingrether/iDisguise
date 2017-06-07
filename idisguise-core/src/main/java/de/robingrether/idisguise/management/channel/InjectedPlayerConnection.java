@@ -4,4 +4,6 @@ public interface InjectedPlayerConnection {
 	
 	public void resetToDefaultConnection() throws Exception;
 	
+	public void sendPacket(Object packet);
+	
 }

@@ -44,6 +44,10 @@ public class InjectedPlayerConnection181 extends PlayerConnection implements Inj
 		}
 	}
 	
+	public void sendPacket(Object packet) {
+		if(packet instanceof Packet) sendPacket((Packet)packet);
+	}
+	
 	public void a(PacketPlayInUseEntity packet) {
 		try {
 			packet = (PacketPlayInUseEntity)PacketHandler.getInstance().handlePacketPlayInUseEntity(observer, packet);
