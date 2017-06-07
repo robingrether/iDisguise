@@ -122,6 +122,7 @@ public class Reflection {
 	public static Method Entity_getDataWatcher;
 	public static Method Entity_setCustomName;
 	public static Method Entity_setCustomNameVisible;
+	public static Method Entity_setInvisible;
 	
 	public static Class<?> EntityAgeable;
 	public static Method EntityAgeable_setAge;

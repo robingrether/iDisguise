@@ -68,8 +68,8 @@ public enum DisguiseType {
 	ZOMBIE(Type.MOB, "v1_8_R1", AgeableDisguise.class, "EntityZombie", "zombie"),
 	ZOMBIE_VILLAGER(Type.MOB, "v1_8_R1", ZombieVillagerDisguise.class, "EntityZombieVillager", "zombie_villager", "infected_villager"),
 	
-	GHOST(Type.PLAYER, "v1_8_R1", PlayerDisguise.class, "EntityPlayer"),
-	PLAYER(Type.PLAYER, "v1_8_R1", PlayerDisguise.class, "EntityPlayer"),
+	GHOST(Type.PLAYER, "v1_8_R1", PlayerDisguise.class, "EntityHuman"),
+	PLAYER(Type.PLAYER, "v1_8_R1", PlayerDisguise.class, "EntityHuman"),
 	
 	ARMOR_STAND(Type.OBJECT, "v1_8_R1", ArmorStandDisguise.class, "EntityArmorStand", "armor_stand", "armor-stand", "armorstand"),
 	BOAT(Type.OBJECT, "v1_8_R1", ObjectDisguise.class, "EntityBoat", "boat"),

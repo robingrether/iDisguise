@@ -21,6 +21,7 @@ DataWatcherObject_getId->MDataWatcherObject$a()
 Entity->C{nms}.Entity
 Entity_getDataWatcher->MEntity$getDataWatcher()
 Entity_setEntityId->MEntity$d(int)
+Entity_setInvisible->MEntity$setInvisible(boolean)
 Entity_setLocation->MEntity$setLocation(double,double,double,float,float)
 Entity_world->FEntity$world
 

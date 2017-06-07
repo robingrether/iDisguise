@@ -203,21 +203,23 @@ public class PacketHelper {
 				}
 				packets.add(PacketPlayOutSpawnEntityLiving_new.newInstance(entity));
 			} else if(disguise instanceof PlayerDisguise) {
-				packets.add(PacketPlayOutNamedEntitySpawn_new.newInstance(entityPlayer));
+				Object entityHuman = Class.forName(VersionHelper.getNMSPackage() + "." + type.getNMSClass()).getConstructor(World, GameProfile).newInstance(Entity_world.get(entityPlayer), CraftPlayer_getProfile.invoke(player));
+				packets.add(PacketPlayOutNamedEntitySpawn_new.newInstance(entityHuman));
 				// don't modify anything here, skin is applied via player list item packet
 				if(disguise.getType().equals(DisguiseType.GHOST)) {
+					Entity_setInvisible.invoke(entityHuman, true);
 					Object packet = PacketPlayOutScoreboardTeam_new.newInstance();
 					PacketPlayOutScoreboardTeam_teamName.set(packet, "Ghosts");
 					PacketPlayOutScoreboardTeam_action.setInt(packet, 3);
 					((Collection<String>)PacketPlayOutScoreboardTeam_entries.get(packet)).add(player.getName());
 					packets.add(packet);
-					packet = PacketPlayOutEntityEffect_new.newInstance();
-					PacketPlayOutEntityEffect_entityId.setInt(packet, player.getEntityId());
-					PacketPlayOutEntityEffect_effectId.setByte(packet, (byte)14);
-					PacketPlayOutEntityEffect_amplifier.setByte(packet, (byte)0);
-					PacketPlayOutEntityEffect_duration.setInt(packet, 32767);
-					PacketPlayOutEntityEffect_flags.setByte(packet, (byte)0);
-					packets.add(packet);
+//					packet = PacketPlayOutEntityEffect_new.newInstance();
+//					PacketPlayOutEntityEffect_entityId.setInt(packet, player.getEntityId());
+//					PacketPlayOutEntityEffect_effectId.setByte(packet, (byte)14);
+//					PacketPlayOutEntityEffect_amplifier.setByte(packet, (byte)0);
+//					PacketPlayOutEntityEffect_duration.setInt(packet, 32767);
+//					PacketPlayOutEntityEffect_flags.setByte(packet, (byte)0);
+//					packets.add(packet);
 				}
 			} else if(disguise instanceof ObjectDisguise) {
 				ObjectDisguise objectDisguise = (ObjectDisguise)disguise;
