@@ -850,7 +850,7 @@ public class iDisguise extends JavaPlugin {
 			}
 			
 			public boolean hasPermission(Player player, DisguiseType type) {
-				return hasPermission(player, type);
+				return iDisguise.this.hasPermission(player, type);
 			}
 			
 			public boolean hasPermission(Player player, Disguise disguise) {
