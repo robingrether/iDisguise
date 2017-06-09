@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.robingrether.idisguise</groupId>
   <artifactId>idisguise-impl-v1_9_R1</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <name>iDisguise Implementation 1.9 R1</name>
   
   <repositories>
@@ -26,7 +26,7 @@
   	<dependency>
   		<groupId>de.robingrether.idisguise</groupId>
   		<artifactId>idisguise-core</artifactId>
-  		<version>5.6.3-SNAPSHOT</version>
+  		<version>5.6.3</version>
   		<scope>provided</scope>
   	</dependency>
   </dependencies>
