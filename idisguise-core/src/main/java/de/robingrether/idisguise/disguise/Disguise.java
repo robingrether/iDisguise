@@ -165,8 +165,8 @@ public abstract class Disguise implements Serializable, Cloneable {
 		String[] args = string.split("; ");
 		DisguiseType type = DisguiseType.Matcher.match(args[0]);
 		if(type == null) {
-			if(StringUtil.equals(args[0], "player", "ghost") && args.length == 5) {
-				Disguise disguise = new PlayerDisguise(args[3], args[4], args[0].equals("ghost"));
+			if(StringUtil.equals(args[0], "player") && args.length == 5) {
+				Disguise disguise = new PlayerDisguise(args[3], args[4]);
 				Subtypes.applySubtype(disguise, args[1]);
 				Subtypes.applySubtype(disguise, args[2]);
 				return disguise;

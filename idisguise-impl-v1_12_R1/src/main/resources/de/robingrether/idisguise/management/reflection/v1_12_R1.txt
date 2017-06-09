@@ -24,7 +24,6 @@ DataWatcherObject_getId->MDataWatcherObject$a()
 Entity->C{nms}.Entity
 Entity_getDataWatcher->MEntity$getDataWatcher()
 Entity_setEntityId->MEntity$h(int)
-Entity_setInvisible->MEntity$setInvisible(boolean)
 Entity_setLocation->MEntity$setLocation(double,double,double,float,float)
 Entity_world->FEntity$world
 
@@ -144,14 +143,6 @@ PacketPlayOutEntity_entityId->FPacketPlayOutEntity$a
 PacketPlayOutEntity_isOnGround->FPacketPlayOutEntity$g
 PacketPlayOutEntity_pitch->FPacketPlayOutEntity$f
 PacketPlayOutEntity_yaw->FPacketPlayOutEntity$e
-
-PacketPlayOutEntityEffect->C{nms}.PacketPlayOutEntityEffect
-PacketPlayOutEntityEffect_new->NPacketPlayOutEntityEffect()
-PacketPlayOutEntityEffect_entityId->FPacketPlayOutEntityEffect$a
-PacketPlayOutEntityEffect_effectId->FPacketPlayOutEntityEffect$b
-PacketPlayOutEntityEffect_amplifier->FPacketPlayOutEntityEffect$c
-PacketPlayOutEntityEffect_duration->FPacketPlayOutEntityEffect$d
-PacketPlayOutEntityEffect_flags->FPacketPlayOutEntityEffect$e
 
 PacketPlayOutEntityMetadata->C{nms}.PacketPlayOutEntityMetadata
 PacketPlayOutEntityMetadata_entityId->FPacketPlayOutEntityMetadata$a

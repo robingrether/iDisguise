@@ -18,7 +18,6 @@ permissions:
       default: op
       children:
          iDisguise.admin: true
-         iDisguise.ghost: true
          iDisguise.help: true
          iDisguise.mob.*: true
          iDisguise.object.*: true
@@ -35,8 +34,6 @@ permissions:
          iDisguise.undisguise.all: true
          iDisguise.undisguise.others: true
          iDisguise.update: true
-   iDisguise.ghost:
-      default: false
    iDisguise.help:
       default: true
    iDisguise.mob.*:

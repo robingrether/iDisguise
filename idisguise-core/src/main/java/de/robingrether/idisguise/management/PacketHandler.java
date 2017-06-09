@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -32,13 +31,6 @@ public class PacketHandler {
 	static void setInstance(PacketHandler instance) {
 		PacketHandler.instance = instance;
 	}
-	
-	private final boolean[] attributes = new boolean[1];
-	/*
-	 * attributes[0] -> ghost disguise enabled
-	 * 
-	 * 
-	 */
 	
 	public Object handlePacketPlayInUseEntity(final Player observer, final Object packet) throws Exception {
 		final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayInUseEntity_entityId.getInt(packet));
@@ -263,7 +255,6 @@ public class PacketHandler {
 	}
 	
 	public Object handlePacketPlayOutScoreboardTeam(final Player observer, final Object packet) throws Exception {
-		if(attributes[0] && !PacketPlayOutScoreboardTeam_teamName.get(packet).equals("Ghosts")) return null;
 		if(ObjectUtil.equals(PacketPlayOutScoreboardTeam_action.getInt(packet), 0, 3, 4)) {
 			Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
 			List<String> entries = (List<String>)PacketPlayOutScoreboardTeam_entries.get(customizablePacket);
@@ -281,10 +272,6 @@ public class PacketHandler {
 			return customizablePacket;
 		}
 		return packet;
-	}
-	
-	public void setAttribute(int index, boolean value) {
-		attributes[index] = value;
 	}
 	
 }

@@ -1,10 +1,6 @@
 # Settings affecting the basic behavior of this plugin (including the API)
 disguise:
    
-   # May your players disguise as ghost
-   # This feature might interfere with stats/scoreboard plugins
-   enable-ghost-disguise: ENABLE_GHOST_DISGUISE
-   
    # Do disguised players keep their disguise when they leave the server
    keep-disguise-leave: KEEP_DISGUISE_LEAVE
    

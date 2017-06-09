@@ -68,8 +68,7 @@ public enum DisguiseType {
 	ZOMBIE(Type.MOB, "v1_8_R1", AgeableDisguise.class, "EntityZombie", "zombie"),
 	ZOMBIE_VILLAGER(Type.MOB, "v1_8_R1", ZombieVillagerDisguise.class, "EntityZombieVillager", "zombie_villager", "infected_villager"),
 	
-	GHOST(Type.PLAYER, "v1_8_R1", PlayerDisguise.class, "EntityHuman"),
-	PLAYER(Type.PLAYER, "v1_8_R1", PlayerDisguise.class, "EntityHuman"),
+	PLAYER(Type.PLAYER, "v1_8_R1", PlayerDisguise.class, "EntityPlayer"),
 	
 	ARMOR_STAND(Type.OBJECT, "v1_8_R1", ArmorStandDisguise.class, "EntityArmorStand", "armor_stand", "armor-stand", "armorstand"),
 	BOAT(Type.OBJECT, "v1_8_R1", ObjectDisguise.class, "EntityBoat", "boat"),
@@ -163,10 +162,10 @@ public enum DisguiseType {
 	
 	/**
 	 * Creates and returns a new instance of the correspondent disguise class.<br>
-	 * This is not supported for {@link DisguiseType#PLAYER} and {@link DisguiseType#GHOST}.
+	 * This is not supported for {@link DisguiseType#PLAYER}.
 	 * 
 	 * @since 5.1.1
-	 * @throws UnsupportedOperationException if the type is {@link DisguiseType#PLAYER} and {@link DisguiseType#GHOST}
+	 * @throws UnsupportedOperationException if the type is {@link DisguiseType#PLAYER}
 	 * @return the new instance or <code>null</code>, if the instantiation failed
 	 */
 	public Disguise newInstance() {
@@ -200,7 +199,7 @@ public enum DisguiseType {
 	 * This is printed for every disguise type when you type <em>/disguise help</em>.
 	 * 
 	 * @since 5.1.1
-	 * @return the default command argument or <code>null</code> for player and ghost
+	 * @return the default command argument or <code>null</code> for {@link DisguiseType#PLAYER}
 	 */
 	public String getDefaultCommandArgument() {
 		return commandArgument;

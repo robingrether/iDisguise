@@ -122,7 +122,6 @@ public class Reflection {
 	public static Method Entity_getDataWatcher;
 	public static Method Entity_setCustomName;
 	public static Method Entity_setCustomNameVisible;
-	public static Method Entity_setInvisible;
 	
 	public static Class<?> EntityAgeable;
 	public static Method EntityAgeable_setAge;
@@ -256,14 +255,6 @@ public class Reflection {
 	public static Field PacketPlayOutScoreboardTeam_entries;
 	public static Field PacketPlayOutScoreboardTeam_action;
 	public static Field PacketPlayOutScoreboardTeam_friendlyFlags;
-	
-	public static Class<?> PacketPlayOutEntityEffect;
-	public static Constructor<?> PacketPlayOutEntityEffect_new;
-	public static Field PacketPlayOutEntityEffect_entityId;
-	public static Field PacketPlayOutEntityEffect_effectId;
-	public static Field PacketPlayOutEntityEffect_amplifier;
-	public static Field PacketPlayOutEntityEffect_duration;
-	public static Field PacketPlayOutEntityEffect_flags;
 	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");

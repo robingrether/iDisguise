@@ -13,7 +13,6 @@ import org.bukkit.scoreboard.Team;
 
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
-import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.management.channel.InjectedPlayerConnection;
 
@@ -53,7 +52,7 @@ public class DisguiseManager {
 		}
 		if(offlinePlayer.isOnline()) {
 			Player player = offlinePlayer.getPlayer();
-			Disguise oldDisguise = disguiseMap.getDisguise(player);
+//			Disguise oldDisguise = disguiseMap.getDisguise(player);
 			hidePlayer(player);
 			disguiseMap.updateDisguise(player, disguise);
 			showPlayer(player);
@@ -186,33 +185,6 @@ public class DisguiseManager {
 				hidePlayer(player);
 				showPlayer(player);
 			}
-		}
-	}
-	
-	public void addToGhostTeam(Player player) {
-		try {
-			Object packet = PacketPlayOutScoreboardTeam_new.newInstance();
-			PacketPlayOutScoreboardTeam_teamName.set(packet, "Ghosts");
-			PacketPlayOutScoreboardTeam_displayName.set(packet, "Players");
-			PacketPlayOutScoreboardTeam_prefix.set(packet, "");
-			PacketPlayOutScoreboardTeam_suffix.set(packet, "");
-			PacketPlayOutScoreboardTeam_friendlyFlags.setInt(packet, 0b11);
-			PacketPlayOutScoreboardTeam_action.setInt(packet, 0);
-			Collection<String> entries = (Collection<String>)PacketPlayOutScoreboardTeam_entries.get(packet);
-			for(Player entry : Bukkit.getOnlinePlayers()) {
-				entries.add(entry.getName());
-			}
-			((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(player))).sendPacket(packet);
-			
-			packet = PacketPlayOutScoreboardTeam_new.newInstance();
-			PacketPlayOutScoreboardTeam_teamName.set(packet, "Ghosts");
-			PacketPlayOutScoreboardTeam_action.setInt(packet, 3);
-			((Collection<String>)PacketPlayOutScoreboardTeam_entries.get(packet)).add(player.getName());
-			for(Player observer : Bukkit.getOnlinePlayers()) {
-				if(observer == player) continue;
-				((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacket(packet);
-			}
-		} catch(Exception e) {
 		}
 	}
 	

@@ -54,7 +54,6 @@ import de.robingrether.idisguise.io.SLAPI;
 import de.robingrether.idisguise.io.UpdateCheck;
 import de.robingrether.idisguise.management.ChannelInjector;
 import de.robingrether.idisguise.management.DisguiseManager;
-import de.robingrether.idisguise.management.PacketHandler;
 import de.robingrether.idisguise.management.PacketHelper;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.Sounds;
@@ -90,7 +89,6 @@ public class iDisguise extends JavaPlugin {
 		language = new Language(this);
 		language.loadData();
 		language.saveData();
-		PacketHandler.getInstance().setAttribute(0, configuration.ENABLE_GHOST_DISGUISE);
 		PacketHelper.getInstance().setAttribute(0, configuration.NAME_TAG_SHOWN);
 		PacketHelper.getInstance().setAttribute(1, configuration.MODIFY_PLAYER_LIST_ENTRY);
 		Sounds.setEnabled(configuration.REPLACE_SOUND_EFFECTS);
@@ -133,7 +131,7 @@ public class iDisguise extends JavaPlugin {
 		metrics.addCustomChart(new Metrics.SimplePie("ghostDisguise") {
 			
 			public String getValue() {
-				return configuration.ENABLE_GHOST_DISGUISE ? "enabled" : "disabled";
+				return "unavailable";
 			}
 			
 		});
@@ -184,7 +182,6 @@ public class iDisguise extends JavaPlugin {
 		configuration.saveData();
 		language.loadData();
 		language.saveData();
-		PacketHandler.getInstance().setAttribute(0, configuration.ENABLE_GHOST_DISGUISE);
 		PacketHelper.getInstance().setAttribute(0, configuration.NAME_TAG_SHOWN);
 		PacketHelper.getInstance().setAttribute(1, configuration.MODIFY_PLAYER_LIST_ENTRY);
 		Sounds.setEnabled(configuration.REPLACE_SOUND_EFFECTS);
@@ -241,7 +238,7 @@ public class iDisguise extends JavaPlugin {
 				}
 				if(args[0].equalsIgnoreCase("help")) {
 					sendHelpMessage(sender, command, alias);
-				} else if(StringUtil.equalsIgnoreCase(args[0], "player", "p") || (configuration.ENABLE_GHOST_DISGUISE && StringUtil.equalsIgnoreCase(args[0], "ghost", "g"))) {
+				} else if(StringUtil.equalsIgnoreCase(args[0], "player", "p")) {
 					if(args.length < 2) {
 						sender.sendMessage(language.WRONG_USAGE_NO_NAME);
 					} else {
@@ -249,7 +246,7 @@ public class iDisguise extends JavaPlugin {
 						if(!Validate.minecraftUsername(skinName)) {
 							sender.sendMessage(language.INVALID_NAME);
 						} else {
-							PlayerDisguise disguise = new PlayerDisguise(skinName, displayName, StringUtil.equalsIgnoreCase(args[0], "ghost", "g"));
+							PlayerDisguise disguise = new PlayerDisguise(skinName, displayName);
 							if(hasPermission(sender, disguise)) {
 								if(player.isOnline()) {
 									DisguiseEvent event = new DisguiseEvent(player.getPlayer(), disguise);
@@ -484,9 +481,6 @@ public class iDisguise extends JavaPlugin {
 				Player player = (Player)sender;
 				if(args.length < 2) {
 					completions.addAll(Arrays.asList("help", "player", "status"));
-					if(configuration.ENABLE_GHOST_DISGUISE) {
-						completions.add("ghost");
-					}
 					if(sender.hasPermission("iDisguise.random")) {
 						completions.add("random");
 					}
@@ -539,9 +533,6 @@ public class iDisguise extends JavaPlugin {
 				if(player != null) {
 					if(args.length < 3) {
 						completions.addAll(Arrays.asList("help", "player", "status"));
-						if(configuration.ENABLE_GHOST_DISGUISE) {
-							completions.add("ghost");
-						}
 						if(sender.hasPermission("iDisguise.random")) {
 							completions.add("random");
 						}
@@ -613,9 +604,6 @@ public class iDisguise extends JavaPlugin {
 		
 		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " help").replace("%description%", language.HELP_HELP));		
 		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " player [skin] <name>").replace("%description%", self ? language.HELP_PLAYER_SELF : language.HELP_PLAYER_OTHER));
-		if(configuration.ENABLE_GHOST_DISGUISE) {
-			sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " ghost [skin] <name>").replace("%description%", self ? language.HELP_GHOST_SELF : language.HELP_GHOST_OTHER));
-		}
 		if(sender.hasPermission("iDisguise.random")) {
 			sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " random").replace("%description%", self ? language.HELP_RANDOM_SELF : language.HELP_RANDOM_OTHER));
 		}
@@ -658,7 +646,7 @@ public class iDisguise extends JavaPlugin {
 		if(ObjectUtil.equals(disguise.getVisibility(), Visibility.ONLY_LIST, Visibility.NOT_LIST) && !sender.hasPermission("iDisguise.visibility.list")) return false;
 		if(ObjectUtil.equals(disguise.getVisibility(), Visibility.ONLY_PERMISSION, Visibility.NOT_PERMISSION) && !sender.hasPermission("iDisguise.visibility.permission")) return false;
 		if(disguise instanceof PlayerDisguise) {
-			return (((PlayerDisguise)disguise).isGhost() ? sender.hasPermission("iDisguise.ghost") : true) && (sender.hasPermission("iDisguise.player.name.*") || sender.hasPermission("iDisguise.player.name." + ((PlayerDisguise)disguise).getSkinName())) && (isPlayerDisguisePermitted(((PlayerDisguise)disguise).getSkinName()) || sender.hasPermission("iDisguise.player.prohibited"));
+			return (sender.hasPermission("iDisguise.player.name.*") || sender.hasPermission("iDisguise.player.name." + ((PlayerDisguise)disguise).getSkinName())) && (isPlayerDisguisePermitted(((PlayerDisguise)disguise).getSkinName()) || sender.hasPermission("iDisguise.player.prohibited"));
 		} else if(hasPermission(sender, disguise.getType())) {
 			if(disguise instanceof MobDisguise) {
 				if(disguise instanceof AgeableDisguise) {

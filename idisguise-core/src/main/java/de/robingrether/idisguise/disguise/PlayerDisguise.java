@@ -18,25 +18,44 @@ public class PlayerDisguise extends Disguise {
 	private String displayName;
 	
 	/**
-	 * Creates an instance.<br>
-	 * (normal player disguise, not ghost)
+	 * Creates an instance.
 	 * 
 	 * @since 2.1.3
 	 * @param skinName the player skin
 	 * @throws IllegalArgumentException the given skin name is not valid
 	 */
 	public PlayerDisguise(String skinName) {
-		this(skinName, false);
+		this(skinName, skinName);
 	}
 	
 	/**
 	 * Creates an instance.
 	 * 
-	 * @since 2.3.1
+	 * @since 5.6.3
 	 * @param skinName the player skin
-	 * @param ghost <code>true</code> for a ghost, <code>false</code> for a normal player
+	 * @param displayName the display name (above player's head and player list)
 	 * @throws IllegalArgumentException the given skin name is not valid
 	 */
+	public PlayerDisguise(String skinName, String displayName) {
+		super(DisguiseType.PLAYER);
+		if(!Validate.minecraftUsername(skinName)) {
+			throw new IllegalArgumentException("The given skin name is invalid!");
+		}
+		this.skinName = skinName.toLowerCase(Locale.ENGLISH);
+		this.displayName = displayName;
+		PlayerHelper.getInstance().loadGameProfileAsynchronously(this.skinName);
+	}
+	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @deprecated ghost disguise is no longer available
+	 * @since 2.3.1
+	 * @param skinName the player skin
+	 * @param ghost <code>false</code> for a normal player, otherwise {@linkplain UnsupportedOperationException} will be thrown
+	 * @throws IllegalArgumentException the given skin name is not valid
+	 */
+	@Deprecated
 	public PlayerDisguise(String skinName, boolean ghost) {
 		this(skinName, skinName, ghost);
 	}
@@ -44,20 +63,19 @@ public class PlayerDisguise extends Disguise {
 	/**
 	 * Creates an instance.
 	 * 
+	 * @deprecated ghost disguise is no longer available
 	 * @since 5.2.2
 	 * @param skinName the player skin
 	 * @param displayName the display name (above player's head and player list)
-	 * @param ghost <code>true</code> for a ghost, <code>false</code> for a normal player
+	 * @param ghost <code>false</code> for a normal player, otherwise {@linkplain UnsupportedOperationException} will be thrown
 	 * @throws IllegalArgumentException the given skin name is not valid
 	 */
+	@Deprecated
 	public PlayerDisguise(String skinName, String displayName, boolean ghost) {
-		super(ghost ? DisguiseType.GHOST : DisguiseType.PLAYER);
-		if(!Validate.minecraftUsername(skinName)) {
-			throw new IllegalArgumentException("The given skin name is invalid!");
+		this(skinName, displayName);
+		if(ghost) {
+			throw new UnsupportedOperationException("Ghost disguise is no longer available!");
 		}
-		this.skinName = skinName.toLowerCase(Locale.ENGLISH);
-		this.displayName = displayName;
-		PlayerHelper.getInstance().loadGameProfileAsynchronously(this.skinName);
 	}
 	
 	/**
@@ -106,11 +124,13 @@ public class PlayerDisguise extends Disguise {
 	/**
 	 * Checks whether this disguise is a ghost.
 	 * 
+	 * @deprecated ghost disguise is no longer available
 	 * @since 2.3.1
-	 * @return <code>true</code> if this is a ghost
+	 * @return <code>false</code>
 	 */
+	@Deprecated
 	public boolean isGhost() {
-		return type == DisguiseType.GHOST;
+		return false;
 	}
 	
 	/**

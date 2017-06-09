@@ -208,7 +208,7 @@ public interface DisguiseAPI {
 	
 	/**
 	 * Indicates whether a given player has the required permissions to disguise as the given disguise type.<br>
-	 * This function will always return <code>false</code> for <code>DisguiseType.PLAYER</code> and <code>DisguiseType.GHOST</code>.
+	 * This function will always return <code>false</code> for {@link DisguiseType#PLAYER}.
 	 * 
 	 * @since 5.5.4
 	 * @param player the player

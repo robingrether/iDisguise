@@ -48,12 +48,6 @@ public class EventListener implements Listener {
 		ChannelInjector.getInstance().inject(player);
 		PlayerHelper.getInstance().addPlayer(player);
 		PlayerHelper.getInstance().loadGameProfileAsynchronously(player.getUniqueId());
-		if(plugin.getConfiguration().ENABLE_GHOST_DISGUISE) {
-			DisguiseManager.getInstance().addToGhostTeam(player);
-		} else if(DisguiseManager.getInstance().isDisguised(player) && DisguiseManager.getInstance().getDisguise(player).getType().equals(DisguiseType.GHOST)) {
-			DisguiseManager.getInstance().undisguise(player);
-			player.sendMessage(plugin.getLanguage().UNDISGUISE_GHOST_DISABLED);
-		}
 		if(DisguiseManager.getInstance().isDisguised(player)) {
 			player.sendMessage(plugin.getLanguage().JOIN_DISGUISED);
 		}
