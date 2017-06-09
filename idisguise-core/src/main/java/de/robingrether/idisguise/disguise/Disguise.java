@@ -160,6 +160,7 @@ public abstract class Disguise implements Serializable, Cloneable {
 	 * @param string the exact string representation of the disguise
 	 * @throws IllegalArgumentException in case the given string cannot be evaluated to a valid disguise
 	 * @throws OutdatedServerException in case the Minecraft server does not support the disguise type
+	 * @return the recreated disguise object
 	 */
 	public static Disguise fromString(String string) throws IllegalArgumentException, OutdatedServerException {
 		String[] args = string.split("; ");

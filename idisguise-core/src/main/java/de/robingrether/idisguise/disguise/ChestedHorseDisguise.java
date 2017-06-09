@@ -42,14 +42,20 @@ public class ChestedHorseDisguise extends HorseDisguise {
 	}
 	
 	/**
+	 * Indicates whether the horse carries a chest.
+	 * 
 	 * @since 5.5.1
+	 * @return <code>true</code> in case the horse carries a chest
 	 */
 	public boolean hasChest() {
 		return hasChest;
 	}
 	
 	/**
+	 * Sets whether the horse carries a chest.
+	 * 
 	 * @since 5.5.1
+	 * @param hasChest <code>true</code> in case the horse shall carry a chest
 	 */
 	public void setHasChest(boolean hasChest) {
 		this.hasChest = hasChest;

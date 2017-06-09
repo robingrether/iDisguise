@@ -18,7 +18,7 @@ public class MinecartDisguise extends ObjectDisguise {
 	
 	/**
 	 * Creates an instance.<br>
-	 * The default block inside the cart is {@link Material.AIR}
+	 * The default block inside the cart is {@link Material#AIR}
 	 * 
 	 * @since 5.1.1
 	 */

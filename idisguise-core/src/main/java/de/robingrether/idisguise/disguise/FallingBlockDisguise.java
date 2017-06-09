@@ -19,7 +19,7 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	
 	/**
 	 * Creates an instance.<br>
-	 * The default material is {@link Material.STONE}
+	 * The default material is {@link Material#STONE}
 	 * 
 	 * @since 5.1.1
 	 */

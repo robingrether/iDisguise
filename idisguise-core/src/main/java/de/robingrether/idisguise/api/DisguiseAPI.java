@@ -129,7 +129,7 @@ public interface DisguiseAPI {
 	 * @since 5.6.1
 	 * @param player the player (or offline player) to check
 	 * @param observer the observing player
-	 * @return <code>true</true>, if and only if the player is disguised <strong>and</strong> the disguise is visible to the observer
+	 * @return <code>true</code>, if and only if the player is disguised <strong>and</strong> the disguise is visible to the observer
 	 */
 	public boolean isDisguisedTo(OfflinePlayer player, Player observer);
 	

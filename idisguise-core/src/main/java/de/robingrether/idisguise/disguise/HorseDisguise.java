@@ -23,6 +23,8 @@ public class HorseDisguise extends AgeableDisguise {
 	 * Creates an instance.
 	 * 
 	 * @since 5.5.1
+	 * @param type the disguise type to use
+	 * @throws IllegalArgumentException the given disguise type is not some sort of horse
 	 */
 	public HorseDisguise(DisguiseType type) {
 		this(type, true, false, Armor.NONE);
@@ -32,6 +34,11 @@ public class HorseDisguise extends AgeableDisguise {
 	 * Creates an instance.
 	 * 
 	 * @since 5.5.1
+	 * @param type the disguise type to use
+	 * @param adult whether the disguise shall appear as an adult or as a baby
+	 * @param saddled whether the disguise shall carry a saddle
+	 * @param armor the type of horse armor the disguise shall wear
+	 * @throws IllegalArgumentException the given disguise type is not some sort of horse
 	 */
 	public HorseDisguise(DisguiseType type, boolean adult, boolean saddled, Armor armor) {
 		super(type, adult);
