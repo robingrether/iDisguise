@@ -34,6 +34,8 @@ HORSE->entity.horse.death,entity.generic.big_fall,entity.generic.small_fall,enti
 
 HUSK->entity.husk.death,entity.hostile.big_fall,entity.hostile.small_fall,entity.husk.hurt,entity.hostile.splash,entity.hostile.swim
 
+ILLUSIONER->entity.illusion_illager.death,entity.hostile.big_fall,entity.hostile.small_fall,entity.illusion_illager.hurt,entity.hostile.splash,entity.hostile.swim
+
 IRON_GOLEM->entity.irongolem.death,entity.generic.big_fall,entity.generic.small_fall,entity.irongolem.hurt,entity.generic.splash,entity.generic.swim
 
 LLAMA->entity.llama.death,entity.generic.big_fall,entity.generic.small_fall,entity.llama.hurt,entity.generic.splash,entity.generic.swim
@@ -45,6 +47,8 @@ MULE->entity.donkey.death,entity.generic.big_fall,entity.generic.small_fall,enti
 MUSHROOM_COW->entity.cow.death,entity.generic.big_fall,entity.generic.small_fall,entity.cow.hurt,entity.generic.splash,entity.generic.swim
 
 OCELOT->entity.cat.death,entity.generic.big_fall,entity.generic.small_fall,entity.cat.hurt,entity.generic.splash,entity.generic.swim
+
+PARROT->entity.parrot.death,entity.generic.big_fall,entity.generic.small_fall,entity.parrot.hurt,entity.generic.splash,entity.generic.swim
 
 PIG->entity.pig.death,entity.generic.big_fall,entity.generic.small_fall,entity.pig.hurt,entity.generic.splash,entity.generic.swim
 
