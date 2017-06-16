@@ -35,6 +35,7 @@ import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.DisguiseType.Type;
 import de.robingrether.idisguise.disguise.EndermanDisguise;
 import de.robingrether.idisguise.disguise.FallingBlockDisguise;
+import de.robingrether.idisguise.disguise.ItemDisguise;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.ObjectDisguise;
 import de.robingrether.idisguise.disguise.SheepDisguise;
@@ -685,10 +686,13 @@ public class iDisguise extends JavaPlugin {
 					}
 				}
 			} else if(disguise instanceof ObjectDisguise) {
-				if(disguise instanceof FallingBlockDisguise) {
-					return sender.hasPermission("iDisguise.object.falling_block.material.*") || sender.hasPermission("iDisguise.object.falling_block.material." + ((FallingBlockDisguise)disguise).getMaterial().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-				} else {
-					return true;
+				switch(disguise.getType()) {
+					case FALLING_BLOCK:	
+						return sender.hasPermission("iDisguise.object.falling_block.material." + ((FallingBlockDisguise)disguise).getMaterial().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+					case ITEM:
+						return sender.hasPermission("iDisguise.object.item.material." + ((ItemDisguise)disguise).getMaterial().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+					default:
+						return true;
 				}
 			}
 		}
