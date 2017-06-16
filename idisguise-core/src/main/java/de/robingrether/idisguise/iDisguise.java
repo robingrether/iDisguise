@@ -151,7 +151,7 @@ public class iDisguise extends JavaPlugin {
 		enabled = true;
 		for(Player player : Bukkit.getOnlinePlayers()) {
 			PlayerHelper.getInstance().addPlayer(player);
-			PlayerHelper.getInstance().loadGameProfileAsynchronously(player.getUniqueId());
+			PlayerHelper.getInstance().registerGameProfile(player);
 		}
 		ChannelInjector.getInstance().injectOnlinePlayers();
 		DisguiseManager.getInstance().resendPackets();

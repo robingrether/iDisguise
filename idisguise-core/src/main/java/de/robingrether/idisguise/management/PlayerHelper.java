@@ -52,6 +52,8 @@ public abstract class PlayerHelper {
 	
 	public abstract void loadGameProfileAsynchronously(UUID uniqueId);
 	
+	public abstract void registerGameProfile(Player player);
+	
 	public abstract boolean isGameProfileLoaded(String skinName);
 	
 	public abstract void waitForGameProfile(String skinName);

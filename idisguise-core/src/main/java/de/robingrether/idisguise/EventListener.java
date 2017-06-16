@@ -47,7 +47,7 @@ public class EventListener implements Listener {
 		Player player = event.getPlayer();
 		ChannelInjector.getInstance().inject(player);
 		PlayerHelper.getInstance().addPlayer(player);
-		PlayerHelper.getInstance().loadGameProfileAsynchronously(player.getUniqueId());
+		PlayerHelper.getInstance().registerGameProfile(player);
 		if(DisguiseManager.getInstance().isDisguised(player)) {
 			player.sendMessage(plugin.getLanguage().JOIN_DISGUISED);
 		}

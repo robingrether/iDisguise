@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -23,6 +24,8 @@ import com.mojang.authlib.properties.Property;
 
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.management.PlayerHelper;
+
+import static de.robingrether.idisguise.management.Reflection.CraftPlayer_getProfile;
 
 public class PlayerHelperUID18 extends PlayerHelper {
 	
@@ -207,6 +210,19 @@ public class PlayerHelperUID18 extends PlayerHelper {
 			}
 			
 		});
+	}
+	
+	public void registerGameProfile(Player player) {
+		if(player.getUniqueId().version() == 4) {
+			try {
+				GameProfile profile = (GameProfile)CraftPlayer_getProfile.invoke(player);
+				profilesById.put(profile.getId(), profile);
+				profilesByName.put(profile.getName().toLowerCase(Locale.ENGLISH), profile);
+			} catch(Exception e) {
+			}
+		} else {
+			loadGameProfileAsynchronously(player.getName());
+		}
 	}
 	
 	public boolean isGameProfileLoaded(String name) {
