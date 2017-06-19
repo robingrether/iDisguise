@@ -603,8 +603,12 @@ public class iDisguise extends JavaPlugin {
 			sender.sendMessage(language.EASTER_EGG_BIRTHDAY.replace("%age%", Integer.toString(today.get(Calendar.YEAR) - 2012)));
 		}
 		
-		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " help").replace("%description%", language.HELP_HELP));		
-		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " player [skin] <name>").replace("%description%", self ? language.HELP_PLAYER_SELF : language.HELP_PLAYER_OTHER));
+		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " help").replace("%description%", language.HELP_HELP));
+		if(sender.hasPermission("iDisguise.player.display-name")) {
+			sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " player [skin] <name>").replace("%description%", self ? language.HELP_PLAYER_SELF : language.HELP_PLAYER_OTHER));
+		} else {
+			sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " player <name>").replace("%description%", self ? language.HELP_PLAYER_SELF : language.HELP_PLAYER_OTHER));
+		}
 		if(sender.hasPermission("iDisguise.random")) {
 			sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " random").replace("%description%", self ? language.HELP_RANDOM_SELF : language.HELP_RANDOM_OTHER));
 		}
@@ -647,7 +651,8 @@ public class iDisguise extends JavaPlugin {
 		if(ObjectUtil.equals(disguise.getVisibility(), Visibility.ONLY_LIST, Visibility.NOT_LIST) && !sender.hasPermission("iDisguise.visibility.list")) return false;
 		if(ObjectUtil.equals(disguise.getVisibility(), Visibility.ONLY_PERMISSION, Visibility.NOT_PERMISSION) && !sender.hasPermission("iDisguise.visibility.permission")) return false;
 		if(disguise instanceof PlayerDisguise) {
-			return (sender.hasPermission("iDisguise.player.name.*") || sender.hasPermission("iDisguise.player.name." + ((PlayerDisguise)disguise).getSkinName())) && (isPlayerDisguisePermitted(((PlayerDisguise)disguise).getSkinName()) || sender.hasPermission("iDisguise.player.prohibited"));
+			PlayerDisguise playerDisguise = (PlayerDisguise)disguise;
+			return (sender.hasPermission("iDisguise.player.name.*") || sender.hasPermission("iDisguise.player.name." + playerDisguise.getSkinName())) && (isPlayerDisguisePermitted(playerDisguise.getSkinName()) || sender.hasPermission("iDisguise.player.prohibited")) && (playerDisguise.getSkinName().equalsIgnoreCase(playerDisguise.getDisplayName()) || sender.hasPermission("iDisguise.player.display-name"));
 		} else if(hasPermission(sender, disguise.getType())) {
 			if(disguise instanceof MobDisguise) {
 				if(disguise instanceof AgeableDisguise) {

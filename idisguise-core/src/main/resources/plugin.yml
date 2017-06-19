@@ -22,6 +22,7 @@ permissions:
          iDisguise.help: true
          iDisguise.mob.*: true
          iDisguise.object.*: true
+         iDisguise.player.display-name: true
          iDisguise.player.name.*: true
          iDisguise.random: true
          iDisguise.undisguise: true
@@ -2591,6 +2592,8 @@ permissions:
    iDisguise.object.minecart:
       default: false
    iDisguise.others:
+      default: false
+   iDisguise.player.display-name:
       default: false
    iDisguise.player.name.*:
       default: false
