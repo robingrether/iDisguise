@@ -6,4 +6,6 @@ public interface InjectedPlayerConnection {
 	
 	public void sendPacket(Object packet);
 	
+	public void sendPacketDirectly(Object packet);
+	
 }

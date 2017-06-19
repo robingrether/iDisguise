@@ -26,31 +26,31 @@
   	<dependency>
   		<groupId>de.robingrether.idisguise</groupId>
   		<artifactId>idisguise-impl-v1_12_R1</artifactId>
-  		<version>1.0.0</version>
+  		<version>1.0.1-SNAPSHOT</version>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>de.robingrether.idisguise</groupId>
   		<artifactId>idisguise-impl-v1_11_R1</artifactId>
-  		<version>1.0.1</version>
+  		<version>1.0.2-SNAPSHOT</version>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>de.robingrether.idisguise</groupId>
   		<artifactId>idisguise-impl-v1_10_R1</artifactId>
-  		<version>1.0.1</version>
+  		<version>1.0.2-SNAPSHOT</version>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>de.robingrether.idisguise</groupId>
   		<artifactId>idisguise-impl-v1_9_R2</artifactId>
-  		<version>1.0.1</version>
+  		<version>1.0.2-SNAPSHOT</version>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>de.robingrether.idisguise</groupId>
   		<artifactId>idisguise-impl-v1_9_R1</artifactId>
-  		<version>1.0.1</version>
+  		<version>1.0.2-SNAPSHOT</version>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
@@ -62,13 +62,13 @@
   	<dependency>
   		<groupId>de.robingrether.idisguise</groupId>
   		<artifactId>idisguise-impl-v1_8_R2</artifactId>
-  		<version>1.0.1</version>
+  		<version>1.0.2-SNAPSHOT</version>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>de.robingrether.idisguise</groupId>
   		<artifactId>idisguise-impl-v1_8_R1</artifactId>
-  		<version>1.0.1</version>
+  		<version>1.0.2-SNAPSHOT</version>
   		<scope>compile</scope>
   	</dependency>
   </dependencies>

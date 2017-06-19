@@ -47,6 +47,10 @@ public class InjectedPlayerConnection192 extends PlayerConnection implements Inj
 		if(packet instanceof Packet) sendPacket((Packet)packet);
 	}
 	
+	public void sendPacketDirectly(Object packet) {
+		if(packet instanceof Packet) super.sendPacket((Packet)packet);
+	}
+	
 	public void a(PacketPlayInTeleportAccept packet) {
 		try {
 			super.a(packet);

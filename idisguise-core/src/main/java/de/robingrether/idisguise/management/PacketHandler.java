@@ -16,6 +16,7 @@ import de.robingrether.idisguise.disguise.FallingBlockDisguise;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.ObjectDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
+import de.robingrether.idisguise.management.channel.InjectedPlayerConnection;
 
 import static de.robingrether.idisguise.management.Reflection.*;
 import de.robingrether.util.ObjectUtil;
@@ -256,20 +257,41 @@ public class PacketHandler {
 	
 	public Object handlePacketPlayOutScoreboardTeam(final Player observer, final Object packet) throws Exception {
 		if(ObjectUtil.equals(PacketPlayOutScoreboardTeam_action.getInt(packet), 0, 3, 4)) {
-			Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
-			List<String> entries = (List<String>)PacketPlayOutScoreboardTeam_entries.get(customizablePacket);
-			List<String> itemsToRemove = new ArrayList<String>();
-			List<String> itemsToAdd = new ArrayList<String>();
-			for(String entry : entries) {
-				OfflinePlayer offlinePlayer = (OfflinePlayer)Bukkit.getOfflinePlayer(entry);
-				if(offlinePlayer != null && offlinePlayer != observer && DisguiseManager.getInstance().isDisguisedTo(offlinePlayer, observer) && DisguiseManager.getInstance().getDisguise(offlinePlayer) instanceof PlayerDisguise) {
-					itemsToRemove.add(entry);
-					itemsToAdd.add(((PlayerDisguise)DisguiseManager.getInstance().getDisguise(offlinePlayer)).getDisplayName());
+			final Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
+			Bukkit.getScheduler().runTaskAsynchronously(iDisguise.getInstance(), new Runnable() {
+				
+				public void run() {
+					try {
+						List<String> entries = (List<String>)PacketPlayOutScoreboardTeam_entries.get(customizablePacket);
+						List<String> itemsToRemove = new ArrayList<String>();
+						List<String> itemsToAdd = new ArrayList<String>();
+						for(String entry : entries) {
+							OfflinePlayer offlinePlayer = (OfflinePlayer)Bukkit.getOfflinePlayer(entry);
+							if(offlinePlayer != null && offlinePlayer != observer && DisguiseManager.getInstance().isDisguisedTo(offlinePlayer, observer) && DisguiseManager.getInstance().getDisguise(offlinePlayer) instanceof PlayerDisguise) {
+								itemsToRemove.add(entry);
+								itemsToAdd.add(((PlayerDisguise)DisguiseManager.getInstance().getDisguise(offlinePlayer)).getDisplayName());
+							}
+						}
+						entries.removeAll(itemsToRemove);
+						entries.addAll(itemsToAdd);
+					} catch (Exception e) {
+						return;
+					}
+					Bukkit.getScheduler().runTask(iDisguise.getInstance(), new Runnable() {
+						
+						public void run() {
+							try {
+								((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacketDirectly(customizablePacket);
+							} catch(Exception e) {
+							}
+						}
+						
+					});
 				}
-			}
-			entries.removeAll(itemsToRemove);
-			entries.addAll(itemsToAdd);
-			return customizablePacket;
+				
+			});
+				
+			return null;
 		}
 		return packet;
 	}
