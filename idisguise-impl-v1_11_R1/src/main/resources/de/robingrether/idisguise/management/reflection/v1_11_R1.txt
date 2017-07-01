@@ -108,6 +108,10 @@ EnumColor_fromColorIndex->MEnumColor$fromColorIndex(int)
 EnumEntityUseAction->C{nms}.PacketPlayInUseEntity$EnumEntityUseAction
 EnumEntityUseAction_ATTACK->FEnumEntityUseAction$ATTACK
 
+EnumScoreboardAction->C{nms}.PacketPlayOutScoreboardScore$EnumScoreboardAction
+EnumScoreboardAction_CHANGE->FEnumScoreboardAction$CHANGE
+EnumScoreboardAction_REMOVE->FEnumScoreboardAction$REMOVE
+
 GameProfile->Ccom.mojang.authlib.GameProfile
 GameProfile_getProfileId->MGameProfile$getId()
 
@@ -176,6 +180,13 @@ PacketPlayOutPlayerInfo->C{nms}.PacketPlayOutPlayerInfo
 PacketPlayOutPlayerInfo_action->FPacketPlayOutPlayerInfo$a
 PacketPlayOutPlayerInfo_new->NPacketPlayOutPlayerInfo()
 PacketPlayOutPlayerInfo_playerInfoList->FPacketPlayOutPlayerInfo$b
+
+PacketPlayOutScoreboardScore->C{nms}.PacketPlayOutScoreboardScore
+PacketPlayOutScoreboardScore_new->NPacketPlayOutScoreboardScore()
+PacketPlayOutScoreboardScore_entry->FPacketPlayOutScoreboardScore$a
+PacketPlayOutScoreboardScore_objective->FPacketPlayOutScoreboardScore$b
+PacketPlayOutScoreboardScore_score->FPacketPlayOutScoreboardScore$c
+PacketPlayOutScoreboardScore_action->FPacketPlayOutScoreboardScore$d
 
 PacketPlayOutScoreboardTeam->C{nms}.PacketPlayOutScoreboardTeam
 PacketPlayOutScoreboardTeam_new->NPacketPlayOutScoreboardTeam()

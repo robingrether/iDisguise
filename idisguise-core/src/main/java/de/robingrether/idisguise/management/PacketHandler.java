@@ -33,6 +33,12 @@ public class PacketHandler {
 		PacketHandler.instance = instance;
 	}
 	
+	private final boolean[] attributes = new boolean[1];
+	/*
+	 * attributes[0] -> modify scoreboard packets
+	 * 
+	 */
+	
 	public Object handlePacketPlayInUseEntity(final Player observer, final Object packet) throws Exception {
 		final Player player = PlayerHelper.getInstance().getPlayerByEntityId(PacketPlayInUseEntity_entityId.getInt(packet));
 		boolean attack = PacketPlayInUseEntity_getAction.invoke(packet).equals(EnumEntityUseAction_ATTACK.get(null));
@@ -256,7 +262,7 @@ public class PacketHandler {
 	}
 	
 	public Object handlePacketPlayOutScoreboardTeam(final Player observer, final Object packet) throws Exception {
-		if(ObjectUtil.equals(PacketPlayOutScoreboardTeam_action.getInt(packet), 0, 3, 4)) {
+		if(attributes[0] && ObjectUtil.equals(PacketPlayOutScoreboardTeam_action.getInt(packet), 0, 3, 4)) {
 			final Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
 			Bukkit.getScheduler().runTaskAsynchronously(iDisguise.getInstance(), new Runnable() {
 				
@@ -266,7 +272,7 @@ public class PacketHandler {
 						List<String> itemsToRemove = new ArrayList<String>();
 						List<String> itemsToAdd = new ArrayList<String>();
 						for(String entry : entries) {
-							OfflinePlayer offlinePlayer = (OfflinePlayer)Bukkit.getOfflinePlayer(entry);
+							OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(entry);
 							if(offlinePlayer != null && offlinePlayer != observer && DisguiseManager.getInstance().isDisguisedTo(offlinePlayer, observer) && DisguiseManager.getInstance().getDisguise(offlinePlayer) instanceof PlayerDisguise) {
 								itemsToRemove.add(entry);
 								itemsToAdd.add(((PlayerDisguise)DisguiseManager.getInstance().getDisguise(offlinePlayer)).getDisplayName());
@@ -290,10 +296,43 @@ public class PacketHandler {
 				}
 				
 			});
-				
 			return null;
 		}
 		return packet;
+	}
+	
+	public Object handlePacketPlayOutScoreboardScore(final Player observer, final Object packet) throws Exception {
+		if(!attributes[0]) return packet;
+		final Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
+		Bukkit.getScheduler().runTaskAsynchronously(iDisguise.getInstance(), new Runnable() {
+			
+			public void run() {
+				try {
+					OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer((String)PacketPlayOutScoreboardScore_entry.get(customizablePacket));
+					if(offlinePlayer != null && offlinePlayer != observer && DisguiseManager.getInstance().isDisguisedTo(offlinePlayer, observer) && DisguiseManager.getInstance().getDisguise(offlinePlayer) instanceof PlayerDisguise) {
+						PacketPlayOutScoreboardScore_entry.set(customizablePacket, ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(offlinePlayer)).getDisplayName());
+					}
+				} catch(Exception e) {
+					return;
+				}
+				Bukkit.getScheduler().runTask(iDisguise.getInstance(), new Runnable() {
+					
+					public void run() {
+						try {
+							((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacketDirectly(customizablePacket);
+						} catch(Exception e) {
+						}
+					}
+					
+				});
+			}
+			
+		});
+		return null;
+	}
+	
+	public void setAttribute(int index, boolean value) {
+		attributes[index] = value;
 	}
 	
 }

@@ -370,6 +370,12 @@ public class PacketHelper {
 				((Collection<String>)PacketPlayOutScoreboardTeam_entries.get(clone)).addAll((Collection<String>)PacketPlayOutScoreboardTeam_entries.get(packet));
 				PacketPlayOutScoreboardTeam_action.setInt(clone, PacketPlayOutScoreboardTeam_action.getInt(packet));
 				PacketPlayOutScoreboardTeam_friendlyFlags.setInt(clone, PacketPlayOutScoreboardTeam_friendlyFlags.getInt(packet));
+			} else if(PacketPlayOutScoreboardScore.isInstance(packet)) {
+				clone = PacketPlayOutScoreboardScore_new.newInstance();
+				PacketPlayOutScoreboardScore_entry.set(clone, PacketPlayOutScoreboardScore_entry.get(packet));
+				PacketPlayOutScoreboardScore_objective.set(clone, PacketPlayOutScoreboardScore_objective.get(packet));
+				PacketPlayOutScoreboardScore_score.setInt(clone, PacketPlayOutScoreboardScore_score.getInt(packet));
+				PacketPlayOutScoreboardScore_action.set(clone, PacketPlayOutScoreboardScore_action.get(packet));
 			}
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {

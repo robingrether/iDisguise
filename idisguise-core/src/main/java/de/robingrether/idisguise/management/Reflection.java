@@ -256,6 +256,17 @@ public class Reflection {
 	public static Field PacketPlayOutScoreboardTeam_action;
 	public static Field PacketPlayOutScoreboardTeam_friendlyFlags;
 	
+	public static Class<?> PacketPlayOutScoreboardScore;
+	public static Constructor<?> PacketPlayOutScoreboardScore_new;
+	public static Field PacketPlayOutScoreboardScore_entry;
+	public static Field PacketPlayOutScoreboardScore_objective;
+	public static Field PacketPlayOutScoreboardScore_score;
+	public static Field PacketPlayOutScoreboardScore_action;
+	
+	public static Class<?> EnumScoreboardAction;
+	public static Field EnumScoreboardAction_CHANGE;
+	public static Field EnumScoreboardAction_REMOVE;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");

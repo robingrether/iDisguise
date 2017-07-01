@@ -28,6 +28,10 @@ disguise:
    # e.g. RobinGrether is not shown on the player list in case he is disguised as anything but another player
    modify-player-list-entry: MODIFY_PLAYER_LIST_ENTRY
    
+   # Modify scoreboard packets
+   # This may help scoreboard plugins to work properly with disguised players.
+   modify-scoreboard-packets: MODIFY_SCOREBOARD_PACKETS
+   
    # Show name tags with their original name for disguised players
    name-tag-shown: NAME_TAG_SHOWN
    

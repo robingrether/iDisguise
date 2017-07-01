@@ -55,6 +55,7 @@ import de.robingrether.idisguise.io.SLAPI;
 import de.robingrether.idisguise.io.UpdateCheck;
 import de.robingrether.idisguise.management.ChannelInjector;
 import de.robingrether.idisguise.management.DisguiseManager;
+import de.robingrether.idisguise.management.PacketHandler;
 import de.robingrether.idisguise.management.PacketHelper;
 import de.robingrether.idisguise.management.PlayerHelper;
 import de.robingrether.idisguise.management.Sounds;
@@ -77,7 +78,7 @@ public class iDisguise extends JavaPlugin {
 	public iDisguise() { instance = this; }
 	
 	public void onEnable() {
-		if(!VersionHelper.init(false)) {
+		if(!VersionHelper.init(true)) {
 			getLogger().log(Level.SEVERE, String.format("%s is not compatible with your server version!", getFullName()));
 			getServer().getPluginManager().disablePlugin(this);
 			return;
@@ -92,6 +93,8 @@ public class iDisguise extends JavaPlugin {
 		language.saveData();
 		PacketHelper.getInstance().setAttribute(0, configuration.NAME_TAG_SHOWN);
 		PacketHelper.getInstance().setAttribute(1, configuration.MODIFY_PLAYER_LIST_ENTRY);
+		DisguiseManager.getInstance().setAttribute(0, configuration.MODIFY_SCOREBOARD_PACKETS);
+		PacketHandler.getInstance().setAttribute(0, configuration.MODIFY_SCOREBOARD_PACKETS);
 		Sounds.setEnabled(configuration.REPLACE_SOUND_EFFECTS);
 		metrics = new Metrics(this);
 		metrics.addCustomChart(new Metrics.SingleLineChart("disguisedPlayers") {
