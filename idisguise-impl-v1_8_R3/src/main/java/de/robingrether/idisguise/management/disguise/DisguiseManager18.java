@@ -18,4 +18,14 @@ public class DisguiseManager18 extends DisguiseManager {
 		}, 10L);
 	}
 	
+	protected void showPlayer(final Player observer, final Player player) {
+		Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), new Runnable() {
+			
+			public void run() {
+				DisguiseManager18.super.showPlayer(observer, player);
+			}
+			
+		}, 10L);
+	}
+	
 }

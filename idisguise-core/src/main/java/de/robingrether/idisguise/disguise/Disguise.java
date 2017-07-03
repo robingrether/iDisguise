@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Locale;
 
 import org.bukkit.entity.Player;
+
+import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.util.StringUtil;
 
 /**
@@ -91,6 +93,7 @@ public abstract class Disguise implements Serializable, Cloneable {
 	 * @return <code>true</code> in case this disguise is visible to the given player, <code>false</code> otherwise
 	 */
 	public boolean isVisibleTo(Player player) {
+		if(DisguiseManager.getInstance().canSeeThrough(player)) return false;
 		switch(visibility) {
 			case EVERYONE:
 				return true;

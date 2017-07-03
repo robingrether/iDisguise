@@ -20,6 +20,7 @@ public class Language {
 	public String WRONG_USAGE_NO_NAME = ChatColor.RED + "Wrong usage: account name required";
 	public String WRONG_USAGE_TWO_DISGUISE_TYPES = ChatColor.RED + "Wrong usage: two disguise types given";
 	public String WRONG_USAGE_UNKNOWN_ARGUMENTS = ChatColor.RED + "Wrong usage: unknown arguments " + ChatColor.ITALIC + "%arguments%";
+	public String WRONG_USAGE_SEE_THROUGH = ChatColor.RED + "Wrong usage: unknown argument " + ChatColor.ITALIC + "%argument%";
 	public String INVALID_NAME = ChatColor.RED + "The given account name is invalid.";
 	public String EVENT_CANCELLED = ChatColor.RED + "Another plugin prohibits you to do that.";
 	public String DISGUISE_PLAYER_SUCCESS_SELF = ChatColor.GOLD + "You disguised as a %type% called %name%.";
@@ -70,6 +71,14 @@ public class Language {
 	public String UPDATE_DOWNLOAD_FAILED = ChatColor.RED + "[iDisguise] Download failed.";
 	public String UPDATE_OPTION = ChatColor.GOLD + "[iDisguise] You can enable automatic updates in the config file.";
 	public String EASTER_EGG_BIRTHDAY = ChatColor.YELLOW + "YAAAY!!! Today is my birthday! I'm %age% years old now.";
+	public String SEE_THROUGH_STATUS_ON_SELF = ChatColor.GOLD + "See-through is enabled for you.";
+	public String SEE_THROUGH_STATUS_ON_OTHER = ChatColor.GOLD + "See-through is enabled for %player%.";
+	public String SEE_THROUGH_STATUS_OFF_SELF = ChatColor.GOLD + "See-through is disabled for you.";
+	public String SEE_THROUGH_STATUS_OFF_OTHER = ChatColor.GOLD + "See-through is disabled for %player%.";
+	public String SEE_THROUGH_ENABLE_SELF = ChatColor.GOLD + "See-through enabled for you.";
+	public String SEE_THROUGH_ENABLE_OTHER = ChatColor.GOLD + "See-through enabled for %player%.";
+	public String SEE_THROUGH_DISABLE_SELF = ChatColor.GOLD + "See-through disabled for you.";
+	public String SEE_THROUGH_DISABLE_OTHER = ChatColor.GOLD + "See-through disabled for %player%.";
 	
 	private iDisguise plugin;
 	

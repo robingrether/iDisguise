@@ -33,6 +33,7 @@ permissions:
          iDisguise.others: true
          iDisguise.player.prohibited: true
          iDisguise.reload: true
+         iDisguise.see-through: true
          iDisguise.undisguise.all: true
          iDisguise.undisguise.others: true
          iDisguise.update: true
@@ -2602,6 +2603,8 @@ permissions:
    iDisguise.random:
       default: false
    iDisguise.reload:
+      default: false
+   iDisguise.see-through:
       default: false
    iDisguise.undisguise:
       default: false

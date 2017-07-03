@@ -227,4 +227,22 @@ public interface DisguiseAPI {
 	 */
 	public boolean hasPermission(Player player, Disguise disguise);
 	
+	/**
+	 * Indicates whether a given player can see through disguises.
+	 * 
+	 * @since 5.6.4
+	 * @param player the player
+	 * @return <code>true</code>, if the player can see through disguises
+	 */
+	public boolean canSeeThrough(OfflinePlayer player);
+	
+	/**
+	 * Sets whether a given player can see through disguises.
+	 * 
+	 * @since 5.6.4
+	 * @param player the player
+	 * @param seeThrough <code>true</code>, if the player shall see through disguises
+	 */
+	public void setSeeThrough(OfflinePlayer player, boolean seeThrough);
+	
 }

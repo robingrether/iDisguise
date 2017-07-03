@@ -315,6 +315,20 @@ public class iDisguise extends JavaPlugin {
 					} else {
 						sender.sendMessage((disguiseSelf ? language.STATUS_NOT_DISGUISED_SELF : language.STATUS_NOT_DISGUISED_OTHER).replace("%player%", player.getName()));
 					}
+				} else if(StringUtil.equalsIgnoreCase(args[0], "seethrough", "see-through")) {
+					if(sender.hasPermission("iDisguise.see-through")) {
+						if(args.length < 2) {
+							sender.sendMessage((DisguiseManager.getInstance().canSeeThrough(player) ? disguiseSelf ? language.SEE_THROUGH_STATUS_ON_SELF : language.SEE_THROUGH_STATUS_ON_OTHER : disguiseSelf ? language.SEE_THROUGH_STATUS_OFF_SELF : language.SEE_THROUGH_STATUS_OFF_OTHER).replace("%player%", player.getName()));
+						} else if(StringUtil.equalsIgnoreCase(args[1], "on", "off")) {
+							boolean seeThrough = args[1].equalsIgnoreCase("on");
+							DisguiseManager.getInstance().setSeeThrough(player, seeThrough);
+							sender.sendMessage((seeThrough ? disguiseSelf ? language.SEE_THROUGH_ENABLE_SELF : language.SEE_THROUGH_ENABLE_OTHER : disguiseSelf ? language.SEE_THROUGH_DISABLE_SELF : language.SEE_THROUGH_DISABLE_OTHER).replace("%player%", player.getName()));
+						} else {
+							sender.sendMessage(language.WRONG_USAGE_SEE_THROUGH.replace("%argument%", args[1]));
+						}
+					} else {
+						sender.sendMessage(language.NO_PERMISSION);
+					}
 				} else {
 					Disguise disguise = DisguiseManager.getInstance().isDisguised(player) ? DisguiseManager.getInstance().getDisguise(player).clone() : null;
 					boolean match = false;
@@ -867,6 +881,14 @@ public class iDisguise extends JavaPlugin {
 			
 			public boolean hasPermission(Player player, Disguise disguise) {
 				return iDisguise.this.hasPermission(player, disguise);
+			}
+			
+			public boolean canSeeThrough(OfflinePlayer player) {
+				return DisguiseManager.getInstance().canSeeThrough(player);
+			}
+			
+			public void setSeeThrough(OfflinePlayer player, boolean seeThrough) {
+				DisguiseManager.getInstance().setSeeThrough(player, seeThrough);
 			}
 			
 		};
