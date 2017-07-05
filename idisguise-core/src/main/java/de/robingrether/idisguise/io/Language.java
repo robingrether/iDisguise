@@ -54,6 +54,8 @@ public class Language {
 	public String HELP_RANDOM_SELF = "Disguise yourself as a randomly chosen mob";
 	public String HELP_RANDOM_OTHER = "Disguise a player as a randomly chosen mob";
 	public String HELP_RELOAD = "Reload config and language file";
+	public String HELP_SEE_THROUGH_SELF = "Indicate or toggle see-through mode for yourself";
+	public String HELP_SEE_THROUGH_OTHER = "Indicate or toggle see-through mode for a player";
 	public String HELP_STATUS_SELF = "Shows your disguise status";
 	public String HELP_STATUS_OTHER = "Shows a player's disguise status";
 	public String HELP_UNDISGUISE_SELF = "Undisguise yourself";
@@ -71,14 +73,14 @@ public class Language {
 	public String UPDATE_DOWNLOAD_FAILED = ChatColor.RED + "[iDisguise] Download failed.";
 	public String UPDATE_OPTION = ChatColor.GOLD + "[iDisguise] You can enable automatic updates in the config file.";
 	public String EASTER_EGG_BIRTHDAY = ChatColor.YELLOW + "YAAAY!!! Today is my birthday! I'm %age% years old now.";
-	public String SEE_THROUGH_STATUS_ON_SELF = ChatColor.GOLD + "See-through is enabled for you.";
-	public String SEE_THROUGH_STATUS_ON_OTHER = ChatColor.GOLD + "See-through is enabled for %player%.";
-	public String SEE_THROUGH_STATUS_OFF_SELF = ChatColor.GOLD + "See-through is disabled for you.";
-	public String SEE_THROUGH_STATUS_OFF_OTHER = ChatColor.GOLD + "See-through is disabled for %player%.";
-	public String SEE_THROUGH_ENABLE_SELF = ChatColor.GOLD + "See-through enabled for you.";
-	public String SEE_THROUGH_ENABLE_OTHER = ChatColor.GOLD + "See-through enabled for %player%.";
-	public String SEE_THROUGH_DISABLE_SELF = ChatColor.GOLD + "See-through disabled for you.";
-	public String SEE_THROUGH_DISABLE_OTHER = ChatColor.GOLD + "See-through disabled for %player%.";
+	public String SEE_THROUGH_STATUS_ON_SELF = ChatColor.GOLD + "See-through mode is currently " + ChatColor.GREEN + "enabled " + ChatColor.GOLD + "for you.";
+	public String SEE_THROUGH_STATUS_ON_OTHER = ChatColor.GOLD + "See-through mode is currently " + ChatColor.GREEN + "enabled " + ChatColor.GOLD + "for %player%.";
+	public String SEE_THROUGH_STATUS_OFF_SELF = ChatColor.GOLD + "See-through mode is currently " + ChatColor.RED + "disabled " + ChatColor.GOLD + "for you.";
+	public String SEE_THROUGH_STATUS_OFF_OTHER = ChatColor.GOLD + "See-through mode is currently " + ChatColor.RED + "disabled " + ChatColor.GOLD + "for %player%.";
+	public String SEE_THROUGH_ENABLE_SELF = ChatColor.GOLD + "See-through mode is now " + ChatColor.GREEN + "enabled " + ChatColor.GOLD + "for you.";
+	public String SEE_THROUGH_ENABLE_OTHER = ChatColor.GOLD + "See-through mode is now " + ChatColor.GREEN + "enabled " + ChatColor.GOLD + "for %player%.";
+	public String SEE_THROUGH_DISABLE_SELF = ChatColor.GOLD + "See-through mode is now " + ChatColor.RED + "disabled " + ChatColor.GOLD + "for you.";
+	public String SEE_THROUGH_DISABLE_OTHER = ChatColor.GOLD + "See-through mode is now " + ChatColor.RED + "disabled " + ChatColor.GOLD + "for %player%.";
 	
 	private iDisguise plugin;
 	

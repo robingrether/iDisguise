@@ -505,6 +505,9 @@ public class iDisguise extends JavaPlugin {
 					if(sender.hasPermission("iDisguise.reload")) {
 						completions.add("reload");
 					}
+					if(sender.hasPermission("iDisguise.see-through")) {
+						completions.add("see-through");
+					}
 					for(DisguiseType type : DisguiseType.values()) {
 						if(type.isAvailable() && !type.isPlayer()) {
 							completions.add(type.getDefaultCommandArgument());
@@ -553,6 +556,9 @@ public class iDisguise extends JavaPlugin {
 						completions.addAll(Arrays.asList("help", "player", "status"));
 						if(sender.hasPermission("iDisguise.random")) {
 							completions.add("random");
+						}
+						if(sender.hasPermission("iDisguise.see-through")) {
+							completions.add("see-through");
 						}
 						for(DisguiseType type : DisguiseType.values()) {
 							if(!type.isPlayer() && type.isAvailable() && hasPermission(sender, type.newInstance())) {
@@ -631,6 +637,9 @@ public class iDisguise extends JavaPlugin {
 		}
 		if(sender.hasPermission("iDisguise.reload")) {
 			sender.sendMessage(language.HELP_BASE.replace("%command%", "/" + alias + " reload").replace("%description%", language.HELP_RELOAD));
+		}
+		if(sender.hasPermission("iDisguise.see-through")) {
+			sender.sendMessage(language.HELP_BASE.replace("%command%", "/" + alias + " see-through [on/off]").replace("%description%", self ? language.HELP_SEE_THROUGH_SELF : language.HELP_SEE_THROUGH_OTHER));
 		}
 		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " status").replace("%description%", self ? language.HELP_STATUS_SELF : language.HELP_STATUS_OTHER));
 		if(self) {
