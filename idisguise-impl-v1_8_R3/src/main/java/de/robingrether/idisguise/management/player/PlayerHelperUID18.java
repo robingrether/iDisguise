@@ -14,18 +14,20 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.properties.Property;
 
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.management.PlayerHelper;
 
-import static de.robingrether.idisguise.management.Reflection.CraftPlayer_getProfile;
+import static de.robingrether.idisguise.management.Reflection.*;
 
 public class PlayerHelperUID18 extends PlayerHelper {
 	
@@ -100,24 +102,34 @@ public class PlayerHelperUID18 extends PlayerHelper {
 			}
 		}
 		currentlyLoadingById.put(uniqueId, new Object());
+		OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uniqueId);
 		BufferedReader reader = null;
 		try {
-			URL url = new URL(API_UID_URL + uniqueId.toString().replace("-", "") + "?unsigned=false");
-			URLConnection connection = url.openConnection();
-			connection.addRequestProperty("User-Agent", iDisguise.getInstance().getFullName());
-			connection.setDoOutput(true);
-			reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String response = reader.readLine();
-			if(response != null && !response.isEmpty()) {
-				JSONObject object = (JSONObject)JSONValue.parse(response);
-				String name = (String)object.get(API_UID_NAME);
-				GameProfile profile = new GameProfile(uniqueId, name);
-				JSONArray array = (JSONArray)object.get(API_UID_PROPERTIES);
-				for(Object obj : array) {
-					JSONObject property = (JSONObject)obj;
-					String propertyName = (String)property.get(API_UID_NAME);
-					profile.getProperties().put(propertyName, new Property(propertyName, (String)property.get(API_UID_VALUE), (String)property.get(API_UID_SIGNATURE)));
+			GameProfile profile = (GameProfile)(offlinePlayer.isOnline() ? CraftPlayer_getProfile.invoke(offlinePlayer) : CraftOfflinePlayer_getProfile.invoke(offlinePlayer));
+			String name = offlinePlayer.getName();
+			if(profile.getProperties().isEmpty()) {
+				((MinecraftSessionService)MinecraftServer_getSessionService.invoke(MinecraftServer_getServer.invoke(null))).fillProfileProperties(profile, true);
+			}
+			if(profile.getProperties().isEmpty()) {
+				URL url = new URL(API_UID_URL + uniqueId.toString().replace("-", "") + "?unsigned=false");
+				URLConnection connection = url.openConnection();
+				connection.addRequestProperty("User-Agent", iDisguise.getInstance().getFullName());
+				connection.setDoOutput(true);
+				reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String response = reader.readLine();
+				if(response != null && !response.isEmpty()) {
+					JSONObject object = (JSONObject)JSONValue.parse(response);
+					name = (String)object.get(API_UID_NAME);
+					profile = new GameProfile(uniqueId, name);
+					JSONArray array = (JSONArray)object.get(API_UID_PROPERTIES);
+					for(Object obj : array) {
+						JSONObject property = (JSONObject)obj;
+						String propertyName = (String)property.get(API_UID_NAME);
+						profile.getProperties().put(propertyName, new Property(propertyName, (String)property.get(API_UID_VALUE), (String)property.get(API_UID_SIGNATURE)));
+					}
 				}
+			}
+			if(!profile.getProperties().isEmpty()) {
 				profilesById.put(uniqueId, profile);
 				profilesByName.put(name.toLowerCase(Locale.ENGLISH), profile);
 			}

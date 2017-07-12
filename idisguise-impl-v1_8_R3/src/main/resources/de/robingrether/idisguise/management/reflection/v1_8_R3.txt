@@ -109,6 +109,10 @@ GameProfile_getProfileId->MGameProfile$getId()
 InventorySubcontainer->C{nms}.InventorySubcontainer
 InventorySubcontainer_setItem->MInventorySubcontainer$setItem(int,{nms}.ItemStack)
 
+MinecraftServer->C{nms}.MinecraftServer
+MinecraftServer_getServer->MMinecraftServer$getServer()
+MinecraftServer_getSessionService->MMinecraftServer$aD()
+
 PacketPlayInUseEntity->C{nms}.PacketPlayInUseEntity
 PacketPlayInUseEntity_entityId->FPacketPlayInUseEntity$a
 PacketPlayInUseEntity_getAction->MPacketPlayInUseEntity$a()

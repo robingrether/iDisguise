@@ -267,6 +267,10 @@ public class Reflection {
 	public static Field EnumScoreboardAction_CHANGE;
 	public static Field EnumScoreboardAction_REMOVE;
 	
+	public static Class<?> MinecraftServer;
+	public static Method MinecraftServer_getServer;
+	public static Method MinecraftServer_getSessionService;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");

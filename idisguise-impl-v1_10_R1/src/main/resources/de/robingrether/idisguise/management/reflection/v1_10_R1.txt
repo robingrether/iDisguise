@@ -125,6 +125,10 @@ MinecraftKey->C{nms}.MinecraftKey
 MinecraftKey_getName->MMinecraftKey$a()
 MinecraftKey_new->NMinecraftKey(java.lang.String)
 
+MinecraftServer->C{nms}.MinecraftServer
+MinecraftServer_getServer->MMinecraftServer$getServer()
+MinecraftServer_getSessionService->MMinecraftServer$ay()
+
 PacketPlayInUseEntity->C{nms}.PacketPlayInUseEntity
 PacketPlayInUseEntity_entityId->FPacketPlayInUseEntity$a
 PacketPlayInUseEntity_getAction->MPacketPlayInUseEntity$a()
