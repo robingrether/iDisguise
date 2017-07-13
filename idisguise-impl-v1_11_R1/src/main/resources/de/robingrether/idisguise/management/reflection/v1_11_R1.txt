@@ -233,7 +233,7 @@ RegistryMaterials_getValue->MRegistryMaterials$get(java.lang.Object)
 SoundEffect->C{nms}.SoundEffect
 SoundEffect_registry->FSoundEffect$a
 
-UserCache->{nms}.UserCache
+UserCache->C{nms}.UserCache
 UserCache_getProfileById->MUserCache$a(java.util.UUID)
 UserCache_putProfile->MUserCache$a(com.mojang.authlib.GameProfile)
 
