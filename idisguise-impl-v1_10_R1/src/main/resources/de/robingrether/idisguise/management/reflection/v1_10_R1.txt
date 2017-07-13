@@ -128,6 +128,7 @@ MinecraftKey_new->NMinecraftKey(java.lang.String)
 MinecraftServer->C{nms}.MinecraftServer
 MinecraftServer_getServer->MMinecraftServer$getServer()
 MinecraftServer_getSessionService->MMinecraftServer$ay()
+MinecraftServer_getUserCache->MMinecraftServer$getUserCache()
 
 PacketPlayInUseEntity->C{nms}.PacketPlayInUseEntity
 PacketPlayInUseEntity_entityId->FPacketPlayInUseEntity$a
@@ -234,6 +235,10 @@ RegistryMaterials_getValue->MRegistryMaterials$get(java.lang.Object)
 
 SoundEffect->C{nms}.SoundEffect
 SoundEffect_registry->FSoundEffect$a
+
+UserCache->{nms}.UserCache
+UserCache_getProfileById->MUserCache$a(java.util.UUID)
+UserCache_putProfile->MUserCache$a(com.mojang.authlib.GameProfile)
 
 World->C{nms}.World
 World_findNearbyPlayer->MWorld$a(double,double,double,double,boolean)

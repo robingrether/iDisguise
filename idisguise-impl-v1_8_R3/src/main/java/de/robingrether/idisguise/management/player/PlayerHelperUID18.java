@@ -102,13 +102,16 @@ public class PlayerHelperUID18 extends PlayerHelper {
 			}
 		}
 		currentlyLoadingById.put(uniqueId, new Object());
-		OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uniqueId);
 		BufferedReader reader = null;
 		try {
-			GameProfile profile = (GameProfile)(offlinePlayer.isOnline() ? CraftPlayer_getProfile.invoke(offlinePlayer) : CraftOfflinePlayer_getProfile.invoke(offlinePlayer));
-			String name = offlinePlayer.getName();
+			boolean addToUserCache = false;
+			GameProfile profile = (GameProfile)UserCache_getProfileById.invoke(MinecraftServer_getUserCache.invoke(MinecraftServer_getServer.invoke(null)), uniqueId);
+			if(profile == null) {
+				profile = new GameProfile(uniqueId, null);
+				addToUserCache = true;
+			}
 			if(profile.getProperties().isEmpty()) {
-				((MinecraftSessionService)MinecraftServer_getSessionService.invoke(MinecraftServer_getServer.invoke(null))).fillProfileProperties(profile, true);
+				profile = ((MinecraftSessionService)MinecraftServer_getSessionService.invoke(MinecraftServer_getServer.invoke(null))).fillProfileProperties(profile, true);
 			}
 			if(profile.getProperties().isEmpty()) {
 				URL url = new URL(API_UID_URL + uniqueId.toString().replace("-", "") + "?unsigned=false");
@@ -119,7 +122,7 @@ public class PlayerHelperUID18 extends PlayerHelper {
 				String response = reader.readLine();
 				if(response != null && !response.isEmpty()) {
 					JSONObject object = (JSONObject)JSONValue.parse(response);
-					name = (String)object.get(API_UID_NAME);
+					String name = (String)object.get(API_UID_NAME);
 					profile = new GameProfile(uniqueId, name);
 					JSONArray array = (JSONArray)object.get(API_UID_PROPERTIES);
 					for(Object obj : array) {
@@ -131,7 +134,10 @@ public class PlayerHelperUID18 extends PlayerHelper {
 			}
 			if(!profile.getProperties().isEmpty()) {
 				profilesById.put(uniqueId, profile);
-				profilesByName.put(name.toLowerCase(Locale.ENGLISH), profile);
+				profilesByName.put(profile.getName().toLowerCase(Locale.ENGLISH), profile);
+				if(addToUserCache) {
+					UserCache_putProfile.invoke(MinecraftServer_getUserCache.invoke(MinecraftServer_getServer.invoke(null)), profile);
+				}
 			}
 			synchronized(currentlyLoadingById.get(uniqueId)) {
 				currentlyLoadingById.remove(uniqueId).notifyAll();

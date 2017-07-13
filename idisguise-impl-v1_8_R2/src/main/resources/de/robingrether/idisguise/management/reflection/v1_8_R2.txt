@@ -112,6 +112,7 @@ InventorySubcontainer_setItem->MInventorySubcontainer$setItem(int,{nms}.ItemStac
 MinecraftServer->C{nms}.MinecraftServer
 MinecraftServer_getServer->MMinecraftServer$getServer()
 MinecraftServer_getSessionService->MMinecraftServer$aC()
+MinecraftServer_getUserCache->MMinecraftServer$getUserCache()
 
 PacketPlayInUseEntity->C{nms}.PacketPlayInUseEntity
 PacketPlayInUseEntity_entityId->FPacketPlayInUseEntity$a
@@ -209,6 +210,10 @@ PlayerInfoData_getGamemode->MPlayerInfoData$c()
 PlayerInfoData_getPing->MPlayerInfoData$b()
 PlayerInfoData_getProfile->MPlayerInfoData$a()
 PlayerInfoData_new->NPlayerInfoData({nms}.PacketPlayOutPlayerInfo,com.mojang.authlib.GameProfile,int,{nms}.WorldSettings$EnumGamemode,{nms}.IChatBaseComponent)
+
+UserCache->{nms}.UserCache
+UserCache_getProfileById->MUserCache$a(java.util.UUID)
+UserCache_putProfile->MUserCache$a(com.mojang.authlib.GameProfile)
 
 World->C{nms}.World
 World_findNearbyPlayer->MWorld$findNearbyPlayer(double,double,double,double)

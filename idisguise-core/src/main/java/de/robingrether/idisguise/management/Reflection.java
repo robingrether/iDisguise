@@ -270,6 +270,11 @@ public class Reflection {
 	public static Class<?> MinecraftServer;
 	public static Method MinecraftServer_getServer;
 	public static Method MinecraftServer_getSessionService;
+	public static Method MinecraftServer_getUserCache;
+	
+	public static Class<?> UserCache;
+	public static Method UserCache_getProfileById;
+	public static Method UserCache_putProfile;
 	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");
