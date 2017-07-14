@@ -44,13 +44,9 @@ public abstract class PlayerHelper {
 	
 	public abstract UUID getUniqueId(String name);
 	
-	public abstract String getName(UUID uniqueId);
-	
 	public abstract Object getGameProfile(UUID uniqueId, String skinName, String displayName);
 	
 	public abstract void loadGameProfileAsynchronously(String skinName);
-	
-	public abstract void loadGameProfileAsynchronously(UUID uniqueId);
 	
 	public abstract void registerGameProfile(Player player);
 	

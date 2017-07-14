@@ -3,8 +3,8 @@ package de.robingrether.idisguise.management.player;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
@@ -14,14 +14,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.properties.Property;
 
 import de.robingrether.idisguise.iDisguise;
@@ -64,16 +62,17 @@ public class PlayerHelperUID18 extends PlayerHelper {
 		BufferedReader reader = null;
 		try {
 			URL url = new URL(API_NAME_URL + name);
-			URLConnection connection = url.openConnection();
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 			connection.addRequestProperty("User-Agent", iDisguise.getInstance().getFullName());
 			connection.setDoOutput(true);
-			reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String response = reader.readLine();
-			if(response != null && !response.isEmpty()) {
+			connection.connect();
+			if(connection.getResponseCode() == 200) {
+				reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String response = reader.readLine();
 				JSONObject object = (JSONObject)JSONValue.parse(response);
 				UUID uniqueId = UUID.fromString(((String)object.get(API_NAME_ID)).replaceFirst("([0-9a-f]{8})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{12})", "$1-$2-$3-$4-$5"));
-				loadGameProfile(uniqueId);
-			} else {
+				loadGameProfile(uniqueId, name);
+			} else if(connection.getResponseCode() == 204) {
 				nonExistingProfiles.add(name);
 			}
 			synchronized(currentlyLoadingByName.get(name)) {
@@ -91,7 +90,7 @@ public class PlayerHelperUID18 extends PlayerHelper {
 		}
 	}
 	
-	private void loadGameProfile(UUID uniqueId) {
+	private void loadGameProfile(UUID uniqueId, String name) {
 		if(currentlyLoadingById.containsKey(uniqueId)) {
 			synchronized(currentlyLoadingById.get(uniqueId)) {
 				try {
@@ -104,40 +103,37 @@ public class PlayerHelperUID18 extends PlayerHelper {
 		currentlyLoadingById.put(uniqueId, new Object());
 		BufferedReader reader = null;
 		try {
-			boolean addToUserCache = false;
-			GameProfile profile = (GameProfile)UserCache_getProfileById.invoke(MinecraftServer_getUserCache.invoke(MinecraftServer_getServer.invoke(null)), uniqueId);
-			if(profile == null) {
-				profile = new GameProfile(uniqueId, null);
-				addToUserCache = true;
-			}
-			if(profile.getProperties().isEmpty()) {
-				profile = ((MinecraftSessionService)MinecraftServer_getSessionService.invoke(MinecraftServer_getServer.invoke(null))).fillProfileProperties(profile, true);
-			}
-			if(profile.getProperties().isEmpty()) {
-				URL url = new URL(API_UID_URL + uniqueId.toString().replace("-", "") + "?unsigned=false");
-				URLConnection connection = url.openConnection();
-				connection.addRequestProperty("User-Agent", iDisguise.getInstance().getFullName());
-				connection.setDoOutput(true);
+			URL url = new URL(API_UID_URL + uniqueId.toString().replace("-", "") + "?unsigned=false");
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+			connection.addRequestProperty("User-Agent", iDisguise.getInstance().getFullName());
+			connection.setDoOutput(true);
+			connection.connect();
+			if(connection.getResponseCode() == 200) {
 				reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 				String response = reader.readLine();
-				if(response != null && !response.isEmpty()) {
-					JSONObject object = (JSONObject)JSONValue.parse(response);
-					String name = (String)object.get(API_UID_NAME);
-					profile = new GameProfile(uniqueId, name);
-					JSONArray array = (JSONArray)object.get(API_UID_PROPERTIES);
-					for(Object obj : array) {
-						JSONObject property = (JSONObject)obj;
-						String propertyName = (String)property.get(API_UID_NAME);
-						profile.getProperties().put(propertyName, new Property(propertyName, (String)property.get(API_UID_VALUE), (String)property.get(API_UID_SIGNATURE)));
-					}
+				JSONObject object = (JSONObject)JSONValue.parse(response);
+				name = (String)object.get(API_UID_NAME);
+				GameProfile profile = new GameProfile(uniqueId, name);
+				JSONArray array = (JSONArray)object.get(API_UID_PROPERTIES);
+				for(Object obj : array) {
+					JSONObject property = (JSONObject)obj;
+					String propertyName = (String)property.get(API_UID_NAME);
+					profile.getProperties().put(propertyName, new Property(propertyName, (String)property.get(API_UID_VALUE), (String)property.get(API_UID_SIGNATURE)));
 				}
-			}
-			if(!profile.getProperties().isEmpty()) {
 				profilesById.put(uniqueId, profile);
 				profilesByName.put(profile.getName().toLowerCase(Locale.ENGLISH), profile);
-				if(addToUserCache) {
-					UserCache_putProfile.invoke(MinecraftServer_getUserCache.invoke(MinecraftServer_getServer.invoke(null)), profile);
-				}
+				UserCache_putProfile.invoke(MinecraftServer_getUserCache.invoke(MinecraftServer_getServer.invoke(null)), profile);
+			} else if(connection.getResponseCode() == 429 && name != null) {
+				final GameProfile profile = new GameProfile(uniqueId, name);
+				profilesById.put(uniqueId, profile);
+				profilesByName.put(profile.getName().toLowerCase(Locale.ENGLISH), profile);
+				Bukkit.getScheduler().runTaskLaterAsynchronously(iDisguise.getInstance(), new Runnable() {
+					
+					public void run() {
+						loadGameProfile(profile.getId(), profile.getName());
+					}
+					
+				}, 1200L);
 			}
 			synchronized(currentlyLoadingById.get(uniqueId)) {
 				currentlyLoadingById.remove(uniqueId).notifyAll();
@@ -182,19 +178,6 @@ public class PlayerHelperUID18 extends PlayerHelper {
 		}
 	}
 	
-	public String getName(UUID uniqueId) {
-		if(profilesById.containsKey(uniqueId)) {
-			return profilesById.get(uniqueId).getName();
-		} else {
-			loadGameProfile(uniqueId);
-			if(profilesById.containsKey(uniqueId)) {
-				return profilesById.get(uniqueId).getName();
-			} else {
-				return null;
-			}
-		}
-	}
-	
 	public GameProfile getGameProfile(UUID uniqueId, String skinName, String displayName) {
 		GameProfile localProfile = new GameProfile(uniqueId, displayName.length() <= 16 ? displayName : skinName);
 		if(profilesByName.containsKey(skinName.toLowerCase(Locale.ENGLISH))) {
@@ -212,19 +195,6 @@ public class PlayerHelperUID18 extends PlayerHelper {
 			
 			public void run() {
 				loadGameProfile(name);
-			}
-			
-		});
-	}
-	
-	public void loadGameProfileAsynchronously(final UUID uniqueId) {
-		if(profilesById.containsKey(uniqueId) || currentlyLoadingById.containsKey(uniqueId)) {
-			return;
-		}
-		Bukkit.getScheduler().runTaskAsynchronously(iDisguise.getInstance(), new Runnable() {
-			
-			public void run() {
-				loadGameProfile(uniqueId);
 			}
 			
 		});
