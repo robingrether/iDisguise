@@ -23,6 +23,8 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
 import de.robingrether.idisguise.iDisguise;
+import de.robingrether.idisguise.disguise.PlayerDisguise;
+import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.PlayerHelper;
 
 import static de.robingrether.idisguise.management.Reflection.*;
@@ -103,37 +105,57 @@ public class PlayerHelperUID18 extends PlayerHelper {
 		currentlyLoadingById.put(uniqueId, new Object());
 		BufferedReader reader = null;
 		try {
-			URL url = new URL(API_UID_URL + uniqueId.toString().replace("-", "") + "?unsigned=false");
-			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-			connection.addRequestProperty("User-Agent", iDisguise.getInstance().getFullName());
-			connection.setDoOutput(true);
-			connection.connect();
-			if(connection.getResponseCode() == 200) {
-				reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String response = reader.readLine();
-				JSONObject object = (JSONObject)JSONValue.parse(response);
-				name = (String)object.get(API_UID_NAME);
-				GameProfile profile = new GameProfile(uniqueId, name);
-				JSONArray array = (JSONArray)object.get(API_UID_PROPERTIES);
-				for(Object obj : array) {
-					JSONObject property = (JSONObject)obj;
-					String propertyName = (String)property.get(API_UID_NAME);
-					profile.getProperties().put(propertyName, new Property(propertyName, (String)property.get(API_UID_VALUE), (String)property.get(API_UID_SIGNATURE)));
-				}
-				profilesById.put(uniqueId, profile);
-				profilesByName.put(profile.getName().toLowerCase(Locale.ENGLISH), profile);
-				UserCache_putProfile.invoke(MinecraftServer_getUserCache.invoke(MinecraftServer_getServer.invoke(null)), profile);
-			} else if(connection.getResponseCode() == 429 && name != null) {
-				final GameProfile profile = new GameProfile(uniqueId, name);
-				profilesById.put(uniqueId, profile);
-				profilesByName.put(profile.getName().toLowerCase(Locale.ENGLISH), profile);
-				Bukkit.getScheduler().runTaskLaterAsynchronously(iDisguise.getInstance(), new Runnable() {
-					
-					public void run() {
-						loadGameProfile(profile.getId(), profile.getName());
+			GameProfile profile = (GameProfile)UserCache_getProfileById.invoke(MinecraftServer_getUserCache.invoke(MinecraftServer_getServer.invoke(null)), uniqueId);
+			if(profile == null) {
+				profile = new GameProfile(uniqueId, name);
+			}
+			if(!profile.getProperties().containsKey("textures")) {
+				URL url = new URL(API_UID_URL + uniqueId.toString().replace("-", "") + "?unsigned=false");
+				HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+				connection.addRequestProperty("User-Agent", iDisguise.getInstance().getFullName());
+				connection.setDoOutput(true);
+				connection.connect();
+				if(connection.getResponseCode() == 200) {
+					reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+					String response = reader.readLine();
+					JSONObject object = (JSONObject)JSONValue.parse(response);
+					name = (String)object.get(API_UID_NAME);
+					profile = new GameProfile(uniqueId, name);
+					JSONArray array = (JSONArray)object.get(API_UID_PROPERTIES);
+					for(Object obj : array) {
+						JSONObject property = (JSONObject)obj;
+						String propertyName = (String)property.get(API_UID_NAME);
+						profile.getProperties().put(propertyName, new Property(propertyName, (String)property.get(API_UID_VALUE), (String)property.get(API_UID_SIGNATURE)));
 					}
-					
-				}, 1200L);
+					profilesById.put(uniqueId, profile);
+					profilesByName.put(profile.getName().toLowerCase(Locale.ENGLISH), profile);
+					UserCache_putProfile.invoke(MinecraftServer_getUserCache.invoke(MinecraftServer_getServer.invoke(null)), profile);
+					final String skinName = name;
+					Bukkit.getScheduler().runTask(iDisguise.getInstance(), new Runnable() {
+						
+						public void run() {
+							for(Player player : Bukkit.getOnlinePlayers()) {
+								if(DisguiseManager.getInstance().isDisguised(player) && DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise) {
+									if(((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getSkinName().equalsIgnoreCase(skinName)) {
+										DisguiseManager.getInstance().resendPackets(player);
+									}
+								}
+							}
+						}
+						
+					});
+				} else if(connection.getResponseCode() == 429 && name != null) {
+					profilesById.put(uniqueId, profile);
+					profilesByName.put(profile.getName().toLowerCase(Locale.ENGLISH), profile);
+					final GameProfile emptyProfile = profile;
+					Bukkit.getScheduler().runTaskLaterAsynchronously(iDisguise.getInstance(), new Runnable() {
+						
+						public void run() {
+							loadGameProfile(emptyProfile.getId(), emptyProfile.getName());
+						}
+						
+					}, 1200L);
+				}
 			}
 			synchronized(currentlyLoadingById.get(uniqueId)) {
 				currentlyLoadingById.remove(uniqueId).notifyAll();

@@ -45,23 +45,23 @@ public class DisguiseManager {
 	private Set<UUID> seeThroughSet = Collections.newSetFromMap(new ConcurrentHashMap<UUID, Boolean>());
 	
 	public synchronized void disguise(final OfflinePlayer offlinePlayer, final Disguise disguise) {
-		if(disguise instanceof PlayerDisguise && !PlayerHelper.getInstance().isGameProfileLoaded(((PlayerDisguise)disguise).getSkinName())) {
-			Bukkit.getScheduler().runTaskAsynchronously(iDisguise.getInstance(), new Runnable() {
-				
-				public void run() {
-					PlayerHelper.getInstance().waitForGameProfile(((PlayerDisguise)disguise).getSkinName());
-					Bukkit.getScheduler().runTask(iDisguise.getInstance(), new Runnable() {
-						
-						public void run() {
-							disguise(offlinePlayer, disguise);
-						}
-						
-					});
-				}
-				
-			});
-			return;
-		}
+//		if(disguise instanceof PlayerDisguise && !PlayerHelper.getInstance().isGameProfileLoaded(((PlayerDisguise)disguise).getSkinName())) {
+//			Bukkit.getScheduler().runTaskAsynchronously(iDisguise.getInstance(), new Runnable() {
+//				
+//				public void run() {
+//					PlayerHelper.getInstance().waitForGameProfile(((PlayerDisguise)disguise).getSkinName());
+//					Bukkit.getScheduler().runTask(iDisguise.getInstance(), new Runnable() {
+//						
+//						public void run() {
+//							disguise(offlinePlayer, disguise);
+//						}
+//						
+//					});
+//				}
+//				
+//			});
+//			return;
+//		}
 		if(offlinePlayer.isOnline()) {
 			Player player = offlinePlayer.getPlayer();
 //			Disguise oldDisguise = disguiseMap.getDisguise(player);
