@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.api.PlayerInteractDisguisedPlayerEvent;
@@ -16,7 +15,6 @@ import de.robingrether.idisguise.disguise.FallingBlockDisguise;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.ObjectDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
-import de.robingrether.idisguise.management.channel.InjectedPlayerConnection;
 
 import static de.robingrether.idisguise.management.Reflection.*;
 import de.robingrether.util.ObjectUtil;
@@ -44,15 +42,14 @@ public class PacketHandler {
 		boolean attack = PacketPlayInUseEntity_getAction.invoke(packet).equals(EnumEntityUseAction_ATTACK.get(null));
 		if(player != null && player != observer && DisguiseManager.getInstance().isDisguisedTo(player, observer) && !attack) {
 			if(ObjectUtil.equals(DisguiseManager.getInstance().getDisguise(player).getType(), DisguiseType.SHEEP, DisguiseType.WOLF)) {
-				BukkitRunnable runnable = new BukkitRunnable() {
+				Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), new Runnable() {
 					
 					public void run() {
 						DisguiseManager.getInstance().resendPackets(player);
 						observer.updateInventory();
 					}
 					
-				};
-				runnable.runTaskLater(iDisguise.getInstance(), 2L);
+				}, 2L);
 			}
 			Bukkit.getPluginManager().callEvent(new PlayerInteractDisguisedPlayerEvent(observer, player));
 			return null;
@@ -263,72 +260,34 @@ public class PacketHandler {
 	
 	public Object handlePacketPlayOutScoreboardTeam(final Player observer, final Object packet) throws Exception {
 		if(attributes[0] && ObjectUtil.equals(PacketPlayOutScoreboardTeam_action.getInt(packet), 0, 3, 4)) {
-			final Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
-			Bukkit.getScheduler().runTaskAsynchronously(iDisguise.getInstance(), new Runnable() {
-				
-				public void run() {
-					try {
-						List<String> entries = (List<String>)PacketPlayOutScoreboardTeam_entries.get(customizablePacket);
-						List<String> itemsToRemove = new ArrayList<String>();
-						List<String> itemsToAdd = new ArrayList<String>();
-						for(String entry : entries) {
-							OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(entry);
-							if(offlinePlayer != null && offlinePlayer != observer && DisguiseManager.getInstance().isDisguisedTo(offlinePlayer, observer) && DisguiseManager.getInstance().getDisguise(offlinePlayer) instanceof PlayerDisguise) {
-								itemsToRemove.add(entry);
-								itemsToAdd.add(((PlayerDisguise)DisguiseManager.getInstance().getDisguise(offlinePlayer)).getDisplayName());
-							}
-						}
-						entries.removeAll(itemsToRemove);
-						entries.addAll(itemsToAdd);
-					} catch (Exception e) {
-						return;
-					}
-					Bukkit.getScheduler().runTask(iDisguise.getInstance(), new Runnable() {
-						
-						public void run() {
-							try {
-								((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacketDirectly(customizablePacket);
-							} catch(Exception e) {
-							}
-						}
-						
-					});
+			Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
+			List<String> entries = (List<String>)PacketPlayOutScoreboardTeam_entries.get(customizablePacket);
+			List<String> itemsToRemove = new ArrayList<String>();
+			List<String> itemsToAdd = new ArrayList<String>();
+			for(String entry : entries) {
+				Player player = Bukkit.getPlayer(entry);
+				if(player != null && player != observer && DisguiseManager.getInstance().isDisguisedTo(player, observer) && DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise) {
+					itemsToRemove.add(entry);
+					itemsToAdd.add(((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getDisplayName());
 				}
-				
-			});
-			return null;
+			}
+			entries.removeAll(itemsToRemove);
+			entries.addAll(itemsToAdd);
+			return customizablePacket;
 		}
 		return packet;
 	}
 	
 	public Object handlePacketPlayOutScoreboardScore(final Player observer, final Object packet) throws Exception {
-		if(!attributes[0]) return packet;
-		final Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
-		Bukkit.getScheduler().runTaskAsynchronously(iDisguise.getInstance(), new Runnable() {
-			
-			public void run() {
-				try {
-					OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer((String)PacketPlayOutScoreboardScore_entry.get(customizablePacket));
-					if(offlinePlayer != null && offlinePlayer != observer && DisguiseManager.getInstance().isDisguisedTo(offlinePlayer, observer) && DisguiseManager.getInstance().getDisguise(offlinePlayer) instanceof PlayerDisguise) {
-						PacketPlayOutScoreboardScore_entry.set(customizablePacket, ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(offlinePlayer)).getDisplayName());
-					}
-				} catch(Exception e) {
-					return;
-				}
-				Bukkit.getScheduler().runTask(iDisguise.getInstance(), new Runnable() {
-					
-					public void run() {
-						try {
-							((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacketDirectly(customizablePacket);
-						} catch(Exception e) {
-						}
-					}
-					
-				});
+		if(attributes[0]) {
+			Player player = Bukkit.getPlayer((String)PacketPlayOutScoreboardScore_entry.get(packet));
+			if(player != null && player != observer && DisguiseManager.getInstance().isDisguisedTo(player, observer) && DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise) {
+				Object customizablePacket = PacketHelper.getInstance().clonePacket(packet);
+				PacketPlayOutScoreboardScore_entry.set(customizablePacket, ((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getDisplayName());
+				return customizablePacket;
 			}
-			
-		});
-		return null;
+		}
+		return packet;
 	}
 	
 	public void setAttribute(int index, boolean value) {
