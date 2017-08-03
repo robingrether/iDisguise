@@ -18,50 +18,21 @@ import org.bukkit.scoreboard.Team;
 
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
-import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.management.channel.InjectedPlayerConnection;
+import de.robingrether.idisguise.management.util.DisguiseMap;
 
 import static de.robingrether.idisguise.management.Reflection.*;
 
-public class DisguiseManager {
+public final class DisguiseManager {
 	
-	private static DisguiseManager instance;
+	private DisguiseManager() {}
 	
-	public static DisguiseManager getInstance() {
-		return instance;
-	}
+	public static boolean modifyScoreboardPackets;
 	
-	static void setInstance(DisguiseManager instance) {
-		DisguiseManager.instance = instance;
-	}
+	private static DisguiseMap disguiseMap = DisguiseMap.emptyMap();
+	private static Set<UUID> seeThroughSet = Collections.newSetFromMap(new ConcurrentHashMap<UUID, Boolean>());
 	
-	private final boolean[] attributes = new boolean[1];
-	/*
-	 * attributes[0] -> modify scoreboard packets
-	 * 
-	 */
-	
-	protected DisguiseMap disguiseMap = DisguiseMap.emptyMap();
-	private Set<UUID> seeThroughSet = Collections.newSetFromMap(new ConcurrentHashMap<UUID, Boolean>());
-	
-	public synchronized void disguise(final OfflinePlayer offlinePlayer, final Disguise disguise) {
-//		if(disguise instanceof PlayerDisguise && !PlayerHelper.getInstance().isGameProfileLoaded(((PlayerDisguise)disguise).getSkinName())) {
-//			Bukkit.getScheduler().runTaskAsynchronously(iDisguise.getInstance(), new Runnable() {
-//				
-//				public void run() {
-//					PlayerHelper.getInstance().waitForGameProfile(((PlayerDisguise)disguise).getSkinName());
-//					Bukkit.getScheduler().runTask(iDisguise.getInstance(), new Runnable() {
-//						
-//						public void run() {
-//							disguise(offlinePlayer, disguise);
-//						}
-//						
-//					});
-//				}
-//				
-//			});
-//			return;
-//		}
+	public static synchronized void disguise(final OfflinePlayer offlinePlayer, final Disguise disguise) {
 		if(offlinePlayer.isOnline()) {
 			Player player = offlinePlayer.getPlayer();
 //			Disguise oldDisguise = disguiseMap.getDisguise(player);
@@ -73,7 +44,7 @@ public class DisguiseManager {
 		}
 	}
 	
-	public synchronized Disguise undisguise(OfflinePlayer offlinePlayer) {
+	public static synchronized Disguise undisguise(OfflinePlayer offlinePlayer) {
 		if(offlinePlayer.isOnline()) {
 			Player player = offlinePlayer.getPlayer();
 			Disguise disguise = disguiseMap.getDisguise(player);
@@ -89,25 +60,25 @@ public class DisguiseManager {
 		}
 	}
 	
-	public synchronized void undisguiseAll() {
+	public static synchronized void undisguiseAll() {
 		for(OfflinePlayer offlinePlayer : getDisguisedPlayers()) {
 			undisguise(offlinePlayer);
 		}
 	}
 	
-	public boolean isDisguised(OfflinePlayer offlinePlayer) {
+	public static boolean isDisguised(OfflinePlayer offlinePlayer) {
 		return disguiseMap.isDisguised(offlinePlayer);
 	}
 	
-	public boolean isDisguisedTo(OfflinePlayer offlinePlayer, Player observer) {
+	public static boolean isDisguisedTo(OfflinePlayer offlinePlayer, Player observer) {
 		return disguiseMap.isDisguised(offlinePlayer) && disguiseMap.getDisguise(offlinePlayer).isVisibleTo(observer);
 	}
 	
-	public Disguise getDisguise(OfflinePlayer offlinePlayer) {
+	public static Disguise getDisguise(OfflinePlayer offlinePlayer) {
 		return disguiseMap.getDisguise(offlinePlayer);
 	}
 	
-	public int getNumberOfDisguisedPlayers() {
+	public static int getNumberOfDisguisedPlayers() {
 		int i = 0;
 		for(Player player : Bukkit.getOnlinePlayers()) {
 			if(isDisguised(player)) {
@@ -117,7 +88,7 @@ public class DisguiseManager {
 		return i;
 	}
 	
-	public Set<OfflinePlayer> getDisguisedPlayers() {
+	public static Set<OfflinePlayer> getDisguisedPlayers() {
 		Set<?> origin = disguiseMap.getDisguisedPlayers();
 		Set<OfflinePlayer> destination = new HashSet<OfflinePlayer>();
 		try {
@@ -129,19 +100,19 @@ public class DisguiseManager {
 		return destination;
 	}
 	
-	public Map<?, Disguise> getDisguises() {
+	public static Map<?, Disguise> getDisguises() {
 		return disguiseMap.getMap();
 	}
 	
-	public void updateDisguises(Map<?, Disguise> map) {
+	public static void updateDisguises(Map<?, Disguise> map) {
 		disguiseMap = DisguiseMap.fromMap(map);
 	}
 	
-	public boolean canSeeThrough(OfflinePlayer offlinePlayer) {
+	public static boolean canSeeThrough(OfflinePlayer offlinePlayer) {
 		return seeThroughSet.contains(offlinePlayer.getUniqueId());
 	}
 	
-	public void setSeeThrough(OfflinePlayer offlinePlayer, boolean seeThrough) {
+	public static void setSeeThrough(OfflinePlayer offlinePlayer, boolean seeThrough) {
 		if(seeThroughSet.contains(offlinePlayer.getUniqueId()) != seeThrough) {
 			if(offlinePlayer.isOnline()) {
 				Player observer = offlinePlayer.getPlayer();
@@ -168,8 +139,8 @@ public class DisguiseManager {
 		}
 	}
 	
-	protected void hidePlayer(Player player) {
-		if(attributes[0]) {
+	private static void hidePlayer(Player player) {
+		if(modifyScoreboardPackets) {
 			List<Object> packets = new ArrayList<Object>();
 			Team team = Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(player);
 			if(team != null) {
@@ -211,8 +182,8 @@ public class DisguiseManager {
 		}
 	}
 	
-	protected void hidePlayer(Player observer, Player player) {
-		if(attributes[0]) {
+	private static void hidePlayer(Player observer, Player player) {
+		if(modifyScoreboardPackets) {
 			List<Object> packets = new ArrayList<Object>();
 			Team team = Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(player);
 			if(team != null) {
@@ -248,8 +219,22 @@ public class DisguiseManager {
 		}
 	}
 	
-	protected void showPlayer(Player player) {
-		if(attributes[0]) {
+	private static void showPlayer(final Player player) {
+		if(VersionHelper.require1_9()) {
+			showPlayer0(player);
+		} else {
+			Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), new Runnable() {
+				
+				public void run() {
+					showPlayer0(player);
+				}
+				
+			}, 10L);
+		}
+	}
+	
+	private static void showPlayer0(Player player) {
+		if(modifyScoreboardPackets) {
 			List<Object> packets = new ArrayList<Object>();
 			Team team = Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(player);
 			if(team != null) {
@@ -292,8 +277,22 @@ public class DisguiseManager {
 		}
 	}
 	
-	protected void showPlayer(Player observer, Player player) {
-		if(attributes[0]) {
+	private static void showPlayer(final Player observer, final Player player) {
+		if(VersionHelper.require1_9()) {
+			showPlayer0(observer, player);
+		} else {
+			Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), new Runnable() {
+				
+				public void run() {
+					showPlayer0(observer, player);
+				}
+				
+			}, 10L);
+		}
+	}
+	
+	private static void showPlayer0(Player observer, Player player) {
+		if(modifyScoreboardPackets) {
 			List<Object> packets = new ArrayList<Object>();
 			Team team = Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(player);
 			if(team != null) {
@@ -330,12 +329,12 @@ public class DisguiseManager {
 		}
 	}
 	
-	public void resendPackets(Player player) {
+	public static void resendPackets(Player player) {
 		hidePlayer(player);
 		showPlayer(player);
 	}
 	
-	public void resendPackets() {
+	public static void resendPackets() {
 		for(OfflinePlayer offlinePlayer : getDisguisedPlayers()) {
 			if(offlinePlayer.isOnline()) {
 				Player player = offlinePlayer.getPlayer();
@@ -343,10 +342,6 @@ public class DisguiseManager {
 				showPlayer(player);
 			}
 		}
-	}
-	
-	public void setAttribute(int index, boolean value) {
-		attributes[index] = value;
 	}
 	
 }

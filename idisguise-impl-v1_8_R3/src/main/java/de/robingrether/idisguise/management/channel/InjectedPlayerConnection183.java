@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.management.PacketHandler;
 import de.robingrether.idisguise.management.VersionHelper;
-import de.robingrether.idisguise.management.channel.ChannelInjectorPC;
 import de.robingrether.idisguise.management.channel.InjectedPlayerConnection;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
 import net.minecraft.server.v1_8_R3.Packet;
@@ -19,12 +18,10 @@ import net.minecraft.server.v1_8_R3.PlayerConnection;
 
 public class InjectedPlayerConnection183 extends PlayerConnection implements InjectedPlayerConnection {
 	
-	private final ChannelInjectorPC channelInjector;
 	private final Player observer;
 	
-	public InjectedPlayerConnection183(ChannelInjectorPC channelInjector, Player observer, Object originalConnection) throws Exception {
+	public InjectedPlayerConnection183(Player observer, Object originalConnection) throws Exception {
 		super(MinecraftServer.getServer(), ((PlayerConnection)originalConnection).networkManager, ((CraftPlayer)observer).getHandle());
-		this.channelInjector = channelInjector;
 		this.observer = observer;
 		for(Field field : PlayerConnection.class.getDeclaredFields()) {
 			if(!Modifier.isFinal(field.getModifiers()) && !Modifier.isStatic(field.getModifiers())) {
@@ -54,7 +51,7 @@ public class InjectedPlayerConnection183 extends PlayerConnection implements Inj
 	
 	public void a(PacketPlayInUseEntity packet) {
 		try {
-			packet = (PacketPlayInUseEntity)PacketHandler.getInstance().handlePacketPlayInUseEntity(observer, packet);
+			packet = (PacketPlayInUseEntity)PacketHandler.handlePacketPlayInUseEntity(observer, packet);
 			if(packet != null) {
 				super.a(packet);
 			}
@@ -66,7 +63,7 @@ public class InjectedPlayerConnection183 extends PlayerConnection implements Inj
 	}
 	
 	public void sendPacket(Packet packet) {
-		Object[] packets = channelInjector.handlePacketOut(observer, packet);
+		Object[] packets = PacketHandler.handlePacketOut(observer, packet);
 		for(Object p : packets) {
 			super.sendPacket((Packet)p);
 		}

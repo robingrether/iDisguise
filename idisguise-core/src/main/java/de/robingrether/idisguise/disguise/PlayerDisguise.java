@@ -2,7 +2,7 @@ package de.robingrether.idisguise.disguise;
 
 import java.util.Locale;
 
-import de.robingrether.idisguise.management.PlayerHelper;
+import de.robingrether.idisguise.management.ProfileHelper;
 import de.robingrether.util.Validate;
 
 /**
@@ -43,7 +43,7 @@ public class PlayerDisguise extends Disguise {
 		}
 		this.skinName = skinName.toLowerCase(Locale.ENGLISH);
 		this.displayName = displayName;
-		PlayerHelper.getInstance().loadGameProfileAsynchronously(this.skinName);
+		ProfileHelper.getInstance().loadGameProfileAsynchronously(this.skinName);
 	}
 	
 	/**

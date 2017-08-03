@@ -2,7 +2,8 @@ package de.robingrether.idisguise.management;
 
 import org.bukkit.Bukkit;
 
-import de.robingrether.idisguise.management.channel.ChannelInjectorPC;
+import de.robingrether.idisguise.management.channel.ChannelInjector;
+import de.robingrether.idisguise.management.util.EntityIdList;
 import de.robingrether.util.StringUtil;
 
 public class VersionHelper {
@@ -76,31 +77,25 @@ public class VersionHelper {
 				case "v1_8_R2":
 				case "v1_8_R3":
 					Reflection.init("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
-					DisguiseManager.setInstance((DisguiseManager)Class.forName("de.robingrether.idisguise.management.disguise.DisguiseManager18").newInstance());
-					PlayerHelper.setInstance((PlayerHelper)Class.forName("de.robingrether.idisguise.management.player.PlayerHelperUID18").newInstance());
 					Sounds.init("sounds/17_18.txt");
 					break;
 				case "v1_9_R1":
 				case "v1_9_R2":
 					Reflection.init("reflection/v1_9_R1.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
-					DisguiseManager.setInstance(new DisguiseManager());
-					PlayerHelper.setInstance((PlayerHelper)Class.forName("de.robingrether.idisguise.management.player.PlayerHelperUID18").newInstance());
 					Sounds.init("sounds/111.txt");
 					break;
 				case "v1_10_R1":
 				case "v1_11_R1":
 				case "v1_12_R1":
 					Reflection.init("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
-					DisguiseManager.setInstance(new DisguiseManager());
-					PlayerHelper.setInstance((PlayerHelper)Class.forName("de.robingrether.idisguise.management.player.PlayerHelperUID18").newInstance());
 					Sounds.init("sounds/111.txt");
 					break;
 				default:
 					return false;
 			}
-			ChannelInjector.setInstance(new ChannelInjectorPC());
-			PacketHandler.setInstance(new PacketHandler());
-			PacketHelper.setInstance(new PacketHelper());
+			ChannelInjector.init();
+			EntityIdList.init();
+			ProfileHelper.setInstance((ProfileHelper)Class.forName("de.robingrether.idisguise.management.profile.ProfileHelperUID").newInstance());
 			initialized = true;
 			return true;
 		} catch(Exception e) {

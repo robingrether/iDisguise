@@ -18,12 +18,10 @@ import net.minecraft.server.v1_9_R1.PlayerConnection;
 
 public class InjectedPlayerConnection191 extends PlayerConnection implements InjectedPlayerConnection {
 	
-	private final ChannelInjectorPC channelInjector;
 	private final Player observer;
 	
-	public InjectedPlayerConnection191(ChannelInjectorPC channelInjector, Player observer, Object originalConnection) throws Exception {
+	public InjectedPlayerConnection191(Player observer, Object originalConnection) throws Exception {
 		super(MinecraftServer.getServer(), ((PlayerConnection)originalConnection).networkManager, ((CraftPlayer)observer).getHandle());
-		this.channelInjector = channelInjector;
 		this.observer = observer;
 		for(Field field : PlayerConnection.class.getDeclaredFields()) {
 			if(!Modifier.isFinal(field.getModifiers()) && !Modifier.isStatic(field.getModifiers())) {
@@ -60,7 +58,7 @@ public class InjectedPlayerConnection191 extends PlayerConnection implements Inj
 	
 	public void a(PacketPlayInUseEntity packet) {
 		try {
-			packet = (PacketPlayInUseEntity)PacketHandler.getInstance().handlePacketPlayInUseEntity(observer, packet);
+			packet = (PacketPlayInUseEntity)PacketHandler.handlePacketPlayInUseEntity(observer, packet);
 			if(packet != null) {
 				super.a(packet);
 			}
@@ -72,7 +70,7 @@ public class InjectedPlayerConnection191 extends PlayerConnection implements Inj
 	}
 	
 	public void sendPacket(Packet packet) {
-		Object[] packets = channelInjector.handlePacketOut(observer, packet);
+		Object[] packets = PacketHandler.handlePacketOut(observer, packet);
 		for(Object p : packets) {
 			super.sendPacket((Packet)p);
 		}

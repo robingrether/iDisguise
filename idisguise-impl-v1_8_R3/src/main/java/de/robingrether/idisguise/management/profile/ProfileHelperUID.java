@@ -1,4 +1,4 @@
-package de.robingrether.idisguise.management.player;
+package de.robingrether.idisguise.management.profile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,11 +25,11 @@ import com.mojang.authlib.properties.Property;
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.management.DisguiseManager;
-import de.robingrether.idisguise.management.PlayerHelper;
+import de.robingrether.idisguise.management.ProfileHelper;
 
 import static de.robingrether.idisguise.management.Reflection.*;
 
-public class PlayerHelperUID18 extends PlayerHelper {
+public class ProfileHelperUID extends ProfileHelper {
 	
 	public static final String API_NAME_URL = "https://api.mojang.com/users/profiles/minecraft/";
 	public static final String API_NAME_ID = "id";
@@ -135,9 +135,9 @@ public class PlayerHelperUID18 extends PlayerHelper {
 						
 						public void run() {
 							for(Player player : Bukkit.getOnlinePlayers()) {
-								if(DisguiseManager.getInstance().isDisguised(player) && DisguiseManager.getInstance().getDisguise(player) instanceof PlayerDisguise) {
-									if(((PlayerDisguise)DisguiseManager.getInstance().getDisguise(player)).getSkinName().equalsIgnoreCase(skinName)) {
-										DisguiseManager.getInstance().resendPackets(player);
+								if(DisguiseManager.isDisguised(player) && DisguiseManager.getDisguise(player) instanceof PlayerDisguise) {
+									if(((PlayerDisguise)DisguiseManager.getDisguise(player)).getSkinName().equalsIgnoreCase(skinName)) {
+										DisguiseManager.resendPackets(player);
 									}
 								}
 							}

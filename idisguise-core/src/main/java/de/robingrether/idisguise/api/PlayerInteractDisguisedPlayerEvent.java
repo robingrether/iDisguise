@@ -21,7 +21,7 @@ public class PlayerInteractDisguisedPlayerEvent extends PlayerInteractEntityEven
 	
 	public PlayerInteractDisguisedPlayerEvent(Player who, Player clicked) {
 		super(who, clicked);
-		disguise = DisguiseManager.getInstance().getDisguise(clicked).clone();
+		disguise = DisguiseManager.getDisguise(clicked).clone();
 	}
 	
 	/**
