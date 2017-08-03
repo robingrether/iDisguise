@@ -50,6 +50,7 @@ permissions:
          iDisguise.mob.cow: true
          iDisguise.mob.creeper: true
          iDisguise.mob.creeper.powered: true
+         iDisguise.mob.custom-name: true
          iDisguise.mob.donkey: true
          iDisguise.mob.elder_guardian: true
          iDisguise.mob.ender_dragon: true
@@ -120,6 +121,8 @@ permissions:
    iDisguise.mob.creeper:
       default: false
    iDisguise.mob.creeper.powered:
+      default: false
+   iDisguise.mob.custom-name:
       default: false
    iDisguise.mob.donkey:
       default: false
@@ -413,6 +416,7 @@ permissions:
       children:
          iDisguise.object.armor_stand: true
          iDisguise.object.boat: true
+         iDisguise.object.custom-name: true
          iDisguise.object.ender_crystal: true
          iDisguise.object.falling_block: true
          iDisguise.object.falling_block.material.*: true
@@ -422,6 +426,8 @@ permissions:
    iDisguise.object.armor_stand:
       default: false
    iDisguise.object.boat:
+      default: false
+   iDisguise.object.custom-name:
       default: false
    iDisguise.object.ender_crystal:
       default: false

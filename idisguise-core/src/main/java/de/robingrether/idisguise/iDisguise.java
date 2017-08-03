@@ -681,6 +681,8 @@ public class iDisguise extends JavaPlugin {
 			return (sender.hasPermission("iDisguise.player.name.*") || sender.hasPermission("iDisguise.player.name." + playerDisguise.getSkinName())) && (isPlayerDisguisePermitted(playerDisguise.getSkinName()) || sender.hasPermission("iDisguise.player.prohibited")) && (playerDisguise.getSkinName().equalsIgnoreCase(playerDisguise.getDisplayName()) || sender.hasPermission("iDisguise.player.display-name"));
 		} else if(hasPermission(sender, disguise.getType())) {
 			if(disguise instanceof MobDisguise) {
+				MobDisguise mobDisguise = (MobDisguise)disguise;
+				if(mobDisguise.getCustomName() != null && !mobDisguise.getCustomName().isEmpty() && !sender.hasPermission("iDisguise.mob.custom-name")) return false;
 				if(disguise instanceof AgeableDisguise) {
 					if(((AgeableDisguise)disguise).isAdult() || sender.hasPermission("iDisguise.mob.baby")) {
 						switch(disguise.getType()) {
@@ -717,6 +719,8 @@ public class iDisguise extends JavaPlugin {
 					}
 				}
 			} else if(disguise instanceof ObjectDisguise) {
+				ObjectDisguise objectDisguise = (ObjectDisguise)disguise;
+				if(objectDisguise.getCustomName() != null && !objectDisguise.getCustomName().isEmpty() && !sender.hasPermission("iDisguise.object.custom-name")) return false;
 				switch(disguise.getType()) {
 					case FALLING_BLOCK:	
 						return sender.hasPermission("iDisguise.object.falling_block.material." + ((FallingBlockDisguise)disguise).getMaterial().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
