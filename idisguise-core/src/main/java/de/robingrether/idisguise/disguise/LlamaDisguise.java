@@ -123,7 +123,7 @@ public class LlamaDisguise extends AgeableDisguise {
 	public enum Color {
 		
 		CREAMY,
-		WHITE,
+		LIGHT,
 		BROWN,
 		GRAY;
 		
