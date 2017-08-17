@@ -150,7 +150,7 @@ public class ItemDisguise extends ObjectDisguise {
 	 */
 	public void setEnchanted(boolean enchanted) {
 		if(enchanted) {
-			itemStack.addEnchantment(Enchantment.LUCK, 1);
+			itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
 		} else {
 			for(Enchantment enchantment : Collections.unmodifiableMap(itemStack.getEnchantments()).keySet()) {
 				itemStack.removeEnchantment(enchantment);
