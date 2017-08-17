@@ -158,16 +158,16 @@ public class iDisguise extends JavaPlugin {
 		}
 		ChannelInjector.injectOnlinePlayers();
 		DisguiseManager.resendPackets();
-		if(getServer().getPluginManager().isPluginEnabled("iDisguiseAdditions")) {
+		if(getServer().getPluginManager().getPlugin("iDisguiseAdditions") != null) {
 			int version = Integer.parseInt(getServer().getPluginManager().getPlugin("iDisguiseAdditions").getDescription().getVersion().replace("-SNAPSHOT", "").replace(".", ""));
 			if(version < 13) {
-				getLogger().log(Level.WARNING, "You use an outdated version of iDisguiseAdditions! Please update to the latest version otherwise the plugin won't work properly.");
+				getLogger().log(Level.SEVERE, "You use an outdated version of iDisguiseAdditions! Please update to the latest version otherwise the plugin won't work properly.");
 			}
 		}
-		if(getServer().getPluginManager().isPluginEnabled("iDisguiseWG")) {
+		if(getServer().getPluginManager().getPlugin("iDisguiseWG") != null) {
 			int version = Integer.parseInt(getServer().getPluginManager().getPlugin("iDisguiseWG").getDescription().getVersion().replace("-SNAPSHOT", "").replace(".", ""));
 			if(version < 12) {
-				getLogger().log(Level.WARNING, "You use an outdated version of iDisguiseWG! Please update to the latest version otherwise the plugin won't work properly.");
+				getLogger().log(Level.SEVERE, "You use an outdated version of iDisguiseWG! Please update to the latest version otherwise the plugin won't work properly.");
 			}
 		}
 	}
