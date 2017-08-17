@@ -1,8 +1,10 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Collections;
 import java.util.Locale;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -131,10 +133,36 @@ public class ItemDisguise extends ObjectDisguise {
 	}
 	
 	/**
+	 * Indicates whether the associated item stack of this disguise contains any enchantments.
+	 * 
+	 * @since 5.6.4
+	 * @return <code>true</code>, if and only if the item stack contains any enchantments
+	 */
+	public boolean isEnchanted() {
+		return !itemStack.getEnchantments().isEmpty();
+	}
+	
+	/**
+	 * Sets whether this item disguise appears enchanted.
+	 * 
+	 * @since 5.6.4
+	 * @param enchanted <code>true</code> means enchanted
+	 */
+	public void setEnchanted(boolean enchanted) {
+		if(enchanted) {
+			itemStack.addEnchantment(Enchantment.LUCK, 1);
+		} else {
+			for(Enchantment enchantment : Collections.unmodifiableMap(itemStack.getEnchantments()).keySet()) {
+				itemStack.removeEnchantment(enchantment);
+			}
+		}
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; material=" + itemStack.getType().name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; material-data=" + itemStack.getDurability() + "; amount=" + itemStack.getAmount();
+		return super.toString() + "; material=" + itemStack.getType().name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; material-data=" + itemStack.getDurability() + "; amount=" + itemStack.getAmount() + "; " + (isEnchanted() ? "enchanted" : "not-enchanted");
 	}
 	
 	static {
@@ -152,6 +180,9 @@ public class ItemDisguise extends ObjectDisguise {
 //		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 33, "quadruple");
 //		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 49, "quintuple");
 		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setAmount", "amount", int.class);
+		
+		Subtypes.registerSubtype(ItemDisguise.class, "setEnchanted", true, "enchanted");
+		Subtypes.registerSubtype(ItemDisguise.class, "setEnchanted", false, "not-enchanted");
 	}
 	
 }
