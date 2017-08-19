@@ -78,12 +78,15 @@ public class iDisguise extends JavaPlugin {
 	public iDisguise() { instance = this; }
 	
 	public void onEnable() {
-		if(!VersionHelper.init(false)) {
+		boolean debugMode = checkDirectory();
+		if(!VersionHelper.init(debugMode)) {
 			getLogger().log(Level.SEVERE, String.format("%s is not compatible with your server version!", getFullName()));
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
-		checkDirectory();
+		if(debugMode) {
+			getLogger().log(Level.INFO, "Debug mode is enabled!");
+		}
 		listener = new EventListener(this);
 		configuration = new Configuration(this);
 		configuration.loadData();
@@ -746,10 +749,16 @@ public class iDisguise extends JavaPlugin {
 		return false;
 	}
 	
-	private void checkDirectory() {
+	/**
+	 * Checks if the plugin directory (= data folder) exist and creates such a directory if not.
+	 * 
+	 * @return <code>true</code> if a file named 'debug' exists in that directory (which means that debug mode shall be enabled), <code>false</code> otherwise
+	 */
+	private boolean checkDirectory() {
 		if(!getDataFolder().exists()) {
-			getDataFolder().mkdir();
+			getDataFolder().mkdirs();
 		}
+		return new File(getDataFolder(), "debug").isFile();
 	}
 	
 	private void loadData() {
