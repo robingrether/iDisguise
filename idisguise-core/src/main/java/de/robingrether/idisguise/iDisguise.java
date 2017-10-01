@@ -881,7 +881,7 @@ public class iDisguise extends JavaPlugin {
 			}
 			
 			public Disguise getDisguise(OfflinePlayer player) {
-				return DisguiseManager.getDisguise(player).clone();
+				return DisguiseManager.isDisguised(player) ? DisguiseManager.getDisguise(player).clone() : null;
 			}
 			
 			@Deprecated
