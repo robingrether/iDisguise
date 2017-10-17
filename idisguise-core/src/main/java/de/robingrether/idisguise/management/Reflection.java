@@ -122,6 +122,7 @@ public class Reflection {
 	public static Method Entity_getDataWatcher;
 	public static Method Entity_setCustomName;
 	public static Method Entity_setCustomNameVisible;
+	public static Method Entity_getBukkitEntity;
 	
 	public static Class<?> EntityAgeable;
 	public static Method EntityAgeable_setAge;
@@ -275,6 +276,12 @@ public class Reflection {
 	public static Class<?> UserCache;
 	public static Method UserCache_getProfileById;
 	public static Method UserCache_putProfile;
+	
+	public static Class<?> World_class;
+	public static Method World_getEntityById;
+	
+	public static Class<?> CraftWorld;
+	public static Method CraftWorld_getHandle;
 	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");

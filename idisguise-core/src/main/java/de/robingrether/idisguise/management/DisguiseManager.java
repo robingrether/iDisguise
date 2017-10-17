@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Team;
@@ -32,32 +33,45 @@ public final class DisguiseManager {
 	private static DisguiseMap disguiseMap = DisguiseMap.emptyMap();
 	private static Set<UUID> seeThroughSet = Collections.newSetFromMap(new ConcurrentHashMap<UUID, Boolean>());
 	
-	public static synchronized void disguise(final OfflinePlayer offlinePlayer, final Disguise disguise) {
+	public static synchronized void disguise(OfflinePlayer offlinePlayer, Disguise disguise) {
 		if(offlinePlayer.isOnline()) {
-			Player player = offlinePlayer.getPlayer();
-//			Disguise oldDisguise = disguiseMap.getDisguise(player);
-			hidePlayer(player);
-			disguiseMap.updateDisguise(player, disguise);
-			showPlayer(player);
+			disguise((LivingEntity)offlinePlayer.getPlayer(), disguise);
 		} else {
-			disguiseMap.updateDisguise(offlinePlayer, disguise);
+			disguiseMap.updateDisguise(offlinePlayer.getUniqueId(), disguise);
 		}
+	}
+	
+	public static synchronized void disguise(Player player, Disguise disguise) {
+		disguise((LivingEntity)player, disguise);
+	}
+	
+	public static synchronized void disguise(LivingEntity livingEntity, Disguise disguise) {
+		hideEntity(livingEntity);
+		disguiseMap.updateDisguise(livingEntity.getUniqueId(), disguise);
+		showEntity(livingEntity);
 	}
 	
 	public static synchronized Disguise undisguise(OfflinePlayer offlinePlayer) {
 		if(offlinePlayer.isOnline()) {
-			Player player = offlinePlayer.getPlayer();
-			Disguise disguise = disguiseMap.getDisguise(player);
-			if(disguise == null) {
-				return null;
-			}
-			hidePlayer(player);
-			disguiseMap.removeDisguise(player);
-			showPlayer(player);
-			return disguise;
+			return undisguise((LivingEntity)offlinePlayer.getPlayer());
 		} else {
-			return disguiseMap.removeDisguise(offlinePlayer);
+			return disguiseMap.removeDisguise(offlinePlayer.getUniqueId());
 		}
+	}
+	
+	public static synchronized Disguise undisguise(Player player) {
+		return undisguise((LivingEntity)player);
+	}
+	
+	public static synchronized Disguise undisguise(LivingEntity livingEntity) {
+		Disguise disguise = disguiseMap.getDisguise(livingEntity.getUniqueId());
+		if(disguise == null) {
+			return null;
+		}
+		hideEntity(livingEntity);
+		disguiseMap.removeDisguise(livingEntity.getUniqueId());
+		showEntity(livingEntity);
+		return disguise;
 	}
 	
 	public static synchronized void undisguiseAll() {
@@ -67,15 +81,39 @@ public final class DisguiseManager {
 	}
 	
 	public static boolean isDisguised(OfflinePlayer offlinePlayer) {
-		return disguiseMap.isDisguised(offlinePlayer);
+		return disguiseMap.isDisguised(offlinePlayer.getUniqueId());
+	}
+	
+	public static boolean isDisguised(Player player) {
+		return disguiseMap.isDisguised(player.getUniqueId());
+	}
+	
+	public static boolean isDisguised(LivingEntity livingEntity) {
+		return disguiseMap.isDisguised(livingEntity.getUniqueId());
 	}
 	
 	public static boolean isDisguisedTo(OfflinePlayer offlinePlayer, Player observer) {
-		return disguiseMap.isDisguised(offlinePlayer) && disguiseMap.getDisguise(offlinePlayer).isVisibleTo(observer);
+		return disguiseMap.isDisguised(offlinePlayer.getUniqueId()) && disguiseMap.getDisguise(offlinePlayer.getUniqueId()).isVisibleTo(observer);
+	}
+	
+	public static boolean isDisguisedTo(Player player, Player observer) {
+		return disguiseMap.isDisguised(player.getUniqueId()) && disguiseMap.getDisguise(player.getUniqueId()).isVisibleTo(observer);
+	}
+	
+	public static boolean isDisguisedTo(LivingEntity livingEntity, Player observer) {
+		return disguiseMap.isDisguised(livingEntity.getUniqueId()) && disguiseMap.getDisguise(livingEntity.getUniqueId()).isVisibleTo(observer);
 	}
 	
 	public static Disguise getDisguise(OfflinePlayer offlinePlayer) {
-		return disguiseMap.getDisguise(offlinePlayer);
+		return disguiseMap.getDisguise(offlinePlayer.getUniqueId());
+	}
+	
+	public static Disguise getDisguise(Player player) {
+		return disguiseMap.getDisguise(player.getUniqueId());
+	}
+	
+	public static Disguise getDisguise(LivingEntity livingEntity) {
+		return disguiseMap.getDisguise(livingEntity.getUniqueId());
 	}
 	
 	public static int getNumberOfDisguisedPlayers() {
@@ -137,6 +175,14 @@ public final class DisguiseManager {
 				}
 			}
 		}
+	}
+	
+	private static void hideEntity(LivingEntity livingEntity) {
+		if(livingEntity instanceof Player) {
+			hidePlayer((Player)livingEntity);
+			return;
+		}
+		//TODO
 	}
 	
 	private static void hidePlayer(Player player) {
@@ -217,6 +263,14 @@ public final class DisguiseManager {
 		} else {
 			observer.hidePlayer(player);
 		}
+	}
+	
+	private static void showEntity(LivingEntity livingEntity) {
+		if(livingEntity instanceof Player) {
+			showPlayer((Player)livingEntity);
+			return;
+		}
+		//TODO
 	}
 	
 	private static void showPlayer(final Player player) {
