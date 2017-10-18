@@ -388,6 +388,11 @@ public final class DisguiseManager {
 		showPlayer(player);
 	}
 	
+	public static void resendPackets(LivingEntity livingEntity) {
+		hideEntity(livingEntity);
+		showEntity(livingEntity);
+	}
+	
 	public static void resendPackets() {
 		for(OfflinePlayer offlinePlayer : getDisguisedPlayers()) {
 			if(offlinePlayer.isOnline()) {

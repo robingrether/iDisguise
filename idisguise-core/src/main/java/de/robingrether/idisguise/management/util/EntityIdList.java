@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import static de.robingrether.idisguise.management.Reflection.*;
@@ -35,12 +35,16 @@ public final class EntityIdList {
 		return players.get(entityId);
 	}
 	
-	public static Entity getEntityByEntityId(int entityId) {
+	public static LivingEntity getEntityByEntityId(int entityId) {
 		for(World world : Bukkit.getWorlds()) {
 			try {
 				Object entity = World_getEntityById.invoke(CraftWorld_getHandle.invoke(world), entityId);
 				if(entity != null) {
-					return (Entity)Entity_getBukkitEntity.invoke(entity);
+					Object bukkitEntity = Entity_getBukkitEntity.invoke(entity);
+					if(bukkitEntity instanceof LivingEntity) {
+						return (LivingEntity)bukkitEntity;
+					}
+					break;
 				}
 			} catch(Exception e) {
 			}
