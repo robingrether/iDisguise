@@ -32,12 +32,12 @@ public final class PacketHandler {
 	public static boolean showOriginalPlayerName;
 	public static boolean modifyPlayerListEntry;
 	
-	public static Object[] getSpawnPackets(Player player) {
+	public static Object[] getSpawnPackets(LivingEntity livingEntity) {
 		try {
-			Disguise disguise = DisguiseManager.getDisguise(player);
+			Disguise disguise = DisguiseManager.getDisguise(livingEntity);
 			if(disguise == null) return null;
 			
-			Object entityPlayer = CraftPlayer_getHandle.invoke(player);
+			Object entityLiving = CraftLivingEntity_getHandle.invoke(livingEntity);
 			DisguiseType type = disguise.getType();
 			List<Object> packets = new ArrayList<Object>();
 			
@@ -45,9 +45,9 @@ public final class PacketHandler {
 				MobDisguise mobDisguise = (MobDisguise)disguise;
 				Object entity = null;
 				if(VersionHelper.require1_11()) {
-					entity = Class.forName(VersionHelper.getNMSPackage() + "." + type.getNMSClass()).getConstructor(World).newInstance(Entity_world.get(entityPlayer));
+					entity = Class.forName(VersionHelper.getNMSPackage() + "." + type.getNMSClass()).getConstructor(World).newInstance(Entity_world.get(entityLiving));
 				} else {
-					entity = Class.forName(VersionHelper.getNMSPackage() + "." + type.getNMSClass().replaceAll("(Guardian|Horse|Skeleton|Zombie)(Elder|Donkey|Mule|Skeleton|Zombie|Wither|Stray|Villager|Husk)", "$1")).getConstructor(World).newInstance(Entity_world.get(entityPlayer));
+					entity = Class.forName(VersionHelper.getNMSPackage() + "." + type.getNMSClass().replaceAll("(Guardian|Horse|Skeleton|Zombie)(Elder|Donkey|Mule|Skeleton|Zombie|Wither|Stray|Villager|Husk)", "$1")).getConstructor(World).newInstance(Entity_world.get(entityLiving));
 					switch(type) {
 						case ELDER_GUARDIAN:
 							EntityGuardian_setElder.invoke(entity, true);
@@ -164,25 +164,33 @@ public final class PacketHandler {
 					EntityBat_setAsleep.invoke(entity, false);
 				}
 				
-				Location location = player.getLocation();
+				Location location = livingEntity.getLocation();
 				Entity_setLocation.invoke(entity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-				Entity_setEntityId.invoke(entity, player.getEntityId());
-				if(showOriginalPlayerName) {
-					Entity_setCustomName.invoke(entity, player.getName());
-					Entity_setCustomNameVisible.invoke(entity, true);
+				Entity_setEntityId.invoke(entity, livingEntity.getEntityId());
+				if(showOriginalPlayerName) { //TODO
+					Entity_setCustomName.invoke(entity, livingEntity.getName());
+					Entity_setCustomNameVisible.invoke(livingEntity, true);
 				}
 				packets.add(PacketPlayOutSpawnEntityLiving_new.newInstance(entity));
 			} else if(disguise instanceof PlayerDisguise) {
-				packets.add(PacketPlayOutNamedEntitySpawn_new.newInstance(entityPlayer));
-				// don't modify anything here, skin is applied via player list item packet
+				if(livingEntity instanceof Player) {
+					packets.add(PacketPlayOutNamedEntitySpawn_new.newInstance(entityLiving));
+					// don't modify anything here, skin is applied via player list item packet
+				} else {
+					Object entity = EntityHumanNonAbstract_new.newInstance(Entity_world.get(entityLiving), ProfileHelper.getInstance().getGameProfile(livingEntity.getUniqueId(), "test", "test"));
+					Location location = livingEntity.getLocation();
+					Entity_setLocation.invoke(entity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+					Entity_setEntityId.invoke(entity, livingEntity.getEntityId());
+					packets.add(PacketPlayOutNamedEntitySpawn_new.newInstance(entity));
+				}
 			} else if(disguise instanceof ObjectDisguise) {
 				ObjectDisguise objectDisguise = (ObjectDisguise)disguise;
-				Object entity = Class.forName(VersionHelper.getNMSPackage() + "." + type.getNMSClass()).getConstructor(World).newInstance(Entity_world.get(entityPlayer));
-				Location location = player.getLocation();
+				Object entity = Class.forName(VersionHelper.getNMSPackage() + "." + type.getNMSClass()).getConstructor(World).newInstance(Entity_world.get(entityLiving));
+				Location location = livingEntity.getLocation();
 				Entity_setLocation.invoke(entity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-				Entity_setEntityId.invoke(entity, player.getEntityId());
+				Entity_setEntityId.invoke(entity, livingEntity.getEntityId());
 				if(showOriginalPlayerName) {
-					Entity_setCustomName.invoke(entity, player.getName());
+					Entity_setCustomName.invoke(entity, livingEntity.getName());
 					Entity_setCustomNameVisible.invoke(entity, true);
 				} else if(objectDisguise.getCustomName() != null && !objectDisguise.getCustomName().isEmpty()) {
 					Entity_setCustomName.invoke(entity, objectDisguise.getCustomName());
@@ -196,20 +204,20 @@ public final class PacketHandler {
 						EntityItem_setItemStack.invoke(entity, CraftItemStack_asNMSCopy.invoke(null, itemDisguise.getItemStack()));
 					}
 					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), 0));
-					packets.add(PacketPlayOutEntityMetadata_new_full.newInstance(player.getEntityId(), Entity_getDataWatcher.invoke(entity), true));
+					packets.add(PacketPlayOutEntityMetadata_new_full.newInstance(livingEntity.getEntityId(), Entity_getDataWatcher.invoke(entity), true));
 				} else if(EntityMinecartAbstract.isInstance(entity)) {
 					if(objectDisguise instanceof MinecartDisguise) {
 						MinecartDisguise minecartDisguise = (MinecartDisguise)objectDisguise;
 						EntityMinecartAbstract_setDisplayBlock.invoke(entity, Block_fromLegacyData.invoke(Block_getById.invoke(null, minecartDisguise.getDisplayedBlock().getId()), minecartDisguise.getDisplayedBlockData()));
 					}
 					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), 0));
-					packets.add(PacketPlayOutEntityMetadata_new_full.newInstance(player.getEntityId(), Entity_getDataWatcher.invoke(entity), true));
+					packets.add(PacketPlayOutEntityMetadata_new_full.newInstance(livingEntity.getEntityId(), Entity_getDataWatcher.invoke(entity), true));
 				} else if(EntityArmorStand.isInstance(entity)) {
 					if(objectDisguise instanceof ArmorStandDisguise) {
 						EntityArmorStand_setArms.invoke(entity, ((ArmorStandDisguise)objectDisguise).getShowArms());
 					}
 					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), 0));
-					packets.add(PacketPlayOutEntityMetadata_new_full.newInstance(player.getEntityId(), Entity_getDataWatcher.invoke(entity), true));
+					packets.add(PacketPlayOutEntityMetadata_new_full.newInstance(livingEntity.getEntityId(), Entity_getDataWatcher.invoke(entity), true));
 				} else {
 					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), 0));
 				}

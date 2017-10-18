@@ -283,6 +283,12 @@ public class Reflection {
 	public static Class<?> CraftWorld;
 	public static Method CraftWorld_getHandle;
 	
+	public static Class<?> CraftLivingEntity;
+	public static Method CraftLivingEntity_getHandle;
+	
+	public static Class<?> EntityHumanNonAbstract;
+	public static Constructor<?> EntityHumanNonAbstract_new;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");
