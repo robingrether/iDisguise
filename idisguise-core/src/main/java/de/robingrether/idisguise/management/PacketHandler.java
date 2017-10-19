@@ -387,7 +387,6 @@ public final class PacketHandler {
 				}, 2L);
 			}
 			if(livingEntity instanceof Player) Bukkit.getPluginManager().callEvent(new PlayerInteractDisguisedPlayerEvent(observer, (Player)livingEntity));
-			return null;
 		}
 		return packet;
 	}
