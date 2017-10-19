@@ -18,6 +18,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -434,22 +435,29 @@ public class iDisguise extends JavaPlugin {
 						DisguiseManager.undisguiseAll();
 						sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL_IGNORE);
 					} else {
-						Set<OfflinePlayer> disguisedPlayers = DisguiseManager.getDisguisedPlayers();
-						int share = 0, total = disguisedPlayers.size();
-						for(OfflinePlayer player : disguisedPlayers) {
-							if(player.isOnline()) {
-								UndisguiseEvent event = new UndisguiseEvent(player.getPlayer(), DisguiseManager.getDisguise(player), true);
-								getServer().getPluginManager().callEvent(event);
-								if(!event.isCancelled()) {
-									DisguiseManager.undisguise(player);
-									share++;
-								}
-							} else {
-								OfflinePlayerUndisguiseEvent event = new OfflinePlayerUndisguiseEvent(player, DisguiseManager.getDisguise(player), true);
-								getServer().getPluginManager().callEvent(event);
-								if(!event.isCancelled()) {
-									DisguiseManager.undisguise(player);
-									share++;
+						Set<Object> disguisedEntities = DisguiseManager.getDisguisedEntities();
+						int share = 0, total = disguisedEntities.size();
+						for(Object disguisable : disguisedEntities) {
+							if(disguisable instanceof LivingEntity && !(disguisable instanceof Player)) {
+								//TODO: entity disguise/undisguise event
+								DisguiseManager.undisguise((LivingEntity)disguisable);
+								share++;
+							} else if(disguisable instanceof OfflinePlayer) {
+								OfflinePlayer offlinePlayer = (OfflinePlayer)disguisable;
+								if(offlinePlayer.isOnline()) {
+									UndisguiseEvent event = new UndisguiseEvent(offlinePlayer.getPlayer(), DisguiseManager.getDisguise(offlinePlayer), true);
+									getServer().getPluginManager().callEvent(event);
+									if(!event.isCancelled()) {
+										DisguiseManager.undisguise(offlinePlayer);
+										share++;
+									}
+								} else {
+									OfflinePlayerUndisguiseEvent event = new OfflinePlayerUndisguiseEvent(offlinePlayer, DisguiseManager.getDisguise(offlinePlayer), true);
+									getServer().getPluginManager().callEvent(event);
+									if(!event.isCancelled()) {
+										DisguiseManager.undisguise(offlinePlayer);
+										share++;
+									}
 								}
 							}
 						}

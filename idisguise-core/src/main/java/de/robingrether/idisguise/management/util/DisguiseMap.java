@@ -42,7 +42,7 @@ public final class DisguiseMap {
 		return disguises;
 	}
 	
-	public Set<UUID> getDisguisedPlayers() {
+	public Set<UUID> getDisguisedEntities() {
 		return disguises.keySet();
 	}
 	

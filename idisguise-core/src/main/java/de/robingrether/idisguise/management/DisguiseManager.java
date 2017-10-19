@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Score;
@@ -76,8 +77,12 @@ public final class DisguiseManager {
 	}
 	
 	public static synchronized void undisguiseAll() {
-		for(OfflinePlayer offlinePlayer : getDisguisedPlayers()) {
-			undisguise(offlinePlayer);
+		for(Object disguisable : getDisguisedEntities()) {
+			if(disguisable instanceof LivingEntity) {
+				undisguise((LivingEntity)disguisable);
+			} else if(disguisable instanceof OfflinePlayer) {
+				undisguise((OfflinePlayer)disguisable);
+			}
 		}
 	}
 	
@@ -127,12 +132,20 @@ public final class DisguiseManager {
 		return i;
 	}
 	
-	public static Set<OfflinePlayer> getDisguisedPlayers() {
-		Set<?> origin = disguiseMap.getDisguisedPlayers();
-		Set<OfflinePlayer> destination = new HashSet<OfflinePlayer>();
+	public static Set<Object> getDisguisedEntities() {
+		Set<UUID> origin = disguiseMap.getDisguisedEntities();
+		Set<Object> destination = new HashSet<Object>();
 		try {
-			for(Object offlinePlayer : origin) {
-				destination.add(offlinePlayer instanceof UUID ? Bukkit.getOfflinePlayer((UUID)offlinePlayer) : Bukkit.getOfflinePlayer((String)offlinePlayer));
+			for(UUID disguisable : origin) {
+				Entity entity = Bukkit.getEntity(disguisable);
+				if(entity != null) {
+					destination.add(entity);
+				} else {
+					OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(disguisable);
+					if(offlinePlayer != null) {
+						destination.add(offlinePlayer);
+					}
+				}
 			}
 		} catch(Exception e) {
 		}
@@ -155,18 +168,24 @@ public final class DisguiseManager {
 		if(seeThroughSet.contains(offlinePlayer.getUniqueId()) != seeThrough) {
 			if(offlinePlayer.isOnline()) {
 				Player observer = offlinePlayer.getPlayer();
-				for(Player player : Bukkit.getOnlinePlayers()) {
-					if(observer == player) continue;
-					hidePlayer(observer, player);
+				for(Object disguisable : getDisguisedEntities()) {
+					if(disguisable instanceof LivingEntity) {
+						hideEntity(observer, (LivingEntity)disguisable);
+					} else if(disguisable instanceof OfflinePlayer && ((OfflinePlayer)disguisable).isOnline()) {
+						hidePlayer(observer, ((OfflinePlayer)disguisable).getPlayer());
+					}
 				}
 				if(seeThrough) {
 					seeThroughSet.add(offlinePlayer.getUniqueId());
 				} else {
 					seeThroughSet.remove(offlinePlayer.getUniqueId());
 				}
-				for(Player player : Bukkit.getOnlinePlayers()) {
-					if(observer == player) continue;
-					showPlayer(observer, player);
+				for(Object disguisable : getDisguisedEntities()) {
+					if(disguisable instanceof LivingEntity) {
+						showEntity(observer, (LivingEntity)disguisable);
+					} else if(disguisable instanceof OfflinePlayer && ((OfflinePlayer)disguisable).isOnline()) {
+						showPlayer(observer, ((OfflinePlayer)disguisable).getPlayer());
+					}
 				}
 			} else {
 				if(seeThrough) {
@@ -461,11 +480,13 @@ public final class DisguiseManager {
 	}
 	
 	public static void resendPackets() {
-		for(OfflinePlayer offlinePlayer : getDisguisedPlayers()) {
-			if(offlinePlayer.isOnline()) {
-				Player player = offlinePlayer.getPlayer();
-				hidePlayer(player);
-				showPlayer(player);
+		for(Object disguisable : getDisguisedEntities()) {
+			if(disguisable instanceof LivingEntity) {
+				hideEntity((LivingEntity)disguisable);
+				showEntity((LivingEntity)disguisable);
+			} else if(disguisable instanceof OfflinePlayer && ((OfflinePlayer)disguisable).isOnline()) {
+				hidePlayer(((OfflinePlayer)disguisable).getPlayer());
+				showPlayer(((OfflinePlayer)disguisable).getPlayer());
 			}
 		}
 	}
