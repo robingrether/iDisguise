@@ -125,6 +125,9 @@ EnumColor_fromColorIndex->MEnumColor$fromColorIndex(int)
 EnumEntityUseAction->C{nms}.PacketPlayInUseEntity$EnumEntityUseAction
 EnumEntityUseAction_ATTACK->FEnumEntityUseAction$ATTACK
 
+EnumGamemode->C{nms}.EnumGamemode
+EnumGamemode_SURVIVAL->FEnumGamemode$SURVIVAL
+
 EnumPlayerInfoAction->C{nms}.PacketPlayOutPlayerInfo$EnumPlayerInfoAction
 EnumPlayerInfoAction_ADD_PLAYER->FEnumPlayerInfoAction$ADD_PLAYER
 EnumPlayerInfoAction_REMOVE_PLAYER->FEnumPlayerInfoAction$REMOVE_PLAYER

@@ -305,6 +305,9 @@ public class Reflection {
 	public static Field EnumPlayerInfoAction_ADD_PLAYER;
 	public static Field EnumPlayerInfoAction_REMOVE_PLAYER;
 	
+	public static Class<?> EnumGamemode;
+	public static Field EnumGamemode_SURVIVAL;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");

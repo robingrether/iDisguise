@@ -183,7 +183,7 @@ public final class PacketHandler {
 					Object playerInfoPacket = PacketPlayOutPlayerInfo_new.newInstance();
 					PacketPlayOutPlayerInfo_action.set(playerInfoPacket, EnumPlayerInfoAction_ADD_PLAYER.get(null));
 					List<Object> playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(playerInfoPacket);
-					playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, gameProfile, 35, null, Array.get(CraftChatMessage_fromString.invoke(null, playerDisguise.getDisplayName()), 0)));
+					playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, gameProfile, 35, EnumGamemode_SURVIVAL.get(null), Array.get(CraftChatMessage_fromString.invoke(null, playerDisguise.getDisplayName()), 0)));
 					packets.add(playerInfoPacket);
 					
 					Object entity = EntityHumanNonAbstract_new.newInstance(Entity_world.get(entityLiving), gameProfile);
