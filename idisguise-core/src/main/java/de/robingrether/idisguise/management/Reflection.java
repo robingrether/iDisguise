@@ -115,6 +115,7 @@ public class Reflection {
 	
 	public static Class<?> World;
 	public static Method World_findNearbyPlayer;
+	public static Method World_getEntityById;
 	
 	public static Class<?> Entity;
 	public static Field Entity_world;
@@ -277,9 +278,6 @@ public class Reflection {
 	public static Class<?> UserCache;
 	public static Method UserCache_getProfileById;
 	public static Method UserCache_putProfile;
-	
-	public static Class<?> World_class;
-	public static Method World_getEntityById;
 	
 	public static Class<?> CraftWorld;
 	public static Method CraftWorld_getHandle;
