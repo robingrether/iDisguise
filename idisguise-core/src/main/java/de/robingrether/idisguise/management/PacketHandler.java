@@ -396,6 +396,8 @@ public final class PacketHandler {
 		try {
 			if(PacketPlayOutNamedEntitySpawn.isInstance(packet)) {
 				return handlePacketPlayOutNamedEntitySpawn(observer, packet);
+			} else if(PacketPlayOutSpawnEntityLiving.isInstance(packet)) {
+				return handlePacketPlayOutSpawnEntityLiving(observer, packet);
 			} else if(PacketPlayOutPlayerInfo.isInstance(packet)) {
 				return new Object[] {handlePacketPlayOutPlayerInfo(observer, packet)};
 			} else if(PacketPlayOutBed.isInstance(packet)) {
@@ -450,6 +452,28 @@ public final class PacketHandler {
 						PacketPlayOutSpawnEntity_x.setInt(spawnPackets[0], (int)((Math.floor(player.getLocation().getX()) + 0.5) * 32));
 						PacketPlayOutSpawnEntity_y.setInt(spawnPackets[0], (int)(Math.floor(player.getLocation().getY()) * 32));
 						PacketPlayOutSpawnEntity_z.setInt(spawnPackets[0], (int)((Math.floor(player.getLocation().getZ()) + 0.5) * 32));
+					}
+				}
+			}
+			return spawnPackets;
+		}
+		return new Object[] {packet};
+	}
+	
+	private static Object[] handlePacketPlayOutSpawnEntityLiving(final Player observer, final Object packet) throws Exception {
+		final LivingEntity livingEntity = EntityIdList.getEntityByEntityId(PacketPlayOutSpawnEntityLiving_entityId.getInt(packet));
+		if(livingEntity != null && DisguiseManager.isDisguisedTo(livingEntity, observer)) {
+			Object[] spawnPackets = getSpawnPackets(livingEntity);
+			if(PacketPlayOutSpawnEntity.isInstance(spawnPackets[0]) && DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.FALLING_BLOCK)) {
+				if(DisguiseManager.getDisguise(livingEntity) instanceof FallingBlockDisguise && ((FallingBlockDisguise)DisguiseManager.getDisguise(livingEntity)).onlyBlockCoordinates()) {
+					if(VersionHelper.require1_9()) {
+						PacketPlayOutSpawnEntity_x.setDouble(spawnPackets[0], Math.floor(livingEntity.getLocation().getX()) + 0.5);
+						PacketPlayOutSpawnEntity_y.setDouble(spawnPackets[0], Math.floor(livingEntity.getLocation().getY()));
+						PacketPlayOutSpawnEntity_z.setDouble(spawnPackets[0], Math.floor(livingEntity.getLocation().getZ()) + 0.5);
+					} else {
+						PacketPlayOutSpawnEntity_x.setInt(spawnPackets[0], (int)((Math.floor(livingEntity.getLocation().getX()) + 0.5) * 32));
+						PacketPlayOutSpawnEntity_y.setInt(spawnPackets[0], (int)(Math.floor(livingEntity.getLocation().getY()) * 32));
+						PacketPlayOutSpawnEntity_z.setInt(spawnPackets[0], (int)((Math.floor(livingEntity.getLocation().getZ()) + 0.5) * 32));
 					}
 				}
 			}

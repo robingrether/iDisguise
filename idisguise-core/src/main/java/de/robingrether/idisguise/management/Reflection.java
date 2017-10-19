@@ -53,6 +53,7 @@ public class Reflection {
 	
 	public static Class<?> PacketPlayOutSpawnEntityLiving;
 	public static Constructor<?> PacketPlayOutSpawnEntityLiving_new;
+	public static Field PacketPlayOutSpawnEntityLiving_entityId;
 	public static Field PacketPlayOutSpawnEntityLiving_yaw;
 	
 	public static Class<?> PacketPlayOutPlayerInfo;
