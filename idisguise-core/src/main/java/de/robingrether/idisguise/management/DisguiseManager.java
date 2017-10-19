@@ -19,6 +19,7 @@ import org.bukkit.scoreboard.Team;
 
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
+import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.management.channel.InjectedPlayerConnection;
 import de.robingrether.idisguise.management.util.DisguiseMap;
 
@@ -182,7 +183,51 @@ public final class DisguiseManager {
 			hidePlayer((Player)livingEntity);
 			return;
 		}
-		//TODO
+		Object packet = null;
+		if(getDisguise(livingEntity) instanceof PlayerDisguise) {
+			try {	
+				packet = PacketPlayOutPlayerInfo_new.newInstance();
+				PacketPlayOutPlayerInfo_action.set(packet, EnumPlayerInfoAction_REMOVE_PLAYER.get(null));
+				List<Object> playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(packet);
+				playerInfoList.add(PlayerInfoData_new.newInstance(packet, ProfileHelper.getInstance().getGameProfile(livingEntity.getUniqueId(), "", ""), 35, null, null));
+			} catch(Exception e) {
+			}
+		}
+		for(Player observer : Bukkit.getOnlinePlayers()) {
+			try {
+				Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftPlayer_getHandle.invoke(observer)))), livingEntity.getEntityId());
+				if(entityTrackerEntry != null) {
+					EntityTrackerEntry_clear.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
+				}
+				((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacket(packet);
+			} catch(Exception e) {
+			}
+		}
+	}
+	
+	private static void hideEntity(Player observer, LivingEntity livingEntity) {
+		if(livingEntity instanceof Player) {
+			hidePlayer(observer, (Player)livingEntity);
+			return;
+		}
+		Object packet = null;
+		if(getDisguise(livingEntity) instanceof PlayerDisguise) {
+			try {	
+				packet = PacketPlayOutPlayerInfo_new.newInstance();
+				PacketPlayOutPlayerInfo_action.set(packet, EnumPlayerInfoAction_REMOVE_PLAYER.get(null));
+				List<Object> playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(packet);
+				playerInfoList.add(PlayerInfoData_new.newInstance(packet, ProfileHelper.getInstance().getGameProfile(livingEntity.getUniqueId(), "", ""), 35, null, null));
+			} catch(Exception e) {
+			}
+		}
+		try {
+			Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftPlayer_getHandle.invoke(observer)))), livingEntity.getEntityId());
+			if(entityTrackerEntry != null) {
+				EntityTrackerEntry_clear.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
+			}
+			((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacket(packet);
+		} catch(Exception e) {
+		}
 	}
 	
 	private static void hidePlayer(Player player) {
@@ -270,7 +315,29 @@ public final class DisguiseManager {
 			showPlayer((Player)livingEntity);
 			return;
 		}
-		//TODO
+		for(Player observer : Bukkit.getOnlinePlayers()) {
+			try {
+				Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftPlayer_getHandle.invoke(observer)))), livingEntity.getEntityId());
+				if(entityTrackerEntry != null) {
+					EntityTrackerEntry_updatePlayer.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
+				}
+			} catch(Exception e) {
+			}
+		}
+	}
+	
+	private static void showEntity(Player observer, LivingEntity livingEntity) {
+		if(livingEntity instanceof Player) {
+			showPlayer(observer, (Player)livingEntity);
+			return;
+		}
+		try {
+			Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftPlayer_getHandle.invoke(observer)))), livingEntity.getEntityId());
+			if(entityTrackerEntry != null) {
+				EntityTrackerEntry_updatePlayer.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
+			}
+		} catch(Exception e) {
+		}
 	}
 	
 	private static void showPlayer(final Player player) {

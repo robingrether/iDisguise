@@ -289,6 +289,23 @@ public class Reflection {
 	public static Class<?> EntityHumanNonAbstract;
 	public static Constructor<?> EntityHumanNonAbstract_new;
 	
+	public static Class<?> WorldServer;
+	public static Field WorldServer_entityTracker;
+	
+	public static Class<?> EntityTracker;
+	public static Field EntityTracker_trackedEntities;
+	
+	public static Class<?> IntHashMap;
+	public static Method IntHashMap_get;
+	
+	public static Class<?> EntityTrackerEntry;
+	public static Method EntityTrackerEntry_clear;
+	public static Method EntityTrackerEntry_updatePlayer;
+	
+	public static Class<?> EnumPlayerInfoAction;
+	public static Field EnumPlayerInfoAction_ADD_PLAYER;
+	public static Field EnumPlayerInfoAction_REMOVE_PLAYER;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");

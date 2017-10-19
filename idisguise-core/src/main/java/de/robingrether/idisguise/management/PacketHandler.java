@@ -177,7 +177,16 @@ public final class PacketHandler {
 					packets.add(PacketPlayOutNamedEntitySpawn_new.newInstance(entityLiving));
 					// don't modify anything here, skin is applied via player list item packet
 				} else {
-					Object entity = EntityHumanNonAbstract_new.newInstance(Entity_world.get(entityLiving), ProfileHelper.getInstance().getGameProfile(livingEntity.getUniqueId(), "test", "test"));
+					PlayerDisguise playerDisguise = (PlayerDisguise)disguise;
+					Object gameProfile = ProfileHelper.getInstance().getGameProfile(livingEntity.getUniqueId(), playerDisguise.getSkinName(), playerDisguise.getDisplayName());
+					
+					Object playerInfoPacket = PacketPlayOutPlayerInfo_new.newInstance();
+					PacketPlayOutPlayerInfo_action.set(playerInfoPacket, EnumPlayerInfoAction_ADD_PLAYER.get(null));
+					List<Object> playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(playerInfoPacket);
+					playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, gameProfile, 35, null, Array.get(CraftChatMessage_fromString.invoke(null, playerDisguise.getDisplayName()), 0)));
+					packets.add(playerInfoPacket);
+					
+					Object entity = EntityHumanNonAbstract_new.newInstance(Entity_world.get(entityLiving), gameProfile);
 					Location location = livingEntity.getLocation();
 					Entity_setLocation.invoke(entity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 					Entity_setEntityId.invoke(entity, livingEntity.getEntityId());
