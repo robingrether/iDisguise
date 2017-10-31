@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -183,7 +184,7 @@ public final class PacketHandler {
 					Object playerInfoPacket = PacketPlayOutPlayerInfo_new.newInstance();
 					PacketPlayOutPlayerInfo_action.set(playerInfoPacket, EnumPlayerInfoAction_ADD_PLAYER.get(null));
 					List<Object> playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(playerInfoPacket);
-					playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, gameProfile, 35, EnumGamemode_SURVIVAL.get(null), Array.get(CraftChatMessage_fromString.invoke(null, playerDisguise.getDisplayName()), 0)));
+					playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, gameProfile, 35, EnumGamemode_SURVIVAL.get(null), Array.get(CraftChatMessage_fromString.invoke(null, modifyPlayerListEntry ? playerDisguise.getDisplayName() : ""), 0)));
 					packets.add(playerInfoPacket);
 					
 					Object entity = EntityHumanNonAbstract_new.newInstance(Entity_world.get(entityLiving), gameProfile);
@@ -534,8 +535,10 @@ public final class PacketHandler {
 			List itemsToRemove = new ArrayList();
 			for(Object metadataItem : metadataList) {
 				int metadataId = getMetadataId(metadataItem);
-				if(metadataId > 0 && !(living && metadataId >= 6 && metadataId <= 9)) {
-					itemsToRemove.add(metadataItem);
+				if(living) {
+					if(!ObjectUtil.equals(metadataId, 0, 6, 7, 8, 9, 10)) itemsToRemove.add(metadataItem);
+				} else {
+					if(metadataId != 0) itemsToRemove.add(metadataItem);
 				}
 			}
 			metadataList.removeAll(itemsToRemove);
@@ -547,17 +550,7 @@ public final class PacketHandler {
 	private static Object handlePacketPlayOutEntity(final Player observer, final Object packet) throws Exception {
 		final LivingEntity livingEntity = EntityIdList.getEntityByEntityId(PacketPlayOutEntity_entityId.getInt(packet));
 		if(livingEntity != null && livingEntity != observer && DisguiseManager.isDisguisedTo(livingEntity, observer)) {
-			if(DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.ENDER_DRAGON)) {
-				Object customizablePacket = clonePacket(packet);
-				byte yaw = PacketPlayOutEntity_yaw.getByte(customizablePacket);
-				if(yaw < 0) {
-					yaw += 128;
-				} else {
-					yaw -= 128;
-				}
-				PacketPlayOutEntity_yaw.setByte(customizablePacket, yaw);
-				return customizablePacket;
-			} else if(DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.FALLING_BLOCK)) {
+			if(DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.FALLING_BLOCK)) {
 				if(DisguiseManager.getDisguise(livingEntity) instanceof FallingBlockDisguise && ((FallingBlockDisguise)DisguiseManager.getDisguise(livingEntity)).onlyBlockCoordinates()) {
 					Object customizablePacket = PacketPlayOutEntityTeleport_new.newInstance();
 					PacketPlayOutEntityTeleport_entityId.setInt(customizablePacket, livingEntity.getEntityId());
@@ -575,7 +568,17 @@ public final class PacketHandler {
 					PacketPlayOutEntityTeleport_isOnGround.setBoolean(customizablePacket, PacketPlayOutEntity_isOnGround.getBoolean(packet));
 					return customizablePacket;
 				}
-			}
+			} else if(DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.ENDER_DRAGON) ^ livingEntity instanceof EnderDragon) {
+				Object customizablePacket = clonePacket(packet);
+				byte yaw = PacketPlayOutEntity_yaw.getByte(customizablePacket);
+				if(yaw < 0) {
+					yaw += 128;
+				} else {
+					yaw -= 128;
+				}
+				PacketPlayOutEntity_yaw.setByte(customizablePacket, yaw);
+				return customizablePacket;
+			} 
 		}
 		return packet;
 	}
@@ -583,17 +586,7 @@ public final class PacketHandler {
 	private static Object handlePacketPlayOutEntityTeleport(final Player observer, final Object packet) throws Exception {
 		final LivingEntity livingEntity = EntityIdList.getEntityByEntityId(PacketPlayOutEntityTeleport_entityId.getInt(packet));
 		if(livingEntity != null && livingEntity != observer && DisguiseManager.isDisguisedTo(livingEntity, observer)) {
-			if(DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.ENDER_DRAGON)) {
-				Object customizablePacket = clonePacket(packet);
-				byte yaw = PacketPlayOutEntityTeleport_yaw.getByte(customizablePacket);
-				if(yaw < 0) {
-					yaw += 128;
-				} else {
-					yaw -= 128;
-				}
-				PacketPlayOutEntityTeleport_yaw.setByte(customizablePacket, yaw);
-				return customizablePacket;
-			} else if(DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.FALLING_BLOCK)) {
+			if(DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.FALLING_BLOCK)) {
 				if(DisguiseManager.getDisguise(livingEntity) instanceof FallingBlockDisguise && ((FallingBlockDisguise)DisguiseManager.getDisguise(livingEntity)).onlyBlockCoordinates()) {
 					Object customizablePacket = clonePacket(packet);
 					if(VersionHelper.require1_9()) {
@@ -607,6 +600,16 @@ public final class PacketHandler {
 					}
 					return customizablePacket;
 				}
+			} else if(DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.ENDER_DRAGON) ^ livingEntity instanceof EnderDragon) {
+				Object customizablePacket = clonePacket(packet);
+				byte yaw = PacketPlayOutEntityTeleport_yaw.getByte(customizablePacket);
+				if(yaw < 0) {
+					yaw += 128;
+				} else {
+					yaw -= 128;
+				}
+				PacketPlayOutEntityTeleport_yaw.setByte(customizablePacket, yaw);
+				return customizablePacket;
 			}
 		}
 		return packet;
@@ -628,7 +631,7 @@ public final class PacketHandler {
 		return packet;
 	}
 	
-	private static Object handlePacketPlayOutNamedSoundEffect(final Player observer, final Object packet) throws Exception {
+	private static Object handlePacketPlayOutNamedSoundEffect(final Player observer, final Object packet) throws Exception { //TODO
 		String soundEffect = soundEffectToString(PacketPlayOutNamedSoundEffect_soundEffect.get(packet));
 		if(Sounds.isSoundFromPlayer(soundEffect)) {
 			Object entityHuman = VersionHelper.require1_9() ? World_findNearbyPlayer.invoke(Entity_world.get(CraftPlayer_getHandle.invoke(observer)), PacketPlayOutNamedSoundEffect_x.getInt(packet) / 8.0, PacketPlayOutNamedSoundEffect_y.getInt(packet) / 8.0, PacketPlayOutNamedSoundEffect_z.getInt(packet) / 8.0, 1.0, false) : World_findNearbyPlayer.invoke(Entity_world.get(CraftPlayer_getHandle.invoke(observer)), PacketPlayOutNamedSoundEffect_x.getInt(packet) / 8.0, PacketPlayOutNamedSoundEffect_y.getInt(packet) / 8.0, PacketPlayOutNamedSoundEffect_z.getInt(packet) / 8.0, 1.0);
