@@ -96,7 +96,7 @@ public class VersionHelper {
 			ChannelInjector.init();
 			EntityIdList.init();
 			ProfileHelper.setInstance((ProfileHelper)Class.forName("de.robingrether.idisguise.management.profile.ProfileHelperUID").newInstance());
-			Reflection.EntityHumanNonAbstract = Class.forName("de.robingrether.idisguise.management.reflect.EntityHumanNonAbstract" + VersionHelper.getVersionCode().replaceAll("[^0-9]*", ""));
+			Reflection.EntityHumanNonAbstract = Class.forName("de.robingrether.idisguise.management.reflection.EntityHumanNonAbstract" + VersionHelper.getVersionCode().replaceAll("[^0-9]*", ""));
 			Reflection.EntityHumanNonAbstract_new = Reflection.EntityHumanNonAbstract.getConstructor(Reflection.World, Reflection.GameProfile);
 			initialized = true;
 			return true;

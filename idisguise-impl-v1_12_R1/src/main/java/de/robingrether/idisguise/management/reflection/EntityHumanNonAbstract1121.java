@@ -1,4 +1,4 @@
-package de.robingrether.idisguise.management.reflect;
+package de.robingrether.idisguise.management.reflection;
 
 import com.mojang.authlib.GameProfile;
 
