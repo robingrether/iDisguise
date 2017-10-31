@@ -203,18 +203,6 @@ public final class DisguiseManager {
 			hidePlayerFromAll((Player)livingEntity);
 			return;
 		}
-			
-		// construct the player info packet (in case the entity is disguised as a player)
-		Object playerInfoPacket = null;
-		if(getDisguise(livingEntity) instanceof PlayerDisguise) {
-			try {	
-				playerInfoPacket = PacketPlayOutPlayerInfo_new.newInstance();
-				PacketPlayOutPlayerInfo_action.set(playerInfoPacket, EnumPlayerInfoAction_REMOVE_PLAYER.get(null));
-				List<Object> playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(playerInfoPacket);
-				playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, ProfileHelper.getInstance().getGameProfile(livingEntity.getUniqueId(), "", ""), 35, null, null));
-			} catch(Exception e) {
-			}
-		}
 		
 		// do the actual sending and stuff
 		for(Player observer : Bukkit.getOnlinePlayers()) {
@@ -225,9 +213,6 @@ public final class DisguiseManager {
 				if(entityTrackerEntry != null) {
 					EntityTrackerEntry_clear.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
 				}
-				
-				// send the player info packet
-				((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacketDirectly(playerInfoPacket);
 				
 			} catch(Exception e) {
 			}
@@ -252,21 +237,6 @@ public final class DisguiseManager {
 			}
 			
 		} catch(Exception e) {
-		}
-		
-		if(getDisguise(livingEntity) instanceof PlayerDisguise) {
-			try {
-				
-				// construct the player info packet
-				Object playerInfoPacket = PacketPlayOutPlayerInfo_new.newInstance();
-				PacketPlayOutPlayerInfo_action.set(playerInfoPacket, EnumPlayerInfoAction_REMOVE_PLAYER.get(null));
-				List<Object> playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(playerInfoPacket);
-				playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, ProfileHelper.getInstance().getGameProfile(livingEntity.getUniqueId(), "", ""), 35, null, null));
-				
-				// send the player info packet
-				((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacketDirectly(playerInfoPacket);
-			} catch(Exception e) {
-			}
 		}
 		
 		// we don't care about scoreboard packets for entities

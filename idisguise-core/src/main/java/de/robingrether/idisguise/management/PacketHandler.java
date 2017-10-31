@@ -400,6 +400,8 @@ public final class PacketHandler {
 				return handlePacketPlayOutSpawnEntityLiving(observer, packet);
 			} else if(PacketPlayOutPlayerInfo.isInstance(packet)) {
 				return new Object[] {handlePacketPlayOutPlayerInfo(observer, packet)};
+			} else if(PacketPlayOutEntityDestroy.isInstance(packet)) {
+				return handlePacketPlayOutEntityDestroy(observer, packet);
 			} else if(PacketPlayOutBed.isInstance(packet)) {
 				return new Object[] {handlePacketPlayOutBed(observer, packet)};
 			} else if(PacketPlayOutAnimation.isInstance(packet)) {
@@ -685,6 +687,28 @@ public final class PacketHandler {
 			}
 		}
 		return packet;
+	}
+	
+	private static Object[] handlePacketPlayOutEntityDestroy(final Player observer, final Object packet) throws Exception {
+		int[] entityIds = (int[])PacketPlayOutEntityDestroy_entityIds.get(packet);
+		
+		// construct the player info packet
+		Object playerInfoPacket = PacketPlayOutPlayerInfo_new.newInstance();
+		PacketPlayOutPlayerInfo_action.set(playerInfoPacket, EnumPlayerInfoAction_REMOVE_PLAYER.get(null));
+		List<Object> playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(playerInfoPacket);
+		
+		for(int entityId : entityIds) {
+			LivingEntity livingEntity = EntityIdList.getEntityByEntityId(entityId);
+			if(livingEntity != null && !(livingEntity instanceof Player) && DisguiseManager.isDisguisedTo(livingEntity, observer) && DisguiseManager.getDisguise(livingEntity) instanceof PlayerDisguise) {
+				playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, ProfileHelper.getInstance().getGameProfile(livingEntity.getUniqueId(), "", ""), 35, null, null));
+			}
+		}
+		
+		if(playerInfoList.isEmpty()) {
+			return new Object[] {packet};
+		} else {
+			return new Object[] {packet, playerInfoPacket};
+		}
 	}
 	
 }

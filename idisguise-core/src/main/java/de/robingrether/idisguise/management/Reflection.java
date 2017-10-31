@@ -308,6 +308,9 @@ public class Reflection {
 	public static Class<?> EnumGamemode;
 	public static Field EnumGamemode_SURVIVAL;
 	
+	public static Class<?> PacketPlayOutEntityDestroy;
+	public static Field PacketPlayOutEntityDestroy_entityIds;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");

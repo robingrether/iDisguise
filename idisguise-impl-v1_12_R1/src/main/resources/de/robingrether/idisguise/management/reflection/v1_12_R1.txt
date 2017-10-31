@@ -177,6 +177,9 @@ PacketPlayOutEntity_isOnGround->FPacketPlayOutEntity$g
 PacketPlayOutEntity_pitch->FPacketPlayOutEntity$f
 PacketPlayOutEntity_yaw->FPacketPlayOutEntity$e
 
+PacketPlayOutEntityDestroy->C{nms}.PacketPlayOutEntityDestroy
+PacketPlayOutEntityDestroy_entityIds->FPacketPlayOutEntityDestroy$a
+
 PacketPlayOutEntityMetadata->C{nms}.PacketPlayOutEntityMetadata
 PacketPlayOutEntityMetadata_entityId->FPacketPlayOutEntityMetadata$a
 PacketPlayOutEntityMetadata_metadataList->FPacketPlayOutEntityMetadata$b
