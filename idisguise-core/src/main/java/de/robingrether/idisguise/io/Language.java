@@ -81,6 +81,12 @@ public class Language {
 	public String SEE_THROUGH_ENABLE_OTHER = ChatColor.GOLD + "See-through mode is now " + ChatColor.GREEN + "enabled " + ChatColor.GOLD + "for %player%.";
 	public String SEE_THROUGH_DISABLE_SELF = ChatColor.GOLD + "See-through mode is now " + ChatColor.RED + "disabled " + ChatColor.GOLD + "for you.";
 	public String SEE_THROUGH_DISABLE_OTHER = ChatColor.GOLD + "See-through mode is now " + ChatColor.RED + "disabled " + ChatColor.GOLD + "for %player%.";
+	public String SEE_THROUGH_ENTITY = ChatColor.RED + "See-through mode is only for players.";
+	public String HELP_TARGET_TITLE = ChatColor.GRAY + "Target:";
+	public String HELP_TARGET_UID = ChatColor.GRAY + " <xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx> - Match player by UID";
+	public String HELP_TARGET_EID = ChatColor.GRAY + " [entity-id] - Match entity/player by entity id";
+	public String HELP_TARGET_NAME_EXACT = ChatColor.GRAY + " {player-name} - Match player by EXACT name";
+	public String HELP_TARGET_NAME_MATCH = ChatColor.GRAY + " player-name - Match online player";
 	
 	private iDisguise plugin;
 	

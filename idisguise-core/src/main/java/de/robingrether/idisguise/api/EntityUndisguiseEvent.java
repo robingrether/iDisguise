@@ -1,26 +1,29 @@
 package de.robingrether.idisguise.api;
 
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.event.entity.EntityEvent;
+
 import de.robingrether.idisguise.disguise.Disguise;
 
 /**
- * This event is fired whenever an online player is about to be undisguised.
+ * This event is fired whenever an entity is about to be undisguised.
  * 
- * @since 2.2.1
+ * @since 5.7.1
  * @author RobinGrether
  */
-public class UndisguiseEvent extends PlayerEvent implements Cancellable {
+public class EntityUndisguiseEvent extends EntityEvent implements Cancellable {
 	
 	private static final HandlerList handlers = new HandlerList();
 	private boolean cancel = false;
 	private final Disguise disguise;
 	private final boolean undisguiseAll;
 	
-	public UndisguiseEvent(Player player, final Disguise disguise, final boolean undisguiseAll) {
-		super(player);
+	public EntityUndisguiseEvent(LivingEntity livingEntity, final Disguise disguise, final boolean undisguiseAll) {
+		super(livingEntity);
+		if(livingEntity instanceof Player) throw new IllegalArgumentException("Entity events must not be called for players!");
 		this.disguise = disguise;
 		this.undisguiseAll = undisguiseAll;
 	}
@@ -28,18 +31,16 @@ public class UndisguiseEvent extends PlayerEvent implements Cancellable {
 	/**
 	 * Returns the disguise.
 	 * 
-	 * @since 2.2.1
-	 * @return the disguise
+	 * @since 5.7.1
 	 */
 	public final Disguise getDisguise() {
 		return disguise;
 	}
 	
 	/**
-	 * Indicates whether this event is part of a '/undisguise *' command.
+	 * Indicates whether this event is part of a '/undisguise *' command
 	 * 
-	 * @since 4.0.1
-	 * @return <code>true</code>, if and only if this event is part of a '/undisguise *' command
+	 * @since 5.7.1
 	 */
 	public final boolean undisguiseAll() {
 		return undisguiseAll;
@@ -48,8 +49,7 @@ public class UndisguiseEvent extends PlayerEvent implements Cancellable {
 	/**
 	 * Checks whether this event is cancelled.
 	 * 
-	 * @since 2.2.1
-	 * @return <code>true</code>, if and only if this event is cancelled
+	 * @since 5.7.1
 	 */
 	public boolean isCancelled() {
 		return cancel;
@@ -58,8 +58,7 @@ public class UndisguiseEvent extends PlayerEvent implements Cancellable {
 	/**
 	 * Sets whether this event is cancelled.
 	 * 
-	 * @since 2.2.1
-	 * @param cancel <code>true</code> if this event shall be cancelled
+	 * @since 5.7.1
 	 */
 	public void setCancelled(boolean cancel) {
 		this.cancel = cancel;
