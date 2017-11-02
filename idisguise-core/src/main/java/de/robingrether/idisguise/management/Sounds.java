@@ -3,31 +3,22 @@ package de.robingrether.idisguise.management;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import de.robingrether.idisguise.iDisguise;
+import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.DisguiseType;
-import de.robingrether.idisguise.disguise.MobDisguise;
-import de.robingrether.idisguise.disguise.SizedDisguise;
-import de.robingrether.util.StringUtil;
 
 public class Sounds {
 	
 	private static Map<DisguiseType, Sounds> entitySounds = new ConcurrentHashMap<DisguiseType, Sounds>();
-	private static boolean enabled = false;
-	private static String[] soundsToReplace;
-	
-	public static boolean isEnabled() {
-		return enabled;
-	}
-	
-	public static void setEnabled(boolean enabled) {
-		Sounds.enabled = enabled;
-	}
 	
 	public static Sounds getSoundsForEntity(DisguiseType type) {
 		return entitySounds.get(type);
@@ -41,75 +32,36 @@ public class Sounds {
 		return false;
 	}
 	
-	public static boolean isSoundFromPlayer(String sound) {
-		return StringUtil.equals(sound, soundsToReplace);
-	}
-	
-	public static String replaceSoundFromPlayer(String sound, MobDisguise disguise) {
-		Sounds sounds = getSoundsForEntity(disguise.getType());
-		if(sounds != null) {	
-			String replacement = null;
-			if(sound.equals(soundsToReplace[0])) {
-				replacement = sounds.death(disguise);
-			} else if(sound.equals(soundsToReplace[1])) {
-				replacement = sounds.fallBig(disguise);
-			} else if(sound.equals(soundsToReplace[2])) {
-				replacement = sounds.fallSmall(disguise);
-			} else if(sound.equals(soundsToReplace[3])) {
-				replacement = sounds.hit(disguise);
-			} else if(sound.equals(soundsToReplace[4])) {
-				replacement = sounds.splash(disguise);
-			} else if(sound.equals(soundsToReplace[5])) {
-				replacement = sounds.swim(disguise);
-			}
-			if(replacement != null && !replacement.isEmpty()) {
-				return replacement;
+	public static String replaceSoundEffect(DisguiseType source, String soundEffect, Disguise target) {
+		Sounds sourceSounds = getSoundsForEntity(source);
+		Sounds targetSounds = getSoundsForEntity(target.getType());
+		if(sourceSounds != null) {
+			SoundEffectType type = sourceSounds.matchSoundEffect(soundEffect);
+			if(type != null) {
+				if(targetSounds != null) {
+					String targetSoundEffect;
+					while((targetSoundEffect = targetSounds.getSoundEffect(type, target)) == null) {
+						type = type.fallback;
+						if(type == null) break;
+					}
+					return targetSoundEffect != null && !targetSoundEffect.isEmpty() ? targetSoundEffect : null;
+				}
+				return null;
 			}
 		}
-		return null;
+		return soundEffect;
 	}
-	
-	private static final Pattern soundPattern = Pattern.compile("([A-Z_]+)->(.+)");
 	
 	public static void init(String file) {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(Sounds.class.getResourceAsStream(file)));
-			String line;
-			while((line = reader.readLine()) != null) {
-				Matcher soundMatcher = soundPattern.matcher(line);
-				if(soundMatcher.matches()) {
-					try {
-						String name = soundMatcher.group(1);
-						final String[] arguments = soundMatcher.group(2).split(",", -1);
-						switch(name) {
-							case "_":
-								soundsToReplace = arguments;
-								break;
-							case "MAGMA_CUBE":
-							case "SLIME":
-								setSoundsForEntity(DisguiseType.valueOf(name), new Sounds(null, arguments[0], arguments[1], null, arguments[2], arguments[3]) {
-									
-									public String death(MobDisguise disguise) {
-										return (disguise instanceof SizedDisguise && ((SizedDisguise)disguise).getSize() > 1) ? arguments[4] : arguments[5];
-									}
-									
-									public String hit(MobDisguise disguise) {
-										return (disguise instanceof SizedDisguise && ((SizedDisguise)disguise).getSize() > 1) ? arguments[6] : arguments[7];
-									}
-									
-								});
-								break;
-							default:
-								setSoundsForEntity(DisguiseType.valueOf(name), new Sounds(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]));
-								break;
-						}
-					} catch(ArrayIndexOutOfBoundsException e) {
-						if(VersionHelper.debug()) {
-							iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot parse line: " + line, e);
-						}
-					}
+			FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(reader);
+			for(DisguiseType type : DisguiseType.values()) {
+				if(fileConfiguration.isConfigurationSection(type.name())) {
+					setSoundsForEntity(type, new Sounds(fileConfiguration.getConfigurationSection(type.name())));
 				}
 			}
+			reader.close();
 		} catch(IOException e) {
 			if(VersionHelper.debug()) {
 				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot load the required sound effect configuration.", e);
@@ -117,39 +69,43 @@ public class Sounds {
 		}
 	}
 	
-	protected String death, fallBig, fallSmall, hit, splash, swim;
+	private Map<SoundEffectType, String> typeToSoundEffect;
+	private Map<String, SoundEffectType> soundEffectToType;
 	
-	public Sounds(String death, String fallBig, String fallSmall, String hit, String splash, String swim) {
-		this.death = death;
-		this.fallBig = fallBig;
-		this.fallSmall = fallSmall;
-		this.hit = hit;
-		this.splash = splash;
-		this.swim = swim;
+	public Sounds(ConfigurationSection section) {
+		for(SoundEffectType type : SoundEffectType.values()) {
+			if(section.isList(type.name())) {
+				List<String> soundEffects = section.getStringList(type.name());
+				typeToSoundEffect.put(type, soundEffects.get(0));
+				for(String soundEffect : soundEffects) {
+					soundEffectToType.put(soundEffect, type);
+				}
+			}
+		}
 	}
 	
-	public String death(MobDisguise disguise) {
-		return death;
+	public SoundEffectType matchSoundEffect(String soundEffect) {
+		return soundEffectToType.get(soundEffect);
 	}
 	
-	public String fallBig(MobDisguise disguise) {
-		return fallBig;
+	public String getSoundEffect(SoundEffectType type) {
+		return typeToSoundEffect.get(type);
 	}
 	
-	public String fallSmall(MobDisguise disguise) {
-		return fallSmall;
+	public String getSoundEffect(SoundEffectType type, Disguise target) {
+		return getSoundEffect(type);
 	}
 	
-	public String hit(MobDisguise disguise) {
-		return hit;
-	}
-	
-	public String splash(MobDisguise disguise) {
-		return splash;
-	}
-	
-	public String swim(MobDisguise disguise) {
-		return swim;
+	public enum SoundEffectType {
+		
+		HURT(null), DEATH(HURT), SMALL_FALL(null), BIG_FALL(SMALL_FALL), SPLASH(null), SWIM(null), STEP(null), AMBIENT(null), EAT(AMBIENT), ANGRY(AMBIENT);
+		
+		public final SoundEffectType fallback;
+		
+		private SoundEffectType(SoundEffectType fallback) {
+			this.fallback = fallback;
+		}
+		
 	}
 	
 }

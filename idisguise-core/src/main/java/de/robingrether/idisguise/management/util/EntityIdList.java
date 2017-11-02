@@ -1,10 +1,15 @@
 package de.robingrether.idisguise.management.util;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -50,6 +55,25 @@ public final class EntityIdList {
 			}
 		}
 		return null;
+	}
+	
+	public static LivingEntity getClosestEntity(Location location, double maxDistance) {
+		List<Entity> nearbyEntities = new ArrayList<Entity>(location.getWorld().getNearbyEntities(location, maxDistance, maxDistance, maxDistance));
+		for(Iterator<Entity> iterator = nearbyEntities.iterator(); iterator.hasNext();) {
+			if(!(iterator.next() instanceof LivingEntity)) {
+				iterator.remove();
+			}
+		}
+		LivingEntity closestEntity = null;
+		double closestDistanceSquared = Double.MAX_VALUE;
+		for(Entity entity : nearbyEntities) {
+			double distanceSquared = entity.getLocation().distanceSquared(location);
+			if(distanceSquared < closestDistanceSquared) {
+				closestEntity = (LivingEntity)entity;
+				closestDistanceSquared = distanceSquared;
+			}
+		}
+		return Math.sqrt(closestDistanceSquared) <= maxDistance ? closestEntity : null;
 	}
 	
 }

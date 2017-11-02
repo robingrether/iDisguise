@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.bukkit.entity.EntityType;
+
 import de.robingrether.idisguise.management.VersionHelper;
 
 /**
@@ -216,6 +218,20 @@ public enum DisguiseType {
 			return getDefaultCommandArgument();
 		} else {
 			return name().toLowerCase(Locale.ENGLISH);
+		}
+	}
+	
+	/**
+	 * Match a disguise type from the equivalent entity type.
+	 * 
+	 * @since 5.7.1
+	 * @return the equivalent disguise type or <code>null</code> if there is no equivalent
+	 */
+	public static DisguiseType fromEntityType(EntityType entityType) {
+		try {
+			return DisguiseType.valueOf(entityType.name().replace("DROPPED_", "").replace("SKELETON_", "SKELETAL_").replace("ZOMBIE_H", "UNDEAD_H").replaceAll("MINECART.*", "MINECART"));
+		} catch(IllegalArgumentException e) {
+			return null;
 		}
 	}
 	

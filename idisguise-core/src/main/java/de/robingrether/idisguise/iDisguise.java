@@ -98,7 +98,7 @@ public class iDisguise extends JavaPlugin {
 		PacketHandler.showOriginalPlayerName = configuration.NAME_TAG_SHOWN;
 		PacketHandler.modifyPlayerListEntry = configuration.MODIFY_PLAYER_LIST_ENTRY;
 		DisguiseManager.modifyScoreboardPackets = PacketHandler.modifyScoreboardPackets = configuration.MODIFY_SCOREBOARD_PACKETS;
-		Sounds.setEnabled(configuration.REPLACE_SOUND_EFFECTS);
+		PacketHandler.replaceSoundEffects = configuration.REPLACE_SOUND_EFFECTS;
 		metrics = new Metrics(this);
 		metrics.addCustomChart(new Metrics.SingleLineChart("disguisedPlayers") {
 			
@@ -204,7 +204,7 @@ public class iDisguise extends JavaPlugin {
 		PacketHandler.showOriginalPlayerName = configuration.NAME_TAG_SHOWN;
 		PacketHandler.modifyPlayerListEntry = configuration.MODIFY_PLAYER_LIST_ENTRY;
 		DisguiseManager.modifyScoreboardPackets = PacketHandler.modifyScoreboardPackets = configuration.MODIFY_SCOREBOARD_PACKETS;
-		Sounds.setEnabled(configuration.REPLACE_SOUND_EFFECTS);
+		PacketHandler.replaceSoundEffects = configuration.REPLACE_SOUND_EFFECTS;
 		if(configuration.KEEP_DISGUISE_SHUTDOWN) {
 			loadData();
 		}
@@ -910,11 +910,11 @@ public class iDisguise extends JavaPlugin {
 			}
 			
 			public boolean isSoundsEnabled() {
-				return Sounds.isEnabled();
+				return PacketHandler.replaceSoundEffects;
 			}
 			
 			public void setSoundsEnabled(boolean enabled) {
-				Sounds.setEnabled(enabled);
+				PacketHandler.replaceSoundEffects = enabled;
 			}
 			
 			public boolean hasPermission(Player player, DisguiseType type) {

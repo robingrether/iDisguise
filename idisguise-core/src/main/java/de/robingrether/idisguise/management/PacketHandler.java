@@ -32,6 +32,7 @@ public final class PacketHandler {
 	public static boolean modifyScoreboardPackets;
 	public static boolean showOriginalPlayerName;
 	public static boolean modifyPlayerListEntry;
+	public static boolean replaceSoundEffects;
 	
 	public static Object[] getSpawnPackets(LivingEntity livingEntity) {
 		try {
@@ -420,7 +421,7 @@ public final class PacketHandler {
 				return new Object[] {handlePacketPlayOutScoreboardTeam(observer, packet)};
 			} else if(PacketPlayOutScoreboardScore.isInstance(packet)) {
 				return new Object[] {handlePacketPlayOutScoreboardScore(observer, packet)};
-			} else if(Sounds.isEnabled() && PacketPlayOutNamedSoundEffect.isInstance(packet)) {
+			} else if(replaceSoundEffects && PacketPlayOutNamedSoundEffect.isInstance(packet)) {
 				return new Object[] {handlePacketPlayOutNamedSoundEffect(observer, packet)};
 			}
 			return new Object[] {packet};
@@ -633,24 +634,18 @@ public final class PacketHandler {
 		return packet;
 	}
 	
-	private static Object handlePacketPlayOutNamedSoundEffect(final Player observer, final Object packet) throws Exception { //TODO
+	private static Object handlePacketPlayOutNamedSoundEffect(final Player observer, final Object packet) throws Exception {
 		String soundEffect = soundEffectToString(PacketPlayOutNamedSoundEffect_soundEffect.get(packet));
-		if(Sounds.isSoundFromPlayer(soundEffect)) {
-			Object entityHuman = VersionHelper.require1_9() ? World_findNearbyPlayer.invoke(Entity_world.get(CraftPlayer_getHandle.invoke(observer)), PacketPlayOutNamedSoundEffect_x.getInt(packet) / 8.0, PacketPlayOutNamedSoundEffect_y.getInt(packet) / 8.0, PacketPlayOutNamedSoundEffect_z.getInt(packet) / 8.0, 1.0, false) : World_findNearbyPlayer.invoke(Entity_world.get(CraftPlayer_getHandle.invoke(observer)), PacketPlayOutNamedSoundEffect_x.getInt(packet) / 8.0, PacketPlayOutNamedSoundEffect_y.getInt(packet) / 8.0, PacketPlayOutNamedSoundEffect_z.getInt(packet) / 8.0, 1.0);
-			if(EntityPlayer.isInstance(entityHuman)) {
-				final Player player = (Player)EntityPlayer_getBukkitEntity.invoke(entityHuman);
-				if(player != null && player != observer && DisguiseManager.isDisguisedTo(player, observer)) {
-					if(DisguiseManager.getDisguise(player) instanceof MobDisguise) {
-						String newSoundEffect = Sounds.replaceSoundFromPlayer(soundEffect, ((MobDisguise)DisguiseManager.getDisguise(player)));
-						if(newSoundEffect != null) {
-							Object customizablePacket = clonePacket(packet);
-							PacketPlayOutNamedSoundEffect_soundEffect.set(customizablePacket, soundEffectFromString(newSoundEffect));
-							return customizablePacket;
-						}
-						return null;
-					} else if(DisguiseManager.getDisguise(player) instanceof ObjectDisguise) {
-						return null;
-					}
+		LivingEntity livingEntity = EntityIdList.getClosestEntity(new Location(observer.getWorld(), PacketPlayOutNamedSoundEffect_x.getInt(packet) / 8.0, PacketPlayOutNamedSoundEffect_y.getInt(packet) / 8.0, PacketPlayOutNamedSoundEffect_z.getInt(packet) / 8.0), 1.0);
+		if(livingEntity != null && livingEntity != observer && DisguiseManager.isDisguisedTo(livingEntity, observer)) {
+			String newSoundEffect = Sounds.replaceSoundEffect(DisguiseType.fromEntityType(livingEntity.getType()), soundEffect, DisguiseManager.getDisguise(livingEntity));
+			if(!soundEffect.equals(newSoundEffect)) {
+				if(newSoundEffect != null) {
+					Object customizablePacket = clonePacket(packet);
+					PacketPlayOutNamedSoundEffect_soundEffect.set(customizablePacket, soundEffectFromString(newSoundEffect));
+					return customizablePacket;
+				} else {
+					return null;
 				}
 			}
 		}
