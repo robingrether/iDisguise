@@ -19,6 +19,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
@@ -243,7 +244,7 @@ public class iDisguise extends JavaPlugin {
 							disguisable = getServer().getOfflinePlayer(UUID.fromString(args[0].substring(1, 37)));
 						} else if(args[0].matches("\\[[0-9]+\\]")) {
 							disguisable = EntityIdList.getEntityByEntityId(Integer.parseInt(args[0].substring(1, args[0].length() - 1)));
-						} else if(args[0].matches("{[A-Za-z0-9_]{1,16}}")) {
+						} else if(args[0].matches("\\{[A-Za-z0-9_]{1,16}\\}")) {
 							disguisable = getServer().getOfflinePlayer(args[0].substring(1, args[0].length() - 1));
 						} else if(getServer().getPlayerExact(args[0]) != null) {
 							disguisable = getServer().getPlayerExact(args[0]);
@@ -542,7 +543,7 @@ public class iDisguise extends JavaPlugin {
 						disguisable = getServer().getOfflinePlayer(UUID.fromString(args[0].substring(1, 37)));
 					} else if(args[0].matches("\\[[0-9]+\\]")) {
 						disguisable = EntityIdList.getEntityByEntityId(Integer.parseInt(args[0].substring(1, args[0].length() - 1)));
-					} else if(args[0].matches("{[A-Za-z0-9_]{1,16}}")) {
+					} else if(args[0].matches("\\{[A-Za-z0-9_]{1,16}\\}")) {
 						disguisable = getServer().getOfflinePlayer(args[0].substring(1, args[0].length() - 1));
 					} else if(getServer().getPlayerExact(args[0]) != null) {
 						disguisable = getServer().getPlayerExact(args[0]);
@@ -659,6 +660,13 @@ public class iDisguise extends JavaPlugin {
 					for(Player player : Bukkit.getOnlinePlayers()) {
 						completions.add("{" + player.getName() + "}");
 					}
+					if(sender instanceof Player) {
+						for(Entity entity : ((Player)sender).getNearbyEntities(5.0, 5.0, 5.0)) {
+							if(entity instanceof LivingEntity) {
+								completions.add("[" + entity.getEntityId() + "]");
+							}
+						}
+					}
 				}
 			} else if(sender.hasPermission("iDisguise.others")) {
 				Object disguisable = null;
@@ -666,7 +674,7 @@ public class iDisguise extends JavaPlugin {
 					disguisable = getServer().getOfflinePlayer(UUID.fromString(args[0].substring(1, 37)));
 				} else if(args[0].matches("\\[[0-9]+\\]")) {
 					disguisable = EntityIdList.getEntityByEntityId(Integer.parseInt(args[0].substring(1, args[0].length() - 1)));
-				} else if(args[0].matches("{[A-Za-z0-9_]{1,16}}")) {
+				} else if(args[0].matches("\\{[A-Za-z0-9_]{1,16}\\}")) {
 					disguisable = getServer().getOfflinePlayer(args[0].substring(1, args[0].length() - 1));
 				} else if(getServer().getPlayerExact(args[0]) != null) {
 					disguisable = getServer().getPlayerExact(args[0]);
@@ -714,6 +722,13 @@ public class iDisguise extends JavaPlugin {
 					for(Player player : Bukkit.getOnlinePlayers()) {
 						if(DisguiseManager.isDisguised(player)) {
 							completions.add("{" + player.getName() + "}");
+						}
+					}
+					if(sender instanceof Player) {
+						for(Entity entity : ((Player)sender).getNearbyEntities(5.0, 5.0, 5.0)) {
+							if(entity instanceof LivingEntity && DisguiseManager.isDisguised((LivingEntity)entity)) {
+								completions.add("[" + entity.getEntityId() + "]");
+							}
 						}
 					}
 				}
