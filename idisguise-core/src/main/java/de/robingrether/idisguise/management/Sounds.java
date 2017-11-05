@@ -69,8 +69,8 @@ public class Sounds {
 		}
 	}
 	
-	private Map<SoundEffectType, String> typeToSoundEffect;
-	private Map<String, SoundEffectType> soundEffectToType;
+	private Map<SoundEffectType, String> typeToSoundEffect = new ConcurrentHashMap<SoundEffectType, String>();
+	private Map<String, SoundEffectType> soundEffectToType = new ConcurrentHashMap<String, SoundEffectType>();
 	
 	public Sounds(ConfigurationSection section) {
 		for(SoundEffectType type : SoundEffectType.values()) {
