@@ -369,14 +369,18 @@ public class iDisguise extends JavaPlugin {
 						}
 					} else {
 						LivingEntity livingEntity = (LivingEntity)disguisable;
-						if(DisguiseManager.getDisguise(livingEntity) instanceof PlayerDisguise) {
-							PlayerDisguise disguise = (PlayerDisguise)DisguiseManager.getDisguise(livingEntity);
-							sender.sendMessage(language.STATUS_PLAYER_OTHER.replace("%player%", livingEntity.getType().name() + " [" + livingEntity.getEntityId() + "]").replace("%type%", disguise.getType().toString()).replace("%name%", disguise.getDisplayName()));
-							sender.sendMessage(language.STATUS_SUBTYPES.replace("%subtypes%", disguise.toString()));
+						if(DisguiseManager.isDisguised(livingEntity)) {
+							if(DisguiseManager.getDisguise(livingEntity) instanceof PlayerDisguise) {
+								PlayerDisguise disguise = (PlayerDisguise)DisguiseManager.getDisguise(livingEntity);
+								sender.sendMessage(language.STATUS_PLAYER_OTHER.replace("%player%", livingEntity.getType().name() + " [" + livingEntity.getEntityId() + "]").replace("%type%", disguise.getType().toString()).replace("%name%", disguise.getDisplayName()));
+								sender.sendMessage(language.STATUS_SUBTYPES.replace("%subtypes%", disguise.toString()));
+							} else {
+								Disguise disguise = DisguiseManager.getDisguise(livingEntity);
+								sender.sendMessage(language.STATUS_OTHER.replace("%player%", livingEntity.getType().name() + " [" + livingEntity.getEntityId() + "]").replace("%type%", disguise.getType().toString()));
+								sender.sendMessage(language.STATUS_SUBTYPES.replace("%subtypes%", disguise.toString()));
+							}
 						} else {
-							Disguise disguise = DisguiseManager.getDisguise(livingEntity);
-							sender.sendMessage(language.STATUS_OTHER.replace("%player%", livingEntity.getType().name() + " [" + livingEntity.getEntityId() + "]").replace("%type%", disguise.getType().toString()));
-							sender.sendMessage(language.STATUS_SUBTYPES.replace("%subtypes%", disguise.toString()));
+							sender.sendMessage((disguiseSelf ? language.STATUS_NOT_DISGUISED_SELF : language.STATUS_NOT_DISGUISED_OTHER).replace("%player%", livingEntity.getType().name() + " [" + livingEntity.getEntityId() + "]"));
 						}
 					}
 				} else if(StringUtil.equalsIgnoreCase(args[0], "seethrough", "see-through")) {

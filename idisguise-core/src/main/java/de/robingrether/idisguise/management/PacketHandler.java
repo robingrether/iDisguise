@@ -344,7 +344,11 @@ public final class PacketHandler {
 				PacketPlayOutNamedSoundEffect_y.setInt(clone, PacketPlayOutNamedSoundEffect_y.getInt(packet));
 				PacketPlayOutNamedSoundEffect_z.setInt(clone, PacketPlayOutNamedSoundEffect_z.getInt(packet));
 				PacketPlayOutNamedSoundEffect_volume.setFloat(clone, PacketPlayOutNamedSoundEffect_volume.getFloat(packet));
-				PacketPlayOutNamedSoundEffect_pitch.setInt(clone, PacketPlayOutNamedSoundEffect_pitch.getInt(packet));
+				if(VersionHelper.require1_10()) {
+					PacketPlayOutNamedSoundEffect_pitch.setFloat(clone, PacketPlayOutNamedSoundEffect_pitch.getFloat(packet));
+				} else {
+					PacketPlayOutNamedSoundEffect_pitch.setInt(clone, PacketPlayOutNamedSoundEffect_pitch.getInt(packet));
+				}
 			} else if(PacketPlayOutScoreboardTeam.isInstance(packet)) {
 				clone = PacketPlayOutScoreboardTeam_new.newInstance();
 				PacketPlayOutScoreboardTeam_teamName.set(clone, PacketPlayOutScoreboardTeam_teamName.get(packet));
