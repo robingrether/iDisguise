@@ -8,12 +8,18 @@ CraftChatMessage_fromString->MCraftChatMessage$fromString(java.lang.String)
 CraftItemStack->C{obc}.inventory.CraftItemStack
 CraftItemStack_asNMSCopy->MCraftItemStack$asNMSCopy(org.bukkit.inventory.ItemStack)
 
+CraftLivingEntity->C{obc}.entity.CraftLivingEntity
+CraftLivingEntity_getHandle->MCraftLivingEntity$getHandle()
+
 CraftOfflinePlayer->C{obc}.CraftOfflinePlayer
 CraftOfflinePlayer_getProfile->MCraftOfflinePlayer$getProfile()
 
 CraftPlayer->C{obc}.entity.CraftPlayer
 CraftPlayer_getHandle->MCraftPlayer$getHandle()
 CraftPlayer_getProfile->MCraftPlayer$getProfile()
+
+CraftWorld->C{obc}.CraftWorld
+CraftWorld_getHandle->MCraftWorld$getHandle()
 
 DataWatcherItem->C{nms}.DataWatcher$Item
 DataWatcherItem_dataWatcherObject->FDataWatcherItem$a
@@ -26,6 +32,7 @@ Entity_getDataWatcher->MEntity$getDataWatcher()
 Entity_setEntityId->MEntity$f(int)
 Entity_setLocation->MEntity$setLocation(double,double,double,float,float)
 Entity_world->FEntity$world
+Entity_getBukkitEntity->MEntity$getBukkitEntity()
 
 EntityAgeable->C{nms}.EntityAgeable
 EntityAgeable_setAge->MEntityAgeable$setAge(int)
@@ -84,6 +91,13 @@ EntitySkeleton_setSkeletonType->MEntitySkeleton$setSkeletonType(int)
 EntitySlime->C{nms}.EntitySlime
 EntitySlime_setSize->MEntitySlime$setSize(int)
 
+EntityTracker->C{nms}.EntityTracker
+EntityTracker_trackedEntities->FEntityTracker$trackedEntities
+
+EntityTrackerEntry->C{nms}.EntityTrackerEntry
+EntityTrackerEntry_clear->MEntityTrackerEntry$clear({nms}.EntityPlayer)
+EntityTrackerEntry_updatePlayer->MEntityTrackerEntry$updatePlayer({nms}.EntityPlayer)
+
 EntityVillager->C{nms}.EntityVillager
 EntityVillager_setProfession->MEntityVillager$setProfession(int)
 
@@ -102,8 +116,15 @@ EnumColor_fromColorIndex->MEnumColor$fromColorIndex(int)
 EnumEntityUseAction->C{nms}.PacketPlayInUseEntity$EnumEntityUseAction
 EnumEntityUseAction_ATTACK->FEnumEntityUseAction$ATTACK
 
+EnumGamemode->C{nms}.WorldSettings$EnumGamemode
+EnumGamemode_SURVIVAL->FEnumGamemode$SURVIVAL
+
 EnumHorseType->C{nms}.EnumHorseType
 EnumHorseType_fromIndex->MEnumHorseType$a(int)
+
+EnumPlayerInfoAction->C{nms}.PacketPlayOutPlayerInfo$EnumPlayerInfoAction
+EnumPlayerInfoAction_ADD_PLAYER->FEnumPlayerInfoAction$ADD_PLAYER
+EnumPlayerInfoAction_REMOVE_PLAYER->FEnumPlayerInfoAction$REMOVE_PLAYER
 
 EnumScoreboardAction->C{nms}.PacketPlayOutScoreboardScore$EnumScoreboardAction
 EnumScoreboardAction_CHANGE->FEnumScoreboardAction$CHANGE
@@ -111,6 +132,9 @@ EnumScoreboardAction_REMOVE->FEnumScoreboardAction$REMOVE
 
 GameProfile->Ccom.mojang.authlib.GameProfile
 GameProfile_getProfileId->MGameProfile$getId()
+
+IntHashMap->C{nms}.IntHashMap
+IntHashMap_get->MIntHashMap$get(int)
 
 InventorySubcontainer->C{nms}.InventorySubcontainer
 InventorySubcontainer_setItem->MInventorySubcontainer$setItem(int,{nms}.ItemStack)
@@ -146,6 +170,9 @@ PacketPlayOutEntity_entityId->FPacketPlayOutEntity$a
 PacketPlayOutEntity_isOnGround->FPacketPlayOutEntity$g
 PacketPlayOutEntity_pitch->FPacketPlayOutEntity$f
 PacketPlayOutEntity_yaw->FPacketPlayOutEntity$e
+
+PacketPlayOutEntityDestroy->C{nms}.PacketPlayOutEntityDestroy
+PacketPlayOutEntityDestroy_entityIds->FPacketPlayOutEntityDestroy$a
 
 PacketPlayOutEntityMetadata->C{nms}.PacketPlayOutEntityMetadata
 PacketPlayOutEntityMetadata_entityId->FPacketPlayOutEntityMetadata$a
@@ -211,6 +238,7 @@ PacketPlayOutSpawnEntity_z->FPacketPlayOutSpawnEntity$e
 
 PacketPlayOutSpawnEntityLiving->C{nms}.PacketPlayOutSpawnEntityLiving
 PacketPlayOutSpawnEntityLiving_new->NPacketPlayOutSpawnEntityLiving({nms}.EntityLiving)
+PacketPlayOutSpawnEntityLiving_entityId->FPacketPlayOutSpawnEntityLiving$a
 PacketPlayOutSpawnEntityLiving_yaw->FPacketPlayOutSpawnEntityLiving$j
 
 PacketPlayOutUpdateAttributes->C{nms}.PacketPlayOutUpdateAttributes
@@ -236,3 +264,7 @@ UserCache_putProfile->MUserCache$a(com.mojang.authlib.GameProfile)
 
 World->C{nms}.World
 World_findNearbyPlayer->MWorld$a(double,double,double,double,boolean)
+World_getEntityById->MWorld$getEntity(int)
+
+WorldServer->C{nms}.WorldServer
+WorldServer_entityTracker->FWorldServer$tracker
