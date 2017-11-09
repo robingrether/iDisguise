@@ -1,0 +1,269 @@
+PLAYER:
+  DEATH: [game.player.die]
+  BIG_FALL: [game.player.hurt.fall.big]
+  SMALL_FALL: [game.player.hurt.fall.small]
+  HURT: [game.player.hurt]
+  SPLASH: [game.player.swim.splash]
+  SWIM: [game.player.swim]
+
+BAT:
+  DEATH: [mob.bat.death]
+  HURT: [mob.bat.hurt]
+  AMBIENT: [mob.bat.idle, mob.bat.loop, mob.bat.takeoff]
+
+BLAZE:
+  DEATH: [mob.blaze.death]
+  BIG_FALL: [game.hostile.hurt.fall.big]
+  SMALL_FALL: [game.hostile.hurt.fall.small]
+  HURT: [mob.blaze.hit]
+  SPLASH: [game.hostile.swim.splash]
+  SWIM: [game.hostile.swim]
+  AMBIENT: [mob.blaze.breathe]
+
+CAVE_SPIDER:
+  DEATH: [mob.spider.death]
+  BIG_FALL: [game.hostile.hurt.fall.big]
+  SMALL_FALL: [game.hostile.hurt.fall.small]
+  HURT: [mob.spider.say]
+  SPLASH: [game.hostile.swim.splash]
+  SWIM: [game.hostile.swim]
+  STEP: [mob.spider.step]
+  AMBIENT: [mob.spider.say]
+
+CHICKEN:
+  HURT: [mob.chicken.hurt]
+  SPLASH: [game.neutral.swim.splash]
+  SWIM: [game.neutral.swim]
+  STEP: [mob.chicken.step]
+  AMBIENT: [mob.chicken.say, mob.chicken.plop]
+
+COW:
+  BIG_FALL: [game.neutral.hurt.fall.big]
+  SMALL_FALL: [game.neutral.hurt.fall.small]
+  HURT: [mob.cow.hurt]
+  SPLASH: [game.neutral.swim.splash]
+  SWIM: [game.neutral.swim]
+  STEP: [mob.cow.step]
+  AMBIENT: [mob.cow.say]
+
+CREEPER:
+  DEATH: [mob.creeper.death]
+  BIG_FALL: [game.hostile.hurt.fall.big]
+  SMALL_FALL: [game.hostile.hurt.fall.small]
+  HURT: [mob.creeper.say]
+  SPLASH: [game.hostile.swim.splash]
+  SWIM: [game.hostile.swim]
+
+DONKEY:
+  DEATH: [mob.horse.donkey.death]
+  BIG_FALL: [game.neutral.hurt.fall.big]
+  SMALL_FALL: [game.neutral.hurt.fall.small]
+  HURT: [mob.horse.donkey.hit]
+  SPLASH: [game.neutral.swim.splash]
+  SWIM: [game.neutral.swim]
+  STEP: [mob.horse.soft, mob.horse.wood, mob.horse.gallop]
+  AMBIENT: [mob.horse.donkey.idle]
+  ANGRY: [mob.horse.donkey.angry]
+
+ENDER_DRAGON:
+  DEATH: [mob.enderdragon.end]
+  HURT: [mob.enderdragon.hit]
+  AMBIENT: [mob.enderdragon.growl, mob.enderdragon.wings]
+
+ENDERMAN:
+  DEATH: [mob.endermen.death]
+  BIG_FALL: [game.hostile.hurt.fall.big]
+  SMALL_FALL: [game.hostile.hurt.fall.small]
+  HURT: [mob.endermen.hit]
+  SPLASH: [game.hostile.swim.splash]
+  SWIM: [game.hostile.swim]
+  AMBIENT: [mob.endermen.idle, mob.endermen.scream, mob.endermen.stare, mob.endermen.portal]
+
+GHAST:  DEATH: [mob.ghast.death]  HURT: [mob.ghast.moan]
+  AMBIENT: [mob.ghast.moan, mob.ghast.scream, mob.ghast.affectionate_scream, mob.ghast.charge]
+
+GIANT:  DEATH: [game.hostile.death]  BIG_FALL: [game.hostile.hurt.fall.big]
+  SMALL_FALL: [game.hostile.hurt.fall.small]
+  HURT: [game.hostile.hurt]
+  SPLASH: [game.hostile.swim.splash]
+  SWIM: [game.hostile.swim]
+
+HORSE:  DEATH: [mob.horse.death]  BIG_FALL: [game.neutral.hurt.fall.big]
+  SMALL_FALL: [game.neutral.hurt.fall.small]
+  HURT: [mob.horse.hit]
+  SPLASH: [game.neutral.swim.splash]
+  SWIM: [game.neutral.swim]
+  STEP: [mob.horse.soft, mob.horse.wood, mob.horse.gallop]
+  AMBIENT: [mob.horse.idle, mob.horse.breathe]
+  ANGRY: [mob.horse.angry]
+
+IRON_GOLEM:  DEATH: [mob.irongolem.death]  BIG_FALL: [game.neutral.hurt.fall.big]
+  SMALL_FALL: [game.neutral.hurt.fall.small]
+  HURT: [mob.irongolem.hit]
+  SPLASH: [game.neutral.swim.splash]
+  SWIM: [game.neutral.swim]
+  STEP: [mob.irongolem.walk]
+
+MAGMA_CUBE:  BIG_FALL: [game.neutral.hurt.fall.big]  SMALL_FALL: [game.neutral.hurt.fall.small]
+  SPLASH: [game.neutral.swim.splash]
+  SWIM: [game.neutral.swim]
+  HURT: [mob.magmacube.big, mob.small_magmacube.small]
+  STEP: [mob.magmacube.jump]
+
+MULE:  DEATH: [mob.horse.donkey.death]
+  BIG_FALL: [game.neutral.hurt.fall.big]
+  SMALL_FALL: [game.neutral.hurt.fall.small]
+  HURT: [mob.horse.donkey.hit]
+  SPLASH: [game.neutral.swim.splash]
+  SWIM: [game.neutral.swim]
+  STEP: [mob.horse.soft, mob.horse.wood, mob.horse.gallop]
+  AMBIENT: [mob.horse.donkey.idle]
+  ANGRY: [mob.horse.donkey.angry]
+
+MUSHROOM_COW:  BIG_FALL: [game.neutral.hurt.fall.big]
+  SMALL_FALL: [game.neutral.hurt.fall.small]
+  HURT: [mob.cow.hurt]
+  SPLASH: [game.neutral.swim.splash]
+  SWIM: [game.neutral.swim]
+  STEP: [mob.cow.step]
+  AMBIENT: [mob.cow.say]
+
+OCELOT:  BIG_FALL: [game.neutral.hurt.fall.big]
+  SMALL_FALL: [game.neutral.hurt.fall.small]
+  HURT: [mob.cat.hitt]
+  SPLASH: [game.neutral.swim.splash]
+  SWIM: [game.neutral.swim]
+  AMBIENT: [mob.cat.meow, mob.cat.purr, mob.cat.purreow]
+  ANGRY: [mob.cat.hiss]
+
+PIG:  DEATH: [mob.pig.death]  BIG_FALL: [game.neutral.hurt.fall.big]
+  SMALL_FALL: [game.neutral.hurt.fall.small]
+  HURT: [mob.pig.say]
+  SPLASH: [game.neutral.swim.splash]
+  SWIM: [game.neutral.swim]
+  STEP: [mob.pig.step]
+  AMBIENT: [mob.pig.say]
+
+PIG_ZOMBIE:  DEATH: [mob.zombiepig.zpigdeath]  BIG_FALL: [game.hostile.hurt.fall.big]
+  SMALL_FALL: [game.hostile.hurt.fall.small]
+  HURT: [mob.zombiepig.zpighurt]
+  SPLASH: [game.hostile.swim.splash]
+  SWIM: [game.hostile.swim]
+  AMBIENT: [mob.zombiepig.zpig]
+  ANGRY: [mob.zombiepig.zpigangry]
+
+SHEEP:  BIG_FALL: [game.neutral.hurt.fall.big]
+  SMALL_FALL: [game.neutral.hurt.fall.small]
+  HURT: [mob.sheep.say]
+  SPLASH: [game.neutral.swim.splash]
+  SWIM: [game.neutral.swim]
+  STEP: [mob.sheep.step]
+  AMBIENT: [mob.sheep.say]
+
+SILVERFISH:  DEATH: [mob.silverfish.kill]  BIG_FALL: [game.hostile.hurt.fall.big]
+  SMALL_FALL: [game.hostile.hurt.fall.small]
+  HURT: [mob.silverfish.hit]
+  SPLASH: [game.hostile.swim.splash]
+  SWIM: [game.hostile.swim]
+  STEP: [mob.silverfish.step]
+  AMBIENT: [mob.silverfish.say]
+
+SKELETAL_HORSE:  DEATH: [mob.horse.skeleton.death]  BIG_FALL: [game.neutral.hurt.fall.big]
+  SMALL_FALL: [game.neutral.hurt.fall.small]
+  HURT: [mob.horse.skeleton.hit]
+  SPLASH: [game.neutral.swim.splash]
+  SWIM: [game.neutral.swim]
+  STEP: [mob.horse.step, mob.horse.step_wood, mob.horse.gallop]
+  AMBIENT: [mob.horse.skeleton.idle]
+
+SKELETON:  DEATH: [mob.skeleton.death]  BIG_FALL: [game.hostile.hurt.fall.big]
+  SMALL_FALL: [game.hostile.hurt.fall.small]
+  HURT: [mob.skeleton.hurt]
+  SPLASH: [game.hostile.swim.splash]
+  SWIM: [game.hostile.swim]
+  STEP: [mob.skeleton.step]
+  AMBIENT: [mob.skeleton.say]
+
+SLIME:  BIG_FALL: [game.neutral.hurt.fall.big]  SMALL_FALL: [game.neutral.hurt.fall.small]
+  SPLASH: [game.neutral.swim.splash]
+  SWIM: [game.neutral.swim]
+  HURT: [mob.slime.big, mob.slime.small]
+  STEP: [mob.slime.big, mob.slime.small]
+
+SNOWMAN:  DEATH: [game.neutral.die]  BIG_FALL: [game.neutral.hurt.fall.big]
+  SMALL_FALL: [game.neutral.hurt.fall.small]
+  HURT: [game.neutral.hurt]
+  SPLASH: [game.neutral.swim.splash]
+  SWIM: [game.neutral.swim]
+
+SPIDER:  DEATH: [mob.spider.death]
+  BIG_FALL: [game.hostile.hurt.fall.big]
+  SMALL_FALL: [game.hostile.hurt.fall.small]
+  HURT: [mob.spider.say]
+  SPLASH: [game.hostile.swim.splash]
+  SWIM: [game.hostile.swim]
+  STEP: [mob.spider.step]
+  AMBIENT: [mob.spider.say]
+
+SQUID:  DEATH: [game.neutral.die]
+  BIG_FALL: [game.neutral.hurt.fall.big]
+  SMALL_FALL: [game.neutral.hurt.fall.small]
+  HURT: [game.neutral.hurt]
+  SPLASH: [game.neutral.swim.splash]
+  SWIM: [game.neutral.swim]
+
+UNDEAD_HORSE:  DEATH: [mob.horse.zombie.death]  BIG_FALL: [game.neutral.hurt.fall.big]
+  SMALL_FALL: [game.neutral.hurt.fall.small]
+  HURT: [mob.horse.zombie.hit]
+  SPLASH: [game.neutral.swim.splash]
+  SWIM: [game.neutral.swim]
+  STEP: [mob.horse.step, mob.horse.step_wood, mob.horse.gallop]
+  AMBIENT: [mob.horse.zombie.idle]
+
+VILLAGER:  DEATH: [mob.villager.death]  BIG_FALL: [game.neutral.hurt.fall.big]
+  SMALL_FALL: [game.neutral.hurt.fall.small]
+  HURT: [mob.villager.hit]
+  SPLASH: [game.neutral.swim.splash]
+  SWIM: [game.neutral.swim]
+  AMBIENT: [mob.villager.idle, mob.villager.haggle, mob.villager.yes]
+  ANGRY: [mob.villager.no]
+
+WITHER:  DEATH: [mob.wither.death]  HURT: [mob.wither.hurt]
+  SPLASH: [game.hostile.swim.splash]
+  SWIM: [game.hostile.swim]
+  AMBIENT: [mob.wither.idle]
+
+WITHER_SKELETON:  DEATH: [mob.skeleton.death]
+  BIG_FALL: [game.hostile.hurt.fall.big]
+  SMALL_FALL: [game.hostile.hurt.fall.small]
+  HURT: [mob.skeleton.hurt]
+  SPLASH: [game.hostile.swim.splash]
+  SWIM: [game.hostile.swim]
+  STEP: [mob.skeleton.step]
+  AMBIENT: [mob.skeleton.say]
+
+WOLF:  DEATH: [mob.wolf.death]  BIG_FALL: [game.neutral.hurt.fall.big]
+  SMALL_FALL: [game.neutral.hurt.fall.small]
+  HURT: [mob.wolf.hurt]
+  SPLASH: [game.neutral.swim.splash]
+  SWIM: [game.neutral.swim]
+  STEP: [mob.wolf.step]
+  AMBIENT: [mob.wolf.bark, mob.wolf.howl, mob.wolf.panting, mob.wolf.shake, mob.wolf.whine]
+  ANGRY: [mob.wolf.growl]
+
+ZOMBIE:  DEATH: [mob.zombie.death]  BIG_FALL: [game.hostile.hurt.fall.big]
+  SMALL_FALL: [game.hostile.hurt.fall.small]
+  HURT: [mob.zombie.hurt]
+  SPLASH: [game.hostile.swim.splash]
+  SWIM: [game.hostile.swim]
+  STEP: [mob.zombie.step]
+  AMBIENT: [mob.zombie.say]
+
+ZOMBIE_VILLAGER:  DEATH: [mob.zombie.death]
+  BIG_FALL: [game.hostile.hurt.fall.big]
+  SMALL_FALL: [game.hostile.hurt.fall.small]
+  HURT: [mob.zombie.hurt]
+  SPLASH: [game.hostile.swim.splash]
+  SWIM: [game.hostile.swim]
+  STEP: [mob.zombie.step]
+  AMBIENT: [mob.zombie.say]
