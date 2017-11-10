@@ -914,40 +914,46 @@ public class iDisguise extends JavaPlugin {
 	public DisguiseAPI getAPI() {
 		return new DisguiseAPI() {
 			
-			@Deprecated
-			public void disguiseToAll(Player player, Disguise disguise) {
-				disguise(player, disguise, false);
+			public boolean disguise(OfflinePlayer offlinePlayer, Disguise disguise) {
+				return disguise(offlinePlayer, disguise, true);
 			}
 			
-			@Deprecated
-			public void undisguiseToAll(Player player) {
-				undisguise(player, false);
-			}
-			
-			public boolean disguise(OfflinePlayer player, Disguise disguise) {
+			public boolean disguise(Player player, Disguise disguise) {
 				return disguise(player, disguise, true);
 			}
 			
-			public boolean disguise(OfflinePlayer player, Disguise disguise, boolean fireEvent) {
+			public boolean disguise(LivingEntity livingEntity, Disguise disguise) {
+				return disguise(livingEntity, disguise, true);
+			}
+			
+			public boolean disguise(OfflinePlayer offlinePlayer, Disguise disguise, boolean fireEvent) {
+				if(offlinePlayer.isOnline()) {
+					return disguise(offlinePlayer.getPlayer(), disguise, fireEvent);
+				}
 				if(fireEvent) {
-					if(player.isOnline()) {
-						DisguiseEvent event = new DisguiseEvent(player.getPlayer(), disguise);
-						getServer().getPluginManager().callEvent(event);
-						if(event.isCancelled()) {
-							return false;
-						} else {
-							DisguiseManager.disguise(player, disguise);
-							return true;
-						}
+					OfflinePlayerDisguiseEvent event = new OfflinePlayerDisguiseEvent(offlinePlayer, disguise);
+					getServer().getPluginManager().callEvent(event);
+					if(event.isCancelled()) {
+						return false;
 					} else {
-						OfflinePlayerDisguiseEvent event = new OfflinePlayerDisguiseEvent(player, disguise);
-						getServer().getPluginManager().callEvent(event);
-						if(event.isCancelled()) {
-							return false;
-						} else {
-							DisguiseManager.disguise(player, disguise);
-							return true;
-						}
+						DisguiseManager.disguise(offlinePlayer, disguise);
+						return true;
+					}
+				} else {
+					DisguiseManager.disguise(offlinePlayer, disguise);
+					return true;
+				}
+			}
+			
+			public boolean disguise(Player player, Disguise disguise, boolean fireEvent) {
+				if(fireEvent) {
+					DisguiseEvent event = new DisguiseEvent(player, disguise);
+					getServer().getPluginManager().callEvent(event);
+					if(event.isCancelled()) {
+						return false;
+					} else {
+						DisguiseManager.disguise(player, disguise);
+						return true;
 					}
 				} else {
 					DisguiseManager.disguise(player, disguise);
@@ -955,36 +961,93 @@ public class iDisguise extends JavaPlugin {
 				}
 			}
 			
-			public boolean undisguise(OfflinePlayer player) {
+			public boolean disguise(LivingEntity livingEntity, Disguise disguise, boolean fireEvent) {
+				if(livingEntity instanceof Player) {
+					return disguise((Player)livingEntity, disguise, fireEvent);
+				}
+				if(fireEvent) {
+					EntityDisguiseEvent event = new EntityDisguiseEvent(livingEntity, disguise);
+					getServer().getPluginManager().callEvent(event);
+					if(event.isCancelled()) {
+						return false;
+					} else {
+						DisguiseManager.disguise(livingEntity, disguise);
+						return true;
+					}
+				} else {
+					DisguiseManager.disguise(livingEntity, disguise);
+					return true;
+				}
+			}
+			
+			public boolean undisguise(OfflinePlayer offlinePlayer) {
+				return undisguise(offlinePlayer, true);
+			}
+			
+			public boolean undisguise(Player player) {
 				return undisguise(player, true);
 			}
 			
-			public boolean undisguise(OfflinePlayer player, boolean fireEvent) {
-				if(!isDisguised(player)) {
-					return false;
+			public boolean undisguise(LivingEntity livingEntity) {
+				return undisguise(livingEntity, true);
+			}
+			
+			public boolean undisguise(OfflinePlayer offlinePlayer, boolean fireEvent) {
+				if(offlinePlayer.isOnline()) {
+					return undisguise(offlinePlayer.getPlayer(), fireEvent);
 				}
+				if(!isDisguised(offlinePlayer)) return false;
+				
 				if(fireEvent) {
-					if(player.isOnline()) {
-						UndisguiseEvent event = new UndisguiseEvent(player.getPlayer(), getDisguise(player), false);
-						getServer().getPluginManager().callEvent(event);
-						if(event.isCancelled()) {
-							return false;
-						} else {
-							DisguiseManager.undisguise(player);
-							return true;
-						}
+					OfflinePlayerUndisguiseEvent event = new OfflinePlayerUndisguiseEvent(offlinePlayer, getDisguise(offlinePlayer), false);
+					getServer().getPluginManager().callEvent(event);
+					if(event.isCancelled()) {
+						return false;
 					} else {
-						OfflinePlayerUndisguiseEvent event = new OfflinePlayerUndisguiseEvent(player, getDisguise(player), false);
-						getServer().getPluginManager().callEvent(event);
-						if(event.isCancelled()) {
-							return false;
-						} else {
-							DisguiseManager.undisguise(player);
-							return true;
-						}
+						DisguiseManager.undisguise(offlinePlayer);
+						return true;
+					}
+				} else {
+					DisguiseManager.undisguise(offlinePlayer);
+					return true;
+				}
+			}
+			
+			public boolean undisguise(Player player, boolean fireEvent) {
+				if(!isDisguised(player)) return false;
+				
+				if(fireEvent) {
+					UndisguiseEvent event = new UndisguiseEvent(player, getDisguise(player), false);
+					getServer().getPluginManager().callEvent(event);
+					if(event.isCancelled()) {
+						return false;
+					} else {
+						DisguiseManager.undisguise(player);
+						return true;
 					}
 				} else {
 					DisguiseManager.undisguise(player);
+					return true;
+				}
+			}
+			
+			public boolean undisguise(LivingEntity livingEntity, boolean fireEvent) {
+				if(livingEntity instanceof Player) {
+					return undisguise((Player)livingEntity, fireEvent);
+				}
+				if(!isDisguised(livingEntity)) return false;
+				
+				if(fireEvent) {
+					EntityUndisguiseEvent event = new EntityUndisguiseEvent(livingEntity, getDisguise(livingEntity), false);
+					getServer().getPluginManager().callEvent(event);
+					if(event.isCancelled()) {
+						return false;
+					} else {
+						DisguiseManager.undisguise(livingEntity);
+						return true;
+					}
+				} else {
+					DisguiseManager.undisguise(livingEntity);
 					return true;
 				}
 			}
@@ -993,31 +1056,40 @@ public class iDisguise extends JavaPlugin {
 				DisguiseManager.undisguiseAll();
 			}
 			
-			@Deprecated
-			public boolean isDisguised(Player player) {
-				return isDisguised((OfflinePlayer)player);
+			public boolean isDisguised(OfflinePlayer offlinePlayer) {
+				return DisguiseManager.isDisguised(offlinePlayer);
 			}
 			
-			public boolean isDisguised(OfflinePlayer player) {
+			public boolean isDisguised(Player player) {
 				return DisguiseManager.isDisguised(player);
 			}
 			
-			public boolean isDisguisedTo(OfflinePlayer player, Player observer) {
+			public boolean isDisguised(LivingEntity livingEntity) {
+				return DisguiseManager.isDisguised(livingEntity);
+			}
+			
+			public boolean isDisguisedTo(OfflinePlayer offlinePlayer, Player observer) {
+				return DisguiseManager.isDisguisedTo(offlinePlayer, observer);
+			}
+			
+			public boolean isDisguisedTo(Player player, Player observer) {
 				return DisguiseManager.isDisguisedTo(player, observer);
 			}
 			
-			@Deprecated
-			public Disguise getDisguise(Player player) {
-				return getDisguise((OfflinePlayer)player);
+			public boolean isDisguisedTo(LivingEntity livingEntity, Player observer) {
+				return DisguiseManager.isDisguisedTo(livingEntity, observer);
 			}
 			
-			public Disguise getDisguise(OfflinePlayer player) {
+			public Disguise getDisguise(OfflinePlayer offlinePlayer) {
+				return DisguiseManager.isDisguised(offlinePlayer) ? DisguiseManager.getDisguise(offlinePlayer).clone() : null;
+			}
+			
+			public Disguise getDisguise(Player player) {
 				return DisguiseManager.isDisguised(player) ? DisguiseManager.getDisguise(player).clone() : null;
 			}
 			
-			@Deprecated
-			public int getOnlineDisguiseCount() {
-				return getNumberOfDisguisedPlayers();
+			public Disguise getDisguise(LivingEntity livingEntity) {
+				return DisguiseManager.isDisguised(livingEntity) ? DisguiseManager.getDisguise(livingEntity).clone() : null;
 			}
 			
 			public int getNumberOfDisguisedPlayers() {
@@ -1054,6 +1126,10 @@ public class iDisguise extends JavaPlugin {
 			
 			public void setSeeThrough(OfflinePlayer player, boolean seeThrough) {
 				DisguiseManager.setSeeThrough(player, seeThrough);
+			}
+			
+			public Set<Object> getDisguisedEntities() {
+				return DisguiseManager.getDisguisedEntities();
 			}
 			
 		};
