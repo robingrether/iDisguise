@@ -13,6 +13,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import de.robingrether.idisguise.management.VersionHelper;
+
 import static de.robingrether.idisguise.management.Reflection.*;
 
 public final class EntityIdList {
@@ -22,6 +24,7 @@ public final class EntityIdList {
 	private static Map<Integer, Player> players;
 	
 	public static void init() {
+		legacyMode = !VersionHelper.requireVersion("v1_8_R2"); 			// are we before 1.8.3 (1_8_R2) ?
 		players = new ConcurrentHashMap<Integer, Player>();
 		for(Player player : Bukkit.getOnlinePlayers()) {
 			players.put(player.getEntityId(), player);
@@ -57,8 +60,10 @@ public final class EntityIdList {
 		return null;
 	}
 	
+	private static boolean legacyMode = false;		// are we before 1.8.3 (1_8_R2) ?
+	
 	public static LivingEntity getClosestEntity(Location location, double maxDistance) {
-		List<Entity> nearbyEntities = new ArrayList<Entity>(location.getWorld().getNearbyEntities(location, maxDistance, maxDistance, maxDistance));
+		List<Entity> nearbyEntities = new ArrayList<Entity>(legacyMode ? location.getWorld().getEntities() : location.getWorld().getNearbyEntities(location, maxDistance, maxDistance, maxDistance));
 		for(Iterator<Entity> iterator = nearbyEntities.iterator(); iterator.hasNext();) {
 			if(!(iterator.next() instanceof LivingEntity)) {
 				iterator.remove();
