@@ -48,6 +48,9 @@ public final class DisguiseManager {
 	}
 	
 	public static synchronized void disguise(LivingEntity livingEntity, Disguise disguise) {
+		// do nothing if entity is invalid (dead or despawned)
+		if(!livingEntity.isValid()) return;
+		
 		hideEntityFromAll(livingEntity);
 		disguiseMap.updateDisguise(livingEntity.getUniqueId(), disguise);
 		showEntityToAll(livingEntity);
@@ -216,6 +219,11 @@ public final class DisguiseManager {
 	}
 	
 	private static void hideEntityFromAll(LivingEntity livingEntity) {
+		// do nothing if entity is invalid (dead or despawned)
+		if(!livingEntity.isValid()) {
+			return;
+		}
+		
 		// use other function if the entity is a player
 		if(livingEntity instanceof Player) {
 			hidePlayerFromAll((Player)livingEntity);
@@ -240,6 +248,11 @@ public final class DisguiseManager {
 	}
 	
 	private static void hideEntityFromOne(Player observer, LivingEntity livingEntity) {
+		// do nothing if entity is invalid (dead or despawned)
+		if(!livingEntity.isValid()) {
+			return;
+		}
+		
 		// use other function if the entity is a player
 		if(livingEntity instanceof Player) {
 			hidePlayerFromOne(observer, (Player)livingEntity);
@@ -351,6 +364,11 @@ public final class DisguiseManager {
 	}
 	
 	private static void showEntityToAll(final LivingEntity livingEntity) {
+		// do nothing if entity is invalid (dead or despawned)
+		if(!livingEntity.isValid()) {
+			return;
+		}
+		
 		// use other function if the entity is a player
 		if(livingEntity instanceof Player) {
 			showPlayerToAll((Player)livingEntity);
@@ -392,6 +410,11 @@ public final class DisguiseManager {
 	}
 	
 	private static void showEntityToOne(final Player observer, final LivingEntity livingEntity) {
+		// do nothing if entity is invalid (dead or despawned)
+		if(!livingEntity.isValid()) {
+			return;
+		}
+		
 		// use other function if the entity is a player
 		if(livingEntity instanceof Player) {
 			showPlayerToOne(observer, (Player)livingEntity);

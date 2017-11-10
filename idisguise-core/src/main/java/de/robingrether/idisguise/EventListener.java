@@ -4,13 +4,16 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -144,6 +147,20 @@ public class EventListener implements Listener {
 				player.sendMessage(plugin.getLanguage().MOVE_AS_SHULKER);
 				mapLastMessageSent.put(player.getUniqueId(), System.currentTimeMillis());
 			}
+		}
+	}
+	
+	@EventHandler
+	public void onEntityDeath(EntityDeathEvent event) {
+		final LivingEntity livingEntity = event.getEntity();
+		if(DisguiseManager.isDisguised(livingEntity)) {
+			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+				
+				public void run() {
+					DisguiseManager.undisguise(livingEntity);
+				}
+				
+			}, 5L);
 		}
 	}
 	
