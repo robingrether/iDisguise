@@ -350,13 +350,30 @@ public final class DisguiseManager {
 		}
 	}
 	
-	private static void showEntityToAll(LivingEntity livingEntity) {	// TODO: implement delay for 1.8.x
+	private static void showEntityToAll(final LivingEntity livingEntity) {
 		// use other function if the entity is a player
 		if(livingEntity instanceof Player) {
 			showPlayerToAll((Player)livingEntity);
 			return;
 		}
 		
+		// are we in 1.9+ ?
+		if(VersionHelper.require1_9()) {
+			showEntityToAll0(livingEntity);
+		} else {
+			
+			// we have to delay the reappearance for 1.8.0 clients
+			Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), new Runnable() {
+				
+				public void run() {
+					showEntityToAll0(livingEntity);
+				}
+				
+			}, 10L);
+		}
+	}
+	
+	private static void showEntityToAll0(LivingEntity livingEntity) {
 		// do the actual sending and stuff
 		for(Player observer : Bukkit.getOnlinePlayers()) {
 			try {
@@ -374,13 +391,30 @@ public final class DisguiseManager {
 		// we don't care about scoreboard packets for entities
 	}
 	
-	private static void showEntityToOne(Player observer, LivingEntity livingEntity) {		// TODO: implement delay for 1.8.x
+	private static void showEntityToOne(final Player observer, final LivingEntity livingEntity) {
 		// use other function if the entity is a player
 		if(livingEntity instanceof Player) {
 			showPlayerToOne(observer, (Player)livingEntity);
 			return;
 		}
 		
+		// are we in 1.9+ ?
+		if(VersionHelper.require1_9()) {
+			showEntityToOne0(observer, livingEntity);
+		} else {
+			
+			// we have to delay the reappearance for 1.8.0 clients
+			Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), new Runnable() {
+				
+				public void run() {
+					showEntityToOne0(observer, livingEntity);
+				}
+				
+			}, 10L);
+		}
+	}
+	
+	private static void showEntityToOne0(Player observer, LivingEntity livingEntity) {
 		// update the entity tracker entry
 		try {
 			Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftPlayer_getHandle.invoke(observer)))), livingEntity.getEntityId());
