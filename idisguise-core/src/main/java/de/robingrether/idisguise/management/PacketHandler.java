@@ -89,7 +89,11 @@ public final class PacketHandler {
 						default: break;
 					}
 				}
-				if(mobDisguise.getCustomName() != null && !mobDisguise.getCustomName().isEmpty()) {
+				
+				if(showOriginalPlayerName) {
+					Entity_setCustomName.invoke(entity, livingEntity.getName());
+					Entity_setCustomNameVisible.invoke(entity, true);
+				} else if(mobDisguise.getCustomName() != null && !mobDisguise.getCustomName().isEmpty()) {
 					Entity_setCustomName.invoke(entity, mobDisguise.getCustomName());
 					Entity_setCustomNameVisible.invoke(entity, mobDisguise.isCustomNameVisible());
 				}
@@ -169,10 +173,6 @@ public final class PacketHandler {
 				Location location = livingEntity.getLocation();
 				Entity_setLocation.invoke(entity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 				Entity_setEntityId.invoke(entity, livingEntity.getEntityId());
-				if(showOriginalPlayerName) { //TODO
-					Entity_setCustomName.invoke(entity, livingEntity.getName());
-					Entity_setCustomNameVisible.invoke(livingEntity, true);
-				}
 				packets.add(PacketPlayOutSpawnEntityLiving_new.newInstance(entity));
 			} else if(disguise instanceof PlayerDisguise) {
 				if(livingEntity instanceof Player) {
