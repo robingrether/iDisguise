@@ -274,6 +274,7 @@ public class Reflection {
 	public static Method MinecraftServer_getServer;
 	public static Method MinecraftServer_getSessionService;
 	public static Method MinecraftServer_getUserCache;
+	public static Method MinecraftServer_getEntityByUID;
 	
 	public static Class<?> UserCache;
 	public static Method UserCache_getProfileById;

@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -20,7 +21,6 @@ import org.bukkit.scoreboard.Team;
 
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
-import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.management.channel.InjectedPlayerConnection;
 import de.robingrether.idisguise.management.util.DisguiseMap;
 
@@ -135,7 +135,7 @@ public final class DisguiseManager {
 	public static Set<Object> getDisguisedEntities() {
 		Set<UUID> origin = disguiseMap.getDisguisedEntities();
 		Set<Object> destination = new HashSet<Object>();
-		try {
+		if(VersionHelper.require1_12()) {
 			for(UUID disguisable : origin) {
 				Entity entity = Bukkit.getEntity(disguisable);
 				if(entity != null) {
@@ -147,7 +147,25 @@ public final class DisguiseManager {
 					}
 				}
 			}
-		} catch(Exception e) {
+		} else {
+			try {
+				Object minecraftServer = MinecraftServer_getServer.invoke(null);
+				for(UUID disguisable : origin) {
+					Entity entity = (Entity)MinecraftServer_getEntityByUID.invoke(minecraftServer, disguisable);
+					if(entity != null) {
+						destination.add(entity);
+					} else {
+						OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(disguisable);
+						if(offlinePlayer != null) {
+							destination.add(offlinePlayer);
+						}
+					}
+				}
+			} catch(Exception e) {
+				if(VersionHelper.debug()) {
+					iDisguise.getInstance().getLogger().log(Level.SEVERE, "An unexpected exception occured.", e);
+				}
+			}
 		}
 		return destination;
 	}
@@ -332,7 +350,7 @@ public final class DisguiseManager {
 		}
 	}
 	
-	private static void showEntityToAll(LivingEntity livingEntity) {
+	private static void showEntityToAll(LivingEntity livingEntity) {	// TODO: implement delay for 1.8.x
 		// use other function if the entity is a player
 		if(livingEntity instanceof Player) {
 			showPlayerToAll((Player)livingEntity);
@@ -356,7 +374,7 @@ public final class DisguiseManager {
 		// we don't care about scoreboard packets for entities
 	}
 	
-	private static void showEntityToOne(Player observer, LivingEntity livingEntity) {
+	private static void showEntityToOne(Player observer, LivingEntity livingEntity) {		// TODO: implement delay for 1.8.x
 		// use other function if the entity is a player
 		if(livingEntity instanceof Player) {
 			showPlayerToOne(observer, (Player)livingEntity);

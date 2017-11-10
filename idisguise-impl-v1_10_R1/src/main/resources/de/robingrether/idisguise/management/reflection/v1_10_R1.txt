@@ -153,6 +153,7 @@ MinecraftServer->C{nms}.MinecraftServer
 MinecraftServer_getServer->MMinecraftServer$getServer()
 MinecraftServer_getSessionService->MMinecraftServer$ay()
 MinecraftServer_getUserCache->MMinecraftServer$getUserCache()
+MinecraftServer_getEntityByUID->MMinecraftServer$a(java.util.UUID)
 
 PacketPlayInUseEntity->C{nms}.PacketPlayInUseEntity
 PacketPlayInUseEntity_entityId->FPacketPlayInUseEntity$a
