@@ -1,3 +1,14 @@
+STEP:
+  STEP: [step.stone]
+  STEP_CLOTH: [step.cloth]
+  STEP_GRASS: [step.grass]
+  STEP_GRAVEL: [step.gravel]
+  STEP_LADDER: [step.ladder]
+  STEP_SAND: [step.sand]
+  STEP_SNOW: [step.snow]
+  STEP_STONE: [step.stone]
+  STEP_WOOD: [step.wood]
+
 PLAYER:
   DEATH: [game.player.die]
   BIG_FALL: [game.player.hurt.fall.big]
@@ -61,7 +72,8 @@ DONKEY:
   HURT: [mob.horse.donkey.hit]
   SPLASH: [game.neutral.swim.splash]
   SWIM: [game.neutral.swim]
-  STEP: [mob.horse.soft, mob.horse.wood, mob.horse.gallop]
+  STEP: [mob.horse.soft, mob.horse.gallop]
+  STEP_WOOD: [mob.horse.wood]
   AMBIENT: [mob.horse.donkey.idle]
   ANGRY: [mob.horse.donkey.angry]
 
@@ -93,7 +105,8 @@ HORSE:  DEATH: [mob.horse.death]  BIG_FALL: [game.neutral.hurt.fall.big]
   HURT: [mob.horse.hit]
   SPLASH: [game.neutral.swim.splash]
   SWIM: [game.neutral.swim]
-  STEP: [mob.horse.soft, mob.horse.wood, mob.horse.gallop]
+  STEP: [mob.horse.soft, mob.horse.gallop]
+  STEP_WOOD: [mob.horse.wood]
   AMBIENT: [mob.horse.idle, mob.horse.breathe]
   ANGRY: [mob.horse.angry]
 
@@ -116,7 +129,8 @@ MULE:  DEATH: [mob.horse.donkey.death]
   HURT: [mob.horse.donkey.hit]
   SPLASH: [game.neutral.swim.splash]
   SWIM: [game.neutral.swim]
-  STEP: [mob.horse.soft, mob.horse.wood, mob.horse.gallop]
+  STEP: [mob.horse.soft, mob.horse.gallop]
+  STEP_WOOD: [mob.horse.wood]
   AMBIENT: [mob.horse.donkey.idle]
   ANGRY: [mob.horse.donkey.angry]
 
@@ -173,7 +187,8 @@ SKELETAL_HORSE:  DEATH: [mob.horse.skeleton.death]  BIG_FALL: [game.neutral.hu
   HURT: [mob.horse.skeleton.hit]
   SPLASH: [game.neutral.swim.splash]
   SWIM: [game.neutral.swim]
-  STEP: [mob.horse.step, mob.horse.step_wood, mob.horse.gallop]
+  STEP: [mob.horse.soft, mob.horse.gallop]
+  STEP_WOOD: [mob.horse.wood]
   AMBIENT: [mob.horse.skeleton.idle]
 
 SKELETON:  DEATH: [mob.skeleton.death]  BIG_FALL: [game.hostile.hurt.fall.big]
@@ -217,7 +232,8 @@ UNDEAD_HORSE:  DEATH: [mob.horse.zombie.death]  BIG_FALL: [game.neutral.hurt.f
   HURT: [mob.horse.zombie.hit]
   SPLASH: [game.neutral.swim.splash]
   SWIM: [game.neutral.swim]
-  STEP: [mob.horse.step, mob.horse.step_wood, mob.horse.gallop]
+  STEP: [mob.horse.soft, mob.horse.gallop]
+  STEP_WOOD: [mob.horse.wood]
   AMBIENT: [mob.horse.zombie.idle]
 
 VILLAGER:  DEATH: [mob.villager.death]  BIG_FALL: [game.neutral.hurt.fall.big]

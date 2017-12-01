@@ -742,7 +742,7 @@ public class iDisguise extends JavaPlugin {
 		}
 		if(args.length > 0) {
 			for(int i = 0; i < completions.size(); i++) {
-				if(!StringUtil.startsWithIgnoreCase(completions.get(i), args[args.length - 1])) {
+				if(!StringUtil.startsWithIgnoreCase(completions.get(i).replace("{", ""), args[args.length - 1])) {
 					completions.remove(i);
 					i--;
 				}
@@ -881,7 +881,7 @@ public class iDisguise extends JavaPlugin {
 	}
 	
 	/**
-	 * Checks if the plugin directory (= data folder) exist and creates such a directory if not.
+	 * Checks if the plugin directory (= data folder) exists and creates such a directory if not.
 	 * 
 	 * @return <code>true</code> if a file named 'debug' exists in that directory (which means that debug mode shall be enabled), <code>false</code> otherwise
 	 */

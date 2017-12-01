@@ -1,3 +1,18 @@
+STEP:
+  STEP: [block.generic.footsteps]
+  STEP_ANVIL: [block.anvil.step]
+  STEP_CLOTH: [block.cloth.step]
+  STEP_GLASS: [block.glass.step]
+  STEP_GRASS: [block.grass.step]
+  STEP_GRAVEL: [block.gravel.step]
+  STEP_LADDER: [block.ladder.step]
+  STEP_METAL: [block.metal.step]
+  STEP_SAND: [block.sand.step]
+  STEP_SLIME: [block.slime.step]
+  STEP_SNOW: [block.snow.step]
+  STEP_STONE: [block.stone.step]
+  STEP_WOOD: [block.wood.step]
+
 PLAYER:
   DEATH: [entity.player.death]
   BIG_FALL: [entity.player.big_fall]
@@ -63,7 +78,8 @@ DONKEY:
   HURT: [entity.donkey.hurt]
   SPLASH: [entity.generic.splash]
   SWIM: [entity.generic.swim]
-  STEP: [entity.horse.step, entity.horse.step_wood, entity.horse.gallop]
+  STEP: [entity.horse.step, entity.horse.gallop]
+  STEP_WOOD: [entity.horse.step_wood]
   AMBIENT: [entity.donkey.ambient, entity.donkey.chest]
   ANGRY: [entity.donkey.angry]
 
@@ -130,7 +146,8 @@ HORSE:  DEATH: [entity.horse.death]  BIG_FALL: [entity.generic.big_fall]
   HURT: [entity.horse.hurt]
   SPLASH: [entity.generic.splash]
   SWIM: [entity.generic.swim]
-  STEP: [entity.horse.step, entity.horse.step_wood, entity.horse.gallop]
+  STEP: [entity.horse.step, entity.horse.gallop]
+  STEP_WOOD: [entity.horse.step_wood]
   AMBIENT: [entity.horse.ambient, entity.horse.breathe]
   EAT: [entity.horse.eat]
   ANGRY: [entity.horse.angry]
@@ -179,7 +196,8 @@ MULE:  DEATH: [entity.mule.death]  BIG_FALL: [entity.generic.big_fall]
   HURT: [entity.mule.hurt]
   SPLASH: [entity.generic.splash]
   SWIM: [entity.generic.swim]
-  STEP: [entity.horse.step, entity.horse.step_wood, entity.horse.gallop]
+  STEP: [entity.horse.step, entity.horse.gallop]
+  STEP_WOOD: [entity.horse.step_wood]
   AMBIENT: [entity.mule.ambient, entity.mule.chest]
 
 MUSHROOM_COW:  DEATH: [entity.cow.death]  BIG_FALL: [entity.generic.big_fall]
@@ -263,7 +281,8 @@ SKELETAL_HORSE:  DEATH: [entity.skeleton_horse.death]  BIG_FALL: [entity.gener
   HURT: [entity.skeleton_horse.hurt]
   SPLASH: [entity.generic.splash]
   SWIM: [entity.generic.swim]
-  STEP: [entity.horse.step, entity.horse.step_wood, entity.horse.gallop]
+  STEP: [entity.horse.step, entity.horse.gallop]
+  STEP_WOOD: [entity.horse.step_wood]
   AMBIENT: [entity.skeleton_horse.ambient]
 
 SKELETON:  DEATH: [entity.skeleton.death]  BIG_FALL: [entity.hostile.big_fall]
@@ -316,7 +335,8 @@ UNDEAD_HORSE:  DEATH: [entity.zombie_horse.death]  BIG_FALL: [entity.generic.b
   HURT: [entity.zombie_horse.hurt]
   SPLASH: [entity.generic.splash]
   SWIM: [entity.generic.swim]
-  STEP: [entity.horse.step, entity.horse.step_wood, entity.horse.gallop]
+  STEP: [entity.horse.step, entity.horse.gallop]
+  STEP_WOOD: [entity.horse.step_wood]
   AMBIENT: [entity.zombie_horse.ambient]
 
 VEX:  DEATH: [entity.vex.death]  BIG_FALL: [entity.hostile.big_fall]
