@@ -26,11 +26,8 @@ public class Sounds {
 	}
 	
 	public static boolean setSoundsForEntity(DisguiseType type, Sounds sounds) {
-		if(type.isMob()) {
-			entitySounds.put(type, sounds);
-			return true;
-		}
-		return false;
+		entitySounds.put(type, sounds);
+		return true;
 	}
 	
 	public static String replaceSoundEffect(DisguiseType source, String soundEffect, Disguise target) {
