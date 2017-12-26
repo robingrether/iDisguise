@@ -46,7 +46,7 @@ public class Sounds {
 						targetType = targetType.fallback;
 						if(targetType == null) break;
 					}
-					return targetSoundEffect != null && !targetSoundEffect.isEmpty() ? targetSoundEffect : !stepSounds.getSoundEffect(sourceType).isEmpty() ? stepSounds.getSoundEffect(sourceType) : null;
+					return targetSoundEffect != null && !targetSoundEffect.isEmpty() ? targetSoundEffect : stepSounds.getSoundEffect(sourceType) != null && !stepSounds.getSoundEffect(sourceType).isEmpty() ? stepSounds.getSoundEffect(sourceType) : null;
 				}
 				return null;
 			}
