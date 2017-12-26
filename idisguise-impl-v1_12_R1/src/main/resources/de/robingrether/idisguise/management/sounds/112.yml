@@ -1,5 +1,5 @@
 STEP:
-  STEP: [block.generic.footsteps]
+  STEP: [block.stone.step]
   STEP_ANVIL: [block.anvil.step]
   STEP_CLOTH: [block.cloth.step]
   STEP_GLASS: [block.glass.step]
