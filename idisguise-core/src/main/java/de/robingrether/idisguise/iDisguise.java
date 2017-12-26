@@ -810,7 +810,9 @@ public class iDisguise extends JavaPlugin {
 				}
 			}
 		}
-		sender.sendMessage(language.HELP_TYPES.replace("%types%", builder.substring(0, builder.length() - 2)));
+		if(builder.length() > 2) {
+			sender.sendMessage(language.HELP_TYPES.replace("%types%", builder.substring(0, builder.length() - 2)));
+		}
 	}
 	
 	private boolean hasPermission(CommandSender sender, DisguiseType type) {
