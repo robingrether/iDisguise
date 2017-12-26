@@ -94,15 +94,8 @@ public class iDisguise extends JavaPlugin {
 		}
 		listener = new EventListener(this);
 		configuration = new Configuration(this);
-		configuration.loadData();
-		configuration.saveData();
 		language = new Language(this);
-		language.loadData();
-		language.saveData();
-		PacketHandler.showOriginalPlayerName = configuration.NAME_TAG_SHOWN;
-		PacketHandler.modifyPlayerListEntry = configuration.MODIFY_PLAYER_LIST_ENTRY;
-		DisguiseManager.modifyScoreboardPackets = PacketHandler.modifyScoreboardPackets = configuration.MODIFY_SCOREBOARD_PACKETS;
-		PacketHandler.replaceSoundEffects = configuration.REPLACE_SOUND_EFFECTS;
+		loadConfigFiles();
 		metrics = new Metrics(this);
 		metrics.addCustomChart(new Metrics.SingleLineChart("disguisedPlayers") {
 			
@@ -147,7 +140,7 @@ public class iDisguise extends JavaPlugin {
 			
 		});
 		if(configuration.KEEP_DISGUISE_SHUTDOWN) {
-			loadData();
+			loadDisguises();
 		}
 		getServer().getPluginManager().registerEvents(listener, this);
 		getServer().getServicesManager().register(DisguiseAPI.class, getAPI(), this, ServicePriority.Normal);
@@ -186,7 +179,7 @@ public class iDisguise extends JavaPlugin {
 		}
 		getServer().getScheduler().cancelTasks(this);
 		if(configuration.KEEP_DISGUISE_SHUTDOWN) {
-			saveData();
+			saveDisguises();
 		}
 		ChannelInjector.removeOnlinePlayers();
 		getLogger().log(Level.INFO, String.format("%s disabled!", getFullName()));
@@ -198,19 +191,12 @@ public class iDisguise extends JavaPlugin {
 			return;
 		}
 		if(configuration.KEEP_DISGUISE_SHUTDOWN) {
-			saveData();
+			saveDisguises();
 		}
 		enabled = false;
-		configuration.loadData();
-		configuration.saveData();
-		language.loadData();
-		language.saveData();
-		PacketHandler.showOriginalPlayerName = configuration.NAME_TAG_SHOWN;
-		PacketHandler.modifyPlayerListEntry = configuration.MODIFY_PLAYER_LIST_ENTRY;
-		DisguiseManager.modifyScoreboardPackets = PacketHandler.modifyScoreboardPackets = configuration.MODIFY_SCOREBOARD_PACKETS;
-		PacketHandler.replaceSoundEffects = configuration.REPLACE_SOUND_EFFECTS;
+		loadConfigFiles();
 		if(configuration.KEEP_DISGUISE_SHUTDOWN) {
-			loadData();
+			loadDisguises();
 		}
 		enabled = true;
 		DisguiseManager.resendPackets();
@@ -894,7 +880,24 @@ public class iDisguise extends JavaPlugin {
 		return new File(getDataFolder(), "debug").isFile();
 	}
 	
-	private void loadData() {
+	private void loadConfigFiles() {
+		// reload config
+		configuration.loadData();
+		configuration.saveData();
+		
+		// reload language file
+		language.loadData();
+		language.saveData();
+		
+		// reset config values
+		PacketHandler.showOriginalPlayerName = configuration.NAME_TAG_SHOWN;
+		PacketHandler.modifyPlayerListEntry = configuration.MODIFY_PLAYER_LIST_ENTRY;
+		DisguiseManager.modifyScoreboardPackets = PacketHandler.modifyScoreboardPackets = configuration.MODIFY_SCOREBOARD_PACKETS;
+		PacketHandler.replaceSoundEffects = configuration.REPLACE_SOUND_EFFECTS;
+		PacketHandler.bungeeCord = configuration.BUNGEE_CORD;
+	}
+	
+	private void loadDisguises() {
 		File dataFile = new File(getDataFolder(), "disguises.dat");
 		File oldDataFile = new File(getDataFolder(), "data.bin");
 		if(dataFile.exists()) {
@@ -908,7 +911,7 @@ public class iDisguise extends JavaPlugin {
 		}
 	}
 	
-	private void saveData() {
+	private void saveDisguises() {
 		File dataFile = new File(getDataFolder(), "disguises.dat");
 		SLAPI.saveMap(DisguiseManager.getDisguises(), dataFile);
 	}

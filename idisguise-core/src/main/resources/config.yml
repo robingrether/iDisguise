@@ -39,6 +39,10 @@ disguise:
    # e.g. a player disguised as a cow moos when he is hurt
    replace-sound-effects: REPLACE_SOUND_EFFECTS
    
+   # Change this to true if you use BungeeCord
+   # Explanation: BungeeCord breaks the standard player disguises, this option fixes that.
+   bungee-cord: BUNGEE_CORD
+   
 # Settings affecting the command and permission behavior of this plugin
 commands:
    

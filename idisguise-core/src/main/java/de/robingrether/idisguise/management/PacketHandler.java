@@ -34,6 +34,8 @@ public final class PacketHandler {
 	public static boolean modifyPlayerListEntry;
 	public static boolean replaceSoundEffects;
 	
+	public static boolean bungeeCord;
+	
 	public static Object[] getSpawnPackets(LivingEntity livingEntity) {
 		try {
 			Disguise disguise = DisguiseManager.getDisguise(livingEntity);
@@ -176,8 +178,11 @@ public final class PacketHandler {
 				packets.add(PacketPlayOutSpawnEntityLiving_new.newInstance(entity));
 			} else if(disguise instanceof PlayerDisguise) {
 				if(livingEntity instanceof Player) {
-					packets.add(PacketPlayOutNamedEntitySpawn_new.newInstance(entityLiving));
-					// don't modify anything here, skin is applied via player list item packet
+					Object spawnPacket = PacketPlayOutNamedEntitySpawn_new.newInstance(entityLiving);
+					PacketPlayOutNamedEntitySpawn_profileId.set(spawnPacket, formatUniqueId((UUID)PacketPlayOutNamedEntitySpawn_profileId.get(spawnPacket)));
+					
+					// don't modify anything else here, skin is applied via player list item packet
+					packets.add(spawnPacket);
 				} else {
 					PlayerDisguise playerDisguise = (PlayerDisguise)disguise;
 					Object gameProfile = ProfileHelper.getInstance().getGameProfile(livingEntity.getUniqueId(), playerDisguise.getSkinName(), playerDisguise.getDisplayName());
@@ -248,7 +253,7 @@ public final class PacketHandler {
 			if(disguise == null) {
 				return PlayerInfoData_new.newInstance(context, offlinePlayer.isOnline() ? CraftPlayer_getProfile.invoke(offlinePlayer) : CraftOfflinePlayer_getProfile.invoke(offlinePlayer), ping, gamemode, displayName);
 			} else if(disguise instanceof PlayerDisguise) {
-				return PlayerInfoData_new.newInstance(context, ProfileHelper.getInstance().getGameProfile(offlinePlayer.getUniqueId(), ((PlayerDisguise)disguise).getSkinName(), ((PlayerDisguise)disguise).getDisplayName()), ping, gamemode, modifyPlayerListEntry ? Array.get(CraftChatMessage_fromString.invoke(null, ((PlayerDisguise)disguise).getDisplayName()), 0) : displayName != null ? displayName : Array.get(CraftChatMessage_fromString.invoke(null, offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName()), 0));
+				return PlayerInfoData_new.newInstance(context, ProfileHelper.getInstance().getGameProfile(formatUniqueId(offlinePlayer.getUniqueId()), ((PlayerDisguise)disguise).getSkinName(), ((PlayerDisguise)disguise).getDisplayName()), ping, gamemode, modifyPlayerListEntry ? Array.get(CraftChatMessage_fromString.invoke(null, ((PlayerDisguise)disguise).getDisplayName()), 0) : displayName != null ? displayName : Array.get(CraftChatMessage_fromString.invoke(null, offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName()), 0));
 			} else if(!modifyPlayerListEntry) {
 				return PlayerInfoData_new.newInstance(context, offlinePlayer.isOnline() ? CraftPlayer_getProfile.invoke(offlinePlayer) : CraftOfflinePlayer_getProfile.invoke(offlinePlayer), ping, gamemode, displayName);
 			}
@@ -303,6 +308,10 @@ public final class PacketHandler {
 			return name;
 		}
 		return null;
+	}
+	
+	public static UUID formatUniqueId(UUID origin) {
+		return bungeeCord ? new UUID(origin.getMostSignificantBits() & 0xFFFFFFFFFFFF0FFFL | 0x0000000000005000, origin.getLeastSignificantBits()) : origin;
 	}
 	
 	public static Object clonePacket(Object packet) {
