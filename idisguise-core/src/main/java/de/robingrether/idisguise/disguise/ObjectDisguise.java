@@ -110,6 +110,8 @@ public class ObjectDisguise extends Disguise {
 			throw new IllegalArgumentException("DisguiseType must be an object");
 		}
 		switch(type) {
+			case AREA_EFFECT_CLOUD:
+				return 3;
 			case ARMOR_STAND:
 				return 78;
 			case BOAT:

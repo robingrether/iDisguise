@@ -8,7 +8,9 @@ import de.robingrether.util.StringUtil;
 
 public class VersionHelper {
 	
-	private static final String[] versions = {"v1_8_R1", "v1_8_R2", "v1_8_R3", "v1_9_R1", "v1_9_R2", "v1_10_R1", "v1_11_R1", "v1_12_R1"};
+	public static final String[] VERSIONS = {"v1_8_R1", "v1_8_R2", "v1_8_R3", "v1_9_R1", "v1_9_R2", "v1_10_R1", "v1_11_R1", "v1_12_R1"};
+	public static final String EARLIEST = VERSIONS[0];
+	
 	private static boolean initialized = false;
 	private static String versionCode, orgBukkitCraftbukkit = "org.bukkit.craftbukkit", netMinecraftServer = "net.minecraft.server", orgBukkitCraftbukkitVersioned, netMinecraftServerVersioned;
 	private static boolean debug, require1_9, require1_10, require1_11, require1_12;
@@ -30,10 +32,10 @@ public class VersionHelper {
 	}
 	
 	public static boolean requireVersion(String requiredVersion) {
-		if(!StringUtil.equals(requiredVersion, versions)) {
+		if(!StringUtil.equals(requiredVersion, VERSIONS)) {
 			return false;
 		}
-		for(String version : versions) {
+		for(String version : VERSIONS) {
 			if(version.equals(requiredVersion)) {
 				return true;
 			} else if(version.equals(versionCode)) {

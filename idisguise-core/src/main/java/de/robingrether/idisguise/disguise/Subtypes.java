@@ -103,7 +103,7 @@ public class Subtypes {
 	 * @param disguiseClass the disguise class
 	 * @param methodName the method to call
 	 * @param argument the command argument to bind this to
-	 * @param parameterType the parameter type to pass to the method (<code>int.class</code>, <code>String.class</code>, <code>String[].class</code> and enum classes are supported)
+	 * @param parameterType the parameter type to pass to the method (<code>int.class</code>, <code>float.class</code>, <code>String.class</code>, <code>String[].class</code> and enum classes are supported)
 	 */
 	public static void registerParameterizedSubtype(Class<? extends Disguise> disguiseClass, String methodName, String argument, Class<?> parameterType) {
 		if(!registeredClasses2.containsKey(disguiseClass)) {
@@ -239,6 +239,8 @@ public class Subtypes {
 		private void apply(Disguise disguise, String parameter) throws InvocationTargetException, IllegalAccessException {
 			if(parameterType == int.class) {
 				method.invoke(disguise, Integer.parseInt(parameter));
+			} else if(parameterType == float.class) {
+				method.invoke(disguise, Float.parseFloat(parameter));
 			} else if(parameterType == String.class) {
 				method.invoke(disguise, parameter);
 			} else if(parameterType == String[].class) {

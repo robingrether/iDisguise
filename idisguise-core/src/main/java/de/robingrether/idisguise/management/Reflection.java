@@ -312,6 +312,14 @@ public class Reflection {
 	public static Class<?> PacketPlayOutEntityDestroy;
 	public static Field PacketPlayOutEntityDestroy_entityIds;
 	
+	public static Class<?> EntityAreaEffectCloud;
+	public static Method EntityAreaEffectCloud_setColor;
+	public static Method EntityAreaEffectCloud_setParticle;
+	public static Method EntityAreaEffectCloud_setRadius;
+	
+	public static Class<?> EnumParticle;
+	public static Method EnumParticle_valueOf;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");

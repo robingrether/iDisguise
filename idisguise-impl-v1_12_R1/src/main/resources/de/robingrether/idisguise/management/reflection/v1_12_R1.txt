@@ -37,6 +37,11 @@ Entity_getBukkitEntity->MEntity$getBukkitEntity()
 EntityAgeable->C{nms}.EntityAgeable
 EntityAgeable_setAge->MEntityAgeable$setAge(int)
 
+EntityAreaEffectCloud->C{nms}.EntityAreaEffectCloud
+EntityAreaEffectCloud_setColor->MEntityAreaEffectCloud$setColor(int)
+EntityAreaEffectCloud_setParticle->MEntityAreaEffectCloud$setParticle({nms}.EnumParticle)
+EntityAreaEffectCloud_setRadius->MEntityAreaEffectCloud$setRadius(float)
+
 EntityArmorStand->C{nms}.EntityArmorStand
 EntityArmorStand_setArms->MEntityArmorStand$setArms(boolean)
 
@@ -127,6 +132,9 @@ EnumEntityUseAction_ATTACK->FEnumEntityUseAction$ATTACK
 
 EnumGamemode->C{nms}.EnumGamemode
 EnumGamemode_SURVIVAL->FEnumGamemode$SURVIVAL
+
+EnumParticle->C{nms}.EnumParticle
+EnumParticle_valueOf->MEnumParticle$valueOf(java.lang.String)
 
 EnumPlayerInfoAction->C{nms}.PacketPlayOutPlayerInfo$EnumPlayerInfoAction
 EnumPlayerInfoAction_ADD_PLAYER->FEnumPlayerInfoAction$ADD_PLAYER

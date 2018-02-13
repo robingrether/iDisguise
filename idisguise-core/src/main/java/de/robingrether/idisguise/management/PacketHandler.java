@@ -234,6 +234,15 @@ public final class PacketHandler {
 					}
 					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), 0));
 					packets.add(PacketPlayOutEntityMetadata_new_full.newInstance(livingEntity.getEntityId(), Entity_getDataWatcher.invoke(entity), true));
+				} else if(EntityAreaEffectCloud.isInstance(entity)) {
+					if(objectDisguise instanceof AreaEffectCloudDisguise) {
+						AreaEffectCloudDisguise aecDisguise = (AreaEffectCloudDisguise)objectDisguise;
+						EntityAreaEffectCloud_setRadius.invoke(entity, aecDisguise.getRadius());
+						EntityAreaEffectCloud_setColor.invoke(entity, aecDisguise.getColor().asRGB());
+						EntityAreaEffectCloud_setParticle.invoke(entity, EnumParticle_valueOf.invoke(null, aecDisguise.getParticle().name()));
+					}
+					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), 0));
+					packets.add(PacketPlayOutEntityMetadata_new_full.newInstance(livingEntity.getEntityId(), Entity_getDataWatcher.invoke(entity), true));
 				} else {
 					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), 0));
 				}
