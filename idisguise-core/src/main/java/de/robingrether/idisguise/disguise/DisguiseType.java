@@ -40,7 +40,7 @@ public enum DisguiseType {
 	ILLUSIONER(Type.MOB, "v1_12_R1", MobDisguise.class, "EntityIllagerIllusioner", "illusioner"),
 	IRON_GOLEM(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityIronGolem", "iron_golem", "iron-golem", "irongolem", "golem"),
 	LLAMA(Type.MOB, "v1_11_R1", LlamaDisguise.class, "EntityLlama", "llama"),
-	MAGMA_CUBE(Type.MOB, VersionHelper.EARLIEST, SizedDisguise.class, "EntityMagmaCube", "magma_cube", "magma-cube", "magmacube", "magma", "lava_cube", "lava-cube", "lavacube", "lava", "magma_slime", "magma-slime", "magmaslime", "lava_slime", "lava-slime", "lavaslime"),
+	MAGMA_CUBE(Type.MOB, VersionHelper.EARLIEST, SizedDisguise.class, "EntityMagmaCube", "magma_cube", "magma-cube", "magmacube", "magma", "magma_slime", "magma-slime", "magmaslime"),
 	MULE(Type.MOB, VersionHelper.EARLIEST, ChestedHorseDisguise.class, "EntityHorseMule", "mule"),
 	MUSHROOM_COW(Type.MOB, VersionHelper.EARLIEST, AgeableDisguise.class, "EntityMushroomCow", "mushroom_cow", "mushroom-cow", "mushroomcow", "mushroom", "mooshroom"),
 	OCELOT(Type.MOB, VersionHelper.EARLIEST, OcelotDisguise.class, "EntityOcelot", "ocelot", "cat"),
@@ -72,7 +72,7 @@ public enum DisguiseType {
 	
 	PLAYER(Type.PLAYER, VersionHelper.EARLIEST, PlayerDisguise.class, "EntityPlayer"),
 	
-	AREA_EFFECT_CLOUD(Type.OBJECT, "v1_9_R1", AreaEffectCloudDisguise.class, "EntityAreaEffectCloud", "area_effect_cloud", "cloud"),
+	AREA_EFFECT_CLOUD(Type.OBJECT, "v1_9_R1", AreaEffectCloudDisguise.class, "EntityAreaEffectCloud", "area_effect_cloud"),
 	ARMOR_STAND(Type.OBJECT, VersionHelper.EARLIEST, ArmorStandDisguise.class, "EntityArmorStand", "armor_stand", "armor-stand", "armorstand"),
 	BOAT(Type.OBJECT, VersionHelper.EARLIEST, ObjectDisguise.class, "EntityBoat", "boat"),
 	ENDER_CRYSTAL(Type.OBJECT, VersionHelper.EARLIEST, ObjectDisguise.class, "EntityEnderCrystal", "ender_crystal", "ender-crystal", "endercrystal", "crystal"),

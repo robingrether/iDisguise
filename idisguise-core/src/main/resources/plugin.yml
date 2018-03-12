@@ -414,6 +414,7 @@ permissions:
    iDisguise.object.*:
       default: false
       children:
+         iDisguise.object.area_effect_cloud: true
          iDisguise.object.armor_stand: true
          iDisguise.object.boat: true
          iDisguise.object.custom-name: true
@@ -423,6 +424,8 @@ permissions:
          iDisguise.object.item: true
          iDisguise.object.item.material.*: true
          iDisguise.object.minecart: true
+   iDisguise.object.area_effect_cloud:
+      default: false
    iDisguise.object.armor_stand:
       default: false
    iDisguise.object.boat:
