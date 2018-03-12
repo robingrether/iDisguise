@@ -88,6 +88,9 @@ EntitySkeleton_setSkeletonType->MEntitySkeleton$setSkeletonType(int)
 EntitySlime->C{nms}.EntitySlime
 EntitySlime_setSize->MEntitySlime$setSize(int)
 
+EntityTameableAnimal->C{nms}.EntityTameableAnimal
+EntityTameableAnimal_setSitting->MEntityTameableAnimal$setSitting(boolean)
+
 EntityTracker->C{nms}.EntityTracker
 EntityTracker_trackedEntities->FEntityTracker$trackedEntities
 

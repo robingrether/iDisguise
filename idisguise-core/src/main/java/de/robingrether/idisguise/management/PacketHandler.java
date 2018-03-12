@@ -130,7 +130,9 @@ public final class PacketHandler {
 						InventorySubcontainer_setItem.invoke(inventoryChest, 1, CraftItemStack_asNMSCopy.invoke(null, llamaDisguise.getSaddle().equals(SaddleColor.NOT_SADDLED) ? null : new ItemStack(Material.CARPET, 1, (short)llamaDisguise.getSaddle().ordinal())));
 						EntityHorseChestedAbstract_setCarryingChest.invoke(entity, llamaDisguise.hasChest());
 					} else if(mobDisguise instanceof OcelotDisguise) {
-						EntityOcelot_setCatType.invoke(entity, ((OcelotDisguise)mobDisguise).getCatType().getId());
+						OcelotDisguise ocelotDisguise = (OcelotDisguise)mobDisguise;
+						EntityOcelot_setCatType.invoke(entity, ocelotDisguise.getCatType().getId());
+						EntityTameableAnimal_setSitting.invoke(entity, ocelotDisguise.isSitting());
 					} else if(mobDisguise instanceof PigDisguise) {
 						EntityPig_setSaddle.invoke(entity, ((PigDisguise)mobDisguise).isSaddled());
 					} else if(mobDisguise instanceof RabbitDisguise) {
@@ -144,6 +146,7 @@ public final class PacketHandler {
 						EntityWolf_setCollarColor.invoke(entity, EnumColor_fromColorIndex.invoke(null, wolfDisguise.getCollarColor().getWoolData()));
 						EntityWolf_setTamed.invoke(entity, wolfDisguise.isTamed());
 						EntityWolf_setAngry.invoke(entity, wolfDisguise.isAngry());
+						EntityTameableAnimal_setSitting.invoke(entity, wolfDisguise.isSitting());
 					} else if(mobDisguise instanceof ZombieVillagerDisguise) {
 						if(VersionHelper.require1_11()) {
 							EntityZombieVillager_setProfession.invoke(entity, ((ZombieVillagerDisguise)mobDisguise).getProfession().ordinal());
@@ -159,7 +162,9 @@ public final class PacketHandler {
 					EndermanDisguise endermanDisguise = (EndermanDisguise)mobDisguise;
 					EntityEnderman_setCarried.invoke(entity, Block_fromLegacyData.invoke(Block_getById.invoke(null, endermanDisguise.getBlockInHand().getId()), endermanDisguise.getBlockInHandData()));
 				} else if(mobDisguise instanceof ParrotDisguise) {
-					EntityParrot_setVariant.invoke(entity, ((ParrotDisguise)mobDisguise).getVariant().ordinal());
+					ParrotDisguise parrotDisguise = (ParrotDisguise)mobDisguise;
+					EntityParrot_setVariant.invoke(entity, parrotDisguise.getVariant().ordinal());
+					EntityTameableAnimal_setSitting.invoke(entity, parrotDisguise.isSitting());
 				} else if(mobDisguise instanceof SizedDisguise) {
 					if(VersionHelper.require1_11()) {
 						EntitySlime_setSize.invoke(entity, ((SizedDisguise)mobDisguise).getSize(), false);

@@ -12,6 +12,7 @@ public class ParrotDisguise extends MobDisguise {
 	
 	private static final long serialVersionUID = -6569588312342758585L;
 	private Variant variant;
+	private boolean sitting;
 	
 	/**
 	 * Creates an instance.
@@ -53,16 +54,32 @@ public class ParrotDisguise extends MobDisguise {
 	}
 	
 	/**
+	 * @since 5.7.1
+	 */
+	public boolean isSitting() {
+		return sitting;
+	}
+	
+	/**
+	 * @since 5.7.1
+	 */
+	public void setSitting(boolean sitting) {
+		this.sitting = sitting;
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + variant.name().toLowerCase(Locale.ENGLISH);
+		return String.format("%s; %s; %s", super.toString(), variant.name().toLowerCase(Locale.ENGLISH), sitting ? "sitting" : "not-sitting");
 	}
 	
 	static {
 		for(Variant variant : Variant.values()) {
 			Subtypes.registerSubtype(ParrotDisguise.class, "setVariant", variant, variant.name().toLowerCase(Locale.ENGLISH));
 		}
+		Subtypes.registerSubtype(ParrotDisguise.class, "setSitting", true, "sitting");
+		Subtypes.registerSubtype(ParrotDisguise.class, "setSitting", false, "not-sitting");
 	}
 	
 	/**

@@ -320,6 +320,9 @@ public class Reflection {
 	public static Class<?> EnumParticle;
 	public static Method EnumParticle_valueOf;
 	
+	public static Class<?> EntityTameableAnimal;
+	public static Method EntityTameableAnimal_setSitting;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");

@@ -14,6 +14,7 @@ public class OcelotDisguise extends AgeableDisguise {
 	
 	private static final long serialVersionUID = -1849874936924669239L;
 	private Type catType;
+	private boolean sitting;
 	
 	/**
 	 * Creates an instance.
@@ -57,16 +58,32 @@ public class OcelotDisguise extends AgeableDisguise {
 	}
 	
 	/**
+	 * @since 5.7.1
+	 */
+	public boolean isSitting() {
+		return sitting;
+	}
+	
+	/**
+	 * @since 5.7.1
+	 */
+	public void setSitting(boolean sitting) {
+		this.sitting = sitting;
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + catType.name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", "");
+		return String.format("%s; %s; %s", super.toString(), catType.name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", ""), sitting ? "sitting" : "not-sitting");
 	}
 	
 	static {
 		for(Type catType : Type.values()) {
 			Subtypes.registerSubtype(OcelotDisguise.class, "setCatType", catType, catType.name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", ""));
 		}
+		Subtypes.registerSubtype(OcelotDisguise.class, "setSitting", true, "sitting");
+		Subtypes.registerSubtype(OcelotDisguise.class, "setSitting", false, "not-sitting");
 	}
 	
 }
