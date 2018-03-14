@@ -393,7 +393,7 @@ public class iDisguise extends JavaPlugin {
 					boolean match = false;
 					List<String> unknown_args = new ArrayList<String>(Arrays.asList(args));
 					for(Iterator<String> iterator = unknown_args.iterator(); iterator.hasNext(); ) {
-						DisguiseType type = DisguiseType.Matcher.match(iterator.next().toLowerCase(Locale.ENGLISH));
+						DisguiseType type = DisguiseType.fromString(iterator.next());
 						if(type != null) {
 							if(match) {
 								sender.sendMessage(language.WRONG_USAGE_TWO_DISGUISE_TYPES);
@@ -619,13 +619,13 @@ public class iDisguise extends JavaPlugin {
 					}
 					for(DisguiseType type : DisguiseType.values()) {
 						if(type.isAvailable() && !type.isPlayer()) {
-							completions.add(type.getDefaultCommandArgument());
+							completions.add(type.getCustomCommandArgument());
 						}
 					}
 				}
 				Disguise disguise = DisguiseManager.isDisguised(player) ? DisguiseManager.getDisguise(player).clone() : null;
 				for(String argument : args) {
-					DisguiseType type = DisguiseType.Matcher.match(argument.toLowerCase(Locale.ENGLISH));
+					DisguiseType type = DisguiseType.fromString(argument);
 					if(type != null) {
 						try {
 							disguise = type.newInstance();
@@ -682,13 +682,13 @@ public class iDisguise extends JavaPlugin {
 						}
 						for(DisguiseType type : DisguiseType.values()) {
 							if(!type.isPlayer() && type.isAvailable() && hasPermission(sender, type.newInstance())) {
-								completions.add(type.getDefaultCommandArgument());
+								completions.add(type.getCustomCommandArgument());
 							}
 						}
 					}
 					Disguise disguise = disguisable instanceof OfflinePlayer ? DisguiseManager.isDisguised((OfflinePlayer)disguisable) ? DisguiseManager.getDisguise((OfflinePlayer)disguisable).clone() : null : DisguiseManager.isDisguised((LivingEntity)disguisable) ? DisguiseManager.getDisguise((LivingEntity)disguisable).clone() : null;
 					for(String argument : args) {
-						DisguiseType type = DisguiseType.Matcher.match(argument.toLowerCase(Locale.ENGLISH));
+						DisguiseType type = DisguiseType.fromString(argument);
 						if(type != null) {
 							try {
 								disguise = type.newInstance();
@@ -791,7 +791,7 @@ public class iDisguise extends JavaPlugin {
 			if(!type.isPlayer()) {
 				String format = !type.isAvailable() ? language.HELP_TYPES_NOT_SUPPORTED : hasPermission(sender, type) ? language.HELP_TYPES_AVAILABLE : language.HELP_TYPES_NO_PERMISSION;
 				if(format.contains("%type%")) {	
-					builder.append(format.replace("%type%", type.getDefaultCommandArgument()));
+					builder.append(format.replace("%type%", type.getCustomCommandArgument()));
 					builder.append(color + ", ");
 				}
 			}
@@ -895,6 +895,27 @@ public class iDisguise extends JavaPlugin {
 		DisguiseManager.modifyScoreboardPackets = PacketHandler.modifyScoreboardPackets = configuration.MODIFY_SCOREBOARD_PACKETS;
 		PacketHandler.replaceSoundEffects = configuration.REPLACE_SOUND_EFFECTS;
 		PacketHandler.bungeeCord = configuration.BUNGEE_CORD;
+		
+		// load disguise aliases
+		try {
+			for(DisguiseType type : DisguiseType.values()) {
+				if(!type.isPlayer()) {
+					String value = (String)Language.class.getDeclaredField("DISGUISE_ALIAS_" + type.name()).get(language);
+					if(StringUtil.isNotBlank(value)) {
+						String[] aliases = value.split("\\s*,\\s*");
+						for(String alias : aliases) {
+							if(StringUtil.isNotBlank(alias) && alias.matches("!?[A-Za-z0-9-_]+")) {
+								if(alias.startsWith("!"))
+									type.setCustomCommandArgument(alias.substring(1));
+								else
+									type.addCustomCommandArgument(alias);
+							}
+						}
+					}
+				}
+			}
+		} catch(Exception e) { // fail silently
+		}
 	}
 	
 	private void loadDisguises() {
