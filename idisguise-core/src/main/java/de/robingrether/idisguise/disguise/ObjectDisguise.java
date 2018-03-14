@@ -82,7 +82,7 @@ public class ObjectDisguise extends Disguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; custom-name=" + customName + "; " + (customNameVisible ? "custom-name-visible" : "custom-name-invisible");
+		return String.format("%s; custom-name=%s; %s", super.toString(), customName, customNameVisible ? "custom-name-visible" : "custom-name-invisible");
 	}
 	
 	/**
