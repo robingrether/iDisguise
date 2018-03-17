@@ -40,8 +40,9 @@ public class Language {
 	public String UNDISGUISE_NOT_DISGUISED_OTHER = ChatColor.RED + "%player% is not disguised.";
 	public String UNDISGUISE_SUCCESS_SELF = ChatColor.GOLD + "You undisguised.";
 	public String UNDISGUISE_SUCCESS_OTHER = ChatColor.GOLD + "%player% undisguised.";
-	public String UNDISGUISE_SUCCESS_ALL = ChatColor.GOLD + "%share% out of %total% disguised players undisguised.";
-	public String UNDISGUISE_SUCCESS_ALL_IGNORE = ChatColor.GOLD + "Undisguised every disguised player ignoring other plugins.";
+	public String UNDISGUISE_SUCCESS_ALL_ONLINE = ChatColor.GOLD + "%share% out of %total% online disguised players undisguised.";
+	public String UNDISGUISE_SUCCESS_ALL_OFFLINE = ChatColor.GOLD + "%share% out of %total% offline disguised players undisguised.";
+	public String UNDISGUISE_SUCCESS_ALL_ENTITIES = ChatColor.GOLD + "%share% out of %total% disguised entities undisguised.";
 	public String HELP_INFO = ChatColor.GREEN + "%name% %version% - Help";
 	public String HELP_BASE = ChatColor.GOLD + (ChatColor.ITALIC + " %command% " + ChatColor.GOLD + "- %description%");
 	public String HELP_TYPES = ChatColor.GRAY + "Types: %types%";
@@ -59,7 +60,7 @@ public class Language {
 	public String HELP_STATUS_SELF = "Shows your disguise status";
 	public String HELP_STATUS_OTHER = "Shows a player's disguise status";
 	public String HELP_UNDISGUISE_SELF = "Undisguise yourself";
-	public String HELP_UNDISGUISE_ALL = "Undisguise everyone";
+	public String HELP_UNDISGUISE_ALL_NEW = "Undisguise everyone (*), all online players (*o), all players (*p) or all entities (*e)";
 	public String HELP_UNDISGUISE_OTHER = "Undisguise a player";
 	public String HELP_DISGUISE_SELF = "Disguise yourself as a mob with optional subtypes";
 	public String HELP_DISGUISE_OTHER = "Disguise a player as a mob with optional subtypes";

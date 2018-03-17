@@ -485,43 +485,101 @@ public class iDisguise extends JavaPlugin {
 				} else {
 					sender.sendMessage(language.UNDISGUISE_CONSOLE);
 				}
-			} else if(args[0].equals("*")) {
-				if(sender.hasPermission("iDisguise.undisguise.all")) {	
-					if(args.length > 1 && args[1].equalsIgnoreCase("ignore")) {
-						DisguiseManager.undisguiseAll();
-						sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL_IGNORE);
-					} else {
-						Set<Object> disguisedEntities = DisguiseManager.getDisguisedEntities();
-						int share = 0, total = disguisedEntities.size();
-						for(Object disguisable : disguisedEntities) {
-							if(disguisable instanceof OfflinePlayer) {
-								OfflinePlayer offlinePlayer = (OfflinePlayer)disguisable;
-								if(offlinePlayer.isOnline()) {
-									UndisguiseEvent event = new UndisguiseEvent(offlinePlayer.getPlayer(), DisguiseManager.getDisguise(offlinePlayer), true);
-									getServer().getPluginManager().callEvent(event);
-									if(!event.isCancelled()) {
-										DisguiseManager.undisguise(offlinePlayer);
-										share++;
-									}
-								} else {
-									OfflinePlayerUndisguiseEvent event = new OfflinePlayerUndisguiseEvent(offlinePlayer, DisguiseManager.getDisguise(offlinePlayer), true);
-									getServer().getPluginManager().callEvent(event);
-									if(!event.isCancelled()) {
-										DisguiseManager.undisguise(offlinePlayer);
-										share++;
-									}
-								}
-							} else {
-								LivingEntity livingEntity = (LivingEntity)disguisable;
-								EntityUndisguiseEvent event = new EntityUndisguiseEvent(livingEntity, DisguiseManager.getDisguise(livingEntity), true);
-								getServer().getPluginManager().callEvent(event);
-								if(!event.isCancelled()) {
-									DisguiseManager.undisguise(livingEntity);
-									share++;
-								}
+			} else if(args[0].startsWith("*")) {
+				args[0] = args[0].toLowerCase(Locale.ENGLISH);
+				if(sender.hasPermission("iDisguise.undisguise.all")) {
+					if(args[0].matches("\\*[eop]?")) {
+						boolean entities, players, offline;
+						entities = players = offline = true;
+						if(args[0].length() == 2) {
+							switch(args[0].charAt(1)) {
+								case 'e':
+									players = offline = false;
+									break;
+								case 'o':
+									offline = false;
+								case 'p':
+									entities = false;
+									break;
 							}
 						}
-						sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL.replace("%share%", Integer.toString(share)).replace("%total%", Integer.toString(total)));
+						if(args.length > 1 && args[1].equalsIgnoreCase("ignore")) {
+							Set<Object> disguisedEntities = DisguiseManager.getDisguisedEntities();
+							int[] share = {0, 0, 0}, total = {0, 0, 0};
+							for(Object disguisable : disguisedEntities) {
+								if(disguisable instanceof OfflinePlayer) {
+									if(!players) continue;
+									OfflinePlayer offlinePlayer = (OfflinePlayer)disguisable;
+									if(offlinePlayer.isOnline()) {
+										total[1]++;
+										DisguiseManager.undisguise(offlinePlayer);
+										share[1]++;
+									} else {
+										if(!offline) continue;
+										total[2]++;
+										DisguiseManager.undisguise(offlinePlayer);
+										share[2]++;
+									}
+								} else {
+									if(!entities) continue;
+									total[0]++;
+									LivingEntity livingEntity = (LivingEntity)disguisable;
+									DisguiseManager.undisguise(livingEntity);
+									share[0]++;
+								}
+							}
+							if(players)
+								sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL_ONLINE.replace("%share%", Integer.toString(share[1])).replace("%total%", Integer.toString(total[1])));
+							if(offline)
+								sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL_OFFLINE.replace("%share%", Integer.toString(share[2])).replace("%total%", Integer.toString(total[2])));
+							if(entities)
+								sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL_ENTITIES.replace("%share%", Integer.toString(share[0])).replace("%total%", Integer.toString(total[0])));
+						} else {
+							Set<Object> disguisedEntities = DisguiseManager.getDisguisedEntities();
+							int[] share = {0, 0, 0}, total = {0, 0, 0};
+							for(Object disguisable : disguisedEntities) {
+								if(disguisable instanceof OfflinePlayer) {
+									if(!players) continue;
+									OfflinePlayer offlinePlayer = (OfflinePlayer)disguisable;
+									if(offlinePlayer.isOnline()) {
+										total[1]++;
+										UndisguiseEvent event = new UndisguiseEvent(offlinePlayer.getPlayer(), DisguiseManager.getDisguise(offlinePlayer), true);
+										getServer().getPluginManager().callEvent(event);
+										if(!event.isCancelled()) {
+											DisguiseManager.undisguise(offlinePlayer);
+											share[1]++;
+										}
+									} else {
+										if(!offline) continue;
+										total[2]++;
+										OfflinePlayerUndisguiseEvent event = new OfflinePlayerUndisguiseEvent(offlinePlayer, DisguiseManager.getDisguise(offlinePlayer), true);
+										getServer().getPluginManager().callEvent(event);
+										if(!event.isCancelled()) {
+											DisguiseManager.undisguise(offlinePlayer);
+											share[2]++;
+										}
+									}
+								} else {
+									if(!entities) continue;
+									total[0]++;
+									LivingEntity livingEntity = (LivingEntity)disguisable;
+									EntityUndisguiseEvent event = new EntityUndisguiseEvent(livingEntity, DisguiseManager.getDisguise(livingEntity), true);
+									getServer().getPluginManager().callEvent(event);
+									if(!event.isCancelled()) {
+										DisguiseManager.undisguise(livingEntity);
+										share[0]++;
+									}
+								}
+							}
+							if(players)
+								sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL_ONLINE.replace("%share%", Integer.toString(share[1])).replace("%total%", Integer.toString(total[1])));
+							if(offline)
+								sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL_OFFLINE.replace("%share%", Integer.toString(share[2])).replace("%total%", Integer.toString(total[2])));
+							if(entities)
+								sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL_ENTITIES.replace("%share%", Integer.toString(share[0])).replace("%total%", Integer.toString(total[0])));
+						}
+					} else {
+						sender.sendMessage(language.WRONG_USAGE_UNKNOWN_ARGUMENTS.replace("%arguments%", args[0]));
 					}
 				} else {
 					sender.sendMessage(language.NO_PERMISSION);
@@ -706,7 +764,7 @@ public class iDisguise extends JavaPlugin {
 		} else if(command.getName().equalsIgnoreCase("undisguise")) {
 			if(args.length < 2) {
 				if(sender.hasPermission("iDisguise.undisguise.all")) {
-					completions.add("*");
+					completions.addAll(Arrays.asList("*", "*e", "*o", "*p"));
 				}
 				if(sender.hasPermission("iDisguise.undisguise.others")) {
 					for(Player player : Bukkit.getOnlinePlayers()) {
@@ -773,7 +831,7 @@ public class iDisguise extends JavaPlugin {
 			sender.sendMessage(language.HELP_BASE.replace("%command%", undisguiseCommand).replace("%description%", language.HELP_UNDISGUISE_SELF));
 		}
 		if(sender.hasPermission("iDisguise.undisguise.all")) {
-			sender.sendMessage(language.HELP_BASE.replace("%command%", undisguiseCommand + " * [ignore]").replace("%description%", language.HELP_UNDISGUISE_ALL));
+			sender.sendMessage(language.HELP_BASE.replace("%command%", undisguiseCommand + " <*/*o/*p/*e> [ignore]").replace("%description%", language.HELP_UNDISGUISE_ALL_NEW));
 		}
 		if(sender.hasPermission("iDisguise.undisguise.others")) {
 			sender.sendMessage(language.HELP_BASE.replace("%command%", undisguiseCommand + " <target> [ignore]").replace("%description%", language.HELP_UNDISGUISE_OTHER));
