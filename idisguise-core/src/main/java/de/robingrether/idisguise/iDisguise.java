@@ -256,7 +256,7 @@ public class iDisguise extends JavaPlugin {
 					if(args.length < 2) {
 						sender.sendMessage(language.WRONG_USAGE_NO_NAME);
 					} else {
-						String skinName = args.length == 2 ? args[1].replaceAll("&[0-9a-fk-or]", "") : args[1], displayName = args.length == 2 ? ChatColor.translateAlternateColorCodes('&', args[1]) : ChatColor.translateAlternateColorCodes('&', args[2]);
+						String skinName = args.length == 2 ? args[1].replaceAll("&[0-9a-fk-or]", "") : args[1], displayName = args.length == 2 ? ChatColor.translateAlternateColorCodes('&', args[1]) : ChatColor.translateAlternateColorCodes('&', args[2].replace("\\s", " "));
 						if(!Validate.minecraftUsername(skinName)) {
 							sender.sendMessage(language.INVALID_NAME);
 						} else {
