@@ -22,6 +22,7 @@ import org.bukkit.scoreboard.Team;
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.management.channel.InjectedPlayerConnection;
+import de.robingrether.idisguise.management.hooks.ScoreboardHooks;
 import de.robingrether.idisguise.management.util.DisguiseMap;
 
 import static de.robingrether.idisguise.management.Reflection.*;
@@ -511,6 +512,11 @@ public final class DisguiseManager {
 			} catch(Exception e) {
 			}
 		}
+		
+		if(modifyScoreboardPackets) {
+			// update scoreboard hooks
+			ScoreboardHooks.updatePlayer(player);
+		}
 	}
 	
 	private static void showPlayerToOne(final Player observer, final Player player) {
@@ -567,6 +573,10 @@ public final class DisguiseManager {
 				}
 			} catch(Exception e) {
 			}
+			
+			// update scoreboard hooks
+			ScoreboardHooks.updatePlayer(player);
+			
 		}
 	}
 	

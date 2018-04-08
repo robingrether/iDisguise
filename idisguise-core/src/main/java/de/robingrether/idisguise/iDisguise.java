@@ -64,6 +64,7 @@ import de.robingrether.idisguise.management.ProfileHelper;
 import de.robingrether.idisguise.management.Sounds;
 import de.robingrether.idisguise.management.VersionHelper;
 import de.robingrether.idisguise.management.channel.ChannelInjector;
+import de.robingrether.idisguise.management.hooks.ScoreboardHooks;
 import de.robingrether.idisguise.management.util.EntityIdList;
 import de.robingrether.util.ObjectUtil;
 import de.robingrether.util.RandomUtil;
@@ -953,6 +954,11 @@ public class iDisguise extends JavaPlugin {
 		DisguiseManager.modifyScoreboardPackets = PacketHandler.modifyScoreboardPackets = configuration.MODIFY_SCOREBOARD_PACKETS;
 		PacketHandler.replaceSoundEffects = configuration.REPLACE_SOUND_EFFECTS;
 		PacketHandler.bungeeCord = configuration.BUNGEE_CORD;
+		
+		// setup hooks
+		if(configuration.MODIFY_SCOREBOARD_PACKETS) {
+			ScoreboardHooks.setup();
+		}
 		
 		// load disguise aliases
 		try {

@@ -68,6 +68,10 @@
       <id>robingrether-repo</id>
       <url>http://repo.robingrether.de/</url>
     </repository>
+    <repository>
+      <id>nametagedit-repo</id>
+      <url>http://ci.nametagedit.com/plugin/repository/everything/</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -103,6 +107,12 @@
       <artifactId>utility</artifactId>
       <version>1.0.1</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.nametagedit</groupId>
+      <artifactId>nametagedit</artifactId>
+      <version>4.1.0</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
   <distributionManagement>
