@@ -27,6 +27,7 @@ public class Reflection {
 	
 	public static Class<?> CraftChatMessage;
 	public static Method CraftChatMessage_fromString;
+	public static Method CraftChatMessage_fromComponent;
 	
 	public static Class<?> EntityPlayer;
 	public static Method EntityPlayer_getBukkitEntity;
@@ -323,12 +324,15 @@ public class Reflection {
 	public static Class<?> EntityTameableAnimal;
 	public static Method EntityTameableAnimal_setSitting;
 	
+	public static Class<?> EnumChatFormat;
+	public static Field EnumChatFormat_WHITE;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");
 	private static final Pattern newPattern = Pattern.compile("([A-Za-z0-9_]+)\\(([^\\(\\)]*)\\)");
 	
-	public static void init(String file, String nms, String obc) {
+	public static void load(String file, String nms, String obc) {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(Reflection.class.getResourceAsStream(file)));
 			String line;

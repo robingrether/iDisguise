@@ -74,22 +74,23 @@ public class VersionHelper {
 			require1_10 = requireVersion("v1_10_R1");
 			require1_11 = requireVersion("v1_11_R1");
 			require1_12 = requireVersion("v1_12_R1");
+			Reflection.load("reflection/common.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
 			switch(versionCode) {
 				case "v1_8_R1":
 				case "v1_8_R2":
 				case "v1_8_R3":
-					Reflection.init("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
+					Reflection.load("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
 					Sounds.init("sounds/18.yml");
 					break;
 				case "v1_9_R1":
 				case "v1_9_R2":
-					Reflection.init("reflection/v1_9_R1.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
+					Reflection.load("reflection/v1_9_R1.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
 					Sounds.init("sounds/112.yml");
 					break;
 				case "v1_10_R1":
 				case "v1_11_R1":
 				case "v1_12_R1":
-					Reflection.init("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
+					Reflection.load("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
 					Sounds.init("sounds/112.yml");
 					break;
 				default:
