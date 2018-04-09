@@ -8,10 +8,11 @@ import de.robingrether.idisguise.iDisguise;
 public class ScoreboardHooks {
 	
 	public static boolean nametagEdit = false;
-//	public static boolean coloredTags = false;
+	public static boolean coloredTags = false;
 	
 	public static void setup() {
 		nametagEdit = Bukkit.getPluginManager().getPlugin("NametagEdit") != null;
+		coloredTags = Bukkit.getPluginManager().getPlugin("ColoredTags") != null;
 	}
 	
 	public static void updatePlayer(final Player player) {
@@ -26,11 +27,17 @@ public class ScoreboardHooks {
 				
 			}, 5L);
 		}
-		// TODO
-//		if(coloredTags) {
-//			com.gmail.filoghost.coloredtags.ColoredTags.updateNametag(player);
-//			com.gmail.filoghost.coloredtags.ColoredTags.updateTab(player);
-//		}
+		
+		if(coloredTags) {
+			Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), new Runnable() {
+				
+				public void run() {
+					com.gmail.filoghost.coloredtags.ColoredTags.updateNametag(player);
+					com.gmail.filoghost.coloredtags.ColoredTags.updateTab(player);
+				}
+				
+			}, 5L);
+		}
 	}
 	
 }
