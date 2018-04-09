@@ -267,7 +267,17 @@ public final class PacketHandler {
 			if(disguise == null) {
 				return PlayerInfoData_new.newInstance(context, offlinePlayer.isOnline() ? CraftPlayer_getProfile.invoke(offlinePlayer) : CraftOfflinePlayer_getProfile.invoke(offlinePlayer), ping, gamemode, displayName);
 			} else if(disguise instanceof PlayerDisguise) {
-				return PlayerInfoData_new.newInstance(context, ProfileHelper.getInstance().getGameProfile(formatUniqueId(offlinePlayer.getUniqueId()), ((PlayerDisguise)disguise).getSkinName(), ((PlayerDisguise)disguise).getDisplayName()), ping, gamemode, modifyPlayerListEntry ? Array.get(CraftChatMessage_fromString.invoke(null, ((PlayerDisguise)disguise).getDisplayName()), 0) : displayName != null ? displayName : Array.get(CraftChatMessage_fromString.invoke(null, offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName()), 0));
+				if(modifyPlayerListEntry) {
+					return PlayerInfoData_new.newInstance(context,
+							ProfileHelper.getInstance().getGameProfile(formatUniqueId(offlinePlayer.getUniqueId()), ((PlayerDisguise)disguise).getSkinName(), ((PlayerDisguise)disguise).getDisplayName()),
+							ping, gamemode, displayName != null ?
+									Array.get(CraftChatMessage_fromString.invoke(null, ((String)CraftChatMessage_fromComponent.invoke(null, displayName, EnumChatFormat_WHITE.get(null))).replace(offlinePlayer.getName(), ((PlayerDisguise)disguise).getDisplayName())), 0) :
+									null);
+				} else {
+					return PlayerInfoData_new.newInstance(context,
+							ProfileHelper.getInstance().getGameProfile(formatUniqueId(offlinePlayer.getUniqueId()), ((PlayerDisguise)disguise).getSkinName(), ((PlayerDisguise)disguise).getDisplayName()),
+							ping, gamemode, displayName != null ? displayName : Array.get(CraftChatMessage_fromString.invoke(null, offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName()), 0));
+				}
 			} else if(!modifyPlayerListEntry) {
 				return PlayerInfoData_new.newInstance(context, offlinePlayer.isOnline() ? CraftPlayer_getProfile.invoke(offlinePlayer) : CraftOfflinePlayer_getProfile.invoke(offlinePlayer), ping, gamemode, displayName);
 			}
