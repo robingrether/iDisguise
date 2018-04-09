@@ -1,4 +1,4 @@
-# Settings affecting the basic behavior of this plugin (including the API)
+# Options affecting the basic behavior of iDisguise (including the developer API)
 disguise:
    
    # Do disguised players keep their disguise when they leave the server
@@ -24,15 +24,18 @@ disguise:
    modify-message-leave: MODIFY_MESSAGE_LEAVE
    
    # Modify disguised players' player list entry
-   # e.g. 'RobinGrether' -> 'Dinnerbone' in case RobinGrether is disguised as a player called Dinnerbone
-   # e.g. RobinGrether is not shown on the player list in case he is disguised as anything but another player
+   # If this is enabled disguised players are NOT shown in the player list except if they are disguised as other players,
+   # in this case the disguise name is shown instead of the original player name.
+   # Consider enabling modify-scoreboard-packets as well if you experience problems with scoreboard/nametag plugins.
    modify-player-list-entry: MODIFY_PLAYER_LIST_ENTRY
    
    # Modify scoreboard packets
    # This may help scoreboard plugins to work properly with disguised players.
+   # Furthermore, this option enables compatibility with NametagEdit and ColoredTags.
    modify-scoreboard-packets: MODIFY_SCOREBOARD_PACKETS
    
    # Show name tags with their original name for disguised players
+   # Obviously, this option does NOT affect player disguises.
    name-tag-shown: NAME_TAG_SHOWN
    
    # Do disguised players sound like actual mobs
@@ -43,7 +46,7 @@ disguise:
    # Explanation: BungeeCord breaks the standard player disguises, this option fixes that.
    bungee-cord: BUNGEE_CORD
    
-# Settings affecting the command and permission behavior of this plugin
+# Options affecting the commands and permissions of iDisguise (these do NOT affect the developer API)
 commands:
    
    # Restrict some player names so your players cannot disguise as them
@@ -54,12 +57,12 @@ commands:
    # Do disguised players need to have 'iDisguise.undisguise' permission to be allowed to undisguise
    undisguise-permission: UNDISGUISE_PERMISSION
    
-# Settings affecting the update checking feature
+# Options affecting the update checking feature
 updates:
    
    # Check whether an update is available at every server start
-   # Admins might get 'iDisguise.update' permission to also trigger an update check and receive a notification if an update is available
+   # Admins might get the 'iDisguise.update' permission node to trigger an update check whenever they log in and receive a notification if an update is available
    check: UPDATE_CHECK
    
-   # Automatically download a new update after checking whether one is available
+   # Automatically download new updates (however a server restart is required for an update to take effect)
    download: UPDATE_DOWNLOAD
