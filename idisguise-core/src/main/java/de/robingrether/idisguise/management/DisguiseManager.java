@@ -155,9 +155,9 @@ public final class DisguiseManager {
 			try {
 				Object minecraftServer = MinecraftServer_getServer.invoke(null);
 				for(UUID disguisable : origin) {
-					Entity entity = (Entity)Entity_getBukkitEntity.invoke(MinecraftServer_getEntityByUID.invoke(minecraftServer, disguisable));
+					Object entity = MinecraftServer_getEntityByUID.invoke(minecraftServer, disguisable);
 					if(entity != null) {
-						destination.add(entity);
+						destination.add(Entity_getBukkitEntity.invoke(entity));
 					} else {
 						OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(disguisable);
 						if(offlinePlayer != null) {
