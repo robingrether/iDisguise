@@ -4,7 +4,7 @@ DataWatcherItem_dataWatcherObject->FDataWatcherItem$a
 DataWatcherObject->C{nms}.DataWatcherObject
 DataWatcherObject_getId->MDataWatcherObject$a()
 
-Entity_setEntityId->MEntity$h(int)
+Entity_setEntityId->MEntity$f(int)
 
 EntityAreaEffectCloud->C{nms}.EntityAreaEffectCloud
 EntityAreaEffectCloud_setColor->MEntityAreaEffectCloud$setColor(int)
@@ -23,11 +23,11 @@ EntityMinecartAbstract_setDisplayBlock->MEntityMinecartAbstract$setDisplayBlock(
 
 EntityRabbit_setRabbitType->MEntityRabbit$setRabbitType(int)
 
-EntitySkeleton_setSkeletonType->MEntitySkeleton$setSkeletonType({nms}.EnumSkeletonType)
+EntitySkeleton_setSkeletonType->MEntitySkeleton$setSkeletonType(int)
 
 EntitySlime_setSize->MEntitySlime$setSize(int)
 
-EntityZombie_setVillagerType->MEntityZombie$setVillagerType({nms}.EnumZombieType)
+EntityZombie_setVillagerType->MEntityZombie$setVillagerType(int)
 
 EnumBoatType->C{nms}.EntityBoat$EnumBoatType
 EnumBoatType_fromString->MEnumBoatType$a(java.lang.String)
@@ -35,7 +35,7 @@ EnumBoatType_fromString->MEnumBoatType$a(java.lang.String)
 EnumEntityUseAction->C{nms}.PacketPlayInUseEntity$EnumEntityUseAction
 EnumEntityUseAction_ATTACK->FEnumEntityUseAction$ATTACK
 
-EnumGamemode->C{nms}.EnumGamemode
+EnumGamemode->C{nms}.WorldSettings$EnumGamemode
 EnumGamemode_SURVIVAL->FEnumGamemode$SURVIVAL
 
 EnumHorseType->C{nms}.EnumHorseType
@@ -51,12 +51,6 @@ EnumPlayerInfoAction_REMOVE_PLAYER->FEnumPlayerInfoAction$REMOVE_PLAYER
 EnumScoreboardAction->C{nms}.PacketPlayOutScoreboardScore$EnumScoreboardAction
 EnumScoreboardAction_CHANGE->FEnumScoreboardAction$CHANGE
 EnumScoreboardAction_REMOVE->FEnumScoreboardAction$REMOVE
-
-EnumSkeletonType->C{nms}.EnumSkeletonType
-EnumSkeletonType_fromIndex->MEnumSkeletonType$a(int)
-
-EnumZombieType->C{nms}.EnumZombieType
-EnumZombieType_fromIndex->MEnumZombieType$a(int)
 
 MinecraftKey->C{nms}.MinecraftKey
 MinecraftKey_getName->MMinecraftKey$a()
@@ -89,7 +83,7 @@ PlayerInfoData_getDisplayName->MPlayerInfoData$d()
 PlayerInfoData_getGamemode->MPlayerInfoData$c()
 PlayerInfoData_getPing->MPlayerInfoData$b()
 PlayerInfoData_getProfile->MPlayerInfoData$a()
-PlayerInfoData_new->NPlayerInfoData({nms}.PacketPlayOutPlayerInfo,com.mojang.authlib.GameProfile,int,{nms}.EnumGamemode,{nms}.IChatBaseComponent)
+PlayerInfoData_new->NPlayerInfoData({nms}.PacketPlayOutPlayerInfo,com.mojang.authlib.GameProfile,int,{nms}.WorldSettings$EnumGamemode,{nms}.IChatBaseComponent)
 
 RegistryMaterials->C{nms}.RegistryMaterials
 RegistryMaterials_getKey->MRegistryMaterials$b(java.lang.Object)

@@ -74,7 +74,7 @@ public enum DisguiseType {
 	
 	AREA_EFFECT_CLOUD(Type.OBJECT, "v1_9_R1", AreaEffectCloudDisguise.class, "EntityAreaEffectCloud"),
 	ARMOR_STAND(Type.OBJECT, VersionHelper.EARLIEST, ArmorStandDisguise.class, "EntityArmorStand"),
-	BOAT(Type.OBJECT, VersionHelper.EARLIEST, ObjectDisguise.class, "EntityBoat"),
+	BOAT(Type.OBJECT, VersionHelper.EARLIEST, BoatDisguise.class, "EntityBoat"),
 	ENDER_CRYSTAL(Type.OBJECT, VersionHelper.EARLIEST, ObjectDisguise.class, "EntityEnderCrystal"),
 	FALLING_BLOCK(Type.OBJECT, VersionHelper.EARLIEST, FallingBlockDisguise.class, "EntityFallingBlock"),
 	ITEM(Type.OBJECT, VersionHelper.EARLIEST, ItemDisguise.class, "EntityItem"),

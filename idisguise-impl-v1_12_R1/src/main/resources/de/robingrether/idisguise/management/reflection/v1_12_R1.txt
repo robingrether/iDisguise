@@ -11,6 +11,8 @@ EntityAreaEffectCloud_setColor->MEntityAreaEffectCloud$setColor(int)
 EntityAreaEffectCloud_setParticle->MEntityAreaEffectCloud$setParticle({nms}.EnumParticle)
 EntityAreaEffectCloud_setRadius->MEntityAreaEffectCloud$setRadius(float)
 
+EntityBoat_setType->MEntityBoat$setType({nms}.EntityBoat$EnumBoatType)
+
 EntityHorseAbstract->C{nms}.EntityHorseAbstract
 EntityHorseAbstract_inventoryChest->FEntityHorseAbstract$inventoryChest
 
@@ -31,6 +33,9 @@ EntitySlime_setSize->MEntitySlime$setSize(int,boolean)
 
 EntityZombieVillager->C{nms}.EntityZombieVillager
 EntityZombieVillager_setProfession->MEntityZombieVillager$setProfession(int)
+
+EnumBoatType->C{nms}.EntityBoat$EnumBoatType
+EnumBoatType_fromString->MEnumBoatType$a(java.lang.String)
 
 EnumEntityUseAction->C{nms}.PacketPlayInUseEntity$EnumEntityUseAction
 EnumEntityUseAction_ATTACK->FEnumEntityUseAction$ATTACK

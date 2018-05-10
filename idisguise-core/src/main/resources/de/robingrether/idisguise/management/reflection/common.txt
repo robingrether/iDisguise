@@ -39,6 +39,8 @@ EntityArmorStand_setArms->MEntityArmorStand$setArms(boolean)
 EntityBat->C{nms}.EntityBat
 EntityBat_setAsleep->MEntityBat$setAsleep(boolean)
 
+EntityBoat->C{nms}.EntityBoat
+
 EntityCreeper->C{nms}.EntityCreeper
 EntityCreeper_setPowered->MEntityCreeper$setPowered(boolean)
 

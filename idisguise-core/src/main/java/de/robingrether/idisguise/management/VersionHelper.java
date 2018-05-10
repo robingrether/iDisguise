@@ -84,9 +84,6 @@ public class VersionHelper {
 					break;
 				case "v1_9_R1":
 				case "v1_9_R2":
-					Reflection.load("reflection/v1_9_R1.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
-					Sounds.init("sounds/112.yml");
-					break;
 				case "v1_10_R1":
 				case "v1_11_R1":
 				case "v1_12_R1":

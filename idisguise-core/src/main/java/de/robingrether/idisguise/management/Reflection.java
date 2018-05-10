@@ -327,6 +327,12 @@ public class Reflection {
 	public static Class<?> EnumChatFormat;
 	public static Field EnumChatFormat_WHITE;
 	
+	public static Class<?> EntityBoat;
+	public static Method EntityBoat_setType;
+	
+	public static Class<?> EnumBoatType;
+	public static Method EnumBoatType_fromString;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");

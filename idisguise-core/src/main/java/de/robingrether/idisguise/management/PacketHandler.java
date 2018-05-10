@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -217,7 +218,13 @@ public final class PacketHandler {
 					Entity_setCustomName.invoke(entity, objectDisguise.getCustomName());
 					Entity_setCustomNameVisible.invoke(entity, objectDisguise.isCustomNameVisible());
 				}
-				if(EntityFallingBlock.isInstance(entity)) {
+				if(EntityBoat.isInstance(entity)) {
+					if(VersionHelper.require1_9() && objectDisguise instanceof BoatDisguise) {
+						EntityBoat_setType.invoke(entity, EnumBoatType_fromString.invoke(null, ((BoatDisguise)objectDisguise).getBoatType().name().toLowerCase(Locale.ENGLISH)));
+					}
+					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), 0));
+					packets.add(PacketPlayOutEntityMetadata_new_full.newInstance(livingEntity.getEntityId(), Entity_getDataWatcher.invoke(entity), true));
+				} else if(EntityFallingBlock.isInstance(entity)) {
 					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), objectDisguise instanceof FallingBlockDisguise ? ((FallingBlockDisguise)objectDisguise).getMaterial().getId() | (((FallingBlockDisguise)objectDisguise).getData() << 12) : 1));
 				} else if(EntityItem.isInstance(entity)) {
 					if(objectDisguise instanceof ItemDisguise) {
