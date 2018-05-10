@@ -1,8 +1,14 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import org.bukkit.Material;
+
+import de.robingrether.idisguise.management.VersionHelper;
 
 /**
  * Represents a disguise as an enderman.
@@ -46,8 +52,14 @@ public class EndermanDisguise extends MobDisguise {
 	 */
 	public EndermanDisguise(Material blockInHand, int blockInHandData) {
 		super(DisguiseType.ENDERMAN);
+		if(blockInHand == null) {
+			blockInHand = Material.AIR;
+		}
 		if(!blockInHand.isBlock()) {
 			throw new IllegalArgumentException("Material must be a block!");
+		}
+		if(INVALID_MATERIALS.contains(blockInHand)) {
+			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
 		}
 		this.blockInHand = blockInHand;
 		if(blockInHandData < 0) {
@@ -75,8 +87,14 @@ public class EndermanDisguise extends MobDisguise {
 	 * @throws IllegalArgumentException Material is not a block.
 	 */
 	public void setBlockInHand(Material blockInHand) {
+		if(blockInHand == null) {
+			blockInHand = Material.AIR;
+		}
 		if(!blockInHand.isBlock()) {
 			throw new IllegalArgumentException("Material must be a block!");
+		}
+		if(INVALID_MATERIALS.contains(blockInHand)) {
+			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
 		}
 		this.blockInHand = blockInHand;
 		this.blockInHandData = 0;
@@ -110,16 +128,36 @@ public class EndermanDisguise extends MobDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; block=" + blockInHand.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; block-data=" + blockInHandData;
+		return String.format("%s; block=%s; block-data=%s", super.toString(), blockInHand.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), blockInHandData);
 	}
 	
+	/**
+	 * A set containing all invalid materials.<br>
+	 * These materials are <em>invalid</em> because the associated disguise would be invisible.
+	 * 
+	 * @since 5.7.1
+	 */
+	public static final Set<Material> INVALID_MATERIALS;
+	
 	static {
-//		for(Material material : Material.values()) {
-//			if(material.isBlock()) {
-//				Subtypes.registerSubtype(EndermanDisguise.class, "setBlockInHand", material, material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-//			}
-//		}
-		Subtypes.registerParameterizedSubtype(EndermanDisguise.class, "setBlockInHand", "block", Material.class);
+		Set<Material> tempSet = new HashSet<Material>(Arrays.asList(Material.BARRIER, Material.BED_BLOCK, Material.COBBLE_WALL, Material.ENDER_PORTAL, Material.LAVA, Material.MELON_STEM,
+				Material.PISTON_MOVING_PIECE, Material.PUMPKIN_STEM, Material.SIGN_POST, Material.SKULL, Material.STANDING_BANNER, Material.STATIONARY_LAVA, Material.STATIONARY_WATER,
+				Material.WALL_BANNER, Material.WALL_SIGN, Material.WATER));
+		if(VersionHelper.require1_9()) {
+			tempSet.add(Material.END_GATEWAY);
+		}
+		if(VersionHelper.require1_10()) {
+			tempSet.add(Material.STRUCTURE_VOID);
+		}
+		INVALID_MATERIALS = Collections.unmodifiableSet(tempSet);
+		
+		Set<String> parameterSuggestions = new HashSet<String>();
+		for(Material material : Material.values()) {
+			if(material.isBlock() && !INVALID_MATERIALS.contains(material)) {
+				parameterSuggestions.add(material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+			}
+		}
+		Subtypes.registerParameterizedSubtype(EndermanDisguise.class, "setBlockInHand", "block", Material.class, parameterSuggestions);
 //		for(int i = 0; i < 256; i++) {
 //			Subtypes.registerSubtype(EndermanDisguise.class, "setBlockInHandData", i, Integer.toString(i));
 //		}

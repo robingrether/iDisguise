@@ -1,5 +1,9 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+
 /**
  * Represents a disguise as an object.
  * 
@@ -130,7 +134,7 @@ public class ObjectDisguise extends Disguise {
 	}
 	
 	static {
-		Subtypes.registerParameterizedSubtype(ObjectDisguise.class, "setCustomName", "custom-name", String.class);
+		Subtypes.registerParameterizedSubtype(ObjectDisguise.class, "setCustomName", "custom-name", String.class, Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("Hello\\sWorld!", "Notch", "I'm\\syour\\sfather"))));
 		Subtypes.registerSubtype(ObjectDisguise.class, "setCustomNameVisible", true, "custom-name-visible");
 		Subtypes.registerSubtype(ObjectDisguise.class, "setCustomNameVisible", false, "custom-name-invisible");
 	}

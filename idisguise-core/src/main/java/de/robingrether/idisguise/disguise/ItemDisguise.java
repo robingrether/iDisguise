@@ -210,7 +210,7 @@ public class ItemDisguise extends ObjectDisguise {
 		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setMaterial", "material", Material.class, Collections.unmodifiableSet(parameterSuggestions));
 		
 		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setData", "material-data", int.class);
-		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setAmount", "amount", int.class);
+		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setAmount", "amount", int.class, Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("1", "2", "64"))));
 		
 		Subtypes.registerSubtype(ItemDisguise.class, "setEnchanted", true, "enchanted");
 		Subtypes.registerSubtype(ItemDisguise.class, "setEnchanted", false, "not-enchanted");

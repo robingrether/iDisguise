@@ -1,8 +1,14 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import org.bukkit.Material;
+
+import de.robingrether.idisguise.management.VersionHelper;
 
 /**
  * Represents a disguise as a minecart.
@@ -53,6 +59,9 @@ public class MinecartDisguise extends ObjectDisguise {
 		if(!displayedBlock.isBlock()) {
 			throw new IllegalArgumentException("Material must be a block");
 		}
+		if(INVALID_MATERIALS.contains(displayedBlock)) {
+			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
+		}
 		this.displayedBlock = displayedBlock;
 		if(displayedBlockData < 0) {
 			throw new IllegalArgumentException("Data must be positive");
@@ -79,8 +88,14 @@ public class MinecartDisguise extends ObjectDisguise {
 	 * @throws IllegalArgumentException if the material is not a block
 	 */
 	public void setDisplayedBlock(Material displayedBlock) {
+		if(displayedBlock == null) {
+			displayedBlock = Material.AIR;
+		}
 		if(!displayedBlock.isBlock()) {
 			throw new IllegalArgumentException("Material must be a block");
+		}
+		if(INVALID_MATERIALS.contains(displayedBlock)) {
+			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
 		}
 		this.displayedBlock = displayedBlock;
 		this.displayedBlockData = 0;
@@ -114,16 +129,36 @@ public class MinecartDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; block=" + displayedBlock.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; block-data=" + displayedBlockData;
+		return String.format("%s; block=%s; block-data=%s", super.toString(), displayedBlock.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), displayedBlockData);
 	}
 	
+	/**
+	 * A set containing all invalid materials.<br>
+	 * These materials are <em>invalid</em> because the associated disguise would be invisible.
+	 * 
+	 * @since 5.7.1
+	 */
+	public static final Set<Material> INVALID_MATERIALS;
+	
 	static {
-//		for(Material material : Material.values()) {
-//			if(material.isBlock()) {
-//				Subtypes.registerSubtype(MinecartDisguise.class, "setDisplayedBlock", material, material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-//			}
-//		}
-		Subtypes.registerParameterizedSubtype(MinecartDisguise.class, "setDisplayedBlock", "block", Material.class);
+		Set<Material> tempSet = new HashSet<Material>(Arrays.asList(Material.BARRIER, Material.BED_BLOCK, Material.COBBLE_WALL, Material.ENDER_PORTAL, Material.LAVA, Material.MELON_STEM,
+				Material.PISTON_MOVING_PIECE, Material.PUMPKIN_STEM, Material.SIGN_POST, Material.SKULL, Material.STANDING_BANNER, Material.STATIONARY_LAVA, Material.STATIONARY_WATER,
+				Material.WALL_BANNER, Material.WALL_SIGN, Material.WATER));
+		if(VersionHelper.require1_9()) {
+			tempSet.add(Material.END_GATEWAY);
+		}
+		if(VersionHelper.require1_10()) {
+			tempSet.add(Material.STRUCTURE_VOID);
+		}
+		INVALID_MATERIALS = Collections.unmodifiableSet(tempSet);
+		
+		Set<String> parameterSuggestions = new HashSet<String>();
+		for(Material material : Material.values()) {
+			if(material.isBlock() && !INVALID_MATERIALS.contains(material)) {
+				parameterSuggestions.add(material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+			}
+		}
+		Subtypes.registerParameterizedSubtype(MinecartDisguise.class, "setDisplayedBlock", "block", Material.class, parameterSuggestions);
 //		for(int i = 0; i < 256; i++) {
 //			Subtypes.registerSubtype(MinecartDisguise.class, "setDisplayedBlockData", i, Integer.toString(i));
 //		}

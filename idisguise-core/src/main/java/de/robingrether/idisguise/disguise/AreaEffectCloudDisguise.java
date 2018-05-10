@@ -1,5 +1,8 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Locale;
 
 import org.bukkit.Color;
@@ -100,12 +103,12 @@ public class AreaEffectCloudDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; radius=" + radius + "; color=" + color.asRGB() + "; " + particle.name().toLowerCase(Locale.ENGLISH);
+		return String.format("%s; radius=%s; color=%s; %s", super.toString(), radius, color.asRGB(), particle.name().toLowerCase(Locale.ENGLISH));
 	}
 	
 	static {
-		Subtypes.registerParameterizedSubtype(AreaEffectCloudDisguise.class, "setRadius", "radius", float.class);
-		Subtypes.registerParameterizedSubtype(AreaEffectCloudDisguise.class, "setColor", "color", int.class);
+		Subtypes.registerParameterizedSubtype(AreaEffectCloudDisguise.class, "setRadius", "radius", float.class, Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("0.1", "0.5", "1.0", "2.0", "5.0", "10.0", "20.0"))));
+		Subtypes.registerParameterizedSubtype(AreaEffectCloudDisguise.class, "setColor", "color", int.class, Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("16711680", "65280", "255"))));
 		try {
 			for(String colorName : new String[] {"AQUA", "BLACK", "BLUE", "FUCHSIA", "GRAY", "GREEN", "LIME", "MAROON", "NAVY", "OLIVE", "ORANGE", "PURPLE", "RED", "SILVER", "TEAL", "WHITE", "YELLOW"}) {
 				Subtypes.registerSubtype(AreaEffectCloudDisguise.class, "setColor", Color.class.getDeclaredField(colorName).get(null), colorName.toLowerCase(Locale.ENGLISH));

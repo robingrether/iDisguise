@@ -2,8 +2,11 @@ package de.robingrether.idisguise.disguise;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.bukkit.entity.Player;
 
@@ -152,7 +155,11 @@ public abstract class Disguise implements Serializable, Cloneable {
 	}
 	
 	static {
-		Subtypes.registerParameterizedSubtype(Disguise.class, "setVisibility", "visibility", Visibility.class);
+		Set<String> tempSet = new HashSet<String>();
+		for(Visibility visibility : Visibility.values()) {
+			tempSet.add(visibility.name().toLowerCase(Locale.ENGLISH));
+		}
+		Subtypes.registerParameterizedSubtype(Disguise.class, "setVisibility", "visibility", Visibility.class, Collections.unmodifiableSet(tempSet));
 		Subtypes.registerParameterizedSubtype(Disguise.class, "setVisibilityParameter", "visibility-param", String[].class);
 	}
 	
