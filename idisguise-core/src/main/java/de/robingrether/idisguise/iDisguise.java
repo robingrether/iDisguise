@@ -695,7 +695,7 @@ public class iDisguise extends JavaPlugin {
 					}
 				}
 				if(disguise != null) {
-					completions.addAll(Subtypes.listSubtypeArguments(disguise));
+					completions.addAll(Subtypes.listSubtypeArguments(disguise, args.length > 0 ? args[args.length - 1].contains("=") : false));
 				}
 			} else {
 				completions.add("reload");
@@ -758,7 +758,7 @@ public class iDisguise extends JavaPlugin {
 						}
 					}
 					if(disguise != null) {
-						completions.addAll(Subtypes.listSubtypeArguments(disguise));
+						completions.addAll(Subtypes.listSubtypeArguments(disguise, args.length > 0 ? args[args.length - 1].contains("=") : false));
 					}
 				}
 			}
