@@ -151,13 +151,13 @@ public abstract class Disguise implements Serializable, Cloneable {
 	 * @return a string representation of the object
 	 */
 	public String toString() {
-		return String.format("%s; visibility=%s; visibility-param=%s", type.toString(), visibility.name().toLowerCase(Locale.ENGLISH), StringUtil.join(",", visibilityParameter.toArray(new String[0])));
+		return String.format("%s; visibility=%s; visibility-param=%s", type.toString(), visibility.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), StringUtil.join(",", visibilityParameter.toArray(new String[0])));
 	}
 	
 	static {
 		Set<String> tempSet = new HashSet<String>();
 		for(Visibility visibility : Visibility.values()) {
-			tempSet.add(visibility.name().toLowerCase(Locale.ENGLISH));
+			tempSet.add(visibility.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
 		Subtypes.registerParameterizedSubtype(Disguise.class, "setVisibility", "visibility", Visibility.class, Collections.unmodifiableSet(tempSet));
 		Subtypes.registerParameterizedSubtype(Disguise.class, "setVisibilityParameter", "visibility-param", String[].class);
