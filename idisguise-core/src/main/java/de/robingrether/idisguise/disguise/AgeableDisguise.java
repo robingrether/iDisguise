@@ -57,7 +57,7 @@ public class AgeableDisguise extends MobDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + (adult ? "adult" : "baby");
+		return String.format("%s; %s", super.toString(), adult ? "adult" : "baby");
 	}
 	
 	static {

@@ -1,11 +1,16 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+
+import de.robingrether.idisguise.management.VersionHelper;
 
 /**
  * Represents a disguise as an item stack.
@@ -40,6 +45,9 @@ public class ItemDisguise extends ObjectDisguise {
 		if(itemStack == null) {
 			throw new IllegalArgumentException("Item stack must not be null");
 		}
+		if(INVALID_MATERIALS.contains(itemStack.getType())) {
+			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
+		}
 		this.itemStack = itemStack;
 	}
 	
@@ -64,6 +72,9 @@ public class ItemDisguise extends ObjectDisguise {
 		if(itemStack == null) {
 			throw new IllegalArgumentException("Item stack must not be null");
 		}
+		if(INVALID_MATERIALS.contains(itemStack.getType())) {
+			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
+		}
 		this.itemStack = itemStack;
 	}
 	
@@ -85,6 +96,9 @@ public class ItemDisguise extends ObjectDisguise {
 	 * @param material the material
 	 */
 	public void setMaterial(Material material) {
+		if(INVALID_MATERIALS.contains(material)) {
+			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
+		}
 		itemStack.setType(material);
 		itemStack.setDurability((short)0);
 	}
@@ -162,24 +176,41 @@ public class ItemDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; material=" + itemStack.getType().name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; material-data=" + itemStack.getDurability() + "; amount=" + itemStack.getAmount() + "; " + (isEnchanted() ? "enchanted" : "not-enchanted");
+		return String.format("%s; material=%s; material-data=%s; amount=%s; %s", super.toString(), itemStack.getType().name().toLowerCase(Locale.ENGLISH).replace('_', '-'), itemStack.getDurability(), itemStack.getAmount(), isEnchanted() ? "enchanted" : "not-enchanted");
 	}
 	
+	/**
+	 * A set containing all invalid materials.<br>
+	 * These materials are <em>invalid</em> because the associated disguise would be invisible.
+	 * 
+	 * @since 5.7.1
+	 */
+	public static final Set<Material> INVALID_MATERIALS;
+	
 	static {
-//		for(Material material : Material.values()) {
-//			Subtypes.registerSubtype(ItemDisguise.class, "setMaterial", material, material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-//		}
-		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setMaterial", "material", Material.class);
-//		for(int i = 0; i < 256; i++) {
-//			Subtypes.registerSubtype(ItemDisguise.class, "setData", i, Integer.toString(i));
-//		}
+		Set<Material> tempSet = new HashSet<Material>(Arrays.asList(Material.ACACIA_DOOR, Material.AIR, Material.BED_BLOCK, Material.BIRCH_DOOR, Material.BREWING_STAND,
+				Material.BURNING_FURNACE, Material.CAKE_BLOCK, Material.CARROT, Material.CAULDRON, Material.COCOA, Material.CROPS, Material.DARK_OAK_DOOR, Material.DAYLIGHT_DETECTOR_INVERTED,
+				Material.DIODE_BLOCK_OFF, Material.DIODE_BLOCK_ON, Material.DOUBLE_STEP, Material.DOUBLE_STONE_SLAB2, Material.ENDER_PORTAL, Material.FIRE, Material.FLOWER_POT,
+				Material.GLOWING_REDSTONE_ORE, Material.IRON_DOOR_BLOCK, Material.JUNGLE_DOOR, Material.LAVA, Material.MELON_STEM, Material.MONSTER_EGGS, Material.NETHER_WARTS,
+				Material.PISTON_EXTENSION, Material.PISTON_MOVING_PIECE, Material.PORTAL, Material.POTATO, Material.PUMPKIN_STEM, Material.REDSTONE_COMPARATOR_ON,
+				Material.REDSTONE_COMPARATOR_OFF, Material.REDSTONE_LAMP_ON, Material.REDSTONE_TORCH_OFF, Material.REDSTONE_WIRE, Material.SIGN_POST, Material.SKULL, Material.SPRUCE_DOOR,
+				Material.STANDING_BANNER, Material.STATIONARY_LAVA, Material.STATIONARY_WATER, Material.SUGAR_CANE_BLOCK, Material.TRIPWIRE, Material.WALL_BANNER, Material.WALL_SIGN, Material.WATER,
+				Material.WOOD_DOUBLE_STEP, Material.WOODEN_DOOR));
+		if(VersionHelper.require1_9()) {
+			tempSet.addAll(Arrays.asList(Material.BEETROOT_BLOCK, Material.END_GATEWAY, Material.FROSTED_ICE, Material.PURPUR_DOUBLE_SLAB));
+		}
+		INVALID_MATERIALS = Collections.unmodifiableSet(tempSet);
+		
+		Set<String> parameterSuggestions = new HashSet<String>();
+		for(Material material : Material.values()) {
+			if(!INVALID_MATERIALS.contains(material)) {
+				parameterSuggestions.add(material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+			}
+		}
+		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setMaterial", "material", Material.class, Collections.unmodifiableSet(parameterSuggestions));
+		
 		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setData", "material-data", int.class);
-//		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 1, "single");
-//		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 2, "double");
-//		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 17, "triple");
-//		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 33, "quadruple");
-//		Subtypes.registerSubtype(ItemDisguise.class, "setAmount", 49, "quintuple");
-		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setAmount", "amount", int.class);
+		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setAmount", "amount", int.class, Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("1", "2", "64"))));
 		
 		Subtypes.registerSubtype(ItemDisguise.class, "setEnchanted", true, "enchanted");
 		Subtypes.registerSubtype(ItemDisguise.class, "setEnchanted", false, "not-enchanted");

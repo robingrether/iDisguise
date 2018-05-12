@@ -16,31 +16,26 @@ public class DisguiseEvent extends PlayerEvent implements Cancellable {
 	
 	private static final HandlerList handlers = new HandlerList();
 	private boolean cancel = false;
-	protected Disguise disguise;
+	protected final Disguise disguise;
 	
-	public DisguiseEvent(Player player, Disguise disguise) {
+	public DisguiseEvent(Player player, final Disguise disguise) {
 		super(player);
 		this.disguise = disguise;
 	}
 	
 	/**
-	 * Returns the disguise.
+	 * Returns a copy of the disguise.
 	 * 
 	 * @since 3.0.1
 	 * @return the disguise
 	 */
-	public Disguise getDisguise() {
-		return disguise;
+	public final Disguise getDisguise() {
+		return disguise.clone();
 	}
 	
-	/**
-	 * Changes the disguise.
-	 * 
-	 * @since 3.0.1
-	 * @param disguise the disguise to change to
-	 */
+	@Deprecated
 	public void setDisguise(Disguise disguise) {
-		this.disguise = disguise;
+		throw new UnsupportedOperationException();
 	}
 	
 	/**

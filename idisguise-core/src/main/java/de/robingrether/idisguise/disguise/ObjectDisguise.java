@@ -1,5 +1,9 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+
 /**
  * Represents a disguise as an object.
  * 
@@ -82,7 +86,7 @@ public class ObjectDisguise extends Disguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; custom-name=" + customName + "; " + (customNameVisible ? "custom-name-visible" : "custom-name-invisible");
+		return String.format("%s; custom-name=%s; %s", super.toString(), customName, customNameVisible ? "custom-name-visible" : "custom-name-invisible");
 	}
 	
 	/**
@@ -110,6 +114,8 @@ public class ObjectDisguise extends Disguise {
 			throw new IllegalArgumentException("DisguiseType must be an object");
 		}
 		switch(type) {
+			case AREA_EFFECT_CLOUD:
+				return 3;
 			case ARMOR_STAND:
 				return 78;
 			case BOAT:
@@ -128,7 +134,7 @@ public class ObjectDisguise extends Disguise {
 	}
 	
 	static {
-		Subtypes.registerParameterizedSubtype(ObjectDisguise.class, "setCustomName", "custom-name", String.class);
+		Subtypes.registerParameterizedSubtype(ObjectDisguise.class, "setCustomName", "custom-name", String.class, Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("Hello\\sWorld!", "Notch", "I'm\\syour\\sfather"))));
 		Subtypes.registerSubtype(ObjectDisguise.class, "setCustomNameVisible", true, "custom-name-visible");
 		Subtypes.registerSubtype(ObjectDisguise.class, "setCustomNameVisible", false, "custom-name-invisible");
 	}

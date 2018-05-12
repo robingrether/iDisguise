@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bstats.Metrics;
@@ -18,12 +19,16 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.robingrether.idisguise.api.DisguiseAPI;
 import de.robingrether.idisguise.api.DisguiseEvent;
+import de.robingrether.idisguise.api.EntityDisguiseEvent;
+import de.robingrether.idisguise.api.EntityUndisguiseEvent;
 import de.robingrether.idisguise.api.OfflinePlayerDisguiseEvent;
 import de.robingrether.idisguise.api.OfflinePlayerUndisguiseEvent;
 import de.robingrether.idisguise.api.UndisguiseEvent;
@@ -59,6 +64,7 @@ import de.robingrether.idisguise.management.ProfileHelper;
 import de.robingrether.idisguise.management.Sounds;
 import de.robingrether.idisguise.management.VersionHelper;
 import de.robingrether.idisguise.management.channel.ChannelInjector;
+import de.robingrether.idisguise.management.hooks.ScoreboardHooks;
 import de.robingrether.idisguise.management.util.EntityIdList;
 import de.robingrether.util.ObjectUtil;
 import de.robingrether.util.RandomUtil;
@@ -89,15 +95,8 @@ public class iDisguise extends JavaPlugin {
 		}
 		listener = new EventListener(this);
 		configuration = new Configuration(this);
-		configuration.loadData();
-		configuration.saveData();
 		language = new Language(this);
-		language.loadData();
-		language.saveData();
-		PacketHandler.showOriginalPlayerName = configuration.NAME_TAG_SHOWN;
-		PacketHandler.modifyPlayerListEntry = configuration.MODIFY_PLAYER_LIST_ENTRY;
-		DisguiseManager.modifyScoreboardPackets = PacketHandler.modifyScoreboardPackets = configuration.MODIFY_SCOREBOARD_PACKETS;
-		Sounds.setEnabled(configuration.REPLACE_SOUND_EFFECTS);
+		loadConfigFiles();
 		metrics = new Metrics(this);
 		metrics.addCustomChart(new Metrics.SingleLineChart("disguisedPlayers") {
 			
@@ -142,7 +141,7 @@ public class iDisguise extends JavaPlugin {
 			
 		});
 		if(configuration.KEEP_DISGUISE_SHUTDOWN) {
-			loadData();
+			loadDisguises();
 		}
 		getServer().getPluginManager().registerEvents(listener, this);
 		getServer().getServicesManager().register(DisguiseAPI.class, getAPI(), this, ServicePriority.Normal);
@@ -181,7 +180,7 @@ public class iDisguise extends JavaPlugin {
 		}
 		getServer().getScheduler().cancelTasks(this);
 		if(configuration.KEEP_DISGUISE_SHUTDOWN) {
-			saveData();
+			saveDisguises();
 		}
 		ChannelInjector.removeOnlinePlayers();
 		getLogger().log(Level.INFO, String.format("%s disabled!", getFullName()));
@@ -193,19 +192,12 @@ public class iDisguise extends JavaPlugin {
 			return;
 		}
 		if(configuration.KEEP_DISGUISE_SHUTDOWN) {
-			saveData();
+			saveDisguises();
 		}
 		enabled = false;
-		configuration.loadData();
-		configuration.saveData();
-		language.loadData();
-		language.saveData();
-		PacketHandler.showOriginalPlayerName = configuration.NAME_TAG_SHOWN;
-		PacketHandler.modifyPlayerListEntry = configuration.MODIFY_PLAYER_LIST_ENTRY;
-		DisguiseManager.modifyScoreboardPackets = PacketHandler.modifyScoreboardPackets = configuration.MODIFY_SCOREBOARD_PACKETS;
-		Sounds.setEnabled(configuration.REPLACE_SOUND_EFFECTS);
+		loadConfigFiles();
 		if(configuration.KEEP_DISGUISE_SHUTDOWN) {
-			loadData();
+			loadDisguises();
 		}
 		enabled = true;
 		DisguiseManager.resendPackets();
@@ -223,11 +215,11 @@ public class iDisguise extends JavaPlugin {
 					sender.sendMessage(language.NO_PERMISSION);
 				}
 			} else {
-				OfflinePlayer player = null;
+				Object disguisable = null;
 				boolean disguiseSelf;
 				if(command.getName().equalsIgnoreCase("disguise")) {
 					if(sender instanceof Player) {
-						player = (Player)sender;
+						disguisable = sender;
 						disguiseSelf = true;
 					} else {
 						sender.sendMessage(language.CONSOLE_USE_OTHER_COMMAND);
@@ -235,12 +227,16 @@ public class iDisguise extends JavaPlugin {
 					}
 				} else if(args.length > 1) {
 					if(sender.hasPermission("iDisguise.others")) {
-						if(getServer().getPlayerExact(args[0]) != null) {
-							player = getServer().getPlayerExact(args[0]);
+						if(args[0].matches("<[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}>")) {
+							disguisable = getServer().getOfflinePlayer(UUID.fromString(args[0].substring(1, 37)));
+						} else if(args[0].matches("\\[[0-9]+\\]")) {
+							disguisable = EntityIdList.getEntityByEntityId(Integer.parseInt(args[0].substring(1, args[0].length() - 1)));
+						} else if(args[0].matches("\\{[A-Za-z0-9_]{1,16}\\}")) {
+							disguisable = getServer().getOfflinePlayer(args[0].substring(1, args[0].length() - 1));
+						} else if(getServer().getPlayerExact(args[0]) != null) {
+							disguisable = getServer().getPlayerExact(args[0]);
 						} else if(getServer().matchPlayer(args[0]).size() == 1) {
-							player = getServer().matchPlayer(args[0]).get(0);
-						} else if(getServer().getOfflinePlayer(args[0]) != null) {
-							player = getServer().getOfflinePlayer(args[0]);
+							disguisable = getServer().matchPlayer(args[0]).get(0);
 						} else {
 							sender.sendMessage(language.CANNOT_FIND_PLAYER.replace("%player%", args[0]));
 							return true;
@@ -261,29 +257,42 @@ public class iDisguise extends JavaPlugin {
 					if(args.length < 2) {
 						sender.sendMessage(language.WRONG_USAGE_NO_NAME);
 					} else {
-						String skinName = args.length == 2 ? args[1].replaceAll("&[0-9a-fk-or]", "") : args[1], displayName = args.length == 2 ? ChatColor.translateAlternateColorCodes('&', args[1]) : ChatColor.translateAlternateColorCodes('&', args[2]);
+						String skinName = args.length == 2 ? args[1].replaceAll("&[0-9a-fk-or]", "") : args[1], displayName = args.length == 2 ? ChatColor.translateAlternateColorCodes('&', args[1]) : ChatColor.translateAlternateColorCodes('&', args[2].replace("\\s", " "));
 						if(!Validate.minecraftUsername(skinName)) {
 							sender.sendMessage(language.INVALID_NAME);
 						} else {
 							PlayerDisguise disguise = new PlayerDisguise(skinName, displayName);
 							if(hasPermission(sender, disguise)) {
-								if(player.isOnline()) {
-									DisguiseEvent event = new DisguiseEvent(player.getPlayer(), disguise);
-									getServer().getPluginManager().callEvent(event);
-									if(event.isCancelled()) {
-										sender.sendMessage(language.EVENT_CANCELLED);
+								if(disguisable instanceof OfflinePlayer) {
+									OfflinePlayer player = (OfflinePlayer)disguisable;
+									if(player.isOnline()) {
+										DisguiseEvent event = new DisguiseEvent(player.getPlayer(), disguise);
+										getServer().getPluginManager().callEvent(event);
+										if(event.isCancelled()) {
+											sender.sendMessage(language.EVENT_CANCELLED);
+										} else {
+											DisguiseManager.disguise(player, disguise);
+											sender.sendMessage((disguiseSelf ? language.DISGUISE_PLAYER_SUCCESS_SELF : language.DISGUISE_PLAYER_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()).replace("%name%", disguise.getDisplayName()));
+										}
 									} else {
-										DisguiseManager.disguise(player, disguise);
-										sender.sendMessage((disguiseSelf ? language.DISGUISE_PLAYER_SUCCESS_SELF : language.DISGUISE_PLAYER_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()).replace("%name%", disguise.getDisplayName()));
+										OfflinePlayerDisguiseEvent event = new OfflinePlayerDisguiseEvent(player, disguise);
+										getServer().getPluginManager().callEvent(event);
+										if(event.isCancelled()) {
+											sender.sendMessage(language.EVENT_CANCELLED);
+										} else {
+											DisguiseManager.disguise(player, disguise);
+											sender.sendMessage((disguiseSelf ? language.DISGUISE_PLAYER_SUCCESS_SELF : language.DISGUISE_PLAYER_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()).replace("%name%", disguise.getDisplayName()));
+										}
 									}
 								} else {
-									OfflinePlayerDisguiseEvent event = new OfflinePlayerDisguiseEvent(player, disguise);
+									LivingEntity livingEntity = (LivingEntity)disguisable;
+									EntityDisguiseEvent event = new EntityDisguiseEvent(livingEntity, disguise);
 									getServer().getPluginManager().callEvent(event);
 									if(event.isCancelled()) {
 										sender.sendMessage(language.EVENT_CANCELLED);
 									} else {
-										DisguiseManager.disguise(player, disguise);
-										sender.sendMessage((disguiseSelf ? language.DISGUISE_PLAYER_SUCCESS_SELF : language.DISGUISE_PLAYER_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()).replace("%name%", disguise.getDisplayName()));
+										DisguiseManager.disguise(livingEntity, disguise);
+										sender.sendMessage(language.DISGUISE_PLAYER_SUCCESS_OTHER.replace("%player%", livingEntity.getType().name() + " [" + livingEntity.getEntityId() + "]").replace("%type%", disguise.getType().toString()).replace("%name%", disguise.getDisplayName()));
 									}
 								}
 							} else {
@@ -294,62 +303,98 @@ public class iDisguise extends JavaPlugin {
 				} else if(args[0].equalsIgnoreCase("random")) {
 					if(sender.hasPermission("iDisguise.random")) {
 						Disguise disguise = (RandomUtil.nextBoolean() ? DisguiseType.random(Type.MOB) : DisguiseType.random(Type.OBJECT)).newInstance();
-						if(player.isOnline()) {
-							DisguiseEvent event = new DisguiseEvent(player.getPlayer(), disguise);
-							getServer().getPluginManager().callEvent(event);
-							if(event.isCancelled()) {
-								sender.sendMessage(language.EVENT_CANCELLED);
+						if(disguisable instanceof OfflinePlayer) {
+							OfflinePlayer player = (OfflinePlayer)disguisable;
+							if(player.isOnline()) {
+								DisguiseEvent event = new DisguiseEvent(player.getPlayer(), disguise);
+								getServer().getPluginManager().callEvent(event);
+								if(event.isCancelled()) {
+									sender.sendMessage(language.EVENT_CANCELLED);
+								} else {
+									DisguiseManager.disguise(player, disguise);
+									sender.sendMessage((disguiseSelf ? language.DISGUISE_SUCCESS_SELF : language.DISGUISE_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()));
+								}
 							} else {
-								DisguiseManager.disguise(player, disguise);
-								sender.sendMessage((disguiseSelf ? language.DISGUISE_SUCCESS_SELF : language.DISGUISE_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()));
+								OfflinePlayerDisguiseEvent event = new OfflinePlayerDisguiseEvent(player, disguise);
+								getServer().getPluginManager().callEvent(event);
+								if(event.isCancelled()) {
+									sender.sendMessage(language.EVENT_CANCELLED);
+								} else {
+									DisguiseManager.disguise(player, disguise);
+									sender.sendMessage((disguiseSelf ? language.DISGUISE_SUCCESS_SELF : language.DISGUISE_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()));
+								}
 							}
 						} else {
-							OfflinePlayerDisguiseEvent event = new OfflinePlayerDisguiseEvent(player, disguise);
+							LivingEntity livingEntity = (LivingEntity)disguisable;
+							EntityDisguiseEvent event = new EntityDisguiseEvent(livingEntity, disguise);
 							getServer().getPluginManager().callEvent(event);
 							if(event.isCancelled()) {
 								sender.sendMessage(language.EVENT_CANCELLED);
 							} else {
-								DisguiseManager.disguise(player, disguise);
-								sender.sendMessage((disguiseSelf ? language.DISGUISE_SUCCESS_SELF : language.DISGUISE_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()));
+								DisguiseManager.disguise(livingEntity, disguise);
+								sender.sendMessage(language.DISGUISE_SUCCESS_OTHER.replace("%player%", livingEntity.getType().name() + " [" + livingEntity.getEntityId() + "]").replace("%type%", disguise.getType().toString()));
 							}
 						}
 					} else {
 						sender.sendMessage(language.NO_PERMISSION);
 					}
 				} else if(StringUtil.equalsIgnoreCase(args[0], "status", "state", "stats")) {
-					if(DisguiseManager.isDisguised(player)) {
-						if(DisguiseManager.getDisguise(player) instanceof PlayerDisguise) {
-							PlayerDisguise disguise = (PlayerDisguise)DisguiseManager.getDisguise(player);
-							sender.sendMessage((disguiseSelf ? language.STATUS_PLAYER_SELF : language.STATUS_PLAYER_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()).replace("%name%", disguise.getDisplayName()));
-							sender.sendMessage(language.STATUS_SUBTYPES.replace("%subtypes%", disguise.toString()));
+					if(disguisable instanceof OfflinePlayer) {
+						OfflinePlayer player = (OfflinePlayer)disguisable;
+						if(DisguiseManager.isDisguised(player)) {
+							if(DisguiseManager.getDisguise(player) instanceof PlayerDisguise) {
+								PlayerDisguise disguise = (PlayerDisguise)DisguiseManager.getDisguise(player);
+								sender.sendMessage((disguiseSelf ? language.STATUS_PLAYER_SELF : language.STATUS_PLAYER_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()).replace("%name%", disguise.getDisplayName()));
+								sender.sendMessage(language.STATUS_SUBTYPES.replace("%subtypes%", disguise.toString()));
+							} else {
+								Disguise disguise = DisguiseManager.getDisguise(player);
+								sender.sendMessage((disguiseSelf ? language.STATUS_SELF : language.STATUS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()));
+								sender.sendMessage(language.STATUS_SUBTYPES.replace("%subtypes%", disguise.toString()));
+							}
 						} else {
-							Disguise disguise = DisguiseManager.getDisguise(player);
-							sender.sendMessage((disguiseSelf ? language.STATUS_SELF : language.STATUS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()));
-							sender.sendMessage(language.STATUS_SUBTYPES.replace("%subtypes%", disguise.toString()));
+							sender.sendMessage((disguiseSelf ? language.STATUS_NOT_DISGUISED_SELF : language.STATUS_NOT_DISGUISED_OTHER).replace("%player%", player.getName()));
 						}
 					} else {
-						sender.sendMessage((disguiseSelf ? language.STATUS_NOT_DISGUISED_SELF : language.STATUS_NOT_DISGUISED_OTHER).replace("%player%", player.getName()));
+						LivingEntity livingEntity = (LivingEntity)disguisable;
+						if(DisguiseManager.isDisguised(livingEntity)) {
+							if(DisguiseManager.getDisguise(livingEntity) instanceof PlayerDisguise) {
+								PlayerDisguise disguise = (PlayerDisguise)DisguiseManager.getDisguise(livingEntity);
+								sender.sendMessage(language.STATUS_PLAYER_OTHER.replace("%player%", livingEntity.getType().name() + " [" + livingEntity.getEntityId() + "]").replace("%type%", disguise.getType().toString()).replace("%name%", disguise.getDisplayName()));
+								sender.sendMessage(language.STATUS_SUBTYPES.replace("%subtypes%", disguise.toString()));
+							} else {
+								Disguise disguise = DisguiseManager.getDisguise(livingEntity);
+								sender.sendMessage(language.STATUS_OTHER.replace("%player%", livingEntity.getType().name() + " [" + livingEntity.getEntityId() + "]").replace("%type%", disguise.getType().toString()));
+								sender.sendMessage(language.STATUS_SUBTYPES.replace("%subtypes%", disguise.toString()));
+							}
+						} else {
+							sender.sendMessage((disguiseSelf ? language.STATUS_NOT_DISGUISED_SELF : language.STATUS_NOT_DISGUISED_OTHER).replace("%player%", livingEntity.getType().name() + " [" + livingEntity.getEntityId() + "]"));
+						}
 					}
 				} else if(StringUtil.equalsIgnoreCase(args[0], "seethrough", "see-through")) {
 					if(sender.hasPermission("iDisguise.see-through")) {
-						if(args.length < 2) {
-							sender.sendMessage((DisguiseManager.canSeeThrough(player) ? disguiseSelf ? language.SEE_THROUGH_STATUS_ON_SELF : language.SEE_THROUGH_STATUS_ON_OTHER : disguiseSelf ? language.SEE_THROUGH_STATUS_OFF_SELF : language.SEE_THROUGH_STATUS_OFF_OTHER).replace("%player%", player.getName()));
-						} else if(StringUtil.equalsIgnoreCase(args[1], "on", "off")) {
-							boolean seeThrough = args[1].equalsIgnoreCase("on");
-							DisguiseManager.setSeeThrough(player, seeThrough);
-							sender.sendMessage((seeThrough ? disguiseSelf ? language.SEE_THROUGH_ENABLE_SELF : language.SEE_THROUGH_ENABLE_OTHER : disguiseSelf ? language.SEE_THROUGH_DISABLE_SELF : language.SEE_THROUGH_DISABLE_OTHER).replace("%player%", player.getName()));
+						if(disguisable instanceof OfflinePlayer) {
+							OfflinePlayer player = (OfflinePlayer)disguisable;
+							if(args.length < 2) {
+								sender.sendMessage((DisguiseManager.canSeeThrough(player) ? disguiseSelf ? language.SEE_THROUGH_STATUS_ON_SELF : language.SEE_THROUGH_STATUS_ON_OTHER : disguiseSelf ? language.SEE_THROUGH_STATUS_OFF_SELF : language.SEE_THROUGH_STATUS_OFF_OTHER).replace("%player%", player.getName()));
+							} else if(StringUtil.equalsIgnoreCase(args[1], "on", "off")) {
+								boolean seeThrough = args[1].equalsIgnoreCase("on");
+								DisguiseManager.setSeeThrough(player, seeThrough);
+								sender.sendMessage((seeThrough ? disguiseSelf ? language.SEE_THROUGH_ENABLE_SELF : language.SEE_THROUGH_ENABLE_OTHER : disguiseSelf ? language.SEE_THROUGH_DISABLE_SELF : language.SEE_THROUGH_DISABLE_OTHER).replace("%player%", player.getName()));
+							} else {
+								sender.sendMessage(language.WRONG_USAGE_SEE_THROUGH.replace("%argument%", args[1]));
+							}
 						} else {
-							sender.sendMessage(language.WRONG_USAGE_SEE_THROUGH.replace("%argument%", args[1]));
+							sender.sendMessage(language.SEE_THROUGH_ENTITY);
 						}
 					} else {
 						sender.sendMessage(language.NO_PERMISSION);
 					}
 				} else {
-					Disguise disguise = DisguiseManager.isDisguised(player) ? DisguiseManager.getDisguise(player).clone() : null;
+					Disguise disguise = disguisable instanceof OfflinePlayer ? DisguiseManager.isDisguised((OfflinePlayer)disguisable) ? DisguiseManager.getDisguise((OfflinePlayer)disguisable).clone() : null : DisguiseManager.isDisguised((LivingEntity)disguisable) ? DisguiseManager.getDisguise((LivingEntity)disguisable).clone() : null;
 					boolean match = false;
 					List<String> unknown_args = new ArrayList<String>(Arrays.asList(args));
 					for(Iterator<String> iterator = unknown_args.iterator(); iterator.hasNext(); ) {
-						DisguiseType type = DisguiseType.Matcher.match(iterator.next().toLowerCase(Locale.ENGLISH));
+						DisguiseType type = DisguiseType.fromString(iterator.next());
 						if(type != null) {
 							if(match) {
 								sender.sendMessage(language.WRONG_USAGE_TWO_DISGUISE_TYPES);
@@ -378,23 +423,36 @@ public class iDisguise extends JavaPlugin {
 					}
 					if(match) {
 						if(hasPermission(sender, disguise)) {
-							if(player.isOnline()) {
-								DisguiseEvent event = new DisguiseEvent(player.getPlayer(), disguise);
-								getServer().getPluginManager().callEvent(event);
-								if(event.isCancelled()) {
-									sender.sendMessage(language.EVENT_CANCELLED);
+							if(disguisable instanceof OfflinePlayer) {
+								OfflinePlayer player = (OfflinePlayer)disguisable;
+								if(player.isOnline()) {
+									DisguiseEvent event = new DisguiseEvent(player.getPlayer(), disguise);
+									getServer().getPluginManager().callEvent(event);
+									if(event.isCancelled()) {
+										sender.sendMessage(language.EVENT_CANCELLED);
+									} else {
+										DisguiseManager.disguise(player, disguise);
+										sender.sendMessage((disguiseSelf ? language.DISGUISE_SUCCESS_SELF : language.DISGUISE_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()));
+									}
 								} else {
-									DisguiseManager.disguise(player, disguise);
-									sender.sendMessage((disguiseSelf ? language.DISGUISE_SUCCESS_SELF : language.DISGUISE_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()));
+									OfflinePlayerDisguiseEvent event = new OfflinePlayerDisguiseEvent(player, disguise);
+									getServer().getPluginManager().callEvent(event);
+									if(event.isCancelled()) {
+										sender.sendMessage(language.EVENT_CANCELLED);
+									} else {
+										DisguiseManager.disguise(player, disguise);
+										sender.sendMessage((disguiseSelf ? language.DISGUISE_SUCCESS_SELF : language.DISGUISE_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()));
+									}
 								}
 							} else {
-								OfflinePlayerDisguiseEvent event = new OfflinePlayerDisguiseEvent(player, disguise);
+								LivingEntity livingEntity = (LivingEntity)disguisable;
+								EntityDisguiseEvent event = new EntityDisguiseEvent(livingEntity, disguise);
 								getServer().getPluginManager().callEvent(event);
 								if(event.isCancelled()) {
 									sender.sendMessage(language.EVENT_CANCELLED);
 								} else {
-									DisguiseManager.disguise(player, disguise);
-									sender.sendMessage((disguiseSelf ? language.DISGUISE_SUCCESS_SELF : language.DISGUISE_SUCCESS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().toString()));
+									DisguiseManager.disguise(livingEntity, disguise);
+									sender.sendMessage(language.DISGUISE_SUCCESS_OTHER.replace("%player%", livingEntity.getType().name() + " [" + livingEntity.getEntityId() + "]").replace("%type%", disguise.getType().toString()));
 								}
 							}
 						} else {
@@ -428,76 +486,171 @@ public class iDisguise extends JavaPlugin {
 				} else {
 					sender.sendMessage(language.UNDISGUISE_CONSOLE);
 				}
-			} else if(args[0].equals("*")) {
-				if(sender.hasPermission("iDisguise.undisguise.all")) {	
-					if(args.length > 1 && args[1].equalsIgnoreCase("ignore")) {
-						DisguiseManager.undisguiseAll();
-						sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL_IGNORE);
-					} else {
-						Set<OfflinePlayer> disguisedPlayers = DisguiseManager.getDisguisedPlayers();
-						int share = 0, total = disguisedPlayers.size();
-						for(OfflinePlayer player : disguisedPlayers) {
-							if(player.isOnline()) {
-								UndisguiseEvent event = new UndisguiseEvent(player.getPlayer(), DisguiseManager.getDisguise(player), true);
-								getServer().getPluginManager().callEvent(event);
-								if(!event.isCancelled()) {
-									DisguiseManager.undisguise(player);
-									share++;
-								}
-							} else {
-								OfflinePlayerUndisguiseEvent event = new OfflinePlayerUndisguiseEvent(player, DisguiseManager.getDisguise(player), true);
-								getServer().getPluginManager().callEvent(event);
-								if(!event.isCancelled()) {
-									DisguiseManager.undisguise(player);
-									share++;
-								}
+			} else if(args[0].startsWith("*")) {
+				args[0] = args[0].toLowerCase(Locale.ENGLISH);
+				if(sender.hasPermission("iDisguise.undisguise.all")) {
+					if(args[0].matches("\\*[eop]?")) {
+						boolean entities, players, offline;
+						entities = players = offline = true;
+						if(args[0].length() == 2) {
+							switch(args[0].charAt(1)) {
+								case 'e':
+									players = offline = false;
+									break;
+								case 'o':
+									offline = false;
+								case 'p':
+									entities = false;
+									break;
 							}
 						}
-						sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL.replace("%share%", Integer.toString(share)).replace("%total%", Integer.toString(total)));
+						if(args.length > 1 && args[1].equalsIgnoreCase("ignore")) {
+							Set<Object> disguisedEntities = DisguiseManager.getDisguisedEntities();
+							int[] share = {0, 0, 0}, total = {0, 0, 0};
+							for(Object disguisable : disguisedEntities) {
+								if(disguisable instanceof OfflinePlayer) {
+									if(!players) continue;
+									OfflinePlayer offlinePlayer = (OfflinePlayer)disguisable;
+									if(offlinePlayer.isOnline()) {
+										total[1]++;
+										DisguiseManager.undisguise(offlinePlayer);
+										share[1]++;
+									} else {
+										if(!offline) continue;
+										total[2]++;
+										DisguiseManager.undisguise(offlinePlayer);
+										share[2]++;
+									}
+								} else {
+									if(!entities) continue;
+									total[0]++;
+									LivingEntity livingEntity = (LivingEntity)disguisable;
+									DisguiseManager.undisguise(livingEntity);
+									share[0]++;
+								}
+							}
+							if(players)
+								sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL_ONLINE.replace("%share%", Integer.toString(share[1])).replace("%total%", Integer.toString(total[1])));
+							if(offline)
+								sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL_OFFLINE.replace("%share%", Integer.toString(share[2])).replace("%total%", Integer.toString(total[2])));
+							if(entities)
+								sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL_ENTITIES.replace("%share%", Integer.toString(share[0])).replace("%total%", Integer.toString(total[0])));
+						} else {
+							Set<Object> disguisedEntities = DisguiseManager.getDisguisedEntities();
+							int[] share = {0, 0, 0}, total = {0, 0, 0};
+							for(Object disguisable : disguisedEntities) {
+								if(disguisable instanceof OfflinePlayer) {
+									if(!players) continue;
+									OfflinePlayer offlinePlayer = (OfflinePlayer)disguisable;
+									if(offlinePlayer.isOnline()) {
+										total[1]++;
+										UndisguiseEvent event = new UndisguiseEvent(offlinePlayer.getPlayer(), DisguiseManager.getDisguise(offlinePlayer), true);
+										getServer().getPluginManager().callEvent(event);
+										if(!event.isCancelled()) {
+											DisguiseManager.undisguise(offlinePlayer);
+											share[1]++;
+										}
+									} else {
+										if(!offline) continue;
+										total[2]++;
+										OfflinePlayerUndisguiseEvent event = new OfflinePlayerUndisguiseEvent(offlinePlayer, DisguiseManager.getDisguise(offlinePlayer), true);
+										getServer().getPluginManager().callEvent(event);
+										if(!event.isCancelled()) {
+											DisguiseManager.undisguise(offlinePlayer);
+											share[2]++;
+										}
+									}
+								} else {
+									if(!entities) continue;
+									total[0]++;
+									LivingEntity livingEntity = (LivingEntity)disguisable;
+									EntityUndisguiseEvent event = new EntityUndisguiseEvent(livingEntity, DisguiseManager.getDisguise(livingEntity), true);
+									getServer().getPluginManager().callEvent(event);
+									if(!event.isCancelled()) {
+										DisguiseManager.undisguise(livingEntity);
+										share[0]++;
+									}
+								}
+							}
+							if(players)
+								sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL_ONLINE.replace("%share%", Integer.toString(share[1])).replace("%total%", Integer.toString(total[1])));
+							if(offline)
+								sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL_OFFLINE.replace("%share%", Integer.toString(share[2])).replace("%total%", Integer.toString(total[2])));
+							if(entities)
+								sender.sendMessage(language.UNDISGUISE_SUCCESS_ALL_ENTITIES.replace("%share%", Integer.toString(share[0])).replace("%total%", Integer.toString(total[0])));
+						}
+					} else {
+						sender.sendMessage(language.WRONG_USAGE_UNKNOWN_ARGUMENTS.replace("%arguments%", args[0]));
 					}
 				} else {
 					sender.sendMessage(language.NO_PERMISSION);
 				}
 			} else {
 				if(sender.hasPermission("iDisguise.undisguise.others")) {
-					OfflinePlayer player = null;
-					if(getServer().getPlayerExact(args[0]) != null) {
-						player = getServer().getPlayerExact(args[0]);
+					Object disguisable = null;
+					if(args[0].matches("<[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}>")) {
+						disguisable = getServer().getOfflinePlayer(UUID.fromString(args[0].substring(1, 37)));
+					} else if(args[0].matches("\\[[0-9]+\\]")) {
+						disguisable = EntityIdList.getEntityByEntityId(Integer.parseInt(args[0].substring(1, args[0].length() - 1)));
+					} else if(args[0].matches("\\{[A-Za-z0-9_]{1,16}\\}")) {
+						disguisable = getServer().getOfflinePlayer(args[0].substring(1, args[0].length() - 1));
+					} else if(getServer().getPlayerExact(args[0]) != null) {
+						disguisable = getServer().getPlayerExact(args[0]);
 					} else if(getServer().matchPlayer(args[0]).size() == 1) {
-						player = getServer().matchPlayer(args[0]).get(0);
-					} else if(getServer().getOfflinePlayer(args[0]) != null) {
-						player = getServer().getOfflinePlayer(args[0]);
+						disguisable = getServer().matchPlayer(args[0]).get(0);
 					} else {
 						sender.sendMessage(language.CANNOT_FIND_PLAYER.replace("%player%", args[0]));
 						return true;
 					}
-					if(DisguiseManager.isDisguised(player)) {
-						if(args.length > 1 && args[1].equalsIgnoreCase("ignore")) {
-							DisguiseManager.undisguise(player);
-							sender.sendMessage(language.UNDISGUISE_SUCCESS_OTHER.replace("%player%", player.getName()));
-						} else {
-							if(player.isOnline()) {
-								UndisguiseEvent event = new UndisguiseEvent(player.getPlayer(), DisguiseManager.getDisguise(player), false);
-								getServer().getPluginManager().callEvent(event);
-								if(event.isCancelled()) {
-									sender.sendMessage(language.EVENT_CANCELLED);
-								} else {
-									DisguiseManager.undisguise(player);
-									sender.sendMessage(language.UNDISGUISE_SUCCESS_OTHER.replace("%player%", player.getName()));
-								}
+					if(disguisable instanceof OfflinePlayer) {
+						OfflinePlayer player = (OfflinePlayer)disguisable;
+						if(DisguiseManager.isDisguised(player)) {
+							if(args.length > 1 && args[1].equalsIgnoreCase("ignore")) {
+								DisguiseManager.undisguise(player);
+								sender.sendMessage(language.UNDISGUISE_SUCCESS_OTHER.replace("%player%", player.getName()));
 							} else {
-								OfflinePlayerUndisguiseEvent event = new OfflinePlayerUndisguiseEvent(player, DisguiseManager.getDisguise(player), false);
-								getServer().getPluginManager().callEvent(event);
-								if(event.isCancelled()) {
-									sender.sendMessage(language.EVENT_CANCELLED);
+								if(player.isOnline()) {
+									UndisguiseEvent event = new UndisguiseEvent(player.getPlayer(), DisguiseManager.getDisguise(player), false);
+									getServer().getPluginManager().callEvent(event);
+									if(event.isCancelled()) {
+										sender.sendMessage(language.EVENT_CANCELLED);
+									} else {
+										DisguiseManager.undisguise(player);
+										sender.sendMessage(language.UNDISGUISE_SUCCESS_OTHER.replace("%player%", player.getName()));
+									}
 								} else {
-									DisguiseManager.undisguise(player);
-									sender.sendMessage(language.UNDISGUISE_SUCCESS_OTHER.replace("%player%", player.getName()));
+									OfflinePlayerUndisguiseEvent event = new OfflinePlayerUndisguiseEvent(player, DisguiseManager.getDisguise(player), false);
+									getServer().getPluginManager().callEvent(event);
+									if(event.isCancelled()) {
+										sender.sendMessage(language.EVENT_CANCELLED);
+									} else {
+										DisguiseManager.undisguise(player);
+										sender.sendMessage(language.UNDISGUISE_SUCCESS_OTHER.replace("%player%", player.getName()));
+									}
 								}
 							}
+						} else {
+							sender.sendMessage(language.UNDISGUISE_NOT_DISGUISED_OTHER.replace("%player%", player.getName()));
 						}
 					} else {
-						sender.sendMessage(language.UNDISGUISE_NOT_DISGUISED_OTHER.replace("%player%", player.getName()));
+						LivingEntity livingEntity = (LivingEntity)disguisable;
+						if(DisguiseManager.isDisguised(livingEntity)) {
+							if(args.length > 1 && args[1].equalsIgnoreCase("ignore")) {
+								DisguiseManager.undisguise(livingEntity);
+								sender.sendMessage(language.UNDISGUISE_SUCCESS_OTHER.replace("%player%", livingEntity.getType().name() + " [" + livingEntity.getEntityId() + "]"));
+							} else {
+								EntityUndisguiseEvent event = new EntityUndisguiseEvent(livingEntity, DisguiseManager.getDisguise(livingEntity), false);
+								getServer().getPluginManager().callEvent(event);
+								if(event.isCancelled()) {
+									sender.sendMessage(language.EVENT_CANCELLED);
+								} else {
+									DisguiseManager.undisguise(livingEntity);
+									sender.sendMessage(language.UNDISGUISE_SUCCESS_OTHER.replace("%player%", livingEntity.getType().name() + " [" + livingEntity.getEntityId() + "]"));
+								}
+							}
+						} else {
+							sender.sendMessage(language.UNDISGUISE_NOT_DISGUISED_OTHER.replace("%player%", livingEntity.getType().name() + " [" + livingEntity.getEntityId() + "]"));
+						}
 					}
 				} else {
 					sender.sendMessage(language.NO_PERMISSION);
@@ -525,13 +678,13 @@ public class iDisguise extends JavaPlugin {
 					}
 					for(DisguiseType type : DisguiseType.values()) {
 						if(type.isAvailable() && !type.isPlayer()) {
-							completions.add(type.getDefaultCommandArgument());
+							completions.add(type.getCustomCommandArgument());
 						}
 					}
 				}
 				Disguise disguise = DisguiseManager.isDisguised(player) ? DisguiseManager.getDisguise(player).clone() : null;
 				for(String argument : args) {
-					DisguiseType type = DisguiseType.Matcher.match(argument.toLowerCase(Locale.ENGLISH));
+					DisguiseType type = DisguiseType.fromString(argument);
 					if(type != null) {
 						try {
 							disguise = type.newInstance();
@@ -542,7 +695,7 @@ public class iDisguise extends JavaPlugin {
 					}
 				}
 				if(disguise != null) {
-					completions.addAll(Subtypes.listSubtypeArguments(disguise));
+					completions.addAll(Subtypes.listSubtypeArguments(disguise, args.length > 0 ? args[args.length - 1].contains("=") : false));
 				}
 			} else {
 				completions.add("reload");
@@ -554,36 +707,47 @@ public class iDisguise extends JavaPlugin {
 				}
 				if(sender.hasPermission("iDisguise.others")) {
 					for(Player player : Bukkit.getOnlinePlayers()) {
-						completions.add(player.getName());
+						completions.add("{" + player.getName() + "}");
+					}
+					if(sender instanceof Player) {
+						for(Entity entity : ((Player)sender).getNearbyEntities(5.0, 5.0, 5.0)) {
+							if(entity instanceof LivingEntity) {
+								completions.add("[" + entity.getEntityId() + "]");
+							}
+						}
 					}
 				}
 			} else if(sender.hasPermission("iDisguise.others")) {
-				OfflinePlayer player = null;
-				if(getServer().getPlayerExact(args[0]) != null) {
-					player = getServer().getPlayerExact(args[0]);
+				Object disguisable = null;
+				if(args[0].matches("<[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}>")) {
+					disguisable = getServer().getOfflinePlayer(UUID.fromString(args[0].substring(1, 37)));
+				} else if(args[0].matches("\\[[0-9]+\\]")) {
+					disguisable = EntityIdList.getEntityByEntityId(Integer.parseInt(args[0].substring(1, args[0].length() - 1)));
+				} else if(args[0].matches("\\{[A-Za-z0-9_]{1,16}\\}")) {
+					disguisable = getServer().getOfflinePlayer(args[0].substring(1, args[0].length() - 1));
+				} else if(getServer().getPlayerExact(args[0]) != null) {
+					disguisable = getServer().getPlayerExact(args[0]);
 				} else if(getServer().matchPlayer(args[0]).size() == 1) {
-					player = getServer().matchPlayer(args[0]).get(0);
-				} else if(getServer().getOfflinePlayer(args[0]) != null) {
-					player = getServer().getOfflinePlayer(args[0]);
+					disguisable = getServer().matchPlayer(args[0]).get(0);
 				}
-				if(player != null) {
+				if(disguisable != null) {
 					if(args.length < 3) {
 						completions.addAll(Arrays.asList("help", "player", "status"));
 						if(sender.hasPermission("iDisguise.random")) {
 							completions.add("random");
 						}
-						if(sender.hasPermission("iDisguise.see-through")) {
+						if(sender.hasPermission("iDisguise.see-through") && disguisable instanceof OfflinePlayer) {
 							completions.add("see-through");
 						}
 						for(DisguiseType type : DisguiseType.values()) {
 							if(!type.isPlayer() && type.isAvailable() && hasPermission(sender, type.newInstance())) {
-								completions.add(type.getDefaultCommandArgument());
+								completions.add(type.getCustomCommandArgument());
 							}
 						}
 					}
-					Disguise disguise = DisguiseManager.isDisguised(player) ? DisguiseManager.getDisguise(player).clone() : null;
+					Disguise disguise = disguisable instanceof OfflinePlayer ? DisguiseManager.isDisguised((OfflinePlayer)disguisable) ? DisguiseManager.getDisguise((OfflinePlayer)disguisable).clone() : null : DisguiseManager.isDisguised((LivingEntity)disguisable) ? DisguiseManager.getDisguise((LivingEntity)disguisable).clone() : null;
 					for(String argument : args) {
-						DisguiseType type = DisguiseType.Matcher.match(argument.toLowerCase(Locale.ENGLISH));
+						DisguiseType type = DisguiseType.fromString(argument);
 						if(type != null) {
 							try {
 								disguise = type.newInstance();
@@ -594,19 +758,26 @@ public class iDisguise extends JavaPlugin {
 						}
 					}
 					if(disguise != null) {
-						completions.addAll(Subtypes.listSubtypeArguments(disguise));
+						completions.addAll(Subtypes.listSubtypeArguments(disguise, args.length > 0 ? args[args.length - 1].contains("=") : false));
 					}
 				}
 			}
 		} else if(command.getName().equalsIgnoreCase("undisguise")) {
 			if(args.length < 2) {
 				if(sender.hasPermission("iDisguise.undisguise.all")) {
-					completions.add("*");
+					completions.addAll(Arrays.asList("*", "*e", "*o", "*p"));
 				}
 				if(sender.hasPermission("iDisguise.undisguise.others")) {
 					for(Player player : Bukkit.getOnlinePlayers()) {
 						if(DisguiseManager.isDisguised(player)) {
-							completions.add(player.getName());
+							completions.add("{" + player.getName() + "}");
+						}
+					}
+					if(sender instanceof Player) {
+						for(Entity entity : ((Player)sender).getNearbyEntities(5.0, 5.0, 5.0)) {
+							if(entity instanceof LivingEntity && DisguiseManager.isDisguised((LivingEntity)entity)) {
+								completions.add("[" + entity.getEntityId() + "]");
+							}
 						}
 					}
 				}
@@ -616,7 +787,7 @@ public class iDisguise extends JavaPlugin {
 		}
 		if(args.length > 0) {
 			for(int i = 0; i < completions.size(); i++) {
-				if(!StringUtil.startsWithIgnoreCase(completions.get(i), args[args.length - 1])) {
+				if(!StringUtil.startsWithIgnoreCase(completions.get(i).replace("{", ""), args[args.length - 1])) {
 					completions.remove(i);
 					i--;
 				}
@@ -632,7 +803,7 @@ public class iDisguise extends JavaPlugin {
 		}
 		alias = alias.toLowerCase(Locale.ENGLISH);
 		boolean self = command.getName().equalsIgnoreCase("disguise");
-		String disguiseCommand = "/" + (self ? alias : alias + " <player>");
+		String disguiseCommand = "/" + (self ? alias : alias + " <target>");
 		String undisguiseCommand = "/" + alias.replaceAll("o?disguise$", "undisguise").replaceAll("o?dis$", "undis").replaceAll("o?d$", "ud");
 		sender.sendMessage(language.HELP_INFO.replace("%name%", "iDisguise").replace("%version%", getVersion()));
 		
@@ -661,25 +832,32 @@ public class iDisguise extends JavaPlugin {
 			sender.sendMessage(language.HELP_BASE.replace("%command%", undisguiseCommand).replace("%description%", language.HELP_UNDISGUISE_SELF));
 		}
 		if(sender.hasPermission("iDisguise.undisguise.all")) {
-			sender.sendMessage(language.HELP_BASE.replace("%command%", undisguiseCommand + " * [ignore]").replace("%description%", language.HELP_UNDISGUISE_ALL));
+			sender.sendMessage(language.HELP_BASE.replace("%command%", undisguiseCommand + " <*/*o/*p/*e> [ignore]").replace("%description%", language.HELP_UNDISGUISE_ALL_NEW));
 		}
 		if(sender.hasPermission("iDisguise.undisguise.others")) {
-			sender.sendMessage(language.HELP_BASE.replace("%command%", undisguiseCommand + " <player> [ignore]").replace("%description%", language.HELP_UNDISGUISE_OTHER));
+			sender.sendMessage(language.HELP_BASE.replace("%command%", undisguiseCommand + " <target> [ignore]").replace("%description%", language.HELP_UNDISGUISE_OTHER));
 		}
 		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " [subtype] <type> [subtype]").replace("%description%", self ? language.HELP_DISGUISE_SELF : language.HELP_DISGUISE_OTHER));
 		sender.sendMessage(language.HELP_BASE.replace("%command%", disguiseCommand + " <subtype>").replace("%description%", language.HELP_SUBTYPE));
+		if(!self) {
+			for(String message : new String[] {language.HELP_TARGET_TITLE, language.HELP_TARGET_UID, language.HELP_TARGET_EID, language.HELP_TARGET_NAME_EXACT, language.HELP_TARGET_NAME_MATCH}) {
+				sender.sendMessage(message);
+			}
+		}
 		StringBuilder builder = new StringBuilder();
 		String color = ChatColor.getLastColors(language.HELP_TYPES);
 		for(DisguiseType type : DisguiseType.values()) {
 			if(!type.isPlayer()) {
 				String format = !type.isAvailable() ? language.HELP_TYPES_NOT_SUPPORTED : hasPermission(sender, type) ? language.HELP_TYPES_AVAILABLE : language.HELP_TYPES_NO_PERMISSION;
 				if(format.contains("%type%")) {	
-					builder.append(format.replace("%type%", type.getDefaultCommandArgument()));
+					builder.append(format.replace("%type%", type.getCustomCommandArgument()));
 					builder.append(color + ", ");
 				}
 			}
 		}
-		sender.sendMessage(language.HELP_TYPES.replace("%types%", builder.substring(0, builder.length() - 2)));
+		if(builder.length() > 2) {
+			sender.sendMessage(language.HELP_TYPES.replace("%types%", builder.substring(0, builder.length() - 2)));
+		}
 	}
 	
 	private boolean hasPermission(CommandSender sender, DisguiseType type) {
@@ -750,7 +928,7 @@ public class iDisguise extends JavaPlugin {
 	}
 	
 	/**
-	 * Checks if the plugin directory (= data folder) exist and creates such a directory if not.
+	 * Checks if the plugin directory (= data folder) exists and creates such a directory if not.
 	 * 
 	 * @return <code>true</code> if a file named 'debug' exists in that directory (which means that debug mode shall be enabled), <code>false</code> otherwise
 	 */
@@ -761,7 +939,50 @@ public class iDisguise extends JavaPlugin {
 		return new File(getDataFolder(), "debug").isFile();
 	}
 	
-	private void loadData() {
+	private void loadConfigFiles() {
+		// reload config
+		configuration.loadData();
+		configuration.saveData();
+		
+		// reload language file
+		language.loadData();
+		language.saveData();
+		
+		// reset config values
+		PacketHandler.showOriginalPlayerName = configuration.NAME_TAG_SHOWN;
+		PacketHandler.modifyPlayerListEntry = configuration.MODIFY_PLAYER_LIST_ENTRY;
+		DisguiseManager.modifyScoreboardPackets = PacketHandler.modifyScoreboardPackets = configuration.MODIFY_SCOREBOARD_PACKETS;
+		PacketHandler.replaceSoundEffects = configuration.REPLACE_SOUND_EFFECTS;
+		PacketHandler.bungeeCord = configuration.BUNGEE_CORD;
+		
+		// setup hooks
+		if(configuration.MODIFY_SCOREBOARD_PACKETS) {
+			ScoreboardHooks.setup();
+		}
+		
+		// load disguise aliases
+		try {
+			for(DisguiseType type : DisguiseType.values()) {
+				if(!type.isPlayer()) {
+					String value = (String)Language.class.getDeclaredField("DISGUISE_ALIAS_" + type.name()).get(language);
+					if(StringUtil.isNotBlank(value)) {
+						String[] aliases = value.split("\\s*,\\s*");
+						for(String alias : aliases) {
+							if(StringUtil.isNotBlank(alias) && alias.matches("!?[A-Za-z0-9-_]+")) {
+								if(alias.startsWith("!"))
+									type.setCustomCommandArgument(alias.substring(1));
+								else
+									type.addCustomCommandArgument(alias);
+							}
+						}
+					}
+				}
+			}
+		} catch(Exception e) { // fail silently
+		}
+	}
+	
+	private void loadDisguises() {
 		File dataFile = new File(getDataFolder(), "disguises.dat");
 		File oldDataFile = new File(getDataFolder(), "data.bin");
 		if(dataFile.exists()) {
@@ -775,7 +996,7 @@ public class iDisguise extends JavaPlugin {
 		}
 	}
 	
-	private void saveData() {
+	private void saveDisguises() {
 		File dataFile = new File(getDataFolder(), "disguises.dat");
 		SLAPI.saveMap(DisguiseManager.getDisguises(), dataFile);
 	}
@@ -783,40 +1004,46 @@ public class iDisguise extends JavaPlugin {
 	public DisguiseAPI getAPI() {
 		return new DisguiseAPI() {
 			
-			@Deprecated
-			public void disguiseToAll(Player player, Disguise disguise) {
-				disguise(player, disguise, false);
+			public boolean disguise(OfflinePlayer offlinePlayer, Disguise disguise) {
+				return disguise(offlinePlayer, disguise, true);
 			}
 			
-			@Deprecated
-			public void undisguiseToAll(Player player) {
-				undisguise(player, false);
-			}
-			
-			public boolean disguise(OfflinePlayer player, Disguise disguise) {
+			public boolean disguise(Player player, Disguise disguise) {
 				return disguise(player, disguise, true);
 			}
 			
-			public boolean disguise(OfflinePlayer player, Disguise disguise, boolean fireEvent) {
+			public boolean disguise(LivingEntity livingEntity, Disguise disguise) {
+				return disguise(livingEntity, disguise, true);
+			}
+			
+			public boolean disguise(OfflinePlayer offlinePlayer, Disguise disguise, boolean fireEvent) {
+				if(offlinePlayer.isOnline()) {
+					return disguise(offlinePlayer.getPlayer(), disguise, fireEvent);
+				}
 				if(fireEvent) {
-					if(player.isOnline()) {
-						DisguiseEvent event = new DisguiseEvent(player.getPlayer(), disguise);
-						getServer().getPluginManager().callEvent(event);
-						if(event.isCancelled()) {
-							return false;
-						} else {
-							DisguiseManager.disguise(player, disguise);
-							return true;
-						}
+					OfflinePlayerDisguiseEvent event = new OfflinePlayerDisguiseEvent(offlinePlayer, disguise);
+					getServer().getPluginManager().callEvent(event);
+					if(event.isCancelled()) {
+						return false;
 					} else {
-						OfflinePlayerDisguiseEvent event = new OfflinePlayerDisguiseEvent(player, disguise);
-						getServer().getPluginManager().callEvent(event);
-						if(event.isCancelled()) {
-							return false;
-						} else {
-							DisguiseManager.disguise(player, disguise);
-							return true;
-						}
+						DisguiseManager.disguise(offlinePlayer, disguise);
+						return true;
+					}
+				} else {
+					DisguiseManager.disguise(offlinePlayer, disguise);
+					return true;
+				}
+			}
+			
+			public boolean disguise(Player player, Disguise disguise, boolean fireEvent) {
+				if(fireEvent) {
+					DisguiseEvent event = new DisguiseEvent(player, disguise);
+					getServer().getPluginManager().callEvent(event);
+					if(event.isCancelled()) {
+						return false;
+					} else {
+						DisguiseManager.disguise(player, disguise);
+						return true;
 					}
 				} else {
 					DisguiseManager.disguise(player, disguise);
@@ -824,36 +1051,93 @@ public class iDisguise extends JavaPlugin {
 				}
 			}
 			
-			public boolean undisguise(OfflinePlayer player) {
+			public boolean disguise(LivingEntity livingEntity, Disguise disguise, boolean fireEvent) {
+				if(livingEntity instanceof Player) {
+					return disguise((Player)livingEntity, disguise, fireEvent);
+				}
+				if(fireEvent) {
+					EntityDisguiseEvent event = new EntityDisguiseEvent(livingEntity, disguise);
+					getServer().getPluginManager().callEvent(event);
+					if(event.isCancelled()) {
+						return false;
+					} else {
+						DisguiseManager.disguise(livingEntity, disguise);
+						return true;
+					}
+				} else {
+					DisguiseManager.disguise(livingEntity, disguise);
+					return true;
+				}
+			}
+			
+			public boolean undisguise(OfflinePlayer offlinePlayer) {
+				return undisguise(offlinePlayer, true);
+			}
+			
+			public boolean undisguise(Player player) {
 				return undisguise(player, true);
 			}
 			
-			public boolean undisguise(OfflinePlayer player, boolean fireEvent) {
-				if(!isDisguised(player)) {
-					return false;
+			public boolean undisguise(LivingEntity livingEntity) {
+				return undisguise(livingEntity, true);
+			}
+			
+			public boolean undisguise(OfflinePlayer offlinePlayer, boolean fireEvent) {
+				if(offlinePlayer.isOnline()) {
+					return undisguise(offlinePlayer.getPlayer(), fireEvent);
 				}
+				if(!isDisguised(offlinePlayer)) return false;
+				
 				if(fireEvent) {
-					if(player.isOnline()) {
-						UndisguiseEvent event = new UndisguiseEvent(player.getPlayer(), getDisguise(player), false);
-						getServer().getPluginManager().callEvent(event);
-						if(event.isCancelled()) {
-							return false;
-						} else {
-							DisguiseManager.undisguise(player);
-							return true;
-						}
+					OfflinePlayerUndisguiseEvent event = new OfflinePlayerUndisguiseEvent(offlinePlayer, getDisguise(offlinePlayer), false);
+					getServer().getPluginManager().callEvent(event);
+					if(event.isCancelled()) {
+						return false;
 					} else {
-						OfflinePlayerUndisguiseEvent event = new OfflinePlayerUndisguiseEvent(player, getDisguise(player), false);
-						getServer().getPluginManager().callEvent(event);
-						if(event.isCancelled()) {
-							return false;
-						} else {
-							DisguiseManager.undisguise(player);
-							return true;
-						}
+						DisguiseManager.undisguise(offlinePlayer);
+						return true;
+					}
+				} else {
+					DisguiseManager.undisguise(offlinePlayer);
+					return true;
+				}
+			}
+			
+			public boolean undisguise(Player player, boolean fireEvent) {
+				if(!isDisguised(player)) return false;
+				
+				if(fireEvent) {
+					UndisguiseEvent event = new UndisguiseEvent(player, getDisguise(player), false);
+					getServer().getPluginManager().callEvent(event);
+					if(event.isCancelled()) {
+						return false;
+					} else {
+						DisguiseManager.undisguise(player);
+						return true;
 					}
 				} else {
 					DisguiseManager.undisguise(player);
+					return true;
+				}
+			}
+			
+			public boolean undisguise(LivingEntity livingEntity, boolean fireEvent) {
+				if(livingEntity instanceof Player) {
+					return undisguise((Player)livingEntity, fireEvent);
+				}
+				if(!isDisguised(livingEntity)) return false;
+				
+				if(fireEvent) {
+					EntityUndisguiseEvent event = new EntityUndisguiseEvent(livingEntity, getDisguise(livingEntity), false);
+					getServer().getPluginManager().callEvent(event);
+					if(event.isCancelled()) {
+						return false;
+					} else {
+						DisguiseManager.undisguise(livingEntity);
+						return true;
+					}
+				} else {
+					DisguiseManager.undisguise(livingEntity);
 					return true;
 				}
 			}
@@ -862,31 +1146,40 @@ public class iDisguise extends JavaPlugin {
 				DisguiseManager.undisguiseAll();
 			}
 			
-			@Deprecated
-			public boolean isDisguised(Player player) {
-				return isDisguised((OfflinePlayer)player);
+			public boolean isDisguised(OfflinePlayer offlinePlayer) {
+				return DisguiseManager.isDisguised(offlinePlayer);
 			}
 			
-			public boolean isDisguised(OfflinePlayer player) {
+			public boolean isDisguised(Player player) {
 				return DisguiseManager.isDisguised(player);
 			}
 			
-			public boolean isDisguisedTo(OfflinePlayer player, Player observer) {
+			public boolean isDisguised(LivingEntity livingEntity) {
+				return DisguiseManager.isDisguised(livingEntity);
+			}
+			
+			public boolean isDisguisedTo(OfflinePlayer offlinePlayer, Player observer) {
+				return DisguiseManager.isDisguisedTo(offlinePlayer, observer);
+			}
+			
+			public boolean isDisguisedTo(Player player, Player observer) {
 				return DisguiseManager.isDisguisedTo(player, observer);
 			}
 			
-			@Deprecated
+			public boolean isDisguisedTo(LivingEntity livingEntity, Player observer) {
+				return DisguiseManager.isDisguisedTo(livingEntity, observer);
+			}
+			
+			public Disguise getDisguise(OfflinePlayer offlinePlayer) {
+				return DisguiseManager.isDisguised(offlinePlayer) ? DisguiseManager.getDisguise(offlinePlayer).clone() : null;
+			}
+			
 			public Disguise getDisguise(Player player) {
-				return getDisguise((OfflinePlayer)player);
+				return DisguiseManager.isDisguised(player) ? DisguiseManager.getDisguise(player).clone() : null;
 			}
 			
-			public Disguise getDisguise(OfflinePlayer player) {
-				return DisguiseManager.getDisguise(player).clone();
-			}
-			
-			@Deprecated
-			public int getOnlineDisguiseCount() {
-				return getNumberOfDisguisedPlayers();
+			public Disguise getDisguise(LivingEntity livingEntity) {
+				return DisguiseManager.isDisguised(livingEntity) ? DisguiseManager.getDisguise(livingEntity).clone() : null;
 			}
 			
 			public int getNumberOfDisguisedPlayers() {
@@ -902,11 +1195,11 @@ public class iDisguise extends JavaPlugin {
 			}
 			
 			public boolean isSoundsEnabled() {
-				return Sounds.isEnabled();
+				return PacketHandler.replaceSoundEffects;
 			}
 			
 			public void setSoundsEnabled(boolean enabled) {
-				Sounds.setEnabled(enabled);
+				PacketHandler.replaceSoundEffects = enabled;
 			}
 			
 			public boolean hasPermission(Player player, DisguiseType type) {
@@ -923,6 +1216,10 @@ public class iDisguise extends JavaPlugin {
 			
 			public void setSeeThrough(OfflinePlayer player, boolean seeThrough) {
 				DisguiseManager.setSeeThrough(player, seeThrough);
+			}
+			
+			public Set<Object> getDisguisedEntities() {
+				return DisguiseManager.getDisguisedEntities();
 			}
 			
 		};

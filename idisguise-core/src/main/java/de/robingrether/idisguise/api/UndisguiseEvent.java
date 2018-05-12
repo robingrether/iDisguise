@@ -1,6 +1,7 @@
 package de.robingrether.idisguise.api;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 import de.robingrether.idisguise.disguise.Disguise;
@@ -11,7 +12,7 @@ import de.robingrether.idisguise.disguise.Disguise;
  * @since 2.2.1
  * @author RobinGrether
  */
-public class UndisguiseEvent extends PlayerEvent {
+public class UndisguiseEvent extends PlayerEvent implements Cancellable {
 	
 	private static final HandlerList handlers = new HandlerList();
 	private boolean cancel = false;

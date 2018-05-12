@@ -1,8 +1,14 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import org.bukkit.Material;
+
+import de.robingrether.idisguise.management.VersionHelper;
 
 /**
  * Represents a disguise as a falling block.
@@ -47,16 +53,7 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	 * @throws IllegalArgumentException if the material is not a block, or if the data is negative
 	 */
 	public FallingBlockDisguise(Material material, int data) {
-		super(DisguiseType.FALLING_BLOCK);
-		if(!material.isBlock()) {
-			throw new IllegalArgumentException("Material must be a block");
-		}
-		if(data < 0) {
-			throw new IllegalArgumentException("Data must be positive");
-		}
-		this.material = material;
-		this.data = data;
-		this.onlyBlockCoordinates = false;
+		this(material, data, false);
 	}
 	
 	/**
@@ -72,6 +69,9 @@ public class FallingBlockDisguise extends ObjectDisguise {
 		super(DisguiseType.FALLING_BLOCK);
 		if(!material.isBlock()) {
 			throw new IllegalArgumentException("Material must be a block");
+		}
+		if(INVALID_MATERIALS.contains(material)) {
+			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
 		}
 		if(data < 0) {
 			throw new IllegalArgumentException("Data must be positive");
@@ -102,6 +102,9 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	public void setMaterial(Material material) {
 		if(!material.isBlock()) {
 			throw new IllegalArgumentException("Material must be a block");
+		}
+		if(INVALID_MATERIALS.contains(material)) {
+			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
 		}
 		this.material = material;
 		this.data = 0;
@@ -154,19 +157,43 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; material=" + material.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; material-data=" + data + "; " + (onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
+		return String.format("%s; material=%s; material-data=%s; %s", super.toString(), material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), data, onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
 	}
 	
+	/**
+	 * A set containing all invalid materials.<br>
+	 * These materials are <em>invalid</em> because the associated disguise would be invisible.
+	 * 
+	 * @since 5.7.1
+	 */
+	public static final Set<Material> INVALID_MATERIALS;
+	
 	static {
-//		for(Material material : Material.values()) {
-//			if(material.isBlock()) {
-//				Subtypes.registerSubtype(FallingBlockDisguise.class, "setMaterial", material, material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-//			}
-//		}
-		Subtypes.registerParameterizedSubtype(FallingBlockDisguise.class, "setMaterial", "material", Material.class);
-//		for(int i = 0; i < 256; i++) {
-//			Subtypes.registerSubtype(FallingBlockDisguise.class, "setData", i, Integer.toString(i));
-//		}
+		Set<Material> tempSet = new HashSet<Material>(Arrays.asList(Material.AIR, Material.BARRIER, Material.BED_BLOCK, Material.CHEST,
+				Material.COBBLE_WALL, Material.ENDER_CHEST, Material.ENDER_PORTAL, Material.LAVA, Material.MELON_STEM, Material.PISTON_MOVING_PIECE, Material.PORTAL,
+				Material.PUMPKIN_STEM, Material.SIGN_POST, Material.SKULL, Material.STANDING_BANNER, Material.STATIONARY_LAVA, Material.STATIONARY_WATER, Material.TRAPPED_CHEST,
+				Material.WALL_BANNER, Material.WALL_SIGN, Material.WATER));
+		if(VersionHelper.require1_9()) {
+			tempSet.add(Material.END_GATEWAY);
+		}
+		if(VersionHelper.require1_10()) {
+			tempSet.add(Material.STRUCTURE_VOID);
+		}
+		if(VersionHelper.require1_11()) {
+			tempSet.addAll(Arrays.asList(Material.BLACK_SHULKER_BOX, Material.BLUE_SHULKER_BOX, Material.BROWN_SHULKER_BOX, Material.CYAN_SHULKER_BOX,
+					Material.GRAY_SHULKER_BOX, Material.GREEN_SHULKER_BOX, Material.LIGHT_BLUE_SHULKER_BOX, Material.LIME_SHULKER_BOX, Material.MAGENTA_SHULKER_BOX, Material.ORANGE_SHULKER_BOX,
+					Material.PINK_SHULKER_BOX, Material.PURPLE_SHULKER_BOX, Material.RED_SHULKER_BOX, Material.SILVER_SHULKER_BOX, Material.WHITE_SHULKER_BOX, Material.YELLOW_SHULKER_BOX));
+		}
+		INVALID_MATERIALS = Collections.unmodifiableSet(tempSet);
+		
+		Set<String> parameterSuggestions = new HashSet<String>();
+		for(Material material : Material.values()) {
+			if(material.isBlock() && !INVALID_MATERIALS.contains(material)) {
+				parameterSuggestions.add(material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+			}
+		}
+		Subtypes.registerParameterizedSubtype(FallingBlockDisguise.class, "setMaterial", "material", Material.class, Collections.unmodifiableSet(parameterSuggestions));
+		
 		Subtypes.registerParameterizedSubtype(FallingBlockDisguise.class, "setData", "material-data", int.class);
 		Subtypes.registerSubtype(FallingBlockDisguise.class, "setOnlyBlockCoordinates", true, "block-coordinates");
 		Subtypes.registerSubtype(FallingBlockDisguise.class, "setOnlyBlockCoordinates", false, "all-coordinates");

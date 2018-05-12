@@ -2,11 +2,12 @@ package de.robingrether.idisguise.disguise;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -103,7 +104,7 @@ public class Subtypes {
 	 * @param disguiseClass the disguise class
 	 * @param methodName the method to call
 	 * @param argument the command argument to bind this to
-	 * @param parameterType the parameter type to pass to the method (<code>int.class</code>, <code>String.class</code>, <code>String[].class</code> and enum classes are supported)
+	 * @param parameterType the parameter type to pass to the method (<code>int.class</code>, <code>float.class</code>, <code>String.class</code>, <code>String[].class</code> and enum classes are supported)
 	 */
 	public static void registerParameterizedSubtype(Class<? extends Disguise> disguiseClass, String methodName, String argument, Class<?> parameterType) {
 		if(!registeredClasses2.containsKey(disguiseClass)) {
@@ -112,6 +113,26 @@ public class Subtypes {
 		Map<String, ParameterizedSubtype> registeredSubtypes = registeredClasses2.get(disguiseClass);
 		try {
 			registeredSubtypes.put(argument, new ParameterizedSubtype(disguiseClass, methodName, parameterType));
+		} catch(Exception e) {
+			if(VersionHelper.debug()) {
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot register the given subtype: " + disguiseClass.getSimpleName() + "/" + argument, e);
+			}
+		}
+	}
+	
+	/**
+	 * Registers a new parameterized subtype.
+	 * 
+	 * @since 5.7.1
+	 * @see Subtypes#registerParameterizedSubtype(Class, String, String, Class)
+	 */
+	public static void registerParameterizedSubtype(Class<? extends Disguise> disguiseClass, String methodName, String argument, Class<?> parameterType, Set<String> parameterSuggestions) {
+		if(!registeredClasses2.containsKey(disguiseClass)) {
+			registeredClasses2.put(disguiseClass, new LinkedHashMap<String, ParameterizedSubtype>());
+		}
+		Map<String, ParameterizedSubtype> registeredSubtypes = registeredClasses2.get(disguiseClass);
+		try {
+			registeredSubtypes.put(argument, new ParameterizedSubtype(disguiseClass, methodName, parameterType, parameterSuggestions));
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {
 				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot register the given subtype: " + disguiseClass.getSimpleName() + "/" + argument, e);
@@ -130,7 +151,7 @@ public class Subtypes {
 	public static boolean applySubtype(Disguise disguise, String argument) {
 		if(argument.contains(";")) return false;
 		Class<?> clazz = disguise.getClass();
-		List<Class<? extends Disguise>> classes = new ArrayList<Class<? extends Disguise>>();
+		Set<Class<? extends Disguise>> classes = new HashSet<Class<? extends Disguise>>();
 		while(clazz != Object.class) {
 			classes.add((Class<? extends Disguise>)clazz);
 			clazz = clazz.getSuperclass();
@@ -172,20 +193,18 @@ public class Subtypes {
 	}
 	
 	/**
-	 * Returns a list containing all registered subtype arguments for the given disguise.
+	 * Returns a set containing all registered subtype arguments for the given disguise.
 	 * 
-	 * @since 5.3.1
-	 * @param disguise the disguise
-	 * @return a list containing all registered subtype arguments for the given disguise
+	 * @since 5.7.1
 	 */
-	public static List<String> listSubtypeArguments(Disguise disguise) {
+	public static Set<String> listSubtypeArguments(Disguise disguise, boolean includeParameterSuggestions) {
 		Class<?> clazz = disguise.getClass();
 		Stack<Class<? extends Disguise>> classes = new Stack<Class<? extends Disguise>>();
 		while(clazz != Object.class) {
 			classes.add((Class<? extends Disguise>)clazz);
 			clazz = clazz.getSuperclass();
 		}
-		List<String> subtypeArguments = new ArrayList<String>();
+		Set<String> subtypeArguments = new HashSet<String>();
 		while(!classes.isEmpty()) {
 			Class<? extends Disguise> disguiseClass = classes.pop();
 			if(registeredClasses.containsKey(disguiseClass)) {
@@ -194,6 +213,11 @@ public class Subtypes {
 			if(registeredClasses2.containsKey(disguiseClass)) {
 				for(String subtypeArgument : registeredClasses2.get(disguiseClass).keySet()) {
 					subtypeArguments.add(subtypeArgument + "=");
+					if(includeParameterSuggestions) {
+						for(String parameterSuggestion : registeredClasses2.get(disguiseClass).get(subtypeArgument).getParameterSuggestions()) {
+							subtypeArguments.add(subtypeArgument + "=" + parameterSuggestion);
+						}
+					}
 				}
 			}
 		}
@@ -230,15 +254,25 @@ public class Subtypes {
 		
 		private Method method;
 		private Class<?> parameterType;
+		private Set<String> parameterSuggestions;
 		
 		private ParameterizedSubtype(Class<? extends Disguise> disguiseClass, String methodName, Class<?> parameterType) throws NoSuchMethodException {
 			this.method = disguiseClass.getDeclaredMethod(methodName, parameterType);
 			this.parameterType = parameterType;
+			this.parameterSuggestions = Collections.emptySet();
+		}
+		
+		private ParameterizedSubtype(Class<? extends Disguise> disguiseClass, String methodName, Class<?> parameterType, Set<String> parameterSuggestions) throws NoSuchMethodException {
+			this.method = disguiseClass.getDeclaredMethod(methodName, parameterType);
+			this.parameterType = parameterType;
+			this.parameterSuggestions = parameterSuggestions;
 		}
 		
 		private void apply(Disguise disguise, String parameter) throws InvocationTargetException, IllegalAccessException {
 			if(parameterType == int.class) {
 				method.invoke(disguise, Integer.parseInt(parameter));
+			} else if(parameterType == float.class) {
+				method.invoke(disguise, Float.parseFloat(parameter));
 			} else if(parameterType == String.class) {
 				method.invoke(disguise, parameter);
 			} else if(parameterType == String[].class) {
@@ -246,6 +280,10 @@ public class Subtypes {
 			} else if(Enum.class.isAssignableFrom(parameterType)) {
 				method.invoke(disguise, Enum.valueOf((Class<? extends Enum>)parameterType, parameter.toUpperCase(Locale.ENGLISH).replace('-', '_')));
 			}
+		}
+		
+		private Set<String> getParameterSuggestions() {
+			return parameterSuggestions;
 		}
 		
 	}

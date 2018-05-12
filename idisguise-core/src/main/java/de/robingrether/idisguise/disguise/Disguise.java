@@ -2,8 +2,11 @@ package de.robingrether.idisguise.disguise;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.bukkit.entity.Player;
 
@@ -148,11 +151,15 @@ public abstract class Disguise implements Serializable, Cloneable {
 	 * @return a string representation of the object
 	 */
 	public String toString() {
-		return type.toString() + "; visibility=" + visibility.name().toLowerCase(Locale.ENGLISH) + "; visibility-param=" + StringUtil.join(",", visibilityParameter.toArray(new String[0]));
+		return String.format("%s; visibility=%s; visibility-param=%s", type.toString(), visibility.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), StringUtil.join(",", visibilityParameter.toArray(new String[0])));
 	}
 	
 	static {
-		Subtypes.registerParameterizedSubtype(Disguise.class, "setVisibility", "visibility", Visibility.class);
+		Set<String> tempSet = new HashSet<String>();
+		for(Visibility visibility : Visibility.values()) {
+			tempSet.add(visibility.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+		}
+		Subtypes.registerParameterizedSubtype(Disguise.class, "setVisibility", "visibility", Visibility.class, Collections.unmodifiableSet(tempSet));
 		Subtypes.registerParameterizedSubtype(Disguise.class, "setVisibilityParameter", "visibility-param", String[].class);
 	}
 	
@@ -167,15 +174,15 @@ public abstract class Disguise implements Serializable, Cloneable {
 	 */
 	public static Disguise fromString(String string) throws IllegalArgumentException, OutdatedServerException {
 		String[] args = string.split("; ");
-		DisguiseType type = DisguiseType.Matcher.match(args[0]);
-		if(type == null) {
-			if(StringUtil.equals(args[0], "player") && args.length == 5) {
+		DisguiseType type = DisguiseType.fromString(args[0]);
+		if(type == DisguiseType.PLAYER) {
+			if(args.length == 5) {
 				Disguise disguise = new PlayerDisguise(args[3], args[4]);
 				Subtypes.applySubtype(disguise, args[1]);
 				Subtypes.applySubtype(disguise, args[2]);
 				return disguise;
 			}
-		} else {
+		} else if(type != null) {
 			Disguise disguise = type.newInstance();
 			for(int i = 1; i < args.length; i++) {
 				Subtypes.applySubtype(disguise, args[i]);

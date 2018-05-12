@@ -18,9 +18,9 @@ public class OfflinePlayerDisguiseEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
 	protected final OfflinePlayer offlinePlayer;
 	private boolean cancel = false;
-	protected Disguise disguise;
+	protected final Disguise disguise;
 	
-	public OfflinePlayerDisguiseEvent(OfflinePlayer offlinePlayer, Disguise disguise) {
+	public OfflinePlayerDisguiseEvent(OfflinePlayer offlinePlayer, final Disguise disguise) {
 		this.offlinePlayer = offlinePlayer;
 		this.disguise = disguise;
 	}
@@ -36,23 +36,18 @@ public class OfflinePlayerDisguiseEvent extends Event implements Cancellable {
 	}
 	
 	/**
-	 * Returns the disguise.
+	 * Returns a copy of the disguise.
 	 * 
 	 * @since 5.3.1
 	 * @return the disguise
 	 */
-	public Disguise getDisguise() {
-		return disguise;
+	public final Disguise getDisguise() {
+		return disguise.clone();
 	}
 	
-	/**
-	 * Changes the disguise.
-	 * 
-	 * @since 5.3.1
-	 * @param disguise the disguise to change to
-	 */
+	@Deprecated
 	public void setDisguise(Disguise disguise) {
-		this.disguise = disguise;
+		throw new UnsupportedOperationException();
 	}
 	
 	/**

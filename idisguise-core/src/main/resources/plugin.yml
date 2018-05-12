@@ -28,7 +28,7 @@ permissions:
          iDisguise.undisguise: true
          iDisguise.visibility.*: true
    iDisguise.admin:
-      default: false
+      default: op
       children:
          iDisguise.others: true
          iDisguise.player.prohibited: true
@@ -40,7 +40,7 @@ permissions:
    iDisguise.help:
       default: true
    iDisguise.mob.*:
-      default: false
+      default: op
       children:
          iDisguise.mob.baby: true
          iDisguise.mob.bat: true
@@ -107,86 +107,86 @@ permissions:
          iDisguise.mob.zombie: true
          iDisguise.mob.zombie_villager: true
    iDisguise.mob.baby:
-      default: false
+      default: op
    iDisguise.mob.bat:
-      default: false
+      default: op
    iDisguise.mob.blaze:
-      default: false
+      default: op
    iDisguise.mob.cave_spider:
-      default: false
+      default: op
    iDisguise.mob.chicken:
-      default: false
+      default: op
    iDisguise.mob.cow:
-      default: false
+      default: op
    iDisguise.mob.creeper:
-      default: false
+      default: op
    iDisguise.mob.creeper.powered:
-      default: false
+      default: op
    iDisguise.mob.custom-name:
-      default: false
+      default: op
    iDisguise.mob.donkey:
-      default: false
+      default: op
    iDisguise.mob.elder_guardian:
-      default: false
+      default: op
    iDisguise.mob.ender_dragon:
-      default: false
+      default: op
    iDisguise.mob.enderman:
-      default: false
+      default: op
    iDisguise.mob.enderman.block:
-      default: false
+      default: op
    iDisguise.mob.endermite:
-      default: false
+      default: op
    iDisguise.mob.evoker:
-      default: false
+      default: op
    iDisguise.mob.ghast:
-      default: false
+      default: op
    iDisguise.mob.giant:
-      default: false
+      default: op
    iDisguise.mob.guardian:
-      default: false
+      default: op
    iDisguise.mob.horse:
-      default: false
+      default: op
    iDisguise.mob.husk:
-      default: false
+      default: op
    iDisguise.mob.illusioner:
-      default: false
+      default: op
    iDisguise.mob.iron_golem:
-      default: false
+      default: op
    iDisguise.mob.llama:
-      default: false
+      default: op
    iDisguise.mob.magma_cube:
-      default: false
+      default: op
    iDisguise.mob.magma_cube.giant:
-      default: false
+      default: op
    iDisguise.mob.mule:
-      default: false
+      default: op
    iDisguise.mob.mushroom_cow:
-      default: false
+      default: op
    iDisguise.mob.ocelot:
-      default: false
+      default: op
       children:
          iDisguise.mob.ocelot.type.wild: true
    iDisguise.mob.ocelot.type.*:
-      default: false
+      default: op
       children:
          iDisguise.mob.ocelot.type.black: true
          iDisguise.mob.ocelot.type.red: true
          iDisguise.mob.ocelot.type.siamese: true
          iDisguise.mob.ocelot.type.wild: true
    iDisguise.mob.ocelot.type.black:
-      default: false
+      default: op
    iDisguise.mob.ocelot.type.red:
-      default: false
+      default: op
    iDisguise.mob.ocelot.type.siamese:
-      default: false
+      default: op
    iDisguise.mob.ocelot.type.wild:
-      default: false
+      default: op
    iDisguise.mob.parrot:
-      default: false
+      default: op
       children:
          iDisguise.mob.parrot.variant.red: true
    iDisguise.mob.parrot.variant.*:
-      default: false
+      default: op
       children:
          iDisguise.mob.parrot.variant.blue: true
          iDisguise.mob.parrot.variant.cyan: true
@@ -194,29 +194,29 @@ permissions:
          iDisguise.mob.parrot.variant.green: true
          iDisguise.mob.parrot.variant.red: true
    iDisguise.mob.parrot.variant.blue:
-      default: false
+      default: op
    iDisguise.mob.parrot.variant.cyan:
-      default: false
+      default: op
    iDisguise.mob.parrot.variant.gray:
-      default: false
+      default: op
    iDisguise.mob.parrot.variant.green:
-      default: false
+      default: op
    iDisguise.mob.parrot.variant.red:
-      default: false
+      default: op
    iDisguise.mob.pig:
-      default: false
+      default: op
    iDisguise.mob.pig.saddled:
-      default: false
+      default: op
    iDisguise.mob.pig_zombie:
-      default: false
+      default: op
    iDisguise.mob.polar_bear:
-      default: false
+      default: op
    iDisguise.mob.rabbit:
-      default: false
+      default: op
       children:
          iDisguise.mob.rabbit.type.brown: true
    iDisguise.mob.rabbit.type.*:
-      default: false
+      default: op
       children:
          iDisguise.mob.rabbit.type.black: true
          iDisguise.mob.rabbit.type.black-white: true
@@ -226,25 +226,25 @@ permissions:
          iDisguise.mob.rabbit.type.killer: true
          iDisguise.mob.rabbit.type.white: true
    iDisguise.mob.rabbit.type.black:
-      default: false
+      default: op
    iDisguise.mob.rabbit.type.black-white:
-      default: false
+      default: op
    iDisguise.mob.rabbit.type.brown:
-      default: false
+      default: op
    iDisguise.mob.rabbit.type.gold:
-      default: false
+      default: op
    iDisguise.mob.rabbit.type.salt-pepper:
-      default: false
+      default: op
    iDisguise.mob.rabbit.type.killer:
-      default: false
+      default: op
    iDisguise.mob.rabbit.type.white:
-      default: false
+      default: op
    iDisguise.mob.sheep:
-      default: false
+      default: op
       children:
          iDisguise.mob.sheep.color.white: true
    iDisguise.mob.sheep.color.*:
-      default: false
+      default: op
       children:
          iDisguise.mob.sheep.color.black: true
          iDisguise.mob.sheep.color.blue: true
@@ -263,67 +263,67 @@ permissions:
          iDisguise.mob.sheep.color.white: true
          iDisguise.mob.sheep.color.yellow: true
    iDisguise.mob.sheep.color.black:
-      default: false
+      default: op
    iDisguise.mob.sheep.color.blue:
-      default: false
+      default: op
    iDisguise.mob.sheep.color.brown:
-      default: false
+      default: op
    iDisguise.mob.sheep.color.cyan:
-      default: false
+      default: op
    iDisguise.mob.sheep.color.gray:
-      default: false
+      default: op
    iDisguise.mob.sheep.color.green:
-      default: false
+      default: op
    iDisguise.mob.sheep.color.light-blue:
-      default: false
+      default: op
    iDisguise.mob.sheep.color.lime:
-      default: false
+      default: op
    iDisguise.mob.sheep.color.magenta:
-      default: false
+      default: op
    iDisguise.mob.sheep.color.orange:
-      default: false
+      default: op
    iDisguise.mob.sheep.color.pink:
-      default: false
+      default: op
    iDisguise.mob.sheep.color.purple:
-      default: false
+      default: op
    iDisguise.mob.sheep.color.red:
-      default: false
+      default: op
    iDisguise.mob.sheep.color.silver:
-      default: false
+      default: op
    iDisguise.mob.sheep.color.white:
-      default: false
+      default: op
    iDisguise.mob.sheep.color.yellow:
-      default: false
+      default: op
    iDisguise.mob.shulker:
-      default: false
+      default: op
    iDisguise.mob.silverfish:
-      default: false
+      default: op
    iDisguise.mob.skeletal_horse:
-      default: false
+      default: op
    iDisguise.mob.skeleton:
-      default: false
+      default: op
    iDisguise.mob.slime:
-      default: false
+      default: op
    iDisguise.mob.slime.giant:
-      default: false
+      default: op
    iDisguise.mob.snowman:
-      default: false
+      default: op
    iDisguise.mob.spider:
-      default: false
+      default: op
    iDisguise.mob.squid:
-      default: false
+      default: op
    iDisguise.mob.stray:
-      default: false
+      default: op
    iDisguise.mob.undead_horse:
-      default: false
+      default: op
    iDisguise.mob.vex:
-      default: false
+      default: op
    iDisguise.mob.villager:
-      default: false
+      default: op
       children:
          iDisguise.mob.villager.profession.farmer: true
    iDisguise.mob.villager.profession.*:
-      default: false
+      default: op
       children:
          iDisguise.mob.villager.profession.blacksmith: true
          iDisguise.mob.villager.profession.butcher: true
@@ -331,29 +331,29 @@ permissions:
          iDisguise.mob.villager.profession.librarian: true
          iDisguise.mob.villager.profession.priest: true
    iDisguise.mob.villager.profession.blacksmith:
-      default: false
+      default: op
    iDisguise.mob.villager.profession.butcher:
-      default: false
+      default: op
    iDisguise.mob.villager.profession.farmer:
-      default: false
+      default: op
    iDisguise.mob.villager.profession.librarian:
-      default: false
+      default: op
    iDisguise.mob.villager.profession.priest:
-      default: false
+      default: op
    iDisguise.mob.vindicator:
-      default: false
+      default: op
    iDisguise.mob.witch:
-      default: false
+      default: op
    iDisguise.mob.wither:
-      default: false
+      default: op
    iDisguise.mob.wither_skeleton:
-      default: false
+      default: op
    iDisguise.mob.wolf:
-      default: false
+      default: op
       children:
          iDisguise.mob.wolf.collar.red: true
    iDisguise.mob.wolf.collar.*:
-      default: false
+      default: op
       children:
          iDisguise.mob.wolf.collar.black: true
          iDisguise.mob.wolf.collar.blue: true
@@ -372,48 +372,49 @@ permissions:
          iDisguise.mob.wolf.collar.white: true
          iDisguise.mob.wolf.collar.yellow: true
    iDisguise.mob.wolf.collar.black:
-      default: false
+      default: op
    iDisguise.mob.wolf.collar.blue:
-      default: false
+      default: op
    iDisguise.mob.wolf.collar.brown:
-      default: false
+      default: op
    iDisguise.mob.wolf.collar.cyan:
-      default: false
+      default: op
    iDisguise.mob.wolf.collar.gray:
-      default: false
+      default: op
    iDisguise.mob.wolf.collar.green:
-      default: false
+      default: op
    iDisguise.mob.wolf.collar.light-blue:
-      default: false
+      default: op
    iDisguise.mob.wolf.collar.lime:
-      default: false
+      default: op
    iDisguise.mob.wolf.collar.magenta:
-      default: false
+      default: op
    iDisguise.mob.wolf.collar.orange:
-      default: false
+      default: op
    iDisguise.mob.wolf.collar.pink:
-      default: false
+      default: op
    iDisguise.mob.wolf.collar.purple:
-      default: false
+      default: op
    iDisguise.mob.wolf.collar.red:
-      default: false
+      default: op
    iDisguise.mob.wolf.collar.silver:
-      default: false
+      default: op
    iDisguise.mob.wolf.collar.white:
-      default: false
+      default: op
    iDisguise.mob.wolf.collar.yellow:
-      default: false
+      default: op
    iDisguise.mob.wolf.tamed:
-      default: false
+      default: op
    iDisguise.mob.wolf.angry:
-      default: false
+      default: op
    iDisguise.mob.zombie:
-      default: false
+      default: op
    iDisguise.mob.zombie_villager:
-      default: false
+      default: op
    iDisguise.object.*:
-      default: false
+      default: op
       children:
+         iDisguise.object.area_effect_cloud: true
          iDisguise.object.armor_stand: true
          iDisguise.object.boat: true
          iDisguise.object.custom-name: true
@@ -423,22 +424,23 @@ permissions:
          iDisguise.object.item: true
          iDisguise.object.item.material.*: true
          iDisguise.object.minecart: true
+   iDisguise.object.area_effect_cloud:
+      default: op
    iDisguise.object.armor_stand:
-      default: false
+      default: op
    iDisguise.object.boat:
-      default: false
+      default: op
    iDisguise.object.custom-name:
-      default: false
+      default: op
    iDisguise.object.ender_crystal:
-      default: false
+      default: op
    iDisguise.object.falling_block:
-      default: false
+      default: op
       children:
          iDisguise.object.falling_block.material.stone: true
    iDisguise.object.falling_block.material.*:
-      default: false
+      default: op
       children:
-         iDisguise.object.falling_block.material.air: true
          iDisguise.object.falling_block.material.stone: true
          iDisguise.object.falling_block.material.grass: true
          iDisguise.object.falling_block.material.dirt: true
@@ -446,10 +448,6 @@ permissions:
          iDisguise.object.falling_block.material.wood: true
          iDisguise.object.falling_block.material.sapling: true
          iDisguise.object.falling_block.material.bedrock: true
-         iDisguise.object.falling_block.material.water: true
-         iDisguise.object.falling_block.material.stationary-water: true
-         iDisguise.object.falling_block.material.lava: true
-         iDisguise.object.falling_block.material.stationary-lava: true
          iDisguise.object.falling_block.material.sand: true
          iDisguise.object.falling_block.material.gravel: true
          iDisguise.object.falling_block.material.gold-ore: true
@@ -464,7 +462,6 @@ permissions:
          iDisguise.object.falling_block.material.dispenser: true
          iDisguise.object.falling_block.material.sandstone: true
          iDisguise.object.falling_block.material.note-block: true
-         iDisguise.object.falling_block.material.bed-block: true
          iDisguise.object.falling_block.material.powered-rail: true
          iDisguise.object.falling_block.material.detector-rail: true
          iDisguise.object.falling_block.material.piston-sticky-base: true
@@ -474,7 +471,6 @@ permissions:
          iDisguise.object.falling_block.material.piston-base: true
          iDisguise.object.falling_block.material.piston-extension: true
          iDisguise.object.falling_block.material.wool: true
-         iDisguise.object.falling_block.material.piston-moving-piece: true
          iDisguise.object.falling_block.material.yellow-flower: true
          iDisguise.object.falling_block.material.red-rose: true
          iDisguise.object.falling_block.material.brown-mushroom: true
@@ -492,7 +488,6 @@ permissions:
          iDisguise.object.falling_block.material.fire: true
          iDisguise.object.falling_block.material.mob-spawner: true
          iDisguise.object.falling_block.material.wood-stairs: true
-         iDisguise.object.falling_block.material.chest: true
          iDisguise.object.falling_block.material.redstone-wire: true
          iDisguise.object.falling_block.material.diamond-ore: true
          iDisguise.object.falling_block.material.diamond-block: true
@@ -501,12 +496,10 @@ permissions:
          iDisguise.object.falling_block.material.soil: true
          iDisguise.object.falling_block.material.furnace: true
          iDisguise.object.falling_block.material.burning-furnace: true
-         iDisguise.object.falling_block.material.sign-post: true
          iDisguise.object.falling_block.material.wooden-door: true
          iDisguise.object.falling_block.material.ladder: true
          iDisguise.object.falling_block.material.rails: true
          iDisguise.object.falling_block.material.cobblestone-stairs: true
-         iDisguise.object.falling_block.material.wall-sign: true
          iDisguise.object.falling_block.material.lever: true
          iDisguise.object.falling_block.material.stone-plate: true
          iDisguise.object.falling_block.material.iron-door-block: true
@@ -528,7 +521,6 @@ permissions:
          iDisguise.object.falling_block.material.netherrack: true
          iDisguise.object.falling_block.material.soul-sand: true
          iDisguise.object.falling_block.material.glowstone: true
-         iDisguise.object.falling_block.material.portal: true
          iDisguise.object.falling_block.material.jack-o-lantern: true
          iDisguise.object.falling_block.material.cake-block: true
          iDisguise.object.falling_block.material.diode-block-off: true
@@ -542,8 +534,6 @@ permissions:
          iDisguise.object.falling_block.material.iron-fence: true
          iDisguise.object.falling_block.material.thin-glass: true
          iDisguise.object.falling_block.material.melon-block: true
-         iDisguise.object.falling_block.material.pumpkin-stem: true
-         iDisguise.object.falling_block.material.melon-stem: true
          iDisguise.object.falling_block.material.vine: true
          iDisguise.object.falling_block.material.fence-gate: true
          iDisguise.object.falling_block.material.brick-stairs: true
@@ -557,7 +547,6 @@ permissions:
          iDisguise.object.falling_block.material.enchantment-table: true
          iDisguise.object.falling_block.material.brewing-stand: true
          iDisguise.object.falling_block.material.cauldron: true
-         iDisguise.object.falling_block.material.ender-portal: true
          iDisguise.object.falling_block.material.ender-portal-frame: true
          iDisguise.object.falling_block.material.ender-stone: true
          iDisguise.object.falling_block.material.dragon-egg: true
@@ -568,7 +557,6 @@ permissions:
          iDisguise.object.falling_block.material.cocoa: true
          iDisguise.object.falling_block.material.sandstone-stairs: true
          iDisguise.object.falling_block.material.emerald-ore: true
-         iDisguise.object.falling_block.material.ender-chest: true
          iDisguise.object.falling_block.material.tripwire-hook: true
          iDisguise.object.falling_block.material.tripwire: true
          iDisguise.object.falling_block.material.emerald-block: true
@@ -577,14 +565,11 @@ permissions:
          iDisguise.object.falling_block.material.jungle-wood-stairs: true
          iDisguise.object.falling_block.material.command: true
          iDisguise.object.falling_block.material.beacon: true
-         iDisguise.object.falling_block.material.cobble-wall: true
          iDisguise.object.falling_block.material.flower-pot: true
          iDisguise.object.falling_block.material.carrot: true
          iDisguise.object.falling_block.material.potato: true
          iDisguise.object.falling_block.material.wood-button: true
-         iDisguise.object.falling_block.material.skull: true
          iDisguise.object.falling_block.material.anvil: true
-         iDisguise.object.falling_block.material.trapped-chest: true
          iDisguise.object.falling_block.material.gold-plate: true
          iDisguise.object.falling_block.material.iron-plate: true
          iDisguise.object.falling_block.material.redstone-comparator-off: true
@@ -604,7 +589,6 @@ permissions:
          iDisguise.object.falling_block.material.acacia-stairs: true
          iDisguise.object.falling_block.material.dark-oak-stairs: true
          iDisguise.object.falling_block.material.slime-block: true
-         iDisguise.object.falling_block.material.barrier: true
          iDisguise.object.falling_block.material.iron-trapdoor: true
          iDisguise.object.falling_block.material.prismarine: true
          iDisguise.object.falling_block.material.sea-lantern: true
@@ -614,8 +598,6 @@ permissions:
          iDisguise.object.falling_block.material.coal-block: true
          iDisguise.object.falling_block.material.packed-ice: true
          iDisguise.object.falling_block.material.double-plant: true
-         iDisguise.object.falling_block.material.standing-banner: true
-         iDisguise.object.falling_block.material.wall-banner: true
          iDisguise.object.falling_block.material.daylight-detector-inverted: true
          iDisguise.object.falling_block.material.red-sandstone: true
          iDisguise.object.falling_block.material.red-sandstone-stairs: true
@@ -692,522 +674,479 @@ permissions:
          iDisguise.object.falling_block.material.concrete: true
          iDisguise.object.falling_block.material.concrete-powder: true
          iDisguise.object.falling_block.material.structure-block: true
-   iDisguise.object.falling_block.material.air:
-      default: false
    iDisguise.object.falling_block.material.stone:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.grass:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.dirt:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.cobblestone:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.wood:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.sapling:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.bedrock:
-      default: false
-   iDisguise.object.falling_block.material.water:
-      default: false
-   iDisguise.object.falling_block.material.stationary-water:
-      default: false
-   iDisguise.object.falling_block.material.lava:
-      default: false
-   iDisguise.object.falling_block.material.stationary-lava:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.sand:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.gravel:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.gold-ore:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.iron-ore:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.coal-ore:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.log:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.leaves:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.sponge:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.glass:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.lapis-ore:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.lapis-block:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.dispenser:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.sandstone:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.note-block:
-      default: false
-   iDisguise.object.falling_block.material.bed-block:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.powered-rail:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.detector-rail:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.piston-sticky-base:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.web:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.long-grass:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.dead-bush:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.piston-base:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.piston-extension:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.wool:
-      default: false
-   iDisguise.object.falling_block.material.piston-moving-piece:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.yellow-flower:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.red-rose:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.brown-mushroom:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.red-mushroom:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.gold-block:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.iron-block:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.double-step:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.step:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.brick:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.tnt:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.bookshelf:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.mossy-cobblestone:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.obsidian:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.torch:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.fire:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.mob-spawner:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.wood-stairs:
-      default: false
-   iDisguise.object.falling_block.material.chest:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.redstone-wire:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.diamond-ore:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.diamond-block:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.workbench:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.crops:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.soil:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.furnace:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.burning-furnace:
-      default: false
-   iDisguise.object.falling_block.material.sign-post:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.wooden-door:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.ladder:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.rails:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.cobblestone-stairs:
-      default: false
-   iDisguise.object.falling_block.material.wall-sign:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.lever:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.stone-plate:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.iron-door-block:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.wood-plate:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.redstone-ore:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.glowing-redstone-ore:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.redstone-torch-off:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.redstone-torch-on:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.stone-button:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.snow:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.ice:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.snow-block:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.cactus:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.clay:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.sugar-cane-block:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.jukebox:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.fence:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.pumpkin:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.netherrack:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.soul-sand:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.glowstone:
-      default: false
-   iDisguise.object.falling_block.material.portal:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.jack-o-lantern:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.cake-block:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.diode-block-off:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.diode-block-on:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.stained-glass:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.trap-door:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.monster-eggs:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.smooth-brick:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.huge-mushroom-1:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.huge-mushroom-2:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.iron-fence:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.thin-glass:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.melon-block:
-      default: false
-   iDisguise.object.falling_block.material.pumpkin-stem:
-      default: false
-   iDisguise.object.falling_block.material.melon-stem:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.vine:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.fence-gate:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.brick-stairs:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.smooth-stairs:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.mycel:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.water-lily:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.nether-brick:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.nether-fence:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.nether-brick-stairs:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.nether-warts:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.enchantment-table:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.brewing-stand:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.cauldron:
-      default: false
-   iDisguise.object.falling_block.material.ender-portal:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.ender-portal-frame:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.ender-stone:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.dragon-egg:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.redstone-lamp-off:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.redstone-lamp-on:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.wood-double-step:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.wood-step:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.cocoa:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.sandstone-stairs:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.emerald-ore:
-      default: false
-   iDisguise.object.falling_block.material.ender-chest:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.tripwire-hook:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.tripwire:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.emerald-block:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.spruce-wood-stairs:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.birch-wood-stairs:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.jungle-wood-stairs:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.command:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.beacon:
-      default: false
-   iDisguise.object.falling_block.material.cobble-wall:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.flower-pot:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.carrot:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.potato:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.wood-button:
-      default: false
-   iDisguise.object.falling_block.material.skull:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.anvil:
-      default: false
-   iDisguise.object.falling_block.material.trapped-chest:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.gold-plate:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.iron-plate:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.redstone-comparator-off:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.redstone-comparator-on:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.daylight-detector:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.redstone-block:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.quartz-ore:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.hopper:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.quartz-block:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.quartz-stairs:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.activator-rail:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.dropper:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.stained-clay:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.stained-glass-pane:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.leaves-2:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.log-2:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.acacia-stairs:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.dark-oak-stairs:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.slime-block:
-      default: false
-   iDisguise.object.falling_block.material.barrier:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.iron-trapdoor:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.prismarine:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.sea-lantern:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.hay-block:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.carpet:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.hard-clay:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.coal-block:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.packed-ice:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.double-plant:
-      default: false
-   iDisguise.object.falling_block.material.standing-banner:
-      default: false
-   iDisguise.object.falling_block.material.wall-banner:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.daylight-detector-inverted:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.red-sandstone:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.red-sandstone-stairs:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.double-stone-slab2:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.stone-slab2:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.spruce-fence-gate:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.birch-fence-gate:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.jungle-fence-gate:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.dark-oak-fence-gate:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.acacia-fence-gate:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.spruce-fence:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.birch-fence:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.jungle-fence:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.dark-oak-fence:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.acacia-fence:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.spruce-door:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.birch-door:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.jungle-door:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.acacia-door:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.dark-oak-door:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.end-rod:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.chorus-plant:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.chorus-flower:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.purpur-block:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.purpur-pillar:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.purpur-stairs:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.purpur-double-slab:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.purpur-slab:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.end-bricks:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.beetroot-block:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.grass-path:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.end-gateway:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.command-repeating:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.command-chain:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.frosted-ice:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.magma:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.nether-wart-block:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.red-nether-brick:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.bone-block:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.structure-void:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.observer:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.white-shulker-box:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.orange-shulker-box:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.magenta-shulker-box:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.light-blue-shulker-box:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.yellow-shulker-box:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.lime-shulker-box:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.pink-shulker-box:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.gray-shulker-box:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.silver-shulker-box:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.cyan-shulker-box:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.purple-shulker-box:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.blue-shulker-box:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.brown-shulker-box:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.green-shulker-box:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.red-shulker-box:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.black-shulker-box:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.white-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.orange-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.magenta-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.light-blue-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.yellow-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.lime-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.pink-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.gray-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.silver-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.cyan-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.purple-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.blue-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.brown-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.green-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.red-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.black-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.concrete:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.concrete-powder:
-      default: false
+      default: op
    iDisguise.object.falling_block.material.structure-block:
-      default: false
+      default: op
    iDisguise.object.item:
-      default: false
+      default: op
       children:
          iDisguise.object.item.material.stone: true
    iDisguise.object.item.material.*:
-      default: false
+      default: op
       children:
-         iDisguise.object.item.material.air: true
          iDisguise.object.item.material.stone: true
          iDisguise.object.item.material.grass: true
          iDisguise.object.item.material.dirt: true
@@ -1215,10 +1154,6 @@ permissions:
          iDisguise.object.item.material.wood: true
          iDisguise.object.item.material.sapling: true
          iDisguise.object.item.material.bedrock: true
-         iDisguise.object.item.material.water: true
-         iDisguise.object.item.material.stationary-water: true
-         iDisguise.object.item.material.lava: true
-         iDisguise.object.item.material.stationary-lava: true
          iDisguise.object.item.material.sand: true
          iDisguise.object.item.material.gravel: true
          iDisguise.object.item.material.gold-ore: true
@@ -1233,7 +1168,6 @@ permissions:
          iDisguise.object.item.material.dispenser: true
          iDisguise.object.item.material.sandstone: true
          iDisguise.object.item.material.note-block: true
-         iDisguise.object.item.material.bed-block: true
          iDisguise.object.item.material.powered-rail: true
          iDisguise.object.item.material.detector-rail: true
          iDisguise.object.item.material.piston-sticky-base: true
@@ -1241,16 +1175,13 @@ permissions:
          iDisguise.object.item.material.long-grass: true
          iDisguise.object.item.material.dead-bush: true
          iDisguise.object.item.material.piston-base: true
-         iDisguise.object.item.material.piston-extension: true
          iDisguise.object.item.material.wool: true
-         iDisguise.object.item.material.piston-moving-piece: true
          iDisguise.object.item.material.yellow-flower: true
          iDisguise.object.item.material.red-rose: true
          iDisguise.object.item.material.brown-mushroom: true
          iDisguise.object.item.material.red-mushroom: true
          iDisguise.object.item.material.gold-block: true
          iDisguise.object.item.material.iron-block: true
-         iDisguise.object.item.material.double-step: true
          iDisguise.object.item.material.step: true
          iDisguise.object.item.material.brick: true
          iDisguise.object.item.material.tnt: true
@@ -1258,31 +1189,21 @@ permissions:
          iDisguise.object.item.material.mossy-cobblestone: true
          iDisguise.object.item.material.obsidian: true
          iDisguise.object.item.material.torch: true
-         iDisguise.object.item.material.fire: true
          iDisguise.object.item.material.mob-spawner: true
          iDisguise.object.item.material.wood-stairs: true
          iDisguise.object.item.material.chest: true
-         iDisguise.object.item.material.redstone-wire: true
          iDisguise.object.item.material.diamond-ore: true
          iDisguise.object.item.material.diamond-block: true
          iDisguise.object.item.material.workbench: true
-         iDisguise.object.item.material.crops: true
          iDisguise.object.item.material.soil: true
          iDisguise.object.item.material.furnace: true
-         iDisguise.object.item.material.burning-furnace: true
-         iDisguise.object.item.material.sign-post: true
-         iDisguise.object.item.material.wooden-door: true
          iDisguise.object.item.material.ladder: true
          iDisguise.object.item.material.rails: true
          iDisguise.object.item.material.cobblestone-stairs: true
-         iDisguise.object.item.material.wall-sign: true
          iDisguise.object.item.material.lever: true
          iDisguise.object.item.material.stone-plate: true
-         iDisguise.object.item.material.iron-door-block: true
          iDisguise.object.item.material.wood-plate: true
          iDisguise.object.item.material.redstone-ore: true
-         iDisguise.object.item.material.glowing-redstone-ore: true
-         iDisguise.object.item.material.redstone-torch-off: true
          iDisguise.object.item.material.redstone-torch-on: true
          iDisguise.object.item.material.stone-button: true
          iDisguise.object.item.material.snow: true
@@ -1290,29 +1211,21 @@ permissions:
          iDisguise.object.item.material.snow-block: true
          iDisguise.object.item.material.cactus: true
          iDisguise.object.item.material.clay: true
-         iDisguise.object.item.material.sugar-cane-block: true
          iDisguise.object.item.material.jukebox: true
          iDisguise.object.item.material.fence: true
          iDisguise.object.item.material.pumpkin: true
          iDisguise.object.item.material.netherrack: true
          iDisguise.object.item.material.soul-sand: true
          iDisguise.object.item.material.glowstone: true
-         iDisguise.object.item.material.portal: true
          iDisguise.object.item.material.jack-o-lantern: true
-         iDisguise.object.item.material.cake-block: true
-         iDisguise.object.item.material.diode-block-off: true
-         iDisguise.object.item.material.diode-block-on: true
          iDisguise.object.item.material.stained-glass: true
          iDisguise.object.item.material.trap-door: true
-         iDisguise.object.item.material.monster-eggs: true
          iDisguise.object.item.material.smooth-brick: true
          iDisguise.object.item.material.huge-mushroom-1: true
          iDisguise.object.item.material.huge-mushroom-2: true
          iDisguise.object.item.material.iron-fence: true
          iDisguise.object.item.material.thin-glass: true
          iDisguise.object.item.material.melon-block: true
-         iDisguise.object.item.material.pumpkin-stem: true
-         iDisguise.object.item.material.melon-stem: true
          iDisguise.object.item.material.vine: true
          iDisguise.object.item.material.fence-gate: true
          iDisguise.object.item.material.brick-stairs: true
@@ -1322,24 +1235,16 @@ permissions:
          iDisguise.object.item.material.nether-brick: true
          iDisguise.object.item.material.nether-fence: true
          iDisguise.object.item.material.nether-brick-stairs: true
-         iDisguise.object.item.material.nether-warts: true
          iDisguise.object.item.material.enchantment-table: true
-         iDisguise.object.item.material.brewing-stand: true
-         iDisguise.object.item.material.cauldron: true
-         iDisguise.object.item.material.ender-portal: true
          iDisguise.object.item.material.ender-portal-frame: true
          iDisguise.object.item.material.ender-stone: true
          iDisguise.object.item.material.dragon-egg: true
          iDisguise.object.item.material.redstone-lamp-off: true
-         iDisguise.object.item.material.redstone-lamp-on: true
-         iDisguise.object.item.material.wood-double-step: true
          iDisguise.object.item.material.wood-step: true
-         iDisguise.object.item.material.cocoa: true
          iDisguise.object.item.material.sandstone-stairs: true
          iDisguise.object.item.material.emerald-ore: true
          iDisguise.object.item.material.ender-chest: true
          iDisguise.object.item.material.tripwire-hook: true
-         iDisguise.object.item.material.tripwire: true
          iDisguise.object.item.material.emerald-block: true
          iDisguise.object.item.material.spruce-wood-stairs: true
          iDisguise.object.item.material.birch-wood-stairs: true
@@ -1347,17 +1252,11 @@ permissions:
          iDisguise.object.item.material.command: true
          iDisguise.object.item.material.beacon: true
          iDisguise.object.item.material.cobble-wall: true
-         iDisguise.object.item.material.flower-pot: true
-         iDisguise.object.item.material.carrot: true
-         iDisguise.object.item.material.potato: true
          iDisguise.object.item.material.wood-button: true
-         iDisguise.object.item.material.skull: true
          iDisguise.object.item.material.anvil: true
          iDisguise.object.item.material.trapped-chest: true
          iDisguise.object.item.material.gold-plate: true
          iDisguise.object.item.material.iron-plate: true
-         iDisguise.object.item.material.redstone-comparator-off: true
-         iDisguise.object.item.material.redstone-comparator-on: true
          iDisguise.object.item.material.daylight-detector: true
          iDisguise.object.item.material.redstone-block: true
          iDisguise.object.item.material.quartz-ore: true
@@ -1383,12 +1282,8 @@ permissions:
          iDisguise.object.item.material.coal-block: true
          iDisguise.object.item.material.packed-ice: true
          iDisguise.object.item.material.double-plant: true
-         iDisguise.object.item.material.standing-banner: true
-         iDisguise.object.item.material.wall-banner: true
-         iDisguise.object.item.material.daylight-detector-inverted: true
          iDisguise.object.item.material.red-sandstone: true
          iDisguise.object.item.material.red-sandstone-stairs: true
-         iDisguise.object.item.material.double-stone-slab2: true
          iDisguise.object.item.material.stone-slab2: true
          iDisguise.object.item.material.spruce-fence-gate: true
          iDisguise.object.item.material.birch-fence-gate: true
@@ -1400,11 +1295,6 @@ permissions:
          iDisguise.object.item.material.jungle-fence: true
          iDisguise.object.item.material.dark-oak-fence: true
          iDisguise.object.item.material.acacia-fence: true
-         iDisguise.object.item.material.spruce-door: true
-         iDisguise.object.item.material.birch-door: true
-         iDisguise.object.item.material.jungle-door: true
-         iDisguise.object.item.material.acacia-door: true
-         iDisguise.object.item.material.dark-oak-door: true
          iDisguise.object.item.material.end-rod: true
          iDisguise.object.item.material.chorus-plant: true
          iDisguise.object.item.material.chorus-flower: true
@@ -1670,962 +1560,862 @@ permissions:
          iDisguise.object.item.material.record-10: true
          iDisguise.object.item.material.record-11: true
          iDisguise.object.item.material.record-12: true
-   iDisguise.object.item.material.air:
-      default: false
    iDisguise.object.item.material.stone:
-      default: false
+      default: op
    iDisguise.object.item.material.grass:
-      default: false
+      default: op
    iDisguise.object.item.material.dirt:
-      default: false
+      default: op
    iDisguise.object.item.material.cobblestone:
-      default: false
+      default: op
    iDisguise.object.item.material.wood:
-      default: false
+      default: op
    iDisguise.object.item.material.sapling:
-      default: false
+      default: op
    iDisguise.object.item.material.bedrock:
-      default: false
-   iDisguise.object.item.material.water:
-      default: false
-   iDisguise.object.item.material.stationary-water:
-      default: false
-   iDisguise.object.item.material.lava:
-      default: false
-   iDisguise.object.item.material.stationary-lava:
-      default: false
+      default: op
    iDisguise.object.item.material.sand:
-      default: false
+      default: op
    iDisguise.object.item.material.gravel:
-      default: false
+      default: op
    iDisguise.object.item.material.gold-ore:
-      default: false
+      default: op
    iDisguise.object.item.material.iron-ore:
-      default: false
+      default: op
    iDisguise.object.item.material.coal-ore:
-      default: false
+      default: op
    iDisguise.object.item.material.log:
-      default: false
+      default: op
    iDisguise.object.item.material.leaves:
-      default: false
+      default: op
    iDisguise.object.item.material.sponge:
-      default: false
+      default: op
    iDisguise.object.item.material.glass:
-      default: false
+      default: op
    iDisguise.object.item.material.lapis-ore:
-      default: false
+      default: op
    iDisguise.object.item.material.lapis-block:
-      default: false
+      default: op
    iDisguise.object.item.material.dispenser:
-      default: false
+      default: op
    iDisguise.object.item.material.sandstone:
-      default: false
+      default: op
    iDisguise.object.item.material.note-block:
-      default: false
-   iDisguise.object.item.material.bed-block:
-      default: false
+      default: op
    iDisguise.object.item.material.powered-rail:
-      default: false
+      default: op
    iDisguise.object.item.material.detector-rail:
-      default: false
+      default: op
    iDisguise.object.item.material.piston-sticky-base:
-      default: false
+      default: op
    iDisguise.object.item.material.web:
-      default: false
+      default: op
    iDisguise.object.item.material.long-grass:
-      default: false
+      default: op
    iDisguise.object.item.material.dead-bush:
-      default: false
+      default: op
    iDisguise.object.item.material.piston-base:
-      default: false
-   iDisguise.object.item.material.piston-extension:
-      default: false
+      default: op
    iDisguise.object.item.material.wool:
-      default: false
-   iDisguise.object.item.material.piston-moving-piece:
-      default: false
+      default: op
    iDisguise.object.item.material.yellow-flower:
-      default: false
+      default: op
    iDisguise.object.item.material.red-rose:
-      default: false
+      default: op
    iDisguise.object.item.material.brown-mushroom:
-      default: false
+      default: op
    iDisguise.object.item.material.red-mushroom:
-      default: false
+      default: op
    iDisguise.object.item.material.gold-block:
-      default: false
+      default: op
    iDisguise.object.item.material.iron-block:
-      default: false
-   iDisguise.object.item.material.double-step:
-      default: false
+      default: op
    iDisguise.object.item.material.step:
-      default: false
+      default: op
    iDisguise.object.item.material.brick:
-      default: false
+      default: op
    iDisguise.object.item.material.tnt:
-      default: false
+      default: op
    iDisguise.object.item.material.bookshelf:
-      default: false
+      default: op
    iDisguise.object.item.material.mossy-cobblestone:
-      default: false
+      default: op
    iDisguise.object.item.material.obsidian:
-      default: false
+      default: op
    iDisguise.object.item.material.torch:
-      default: false
-   iDisguise.object.item.material.fire:
-      default: false
+      default: op
    iDisguise.object.item.material.mob-spawner:
-      default: false
+      default: op
    iDisguise.object.item.material.wood-stairs:
-      default: false
+      default: op
    iDisguise.object.item.material.chest:
-      default: false
-   iDisguise.object.item.material.redstone-wire:
-      default: false
+      default: op
    iDisguise.object.item.material.diamond-ore:
-      default: false
+      default: op
    iDisguise.object.item.material.diamond-block:
-      default: false
+      default: op
    iDisguise.object.item.material.workbench:
-      default: false
-   iDisguise.object.item.material.crops:
-      default: false
+      default: op
    iDisguise.object.item.material.soil:
-      default: false
+      default: op
    iDisguise.object.item.material.furnace:
-      default: false
-   iDisguise.object.item.material.burning-furnace:
-      default: false
-   iDisguise.object.item.material.sign-post:
-      default: false
-   iDisguise.object.item.material.wooden-door:
-      default: false
+      default: op
    iDisguise.object.item.material.ladder:
-      default: false
+      default: op
    iDisguise.object.item.material.rails:
-      default: false
+      default: op
    iDisguise.object.item.material.cobblestone-stairs:
-      default: false
-   iDisguise.object.item.material.wall-sign:
-      default: false
+      default: op
    iDisguise.object.item.material.lever:
-      default: false
+      default: op
    iDisguise.object.item.material.stone-plate:
-      default: false
-   iDisguise.object.item.material.iron-door-block:
-      default: false
+      default: op
    iDisguise.object.item.material.wood-plate:
-      default: false
+      default: op
    iDisguise.object.item.material.redstone-ore:
-      default: false
-   iDisguise.object.item.material.glowing-redstone-ore:
-      default: false
-   iDisguise.object.item.material.redstone-torch-off:
-      default: false
+      default: op
    iDisguise.object.item.material.redstone-torch-on:
-      default: false
+      default: op
    iDisguise.object.item.material.stone-button:
-      default: false
+      default: op
    iDisguise.object.item.material.snow:
-      default: false
+      default: op
    iDisguise.object.item.material.ice:
-      default: false
+      default: op
    iDisguise.object.item.material.snow-block:
-      default: false
+      default: op
    iDisguise.object.item.material.cactus:
-      default: false
+      default: op
    iDisguise.object.item.material.clay:
-      default: false
-   iDisguise.object.item.material.sugar-cane-block:
-      default: false
+      default: op
    iDisguise.object.item.material.jukebox:
-      default: false
+      default: op
    iDisguise.object.item.material.fence:
-      default: false
+      default: op
    iDisguise.object.item.material.pumpkin:
-      default: false
+      default: op
    iDisguise.object.item.material.netherrack:
-      default: false
+      default: op
    iDisguise.object.item.material.soul-sand:
-      default: false
+      default: op
    iDisguise.object.item.material.glowstone:
-      default: false
-   iDisguise.object.item.material.portal:
-      default: false
+      default: op
    iDisguise.object.item.material.jack-o-lantern:
-      default: false
-   iDisguise.object.item.material.cake-block:
-      default: false
-   iDisguise.object.item.material.diode-block-off:
-      default: false
-   iDisguise.object.item.material.diode-block-on:
-      default: false
+      default: op
    iDisguise.object.item.material.stained-glass:
-      default: false
+      default: op
    iDisguise.object.item.material.trap-door:
-      default: false
-   iDisguise.object.item.material.monster-eggs:
-      default: false
+      default: op
    iDisguise.object.item.material.smooth-brick:
-      default: false
+      default: op
    iDisguise.object.item.material.huge-mushroom-1:
-      default: false
+      default: op
    iDisguise.object.item.material.huge-mushroom-2:
-      default: false
+      default: op
    iDisguise.object.item.material.iron-fence:
-      default: false
+      default: op
    iDisguise.object.item.material.thin-glass:
-      default: false
+      default: op
    iDisguise.object.item.material.melon-block:
-      default: false
-   iDisguise.object.item.material.pumpkin-stem:
-      default: false
-   iDisguise.object.item.material.melon-stem:
-      default: false
+      default: op
    iDisguise.object.item.material.vine:
-      default: false
+      default: op
    iDisguise.object.item.material.fence-gate:
-      default: false
+      default: op
    iDisguise.object.item.material.brick-stairs:
-      default: false
+      default: op
    iDisguise.object.item.material.smooth-stairs:
-      default: false
+      default: op
    iDisguise.object.item.material.mycel:
-      default: false
+      default: op
    iDisguise.object.item.material.water-lily:
-      default: false
+      default: op
    iDisguise.object.item.material.nether-brick:
-      default: false
+      default: op
    iDisguise.object.item.material.nether-fence:
-      default: false
+      default: op
    iDisguise.object.item.material.nether-brick-stairs:
-      default: false
-   iDisguise.object.item.material.nether-warts:
-      default: false
+      default: op
    iDisguise.object.item.material.enchantment-table:
-      default: false
-   iDisguise.object.item.material.brewing-stand:
-      default: false
-   iDisguise.object.item.material.cauldron:
-      default: false
-   iDisguise.object.item.material.ender-portal:
-      default: false
+      default: op
    iDisguise.object.item.material.ender-portal-frame:
-      default: false
+      default: op
    iDisguise.object.item.material.ender-stone:
-      default: false
+      default: op
    iDisguise.object.item.material.dragon-egg:
-      default: false
+      default: op
    iDisguise.object.item.material.redstone-lamp-off:
-      default: false
-   iDisguise.object.item.material.redstone-lamp-on:
-      default: false
-   iDisguise.object.item.material.wood-double-step:
-      default: false
+      default: op
    iDisguise.object.item.material.wood-step:
-      default: false
-   iDisguise.object.item.material.cocoa:
-      default: false
+      default: op
    iDisguise.object.item.material.sandstone-stairs:
-      default: false
+      default: op
    iDisguise.object.item.material.emerald-ore:
-      default: false
+      default: op
    iDisguise.object.item.material.ender-chest:
-      default: false
+      default: op
    iDisguise.object.item.material.tripwire-hook:
-      default: false
-   iDisguise.object.item.material.tripwire:
-      default: false
+      default: op
    iDisguise.object.item.material.emerald-block:
-      default: false
+      default: op
    iDisguise.object.item.material.spruce-wood-stairs:
-      default: false
+      default: op
    iDisguise.object.item.material.birch-wood-stairs:
-      default: false
+      default: op
    iDisguise.object.item.material.jungle-wood-stairs:
-      default: false
+      default: op
    iDisguise.object.item.material.command:
-      default: false
+      default: op
    iDisguise.object.item.material.beacon:
-      default: false
+      default: op
    iDisguise.object.item.material.cobble-wall:
-      default: false
-   iDisguise.object.item.material.flower-pot:
-      default: false
-   iDisguise.object.item.material.carrot:
-      default: false
-   iDisguise.object.item.material.potato:
-      default: false
+      default: op
    iDisguise.object.item.material.wood-button:
-      default: false
-   iDisguise.object.item.material.skull:
-      default: false
+      default: op
    iDisguise.object.item.material.anvil:
-      default: false
+      default: op
    iDisguise.object.item.material.trapped-chest:
-      default: false
+      default: op
    iDisguise.object.item.material.gold-plate:
-      default: false
+      default: op
    iDisguise.object.item.material.iron-plate:
-      default: false
-   iDisguise.object.item.material.redstone-comparator-off:
-      default: false
-   iDisguise.object.item.material.redstone-comparator-on:
-      default: false
+      default: op
    iDisguise.object.item.material.daylight-detector:
-      default: false
+      default: op
    iDisguise.object.item.material.redstone-block:
-      default: false
+      default: op
    iDisguise.object.item.material.quartz-ore:
-      default: false
+      default: op
    iDisguise.object.item.material.hopper:
-      default: false
+      default: op
    iDisguise.object.item.material.quartz-block:
-      default: false
+      default: op
    iDisguise.object.item.material.quartz-stairs:
-      default: false
+      default: op
    iDisguise.object.item.material.activator-rail:
-      default: false
+      default: op
    iDisguise.object.item.material.dropper:
-      default: false
+      default: op
    iDisguise.object.item.material.stained-clay:
-      default: false
+      default: op
    iDisguise.object.item.material.stained-glass-pane:
-      default: false
+      default: op
    iDisguise.object.item.material.leaves-2:
-      default: false
+      default: op
    iDisguise.object.item.material.log-2:
-      default: false
+      default: op
    iDisguise.object.item.material.acacia-stairs:
-      default: false
+      default: op
    iDisguise.object.item.material.dark-oak-stairs:
-      default: false
+      default: op
    iDisguise.object.item.material.slime-block:
-      default: false
+      default: op
    iDisguise.object.item.material.barrier:
-      default: false
+      default: op
    iDisguise.object.item.material.iron-trapdoor:
-      default: false
+      default: op
    iDisguise.object.item.material.prismarine:
-      default: false
+      default: op
    iDisguise.object.item.material.sea-lantern:
-      default: false
+      default: op
    iDisguise.object.item.material.hay-block:
-      default: false
+      default: op
    iDisguise.object.item.material.carpet:
-      default: false
+      default: op
    iDisguise.object.item.material.hard-clay:
-      default: false
+      default: op
    iDisguise.object.item.material.coal-block:
-      default: false
+      default: op
    iDisguise.object.item.material.packed-ice:
-      default: false
+      default: op
    iDisguise.object.item.material.double-plant:
-      default: false
-   iDisguise.object.item.material.standing-banner:
-      default: false
-   iDisguise.object.item.material.wall-banner:
-      default: false
-   iDisguise.object.item.material.daylight-detector-inverted:
-      default: false
+      default: op
    iDisguise.object.item.material.red-sandstone:
-      default: false
+      default: op
    iDisguise.object.item.material.red-sandstone-stairs:
-      default: false
-   iDisguise.object.item.material.double-stone-slab2:
-      default: false
+      default: op
    iDisguise.object.item.material.stone-slab2:
-      default: false
+      default: op
    iDisguise.object.item.material.spruce-fence-gate:
-      default: false
+      default: op
    iDisguise.object.item.material.birch-fence-gate:
-      default: false
+      default: op
    iDisguise.object.item.material.jungle-fence-gate:
-      default: false
+      default: op
    iDisguise.object.item.material.dark-oak-fence-gate:
-      default: false
+      default: op
    iDisguise.object.item.material.acacia-fence-gate:
-      default: false
+      default: op
    iDisguise.object.item.material.spruce-fence:
-      default: false
+      default: op
    iDisguise.object.item.material.birch-fence:
-      default: false
+      default: op
    iDisguise.object.item.material.jungle-fence:
-      default: false
+      default: op
    iDisguise.object.item.material.dark-oak-fence:
-      default: false
+      default: op
    iDisguise.object.item.material.acacia-fence:
-      default: false
-   iDisguise.object.item.material.spruce-door:
-      default: false
-   iDisguise.object.item.material.birch-door:
-      default: false
-   iDisguise.object.item.material.jungle-door:
-      default: false
-   iDisguise.object.item.material.acacia-door:
-      default: false
-   iDisguise.object.item.material.dark-oak-door:
-      default: false
+      default: op
    iDisguise.object.item.material.end-rod:
-      default: false
+      default: op
    iDisguise.object.item.material.chorus-plant:
-      default: false
+      default: op
    iDisguise.object.item.material.chorus-flower:
-      default: false
+      default: op
    iDisguise.object.item.material.purpur-block:
-      default: false
+      default: op
    iDisguise.object.item.material.purpur-pillar:
-      default: false
+      default: op
    iDisguise.object.item.material.purpur-stairs:
-      default: false
+      default: op
    iDisguise.object.item.material.purpur-double-slab:
-      default: false
+      default: op
    iDisguise.object.item.material.purpur-slab:
-      default: false
+      default: op
    iDisguise.object.item.material.end-bricks:
-      default: false
+      default: op
    iDisguise.object.item.material.beetroot-block:
-      default: false
+      default: op
    iDisguise.object.item.material.grass-path:
-      default: false
+      default: op
    iDisguise.object.item.material.end-gateway:
-      default: false
+      default: op
    iDisguise.object.item.material.command-repeating:
-      default: false
+      default: op
    iDisguise.object.item.material.command-chain:
-      default: false
+      default: op
    iDisguise.object.item.material.frosted-ice:
-      default: false
+      default: op
    iDisguise.object.item.material.magma:
-      default: false
+      default: op
    iDisguise.object.item.material.nether-wart-block:
-      default: false
+      default: op
    iDisguise.object.item.material.red-nether-brick:
-      default: false
+      default: op
    iDisguise.object.item.material.bone-block:
-      default: false
+      default: op
    iDisguise.object.item.material.structure-void:
-      default: false
+      default: op
    iDisguise.object.item.material.observer:
-      default: false
+      default: op
    iDisguise.object.item.material.white-shulker-box:
-      default: false
+      default: op
    iDisguise.object.item.material.orange-shulker-box:
-      default: false
+      default: op
    iDisguise.object.item.material.magenta-shulker-box:
-      default: false
+      default: op
    iDisguise.object.item.material.light-blue-shulker-box:
-      default: false
+      default: op
    iDisguise.object.item.material.yellow-shulker-box:
-      default: false
+      default: op
    iDisguise.object.item.material.lime-shulker-box:
-      default: false
+      default: op
    iDisguise.object.item.material.pink-shulker-box:
-      default: false
+      default: op
    iDisguise.object.item.material.gray-shulker-box:
-      default: false
+      default: op
    iDisguise.object.item.material.silver-shulker-box:
-      default: false
+      default: op
    iDisguise.object.item.material.cyan-shulker-box:
-      default: false
+      default: op
    iDisguise.object.item.material.purple-shulker-box:
-      default: false
+      default: op
    iDisguise.object.item.material.blue-shulker-box:
-      default: false
+      default: op
    iDisguise.object.item.material.brown-shulker-box:
-      default: false
+      default: op
    iDisguise.object.item.material.green-shulker-box:
-      default: false
+      default: op
    iDisguise.object.item.material.red-shulker-box:
-      default: false
+      default: op
    iDisguise.object.item.material.black-shulker-box:
-      default: false
+      default: op
    iDisguise.object.item.material.white-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.item.material.orange-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.item.material.magenta-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.item.material.light-blue-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.item.material.yellow-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.item.material.lime-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.item.material.pink-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.item.material.gray-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.item.material.silver-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.item.material.cyan-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.item.material.purple-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.item.material.blue-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.item.material.brown-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.item.material.green-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.item.material.red-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.item.material.black-glazed-terracotta:
-      default: false
+      default: op
    iDisguise.object.item.material.concrete:
-      default: false
+      default: op
    iDisguise.object.item.material.concrete-powder:
-      default: false
+      default: op
    iDisguise.object.item.material.structure-block:
-      default: false
+      default: op
    iDisguise.object.item.material.iron-spade:
-      default: false
+      default: op
    iDisguise.object.item.material.iron-pickaxe:
-      default: false
+      default: op
    iDisguise.object.item.material.iron-axe:
-      default: false
+      default: op
    iDisguise.object.item.material.flint-and-steel:
-      default: false
+      default: op
    iDisguise.object.item.material.apple:
-      default: false
+      default: op
    iDisguise.object.item.material.bow:
-      default: false
+      default: op
    iDisguise.object.item.material.arrow:
-      default: false
+      default: op
    iDisguise.object.item.material.coal:
-      default: false
+      default: op
    iDisguise.object.item.material.diamond:
-      default: false
+      default: op
    iDisguise.object.item.material.iron-ingot:
-      default: false
+      default: op
    iDisguise.object.item.material.gold-ingot:
-      default: false
+      default: op
    iDisguise.object.item.material.iron-sword:
-      default: false
+      default: op
    iDisguise.object.item.material.wood-sword:
-      default: false
+      default: op
    iDisguise.object.item.material.wood-spade:
-      default: false
+      default: op
    iDisguise.object.item.material.wood-pickaxe:
-      default: false
+      default: op
    iDisguise.object.item.material.wood-axe:
-      default: false
+      default: op
    iDisguise.object.item.material.stone-sword:
-      default: false
+      default: op
    iDisguise.object.item.material.stone-spade:
-      default: false
+      default: op
    iDisguise.object.item.material.stone-pickaxe:
-      default: false
+      default: op
    iDisguise.object.item.material.stone-axe:
-      default: false
+      default: op
    iDisguise.object.item.material.diamond-sword:
-      default: false
+      default: op
    iDisguise.object.item.material.diamond-spade:
-      default: false
+      default: op
    iDisguise.object.item.material.diamond-pickaxe:
-      default: false
+      default: op
    iDisguise.object.item.material.diamond-axe:
-      default: false
+      default: op
    iDisguise.object.item.material.stick:
-      default: false
+      default: op
    iDisguise.object.item.material.bowl:
-      default: false
+      default: op
    iDisguise.object.item.material.mushroom-soup:
-      default: false
+      default: op
    iDisguise.object.item.material.gold-sword:
-      default: false
+      default: op
    iDisguise.object.item.material.gold-spade:
-      default: false
+      default: op
    iDisguise.object.item.material.gold-pickaxe:
-      default: false
+      default: op
    iDisguise.object.item.material.gold-axe:
-      default: false
+      default: op
    iDisguise.object.item.material.string:
-      default: false
+      default: op
    iDisguise.object.item.material.feather:
-      default: false
+      default: op
    iDisguise.object.item.material.sulphur:
-      default: false
+      default: op
    iDisguise.object.item.material.wood-hoe:
-      default: false
+      default: op
    iDisguise.object.item.material.stone-hoe:
-      default: false
+      default: op
    iDisguise.object.item.material.iron-hoe:
-      default: false
+      default: op
    iDisguise.object.item.material.diamond-hoe:
-      default: false
+      default: op
    iDisguise.object.item.material.gold-hoe:
-      default: false
+      default: op
    iDisguise.object.item.material.seeds:
-      default: false
+      default: op
    iDisguise.object.item.material.wheat:
-      default: false
+      default: op
    iDisguise.object.item.material.bread:
-      default: false
+      default: op
    iDisguise.object.item.material.leather-helmet:
-      default: false
+      default: op
    iDisguise.object.item.material.leather-chestplate:
-      default: false
+      default: op
    iDisguise.object.item.material.leather-leggings:
-      default: false
+      default: op
    iDisguise.object.item.material.leather-boots:
-      default: false
+      default: op
    iDisguise.object.item.material.chainmail-helmet:
-      default: false
+      default: op
    iDisguise.object.item.material.chainmail-chestplate:
-      default: false
+      default: op
    iDisguise.object.item.material.chainmail-leggings:
-      default: false
+      default: op
    iDisguise.object.item.material.chainmail-boots:
-      default: false
+      default: op
    iDisguise.object.item.material.iron-helmet:
-      default: false
+      default: op
    iDisguise.object.item.material.iron-chestplate:
-      default: false
+      default: op
    iDisguise.object.item.material.iron-leggings:
-      default: false
+      default: op
    iDisguise.object.item.material.iron-boots:
-      default: false
+      default: op
    iDisguise.object.item.material.diamond-helmet:
-      default: false
+      default: op
    iDisguise.object.item.material.diamond-chestplate:
-      default: false
+      default: op
    iDisguise.object.item.material.diamond-leggings:
-      default: false
+      default: op
    iDisguise.object.item.material.diamond-boots:
-      default: false
+      default: op
    iDisguise.object.item.material.gold-helmet:
-      default: false
+      default: op
    iDisguise.object.item.material.gold-chestplate:
-      default: false
+      default: op
    iDisguise.object.item.material.gold-leggings:
-      default: false
+      default: op
    iDisguise.object.item.material.gold-boots:
-      default: false
+      default: op
    iDisguise.object.item.material.flint:
-      default: false
+      default: op
    iDisguise.object.item.material.pork:
-      default: false
+      default: op
    iDisguise.object.item.material.grilled-pork:
-      default: false
+      default: op
    iDisguise.object.item.material.painting:
-      default: false
+      default: op
    iDisguise.object.item.material.golden-apple:
-      default: false
+      default: op
    iDisguise.object.item.material.sign:
-      default: false
+      default: op
    iDisguise.object.item.material.wood-door:
-      default: false
+      default: op
    iDisguise.object.item.material.bucket:
-      default: false
+      default: op
    iDisguise.object.item.material.water-bucket:
-      default: false
+      default: op
    iDisguise.object.item.material.lava-bucket:
-      default: false
+      default: op
    iDisguise.object.item.material.minecart:
-      default: false
+      default: op
    iDisguise.object.item.material.saddle:
-      default: false
+      default: op
    iDisguise.object.item.material.iron-door:
-      default: false
+      default: op
    iDisguise.object.item.material.redstone:
-      default: false
+      default: op
    iDisguise.object.item.material.snow-ball:
-      default: false
+      default: op
    iDisguise.object.item.material.boat:
-      default: false
+      default: op
    iDisguise.object.item.material.leather:
-      default: false
+      default: op
    iDisguise.object.item.material.milk-bucket:
-      default: false
+      default: op
    iDisguise.object.item.material.clay-brick:
-      default: false
+      default: op
    iDisguise.object.item.material.clay-ball:
-      default: false
+      default: op
    iDisguise.object.item.material.sugar-cane:
-      default: false
+      default: op
    iDisguise.object.item.material.paper:
-      default: false
+      default: op
    iDisguise.object.item.material.book:
-      default: false
+      default: op
    iDisguise.object.item.material.slime-ball:
-      default: false
+      default: op
    iDisguise.object.item.material.storage-minecart:
-      default: false
+      default: op
    iDisguise.object.item.material.powered-minecart:
-      default: false
+      default: op
    iDisguise.object.item.material.egg:
-      default: false
+      default: op
    iDisguise.object.item.material.compass:
-      default: false
+      default: op
    iDisguise.object.item.material.fishing-rod:
-      default: false
+      default: op
    iDisguise.object.item.material.watch:
-      default: false
+      default: op
    iDisguise.object.item.material.glowstone-dust:
-      default: false
+      default: op
    iDisguise.object.item.material.raw-fish:
-      default: false
+      default: op
    iDisguise.object.item.material.cooked-fish:
-      default: false
+      default: op
    iDisguise.object.item.material.ink-sack:
-      default: false
+      default: op
    iDisguise.object.item.material.bone:
-      default: false
+      default: op
    iDisguise.object.item.material.sugar:
-      default: false
+      default: op
    iDisguise.object.item.material.cake:
-      default: false
+      default: op
    iDisguise.object.item.material.bed:
-      default: false
+      default: op
    iDisguise.object.item.material.diode:
-      default: false
+      default: op
    iDisguise.object.item.material.cookie:
-      default: false
+      default: op
    iDisguise.object.item.material.map:
-      default: false
+      default: op
    iDisguise.object.item.material.shears:
-      default: false
+      default: op
    iDisguise.object.item.material.melon:
-      default: false
+      default: op
    iDisguise.object.item.material.pumpkin-seeds:
-      default: false
+      default: op
    iDisguise.object.item.material.melon-seeds:
-      default: false
+      default: op
    iDisguise.object.item.material.raw-beef:
-      default: false
+      default: op
    iDisguise.object.item.material.cooked-beef:
-      default: false
+      default: op
    iDisguise.object.item.material.raw-chicken:
-      default: false
+      default: op
    iDisguise.object.item.material.cooked-chicken:
-      default: false
+      default: op
    iDisguise.object.item.material.rotten-flesh:
-      default: false
+      default: op
    iDisguise.object.item.material.ender-pearl:
-      default: false
+      default: op
    iDisguise.object.item.material.blaze-rod:
-      default: false
+      default: op
    iDisguise.object.item.material.ghast-tear:
-      default: false
+      default: op
    iDisguise.object.item.material.gold-nugget:
-      default: false
+      default: op
    iDisguise.object.item.material.nether-stalk:
-      default: false
+      default: op
    iDisguise.object.item.material.potion:
-      default: false
+      default: op
    iDisguise.object.item.material.glass-bottle:
-      default: false
+      default: op
    iDisguise.object.item.material.spider-eye:
-      default: false
+      default: op
    iDisguise.object.item.material.fermented-spider-eye:
-      default: false
+      default: op
    iDisguise.object.item.material.blaze-powder:
-      default: false
+      default: op
    iDisguise.object.item.material.magma-cream:
-      default: false
+      default: op
    iDisguise.object.item.material.brewing-stand-item:
-      default: false
+      default: op
    iDisguise.object.item.material.cauldron-item:
-      default: false
+      default: op
    iDisguise.object.item.material.eye-of-ender:
-      default: false
+      default: op
    iDisguise.object.item.material.speckled-melon:
-      default: false
+      default: op
    iDisguise.object.item.material.monster-egg:
-      default: false
+      default: op
    iDisguise.object.item.material.exp-bottle:
-      default: false
+      default: op
    iDisguise.object.item.material.fireball:
-      default: false
+      default: op
    iDisguise.object.item.material.book-and-quill:
-      default: false
+      default: op
    iDisguise.object.item.material.written-book:
-      default: false
+      default: op
    iDisguise.object.item.material.emerald:
-      default: false
+      default: op
    iDisguise.object.item.material.item-frame:
-      default: false
+      default: op
    iDisguise.object.item.material.flower-pot-item:
-      default: false
+      default: op
    iDisguise.object.item.material.carrot-item:
-      default: false
+      default: op
    iDisguise.object.item.material.potato-item:
-      default: false
+      default: op
    iDisguise.object.item.material.baked-potato:
-      default: false
+      default: op
    iDisguise.object.item.material.poisonous-potato:
-      default: false
+      default: op
    iDisguise.object.item.material.empty-map:
-      default: false
+      default: op
    iDisguise.object.item.material.golden-carrot:
-      default: false
+      default: op
    iDisguise.object.item.material.skull-item:
-      default: false
+      default: op
    iDisguise.object.item.material.carrot-stick:
-      default: false
+      default: op
    iDisguise.object.item.material.nether-star:
-      default: false
+      default: op
    iDisguise.object.item.material.pumpkin-pie:
-      default: false
+      default: op
    iDisguise.object.item.material.firework:
-      default: false
+      default: op
    iDisguise.object.item.material.firework-charge:
-      default: false
+      default: op
    iDisguise.object.item.material.enchanted-book:
-      default: false
+      default: op
    iDisguise.object.item.material.redstone-comparator:
-      default: false
+      default: op
    iDisguise.object.item.material.nether-brick-item:
-      default: false
+      default: op
    iDisguise.object.item.material.quartz:
-      default: false
+      default: op
    iDisguise.object.item.material.explosive-minecart:
-      default: false
+      default: op
    iDisguise.object.item.material.hopper-minecart:
-      default: false
+      default: op
    iDisguise.object.item.material.prismarine-shard:
-      default: false
+      default: op
    iDisguise.object.item.material.prismarine-crystals:
-      default: false
+      default: op
    iDisguise.object.item.material.rabbit:
-      default: false
+      default: op
    iDisguise.object.item.material.cooked-rabbit:
-      default: false
+      default: op
    iDisguise.object.item.material.rabbit-stew:
-      default: false
+      default: op
    iDisguise.object.item.material.rabbit-foot:
-      default: false
+      default: op
    iDisguise.object.item.material.rabbit-hide:
-      default: false
+      default: op
    iDisguise.object.item.material.armor-stand:
-      default: false
+      default: op
    iDisguise.object.item.material.iron-barding:
-      default: false
+      default: op
    iDisguise.object.item.material.gold-barding:
-      default: false
+      default: op
    iDisguise.object.item.material.diamond-barding:
-      default: false
+      default: op
    iDisguise.object.item.material.leash:
-      default: false
+      default: op
    iDisguise.object.item.material.name-tag:
-      default: false
+      default: op
    iDisguise.object.item.material.command-minecart:
-      default: false
+      default: op
    iDisguise.object.item.material.mutton:
-      default: false
+      default: op
    iDisguise.object.item.material.cooked-mutton:
-      default: false
+      default: op
    iDisguise.object.item.material.banner:
-      default: false
+      default: op
    iDisguise.object.item.material.end-crystal:
-      default: false
+      default: op
    iDisguise.object.item.material.spruce-door-item:
-      default: false
+      default: op
    iDisguise.object.item.material.birch-door-item:
-      default: false
+      default: op
    iDisguise.object.item.material.jungle-door-item:
-      default: false
+      default: op
    iDisguise.object.item.material.acacia-door-item:
-      default: false
+      default: op
    iDisguise.object.item.material.dark-oak-door-item:
-      default: false
+      default: op
    iDisguise.object.item.material.chorus-fruit:
-      default: false
+      default: op
    iDisguise.object.item.material.chorus-fruit-popped:
-      default: false
+      default: op
    iDisguise.object.item.material.beetroot:
-      default: false
+      default: op
    iDisguise.object.item.material.beetroot-seeds:
-      default: false
+      default: op
    iDisguise.object.item.material.beetroot-soup:
-      default: false
+      default: op
    iDisguise.object.item.material.dragons-breath:
-      default: false
+      default: op
    iDisguise.object.item.material.splash-potion:
-      default: false
+      default: op
    iDisguise.object.item.material.spectral-arrow:
-      default: false
+      default: op
    iDisguise.object.item.material.tipped-arrow:
-      default: false
+      default: op
    iDisguise.object.item.material.lingering-potion:
-      default: false
+      default: op
    iDisguise.object.item.material.shield:
-      default: false
+      default: op
    iDisguise.object.item.material.elytra:
-      default: false
+      default: op
    iDisguise.object.item.material.boat-spruce:
-      default: false
+      default: op
    iDisguise.object.item.material.boat-birch:
-      default: false
+      default: op
    iDisguise.object.item.material.boat-jungle:
-      default: false
+      default: op
    iDisguise.object.item.material.boat-acacia:
-      default: false
+      default: op
    iDisguise.object.item.material.boat-dark-oak:
-      default: false
+      default: op
    iDisguise.object.item.material.totem:
-      default: false
+      default: op
    iDisguise.object.item.material.shulker-shell:
-      default: false
+      default: op
    iDisguise.object.item.material.iron-nugget:
-      default: false
+      default: op
    iDisguise.object.item.material.knowledge-book:
-      default: false
+      default: op
    iDisguise.object.item.material.gold-record:
-      default: false
+      default: op
    iDisguise.object.item.material.green-record:
-      default: false
+      default: op
    iDisguise.object.item.material.record-3:
-      default: false
+      default: op
    iDisguise.object.item.material.record-4:
-      default: false
+      default: op
    iDisguise.object.item.material.record-5:
-      default: false
+      default: op
    iDisguise.object.item.material.record-6:
-      default: false
+      default: op
    iDisguise.object.item.material.record-7:
-      default: false
+      default: op
    iDisguise.object.item.material.record-8:
-      default: false
+      default: op
    iDisguise.object.item.material.record-9:
-      default: false
+      default: op
    iDisguise.object.item.material.record-10:
-      default: false
+      default: op
    iDisguise.object.item.material.record-11:
-      default: false
+      default: op
    iDisguise.object.item.material.record-12:
-      default: false
+      default: op
    iDisguise.object.minecart:
-      default: false
+      default: op
    iDisguise.others:
-      default: false
+      default: op
    iDisguise.player.display-name:
-      default: false
+      default: op
    iDisguise.player.name.*:
-      default: false
+      default: op
    iDisguise.player.prohibited:
-      default: false
+      default: op
    iDisguise.random:
-      default: false
+      default: op
    iDisguise.reload:
-      default: false
+      default: op
    iDisguise.see-through:
-      default: false
+      default: op
    iDisguise.undisguise:
-      default: false
+      default: op
    iDisguise.undisguise.all:
-      default: false
+      default: op
    iDisguise.undisguise.others:
-      default: false
+      default: op
    iDisguise.update:
-      default: false
+      default: op
    iDisguise.visibility.*:
-      default: false
+      default: op
       children:
          iDisguise.visibility.list: true
          iDisguise.visibility.permission: true
    iDisguise.visibility.list:
-      default: false
+      default: op
    iDisguise.visibility.permission:
-      default: false
+      default: op

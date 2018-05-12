@@ -14,6 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -134,10 +136,16 @@ public class ProfileHelperUID extends ProfileHelper {
 					Bukkit.getScheduler().runTask(iDisguise.getInstance(), new Runnable() {
 						
 						public void run() {
-							for(Player player : Bukkit.getOnlinePlayers()) {
-								if(DisguiseManager.isDisguised(player) && DisguiseManager.getDisguise(player) instanceof PlayerDisguise) {
-									if(((PlayerDisguise)DisguiseManager.getDisguise(player)).getSkinName().equalsIgnoreCase(skinName)) {
-										DisguiseManager.resendPackets(player);
+							for(Object disguisable : DisguiseManager.getDisguisedEntities()) {
+								if(disguisable instanceof OfflinePlayer) {
+									OfflinePlayer player = (OfflinePlayer)disguisable;
+									if(player.isOnline() && DisguiseManager.getDisguise(player) instanceof PlayerDisguise && ((PlayerDisguise)DisguiseManager.getDisguise(player)).getSkinName().equalsIgnoreCase(skinName)) {
+										DisguiseManager.resendPackets(player.getPlayer());
+									}
+								} else {
+									LivingEntity livingEntity = (LivingEntity)disguisable;
+									if(DisguiseManager.getDisguise(livingEntity) instanceof PlayerDisguise && ((PlayerDisguise)DisguiseManager.getDisguise(livingEntity)).getSkinName().equalsIgnoreCase(skinName)) {
+										DisguiseManager.resendPackets(livingEntity);
 									}
 								}
 							}

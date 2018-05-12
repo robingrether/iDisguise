@@ -27,6 +27,7 @@ public class Reflection {
 	
 	public static Class<?> CraftChatMessage;
 	public static Method CraftChatMessage_fromString;
+	public static Method CraftChatMessage_fromComponent;
 	
 	public static Class<?> EntityPlayer;
 	public static Method EntityPlayer_getBukkitEntity;
@@ -53,6 +54,7 @@ public class Reflection {
 	
 	public static Class<?> PacketPlayOutSpawnEntityLiving;
 	public static Constructor<?> PacketPlayOutSpawnEntityLiving_new;
+	public static Field PacketPlayOutSpawnEntityLiving_entityId;
 	public static Field PacketPlayOutSpawnEntityLiving_yaw;
 	
 	public static Class<?> PacketPlayOutPlayerInfo;
@@ -114,6 +116,7 @@ public class Reflection {
 	
 	public static Class<?> World;
 	public static Method World_findNearbyPlayer;
+	public static Method World_getEntityById;
 	
 	public static Class<?> Entity;
 	public static Field Entity_world;
@@ -122,6 +125,7 @@ public class Reflection {
 	public static Method Entity_getDataWatcher;
 	public static Method Entity_setCustomName;
 	public static Method Entity_setCustomNameVisible;
+	public static Method Entity_getBukkitEntity;
 	
 	public static Class<?> EntityAgeable;
 	public static Method EntityAgeable_setAge;
@@ -271,17 +275,70 @@ public class Reflection {
 	public static Method MinecraftServer_getServer;
 	public static Method MinecraftServer_getSessionService;
 	public static Method MinecraftServer_getUserCache;
+	public static Method MinecraftServer_getEntityByUID;
 	
 	public static Class<?> UserCache;
 	public static Method UserCache_getProfileById;
 	public static Method UserCache_putProfile;
+	
+	public static Class<?> CraftWorld;
+	public static Method CraftWorld_getHandle;
+	
+	public static Class<?> CraftLivingEntity;
+	public static Method CraftLivingEntity_getHandle;
+	
+	public static Class<?> EntityHumanNonAbstract;
+	public static Constructor<?> EntityHumanNonAbstract_new;
+	
+	public static Class<?> WorldServer;
+	public static Field WorldServer_entityTracker;
+	
+	public static Class<?> EntityTracker;
+	public static Field EntityTracker_trackedEntities;
+	
+	public static Class<?> IntHashMap;
+	public static Method IntHashMap_get;
+	
+	public static Class<?> EntityTrackerEntry;
+	public static Method EntityTrackerEntry_clear;
+	public static Method EntityTrackerEntry_updatePlayer;
+	
+	public static Class<?> EnumPlayerInfoAction;
+	public static Field EnumPlayerInfoAction_ADD_PLAYER;
+	public static Field EnumPlayerInfoAction_REMOVE_PLAYER;
+	
+	public static Class<?> EnumGamemode;
+	public static Field EnumGamemode_SURVIVAL;
+	
+	public static Class<?> PacketPlayOutEntityDestroy;
+	public static Field PacketPlayOutEntityDestroy_entityIds;
+	
+	public static Class<?> EntityAreaEffectCloud;
+	public static Method EntityAreaEffectCloud_setColor;
+	public static Method EntityAreaEffectCloud_setParticle;
+	public static Method EntityAreaEffectCloud_setRadius;
+	
+	public static Class<?> EnumParticle;
+	public static Method EnumParticle_valueOf;
+	
+	public static Class<?> EntityTameableAnimal;
+	public static Method EntityTameableAnimal_setSitting;
+	
+	public static Class<?> EnumChatFormat;
+	public static Field EnumChatFormat_WHITE;
+	
+	public static Class<?> EntityBoat;
+	public static Method EntityBoat_setType;
+	
+	public static Class<?> EnumBoatType;
+	public static Method EnumBoatType_fromString;
 	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");
 	private static final Pattern newPattern = Pattern.compile("([A-Za-z0-9_]+)\\(([^\\(\\)]*)\\)");
 	
-	public static void init(String file, String nms, String obc) {
+	public static void load(String file, String nms, String obc) {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(Reflection.class.getResourceAsStream(file)));
 			String line;

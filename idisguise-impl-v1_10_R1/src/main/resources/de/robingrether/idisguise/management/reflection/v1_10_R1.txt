@@ -1,109 +1,52 @@
-Block->C{nms}.Block
-Block_fromLegacyData->MBlock$fromLegacyData(int)
-Block_getById->MBlock$getById(int)
-
-CraftChatMessage->C{obc}.util.CraftChatMessage
-CraftChatMessage_fromString->MCraftChatMessage$fromString(java.lang.String)
-
-CraftItemStack->C{obc}.inventory.CraftItemStack
-CraftItemStack_asNMSCopy->MCraftItemStack$asNMSCopy(org.bukkit.inventory.ItemStack)
-
-CraftOfflinePlayer->C{obc}.CraftOfflinePlayer
-CraftOfflinePlayer_getProfile->MCraftOfflinePlayer$getProfile()
-
-CraftPlayer->C{obc}.entity.CraftPlayer
-CraftPlayer_getHandle->MCraftPlayer$getHandle()
-CraftPlayer_getProfile->MCraftPlayer$getProfile()
-
 DataWatcherItem->C{nms}.DataWatcher$Item
 DataWatcherItem_dataWatcherObject->FDataWatcherItem$a
 
 DataWatcherObject->C{nms}.DataWatcherObject
 DataWatcherObject_getId->MDataWatcherObject$a()
 
-Entity->C{nms}.Entity
-Entity_getDataWatcher->MEntity$getDataWatcher()
 Entity_setEntityId->MEntity$h(int)
-Entity_setLocation->MEntity$setLocation(double,double,double,float,float)
-Entity_world->FEntity$world
 
-EntityAgeable->C{nms}.EntityAgeable
-EntityAgeable_setAge->MEntityAgeable$setAge(int)
+EntityAreaEffectCloud->C{nms}.EntityAreaEffectCloud
+EntityAreaEffectCloud_setColor->MEntityAreaEffectCloud$setColor(int)
+EntityAreaEffectCloud_setParticle->MEntityAreaEffectCloud$setParticle({nms}.EnumParticle)
+EntityAreaEffectCloud_setRadius->MEntityAreaEffectCloud$setRadius(float)
 
-EntityArmorStand->C{nms}.EntityArmorStand
-EntityArmorStand_setArms->MEntityArmorStand$setArms(boolean)
+EntityBoat_setType->MEntityBoat$setType({nms}.EntityBoat$EnumBoatType)
 
-EntityBat->C{nms}.EntityBat
-EntityBat_setAsleep->MEntityBat$setAsleep(boolean)
-
-EntityCreeper->C{nms}.EntityCreeper
-EntityCreeper_setPowered->MEntityCreeper$setPowered(boolean)
-
-EntityEnderman->C{nms}.EntityEnderman
-EntityEnderman_setCarried->MEntityEnderman$setCarried({nms}.IBlockData)
-
-EntityFallingBlock->C{nms}.EntityFallingBlock
-
-EntityGuardian->C{nms}.EntityGuardian
 EntityGuardian_setElder->MEntityGuardian$setElder(boolean)
 
-EntityHorse->C{nms}.EntityHorse
 EntityHorse_inventoryChest->FEntityHorse$inventoryChest
 EntityHorse_setHasChest->MEntityHorse$setHasChest(boolean)
 EntityHorse_setType->MEntityHorse$setType({nms}.EnumHorseType)
-EntityHorse_setVariant->MEntityHorse$setVariant(int)
 
-Entity_setCustomName->MEntity$setCustomName(java.lang.String)
-Entity_setCustomNameVisible->MEntity$setCustomNameVisible(boolean)
-
-EntityItem->C{nms}.EntityItem
-EntityItem_setItemStack->MEntityItem$setItemStack({nms}.ItemStack)
-
-EntityMinecartAbstract->C{nms}.EntityMinecartAbstract
 EntityMinecartAbstract_setDisplayBlock->MEntityMinecartAbstract$setDisplayBlock({nms}.IBlockData)
 
-EntityOcelot->C{nms}.EntityOcelot
-EntityOcelot_setCatType->MEntityOcelot$setCatType(int)
-
-EntityPig->C{nms}.EntityPig
-EntityPig_setSaddle->MEntityPig$setSaddle(boolean)
-
-EntityPlayer->C{nms}.EntityPlayer
-EntityPlayer_getBukkitEntity->MEntityPlayer$getBukkitEntity()
-EntityPlayer_playerConnection->FEntityPlayer$playerConnection
-
-EntityRabbit->C{nms}.EntityRabbit
 EntityRabbit_setRabbitType->MEntityRabbit$setRabbitType(int)
 
-EntitySheep->C{nms}.EntitySheep
-EntitySheep_setColor->MEntitySheep$setColor({nms}.EnumColor)
-
-EntitySkeleton->C{nms}.EntitySkeleton
 EntitySkeleton_setSkeletonType->MEntitySkeleton$setSkeletonType({nms}.EnumSkeletonType)
 
-EntitySlime->C{nms}.EntitySlime
 EntitySlime_setSize->MEntitySlime$setSize(int)
 
-EntityVillager->C{nms}.EntityVillager
-EntityVillager_setProfession->MEntityVillager$setProfession(int)
-
-EntityWolf->C{nms}.EntityWolf
-EntityWolf_setAngry->MEntityWolf$setAngry(boolean)
-EntityWolf_setCollarColor->MEntityWolf$setCollarColor({nms}.EnumColor)
-EntityWolf_setTamed->MEntityWolf$setTamed(boolean)
-
-EntityZombie->C{nms}.EntityZombie
-EntityZombie_setBaby->MEntityZombie$setBaby(boolean)
 EntityZombie_setVillagerType->MEntityZombie$setVillagerType({nms}.EnumZombieType)
 
-EnumColor->C{nms}.EnumColor
-EnumColor_fromColorIndex->MEnumColor$fromColorIndex(int)
+EnumBoatType->C{nms}.EntityBoat$EnumBoatType
+EnumBoatType_fromString->MEnumBoatType$a(java.lang.String)
 
 EnumEntityUseAction->C{nms}.PacketPlayInUseEntity$EnumEntityUseAction
 EnumEntityUseAction_ATTACK->FEnumEntityUseAction$ATTACK
 
+EnumGamemode->C{nms}.EnumGamemode
+EnumGamemode_SURVIVAL->FEnumGamemode$SURVIVAL
+
 EnumHorseType->C{nms}.EnumHorseType
 EnumHorseType_fromIndex->MEnumHorseType$a(int)
+
+EnumParticle->C{nms}.EnumParticle
+EnumParticle_valueOf->MEnumParticle$valueOf(java.lang.String)
+
+EnumPlayerInfoAction->C{nms}.PacketPlayOutPlayerInfo$EnumPlayerInfoAction
+EnumPlayerInfoAction_ADD_PLAYER->FEnumPlayerInfoAction$ADD_PLAYER
+EnumPlayerInfoAction_REMOVE_PLAYER->FEnumPlayerInfoAction$REMOVE_PLAYER
 
 EnumScoreboardAction->C{nms}.PacketPlayOutScoreboardScore$EnumScoreboardAction
 EnumScoreboardAction_CHANGE->FEnumScoreboardAction$CHANGE
@@ -115,112 +58,31 @@ EnumSkeletonType_fromIndex->MEnumSkeletonType$a(int)
 EnumZombieType->C{nms}.EnumZombieType
 EnumZombieType_fromIndex->MEnumZombieType$a(int)
 
-GameProfile->Ccom.mojang.authlib.GameProfile
-GameProfile_getProfileId->MGameProfile$getId()
-
-InventorySubcontainer->C{nms}.InventorySubcontainer
-InventorySubcontainer_setItem->MInventorySubcontainer$setItem(int,{nms}.ItemStack)
-
 MinecraftKey->C{nms}.MinecraftKey
 MinecraftKey_getName->MMinecraftKey$a()
 MinecraftKey_new->NMinecraftKey(java.lang.String)
 
-MinecraftServer->C{nms}.MinecraftServer
-MinecraftServer_getServer->MMinecraftServer$getServer()
 MinecraftServer_getSessionService->MMinecraftServer$ay()
-MinecraftServer_getUserCache->MMinecraftServer$getUserCache()
+MinecraftServer_getEntityByUID->MMinecraftServer$a(java.util.UUID)
 
-PacketPlayInUseEntity->C{nms}.PacketPlayInUseEntity
-PacketPlayInUseEntity_entityId->FPacketPlayInUseEntity$a
-PacketPlayInUseEntity_getAction->MPacketPlayInUseEntity$a()
-
-PacketPlayOutAnimation->C{nms}.PacketPlayOutAnimation
-PacketPlayOutAnimation_animationType->FPacketPlayOutAnimation$b
-PacketPlayOutAnimation_entityId->FPacketPlayOutAnimation$a
-
-PacketPlayOutBed->C{nms}.PacketPlayOutBed
-PacketPlayOutBed_entityId->FPacketPlayOutBed$a
-
-PacketPlayOutCollect->C{nms}.PacketPlayOutCollect
-PacketPlayOutCollect_entityId->FPacketPlayOutCollect$b
-
-PacketPlayOutEntity->C{nms}.PacketPlayOutEntity
-PacketPlayOutEntity_deltaX->FPacketPlayOutEntity$b
-PacketPlayOutEntity_deltaY->FPacketPlayOutEntity$c
-PacketPlayOutEntity_deltaZ->FPacketPlayOutEntity$d
-PacketPlayOutEntity_entityId->FPacketPlayOutEntity$a
-PacketPlayOutEntity_isOnGround->FPacketPlayOutEntity$g
-PacketPlayOutEntity_pitch->FPacketPlayOutEntity$f
-PacketPlayOutEntity_yaw->FPacketPlayOutEntity$e
-
-PacketPlayOutEntityMetadata->C{nms}.PacketPlayOutEntityMetadata
-PacketPlayOutEntityMetadata_entityId->FPacketPlayOutEntityMetadata$a
-PacketPlayOutEntityMetadata_metadataList->FPacketPlayOutEntityMetadata$b
-PacketPlayOutEntityMetadata_new_empty->NPacketPlayOutEntityMetadata()
-PacketPlayOutEntityMetadata_new_full->NPacketPlayOutEntityMetadata(int,{nms}.DataWatcher,boolean)
-
-PacketPlayOutEntityTeleport->C{nms}.PacketPlayOutEntityTeleport
-PacketPlayOutEntityTeleport_entityId->FPacketPlayOutEntityTeleport$a
-PacketPlayOutEntityTeleport_isOnGround->FPacketPlayOutEntityTeleport$g
-PacketPlayOutEntityTeleport_new->NPacketPlayOutEntityTeleport()
-PacketPlayOutEntityTeleport_pitch->FPacketPlayOutEntityTeleport$f
-PacketPlayOutEntityTeleport_x->FPacketPlayOutEntityTeleport$b
-PacketPlayOutEntityTeleport_y->FPacketPlayOutEntityTeleport$c
-PacketPlayOutEntityTeleport_yaw->FPacketPlayOutEntityTeleport$e
-PacketPlayOutEntityTeleport_z->FPacketPlayOutEntityTeleport$d
-
-PacketPlayOutNamedEntitySpawn->C{nms}.PacketPlayOutNamedEntitySpawn
-PacketPlayOutNamedEntitySpawn_entityId->FPacketPlayOutNamedEntitySpawn$a
-PacketPlayOutNamedEntitySpawn_new->NPacketPlayOutNamedEntitySpawn({nms}.EntityHuman)
-PacketPlayOutNamedEntitySpawn_profileId->FPacketPlayOutNamedEntitySpawn$b
-
-PacketPlayOutNamedSoundEffect->C{nms}.PacketPlayOutNamedSoundEffect
-PacketPlayOutNamedSoundEffect_new->NPacketPlayOutNamedSoundEffect()
 PacketPlayOutNamedSoundEffect_pitch->FPacketPlayOutNamedSoundEffect$g
 PacketPlayOutNamedSoundEffect_soundCategory->FPacketPlayOutNamedSoundEffect$b
-PacketPlayOutNamedSoundEffect_soundEffect->FPacketPlayOutNamedSoundEffect$a
 PacketPlayOutNamedSoundEffect_volume->FPacketPlayOutNamedSoundEffect$f
 PacketPlayOutNamedSoundEffect_x->FPacketPlayOutNamedSoundEffect$c
 PacketPlayOutNamedSoundEffect_y->FPacketPlayOutNamedSoundEffect$d
 PacketPlayOutNamedSoundEffect_z->FPacketPlayOutNamedSoundEffect$e
 
-PacketPlayOutPlayerInfo->C{nms}.PacketPlayOutPlayerInfo
-PacketPlayOutPlayerInfo_action->FPacketPlayOutPlayerInfo$a
-PacketPlayOutPlayerInfo_new->NPacketPlayOutPlayerInfo()
-PacketPlayOutPlayerInfo_playerInfoList->FPacketPlayOutPlayerInfo$b
-
-PacketPlayOutScoreboardScore->C{nms}.PacketPlayOutScoreboardScore
-PacketPlayOutScoreboardScore_new->NPacketPlayOutScoreboardScore()
-PacketPlayOutScoreboardScore_entry->FPacketPlayOutScoreboardScore$a
-PacketPlayOutScoreboardScore_objective->FPacketPlayOutScoreboardScore$b
-PacketPlayOutScoreboardScore_score->FPacketPlayOutScoreboardScore$c
-PacketPlayOutScoreboardScore_action->FPacketPlayOutScoreboardScore$d
-
-PacketPlayOutScoreboardTeam->C{nms}.PacketPlayOutScoreboardTeam
-PacketPlayOutScoreboardTeam_new->NPacketPlayOutScoreboardTeam()
-PacketPlayOutScoreboardTeam_teamName->FPacketPlayOutScoreboardTeam$a
-PacketPlayOutScoreboardTeam_displayName->FPacketPlayOutScoreboardTeam$b
-PacketPlayOutScoreboardTeam_prefix->FPacketPlayOutScoreboardTeam$c
-PacketPlayOutScoreboardTeam_suffix->FPacketPlayOutScoreboardTeam$d
-PacketPlayOutScoreboardTeam_nameTagVisibility->FPacketPlayOutScoreboardTeam$e
 PacketPlayOutScoreboardTeam_collisionRule->FPacketPlayOutScoreboardTeam$f
 PacketPlayOutScoreboardTeam_color->FPacketPlayOutScoreboardTeam$g
 PacketPlayOutScoreboardTeam_entries->FPacketPlayOutScoreboardTeam$h
 PacketPlayOutScoreboardTeam_action->FPacketPlayOutScoreboardTeam$i
 PacketPlayOutScoreboardTeam_friendlyFlags->FPacketPlayOutScoreboardTeam$j
 
-PacketPlayOutSpawnEntity->C{nms}.PacketPlayOutSpawnEntity
-PacketPlayOutSpawnEntity_new->NPacketPlayOutSpawnEntity({nms}.Entity,int,int)
 PacketPlayOutSpawnEntity_x->FPacketPlayOutSpawnEntity$c
 PacketPlayOutSpawnEntity_y->FPacketPlayOutSpawnEntity$d
 PacketPlayOutSpawnEntity_z->FPacketPlayOutSpawnEntity$e
 
-PacketPlayOutSpawnEntityLiving->C{nms}.PacketPlayOutSpawnEntityLiving
-PacketPlayOutSpawnEntityLiving_new->NPacketPlayOutSpawnEntityLiving({nms}.EntityLiving)
 PacketPlayOutSpawnEntityLiving_yaw->FPacketPlayOutSpawnEntityLiving$j
-
-PacketPlayOutUpdateAttributes->C{nms}.PacketPlayOutUpdateAttributes
-PacketPlayOutUpdateAttributes_entityId->FPacketPlayOutUpdateAttributes$a
 
 PlayerInfoData->C{nms}.PacketPlayOutPlayerInfo$PlayerInfoData
 PlayerInfoData_getDisplayName->MPlayerInfoData$d()
@@ -236,9 +98,5 @@ RegistryMaterials_getValue->MRegistryMaterials$get(java.lang.Object)
 SoundEffect->C{nms}.SoundEffect
 SoundEffect_registry->FSoundEffect$a
 
-UserCache->C{nms}.UserCache
-UserCache_getProfileById->MUserCache$a(java.util.UUID)
-UserCache_putProfile->MUserCache$a(com.mojang.authlib.GameProfile)
-
-World->C{nms}.World
 World_findNearbyPlayer->MWorld$a(double,double,double,double,boolean)
+World_getEntityById->MWorld$getEntity(int)
