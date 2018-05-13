@@ -231,6 +231,10 @@ public class iDisguise extends JavaPlugin {
 							disguisable = getServer().getOfflinePlayer(UUID.fromString(args[0].substring(1, 37)));
 						} else if(args[0].matches("\\[[0-9]+\\]")) {
 							disguisable = EntityIdList.getEntityByEntityId(Integer.parseInt(args[0].substring(1, args[0].length() - 1)));
+							if(disguisable == null) {
+								sender.sendMessage(language.CANNOT_FIND_ENTITY.replace("%id%", args[0]));
+								return true;
+							}
 						} else if(args[0].matches("\\{[A-Za-z0-9_]{1,16}\\}")) {
 							disguisable = getServer().getOfflinePlayer(args[0].substring(1, args[0].length() - 1));
 						} else if(getServer().getPlayerExact(args[0]) != null) {
@@ -592,6 +596,10 @@ public class iDisguise extends JavaPlugin {
 						disguisable = getServer().getOfflinePlayer(UUID.fromString(args[0].substring(1, 37)));
 					} else if(args[0].matches("\\[[0-9]+\\]")) {
 						disguisable = EntityIdList.getEntityByEntityId(Integer.parseInt(args[0].substring(1, args[0].length() - 1)));
+						if(disguisable == null) {
+							sender.sendMessage(language.CANNOT_FIND_ENTITY.replace("%id%", args[0]));
+							return true;
+						}
 					} else if(args[0].matches("\\{[A-Za-z0-9_]{1,16}\\}")) {
 						disguisable = getServer().getOfflinePlayer(args[0].substring(1, args[0].length() - 1));
 					} else if(getServer().getPlayerExact(args[0]) != null) {

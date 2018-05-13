@@ -17,6 +17,7 @@ public class Language {
 	public String NO_PERMISSION = ChatColor.RED + "You are not allowed to do this.";
 	public String CONSOLE_USE_OTHER_COMMAND = ChatColor.RED + "Use /odisguise from the server console.";
 	public String CANNOT_FIND_PLAYER = ChatColor.RED + "Cannot find player %player%.";
+	public String CANNOT_FIND_ENTITY = ChatColor.RED + "Cannot find valid living entity with EID %id%.";
 	public String WRONG_USAGE_NO_NAME = ChatColor.RED + "Wrong usage: account name required";
 	public String WRONG_USAGE_TWO_DISGUISE_TYPES = ChatColor.RED + "Wrong usage: two disguise types given";
 	public String WRONG_USAGE_UNKNOWN_ARGUMENTS = ChatColor.RED + "Wrong usage: unknown arguments " + ChatColor.ITALIC + "%arguments%";
