@@ -88,10 +88,12 @@ public class UpdateCheck implements Runnable {
 			String response = reader.readLine();
 			JSONArray array = (JSONArray)JSONValue.parse(response);
 			latestVersion = null;
-			JSONObject object = (JSONObject)array.get(array.size() - 1);
-			latestVersion = (String)object.get(API_NAME);
-			downloadUrl = ((String)object.get(API_DOWNLOAD_URL));
-			checksum = (String)object.get(API_CHECKSUM);
+			if(array.size() > 0) {
+				JSONObject object = (JSONObject)array.get(array.size() - 1);
+				latestVersion = (String)object.get(API_NAME);
+				downloadUrl = ((String)object.get(API_DOWNLOAD_URL));
+				checksum = (String)object.get(API_CHECKSUM);
+			}
 		} catch(Exception e) {
 			plugin.getLogger().log(Level.WARNING, "Update checking failed: " + e.getClass().getSimpleName());
 		} finally {
