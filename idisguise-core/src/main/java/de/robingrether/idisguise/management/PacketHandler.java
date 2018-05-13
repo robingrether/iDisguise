@@ -685,9 +685,14 @@ public final class PacketHandler {
 			String newSoundEffect = Sounds.replaceSoundEffect(DisguiseType.fromEntityType(livingEntity.getType()), soundEffect, DisguiseManager.getDisguise(livingEntity));
 			if(!soundEffect.equals(newSoundEffect)) {
 				if(newSoundEffect != null) {
-					Object customizablePacket = clonePacket(packet);
-					PacketPlayOutNamedSoundEffect_soundEffect.set(customizablePacket, soundEffectFromString(newSoundEffect));
-					return customizablePacket;
+					Object nmsSoundEffect = soundEffectFromString(newSoundEffect);
+					if(nmsSoundEffect != null) {
+						Object customizablePacket = clonePacket(packet);
+						PacketPlayOutNamedSoundEffect_soundEffect.set(customizablePacket, nmsSoundEffect);
+						return customizablePacket;
+					} else {
+						return null;
+					}
 				} else {
 					return null;
 				}
