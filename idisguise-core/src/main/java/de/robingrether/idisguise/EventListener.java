@@ -12,6 +12,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -46,11 +47,16 @@ public class EventListener implements Listener {
 		}
 	}
 	
-	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent event) {
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerJoinLowest(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		ChannelInjector.inject(player);
-		EntityIdList.addPlayer(player);
+		EntityIdList.addEntity(player);
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerJoinMonitor(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
 		ProfileHelper.getInstance().registerGameProfile(player);
 		if(DisguiseManager.isDisguised(player)) {
 			player.sendMessage(plugin.getLanguage().JOIN_DISGUISED);
@@ -87,7 +93,7 @@ public class EventListener implements Listener {
 			}
 		}
 		ChannelInjector.remove(player);
-		EntityIdList.removePlayer(player);
+		EntityIdList.removeEntity(player);
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -153,6 +159,10 @@ public class EventListener implements Listener {
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
 		final LivingEntity livingEntity = event.getEntity();
+		final int entityId = livingEntity.getEntityId();
+		
+		if(livingEntity instanceof Player) return; // we have a seperate method for players
+		
 		if(DisguiseManager.isDisguised(livingEntity)) {
 			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 				
@@ -162,6 +172,30 @@ public class EventListener implements Listener {
 				
 			}, 5L);
 		}
+		
+		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+			
+			public void run() {
+				EntityIdList.removeEntity(entityId);
+			}
+			
+		}, 40L);
+	}
+	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onCreatureSpawn(CreatureSpawnEvent event) {
+		final LivingEntity livingEntity = event.getEntity();
+		final int entityId = livingEntity.getEntityId();
+		EntityIdList.addEntity(livingEntity);
+		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+			
+			public void run() {
+				if(livingEntity == null || !livingEntity.isValid()) {
+					EntityIdList.removeEntity(entityId);
+				}
+			}
+			
+		}, 40L);
 	}
 	
 }

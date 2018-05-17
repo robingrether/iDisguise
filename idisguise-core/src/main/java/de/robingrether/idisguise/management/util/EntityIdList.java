@@ -15,49 +15,56 @@ import org.bukkit.entity.Player;
 
 import de.robingrether.idisguise.management.VersionHelper;
 
-import static de.robingrether.idisguise.management.Reflection.*;
+//import static de.robingrether.idisguise.management.Reflection.*;
 
 public final class EntityIdList {
 	
 	private EntityIdList() {}
 	
-	private static Map<Integer, Player> players;
+	private static Map<Integer, LivingEntity> entities;
 	
 	public static void init() {
 		legacyMode = !VersionHelper.requireVersion("v1_8_R2"); 			// are we before 1.8.3 (1_8_R2) ?
-		players = new ConcurrentHashMap<Integer, Player>();
-		for(Player player : Bukkit.getOnlinePlayers()) {
-			players.put(player.getEntityId(), player);
+		entities = new ConcurrentHashMap<Integer, LivingEntity>();
+		for(World world : Bukkit.getWorlds()) {
+			for(LivingEntity livingEntity : world.getLivingEntities())
+			entities.put(livingEntity.getEntityId(), livingEntity);
 		}
 	}
 	
-	public static void addPlayer(Player player) {
-		players.put(player.getEntityId(), player);
+	public static void addEntity(LivingEntity livingEntity) {
+		entities.put(livingEntity.getEntityId(), livingEntity);
 	}
 	
-	public static void removePlayer(Player player) {
-		players.remove(player.getEntityId());
+	public static void removeEntity(int entityId) {
+		entities.remove(entityId);
+	}
+	
+	public static void removeEntity(LivingEntity livingEntity) {
+		entities.remove(livingEntity.getEntityId());
 	}
 	
 	public static Player getPlayerByEntityId(int entityId) {
-		return players.get(entityId);
+		LivingEntity livingEntity = entities.get(entityId);
+		return livingEntity instanceof Player ? (Player)livingEntity : null;
 	}
 	
 	public static LivingEntity getEntityByEntityId(int entityId) {
-		for(World world : Bukkit.getWorlds()) {
-			try {
-				Object entity = World_getEntityById.invoke(CraftWorld_getHandle.invoke(world), entityId);
-				if(entity != null) {
-					Object bukkitEntity = Entity_getBukkitEntity.invoke(entity);
-					if(bukkitEntity instanceof LivingEntity) {
-						return (LivingEntity)bukkitEntity;
-					}
-					break;
-				}
-			} catch(Exception e) {
-			}
-		}
-		return null;
+		return entities.get(entityId);
+//		for(World world : Bukkit.getWorlds()) {
+//			try {
+//				Object entity = World_getEntityById.invoke(CraftWorld_getHandle.invoke(world), entityId);
+//				if(entity != null) {
+//					Object bukkitEntity = Entity_getBukkitEntity.invoke(entity);
+//					if(bukkitEntity instanceof LivingEntity) {
+//						return (LivingEntity)bukkitEntity;
+//					}
+//					break;
+//				}
+//			} catch(Exception e) {
+//			}
+//		}
+//		return null;
 	}
 	
 	private static boolean legacyMode = false;		// are we before 1.8.3 (1_8_R2) ?
