@@ -25,7 +25,7 @@ If you need the core plugin (API...):
 <dependency>
   <groupId>de.robingrether.idisguise</groupId>
   <artifactId>idisguise-core</artifactId>
-  <version>5.7.1</version>
+  <version>5.7.2</version>
 </dependency>
 ````
 
@@ -34,7 +34,7 @@ If you need everything:
 <dependency>
   <groupId>de.robingrether.idisguise</groupId>
   <artifactId>idisguise-full</artifactId>
-  <version>5.7.1</version>
+  <version>5.7.2</version>
 </dependency>
 ````
 
