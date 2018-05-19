@@ -21,6 +21,7 @@ import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.api.PlayerInteractDisguisedPlayerEvent;
 import de.robingrether.idisguise.disguise.*;
 import de.robingrether.idisguise.disguise.LlamaDisguise.SaddleColor;
+import de.robingrether.idisguise.management.channel.InjectedPlayerConnection;
 import de.robingrether.idisguise.management.util.EntityIdList;
 
 import static de.robingrether.idisguise.management.Reflection.*;
@@ -193,17 +194,28 @@ public final class PacketHandler {
 					PlayerDisguise playerDisguise = (PlayerDisguise)disguise;
 					Object gameProfile = ProfileHelper.getInstance().getGameProfile(livingEntity.getUniqueId(), playerDisguise.getSkinName(), playerDisguise.getDisplayName());
 					
+					// send game profile to client
 					Object playerInfoPacket = PacketPlayOutPlayerInfo_new.newInstance();
 					PacketPlayOutPlayerInfo_action.set(playerInfoPacket, EnumPlayerInfoAction_ADD_PLAYER.get(null));
 					List<Object> playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(playerInfoPacket);
-					playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, gameProfile, 35, EnumGamemode_SURVIVAL.get(null), Array.get(CraftChatMessage_fromString.invoke(null, modifyPlayerListEntry ? playerDisguise.getDisplayName() : ""), 0)));
+					playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, gameProfile, 35, EnumGamemode_SURVIVAL.get(null), Array.get(CraftChatMessage_fromString.invoke(null, playerDisguise.getDisplayName()), 0)));
 					packets.add(playerInfoPacket);
 					
+					// send entity to client
 					Object entity = EntityHumanNonAbstract_new.newInstance(Entity_world.get(entityLiving), gameProfile);
 					Location location = livingEntity.getLocation();
 					Entity_setLocation.invoke(entity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 					Entity_setEntityId.invoke(entity, livingEntity.getEntityId());
 					packets.add(PacketPlayOutNamedEntitySpawn_new.newInstance(entity));
+					
+					if(!modifyPlayerListEntry) {
+						// remove player list entry
+						playerInfoPacket = PacketPlayOutPlayerInfo_new.newInstance();
+						PacketPlayOutPlayerInfo_action.set(playerInfoPacket, EnumPlayerInfoAction_REMOVE_PLAYER.get(null));
+						playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(playerInfoPacket);
+						playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, gameProfile, 35, EnumGamemode_SURVIVAL.get(null), null));
+						packets.add(playerInfoPacket);
+					}
 				}
 			} else if(disguise instanceof ObjectDisguise) {
 				ObjectDisguise objectDisguise = (ObjectDisguise)disguise;
@@ -481,7 +493,7 @@ public final class PacketHandler {
 		final Player player = EntityIdList.getPlayerByEntityId(PacketPlayOutNamedEntitySpawn_entityId.getInt(packet));
 		if(player != null && player != observer && DisguiseManager.isDisguisedTo(player, observer)) {
 			Object[] spawnPackets = getSpawnPackets(player);
-			if(PacketPlayOutSpawnEntityLiving.isInstance(spawnPackets[0]) && DisguiseManager.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
+			if(DisguiseManager.getDisguise(player).getType().equals(DisguiseType.ENDER_DRAGON)) {
 				byte yaw = PacketPlayOutSpawnEntityLiving_yaw.getByte(spawnPackets[0]);
 				if(yaw < 0) {
 					yaw += 128;
@@ -489,7 +501,7 @@ public final class PacketHandler {
 					yaw -= 128;
 				}
 				PacketPlayOutSpawnEntityLiving_yaw.setByte(spawnPackets[0], yaw);
-			} else if(PacketPlayOutSpawnEntity.isInstance(spawnPackets[0]) && DisguiseManager.getDisguise(player).getType().equals(DisguiseType.FALLING_BLOCK)) {
+			} else if(DisguiseManager.getDisguise(player).getType().equals(DisguiseType.FALLING_BLOCK)) {
 				if(DisguiseManager.getDisguise(player) instanceof FallingBlockDisguise && ((FallingBlockDisguise)DisguiseManager.getDisguise(player)).onlyBlockCoordinates()) {
 					if(VersionHelper.require1_9()) {
 						PacketPlayOutSpawnEntity_x.setDouble(spawnPackets[0], Math.floor(player.getLocation().getX()) + 0.5);
@@ -511,7 +523,23 @@ public final class PacketHandler {
 		final LivingEntity livingEntity = EntityIdList.getEntityByEntityId(PacketPlayOutSpawnEntityLiving_entityId.getInt(packet));
 		if(livingEntity != null && DisguiseManager.isDisguisedTo(livingEntity, observer)) {
 			Object[] spawnPackets = getSpawnPackets(livingEntity);
-			if(PacketPlayOutSpawnEntity.isInstance(spawnPackets[0]) && DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.FALLING_BLOCK)) {
+			if(DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.PLAYER) && !modifyPlayerListEntry) {
+				final Object playerInfoRemovePacket = spawnPackets[2];
+				spawnPackets = new Object[] {spawnPackets[0], spawnPackets[1]};
+				Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), new Runnable() {
+					
+					public void run() {
+						try {
+							((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacket(playerInfoRemovePacket);
+						} catch(Exception e) {
+							if(VersionHelper.debug()) {
+								iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot handle packet out: " + packet.getClass().getSimpleName() + " to " + observer.getName(), e);
+							}
+						}
+					}
+					
+				}, 40L);
+			} else if(DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.FALLING_BLOCK)) {
 				if(DisguiseManager.getDisguise(livingEntity) instanceof FallingBlockDisguise && ((FallingBlockDisguise)DisguiseManager.getDisguise(livingEntity)).onlyBlockCoordinates()) {
 					if(VersionHelper.require1_9()) {
 						PacketPlayOutSpawnEntity_x.setDouble(spawnPackets[0], Math.floor(livingEntity.getLocation().getX()) + 0.5);
@@ -523,6 +551,14 @@ public final class PacketHandler {
 						PacketPlayOutSpawnEntity_z.setInt(spawnPackets[0], (int)((Math.floor(livingEntity.getLocation().getZ()) + 0.5) * 32));
 					}
 				}
+			} else if(DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.ENDER_DRAGON) ^ livingEntity instanceof EnderDragon) {
+				byte yaw = PacketPlayOutSpawnEntityLiving_yaw.getByte(spawnPackets[0]);
+				if(yaw < 0) {
+					yaw += 128;
+				} else {
+					yaw -= 128;
+				}
+				PacketPlayOutSpawnEntityLiving_yaw.setByte(spawnPackets[0], yaw);
 			}
 			return spawnPackets;
 		}
