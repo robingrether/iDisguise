@@ -27,8 +27,9 @@ public final class EntityIdList {
 		legacyMode = !VersionHelper.requireVersion("v1_8_R2"); 			// are we before 1.8.3 (1_8_R2) ?
 		entities = new ConcurrentHashMap<Integer, LivingEntity>();
 		for(World world : Bukkit.getWorlds()) {
-			for(LivingEntity livingEntity : world.getLivingEntities())
-			entities.put(livingEntity.getEntityId(), livingEntity);
+			for(LivingEntity livingEntity : world.getLivingEntities()) {
+				entities.put(livingEntity.getEntityId(), livingEntity);
+			}
 		}
 	}
 	

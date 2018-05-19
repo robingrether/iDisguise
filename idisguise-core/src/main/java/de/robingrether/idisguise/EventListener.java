@@ -1,10 +1,13 @@
 package de.robingrether.idisguise;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -21,6 +24,8 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.MobDisguise;
@@ -192,6 +197,37 @@ public class EventListener implements Listener {
 			public void run() {
 				if(livingEntity == null || !livingEntity.isValid()) {
 					EntityIdList.removeEntity(entityId);
+				}
+			}
+			
+		}, 40L);
+	}
+	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onChunkLoad(ChunkLoadEvent event) {
+		for(Entity entity : event.getChunk().getEntities()) {
+			if(entity instanceof LivingEntity) {
+				EntityIdList.addEntity((LivingEntity)entity);
+			}
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onChunkUnload(ChunkUnloadEvent event) {
+		final Chunk chunk = event.getChunk();
+		final List<Integer> entityIds = new ArrayList<Integer>();
+		for(Entity entity : chunk.getEntities()) {
+			if(entity instanceof LivingEntity) {
+				entityIds.add(entity.getEntityId());
+			}
+		}
+		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+			
+			public void run() {
+				if(!chunk.isLoaded()) {
+					for(int entityId : entityIds) {
+						EntityIdList.removeEntity(entityId);
+					}
 				}
 			}
 			
