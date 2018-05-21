@@ -175,7 +175,7 @@ public class EventListener implements Listener {
 					DisguiseManager.undisguise(livingEntity);
 				}
 				
-			}, 5L);
+			}, 100L);
 		}
 		
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
@@ -184,7 +184,7 @@ public class EventListener implements Listener {
 				EntityIdList.removeEntity(entityId);
 			}
 			
-		}, 40L);
+		}, 200L);
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)

@@ -21,6 +21,7 @@ import org.bukkit.scoreboard.Team;
 
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
+import de.robingrether.idisguise.disguise.PlayerDisguise;
 import de.robingrether.idisguise.management.channel.InjectedPlayerConnection;
 import de.robingrether.idisguise.management.hooks.ScoreboardHooks;
 import de.robingrether.idisguise.management.util.DisguiseMap;
@@ -231,17 +232,50 @@ public final class DisguiseManager {
 			return;
 		}
 		
-		// do the actual sending and stuff
-		for(Player observer : Bukkit.getOnlinePlayers()) {
+		if(getDisguise(livingEntity) instanceof PlayerDisguise) {
+			Object playerInfoPacket = null;
+			
 			try {
-				
-				// clear the entity tracker entry
-				Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftPlayer_getHandle.invoke(observer)))), livingEntity.getEntityId());
-				if(entityTrackerEntry != null) {
-					EntityTrackerEntry_clear.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
-				}
-				
+				// construct the player info packet
+				playerInfoPacket = PacketPlayOutPlayerInfo_new.newInstance();
+				PacketPlayOutPlayerInfo_action.set(playerInfoPacket, EnumPlayerInfoAction_REMOVE_PLAYER.get(null));
+				List<Object> playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(playerInfoPacket);
+				playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, ProfileHelper.getInstance().getGameProfile(livingEntity.getUniqueId(), "", ""), 35, null, null));
 			} catch(Exception e) {
+			}
+			
+			// do the actual sending and stuff
+			for(Player observer : Bukkit.getOnlinePlayers()) {
+				try {
+					
+					// clear the entity tracker entry
+					Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftPlayer_getHandle.invoke(observer)))), livingEntity.getEntityId());
+					if(entityTrackerEntry != null) {
+						EntityTrackerEntry_clear.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
+					}
+					
+					if(isDisguisedTo(livingEntity, observer)) {
+						((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer, null))).sendPacketDirectly(playerInfoPacket);
+					}
+					
+				} catch(Exception e) {
+				}
+			}
+			
+		} else {
+		
+			// do the actual sending and stuff
+			for(Player observer : Bukkit.getOnlinePlayers()) {
+				try {
+					
+					// clear the entity tracker entry
+					Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftPlayer_getHandle.invoke(observer)))), livingEntity.getEntityId());
+					if(entityTrackerEntry != null) {
+						EntityTrackerEntry_clear.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
+					}
+					
+				} catch(Exception e) {
+				}
 			}
 		}
 		
@@ -266,6 +300,18 @@ public final class DisguiseManager {
 			Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftPlayer_getHandle.invoke(observer)))), livingEntity.getEntityId());
 			if(entityTrackerEntry != null) {
 				EntityTrackerEntry_clear.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
+			}
+			
+			// remove player info if necessary
+			if(isDisguisedTo(livingEntity, observer) && getDisguise(livingEntity) instanceof PlayerDisguise) {
+				
+				// construct the player info packet
+				Object playerInfoPacket = PacketPlayOutPlayerInfo_new.newInstance();
+				PacketPlayOutPlayerInfo_action.set(playerInfoPacket, EnumPlayerInfoAction_REMOVE_PLAYER.get(null));
+				List<Object> playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(playerInfoPacket);
+				playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, ProfileHelper.getInstance().getGameProfile(livingEntity.getUniqueId(), "", ""), 35, null, null));
+				
+				((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer, null))).sendPacketDirectly(playerInfoPacket);
 			}
 			
 		} catch(Exception e) {
