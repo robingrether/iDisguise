@@ -67,8 +67,8 @@ public class UpdateCheck implements Runnable {
 	private boolean isUpdateAvailable() {
 		if(latestVersion != null && !pluginVersion.equals(latestVersion)) {
 			try {
-				int current = Integer.parseInt(pluginVersion.split(" |-")[1].replace(".", "")) - (pluginVersion.endsWith("-SNAPSHOT") ? 1 : 0);
-				int latest = Integer.parseInt(latestVersion.split(" ")[1].replace(".", ""));
+				int current = extractVersionNumber(pluginVersion);
+				int latest = extractVersionNumber(latestVersion);
 				return latest > current;
 			} catch(NumberFormatException e) {
 			} catch(ArrayIndexOutOfBoundsException e) {
@@ -88,11 +88,16 @@ public class UpdateCheck implements Runnable {
 			String response = reader.readLine();
 			JSONArray array = (JSONArray)JSONValue.parse(response);
 			latestVersion = null;
-			if(array.size() > 0) {
-				JSONObject object = (JSONObject)array.get(array.size() - 1);
-				latestVersion = (String)object.get(API_NAME);
-				downloadUrl = ((String)object.get(API_DOWNLOAD_URL));
-				checksum = (String)object.get(API_CHECKSUM);
+			int latestVersionNumber = 0;
+			for(Object obj : array) {
+				JSONObject object = (JSONObject)obj;
+				int versionNumber = extractVersionNumber((String)object.get(API_NAME));
+				if(versionNumber > latestVersionNumber) {
+					latestVersionNumber = versionNumber;
+					latestVersion = (String)object.get(API_NAME);
+					downloadUrl = ((String)object.get(API_DOWNLOAD_URL));
+					checksum = (String)object.get(API_CHECKSUM);
+				}
 			}
 		} catch(Exception e) {
 			plugin.getLogger().log(Level.WARNING, "Update checking failed: " + e.getClass().getSimpleName());
@@ -164,6 +169,24 @@ public class UpdateCheck implements Runnable {
 					}
 				}
 			}
+		}
+	}
+	
+	public static int extractVersionNumber(String versionString) {
+		try {
+			String[] numbers = versionString.split(" |-")[1].split("\\.");
+			int versionNumber = 0;
+			for(int i = 0; i < numbers.length; i++) {
+				if(numbers[i].length() > 2)
+					return 0;
+				
+				versionNumber += Integer.parseInt(numbers[i]) * Math.pow(10.0, 2 * (numbers.length - i - 1));
+			}
+			if(versionString.contains("SNAPSHOT"))
+				versionNumber--;
+			return versionNumber;
+		} catch(ArrayIndexOutOfBoundsException|NumberFormatException e) {
+			return 0;
 		}
 	}
 	
