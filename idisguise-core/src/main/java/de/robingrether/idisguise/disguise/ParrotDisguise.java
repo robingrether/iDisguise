@@ -10,7 +10,6 @@ import java.util.Locale;
  */
 public class ParrotDisguise extends MobDisguise {
 	
-	private static final long serialVersionUID = -6569588312342758585L;
 	private Variant variant;
 	private boolean sitting;
 	

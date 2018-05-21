@@ -8,7 +8,6 @@ package de.robingrether.idisguise.disguise;
  */
 public class ArmorStandDisguise extends ObjectDisguise {
 	
-	private static final long serialVersionUID = 7786128991288922802L;
 	private boolean showArms;
 	
 	/**
@@ -55,7 +54,7 @@ public class ArmorStandDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + (showArms ? "show-arms" : "hide-arms");
+		return String.format("%s; %s", super.toString(), showArms ? "show-arms" : "hide-arms");
 	}
 	
 	static {

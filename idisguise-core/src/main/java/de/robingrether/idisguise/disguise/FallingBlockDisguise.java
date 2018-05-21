@@ -18,7 +18,6 @@ import de.robingrether.idisguise.management.VersionHelper;
  */
 public class FallingBlockDisguise extends ObjectDisguise {
 	
-	private static final long serialVersionUID = -7935017310299797038L;
 	private Material material;
 	private int data;
 	private boolean onlyBlockCoordinates;

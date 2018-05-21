@@ -10,7 +10,6 @@ import java.util.Locale;
  */
 public class RabbitDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = 1540855063412621247L;
 	private RabbitType rabbitType;
 	
 	/**
@@ -68,7 +67,7 @@ public class RabbitDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + rabbitType.name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer");
+		return String.format("%s; %s", super.toString(), rabbitType.name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer"));
 	}
 	
 	static {

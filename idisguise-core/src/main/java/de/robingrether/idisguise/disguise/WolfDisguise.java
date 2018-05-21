@@ -12,7 +12,6 @@ import org.bukkit.DyeColor;
  */
 public class WolfDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = -6203460877408219137L;
 	private State state;
 	private DyeColor collarColor;
 	private boolean sitting;

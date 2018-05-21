@@ -12,7 +12,6 @@ import de.robingrether.idisguise.management.VersionHelper;
  */
 public class BoatDisguise extends ObjectDisguise {
 	
-	private static final long serialVersionUID = -9176911440377865601L;
 	private BoatType boatType;
 	
 	/**

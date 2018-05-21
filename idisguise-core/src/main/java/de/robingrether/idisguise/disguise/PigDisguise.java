@@ -8,7 +8,6 @@ package de.robingrether.idisguise.disguise;
  */
 public class PigDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = 8040481135931636309L;
 	private boolean saddled;
 	
 	/**
@@ -56,7 +55,7 @@ public class PigDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + (saddled ? "saddled" : "not-saddled");
+		return String.format("%s; %s", super.toString(), saddled ? "saddled" : "not-saddled");
 	}
 	
 	static {

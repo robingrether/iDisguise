@@ -12,7 +12,6 @@ import java.util.HashSet;
  */
 public class ObjectDisguise extends Disguise {
 	
-	private static final long serialVersionUID = 7999903708957650848L;
 	private final int typeId;
 	private String customName = "";
 	private boolean customNameVisible = true;

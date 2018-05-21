@@ -16,7 +16,6 @@ import org.bukkit.Particle;
  */
 public class AreaEffectCloudDisguise extends ObjectDisguise {
 	
-	private static final long serialVersionUID = 300566387302741105L;
 	private float radius;
 	private Color color;
 	private Particle particle;

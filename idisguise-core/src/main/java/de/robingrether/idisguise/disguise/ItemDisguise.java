@@ -20,7 +20,6 @@ import de.robingrether.idisguise.management.VersionHelper;
  */
 public class ItemDisguise extends ObjectDisguise {
 	
-	private static final long serialVersionUID = -4607689524782164382L;
 	private ItemStack itemStack;
 	
 	/**

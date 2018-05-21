@@ -12,7 +12,6 @@ import org.bukkit.DyeColor;
  */
 public class SheepDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = -8390096252207373283L;
 	private DyeColor color;
 	
 	/**
@@ -60,7 +59,7 @@ public class SheepDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + color.name().toLowerCase(Locale.ENGLISH).replace('_', '-');
+		return String.format("%s; %s", super.toString(), color.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 	}
 	
 	static {

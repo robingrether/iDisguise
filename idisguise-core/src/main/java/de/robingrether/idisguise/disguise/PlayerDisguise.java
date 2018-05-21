@@ -13,7 +13,6 @@ import de.robingrether.util.Validate;
  */
 public class PlayerDisguise extends Disguise {
 	
-	private static final long serialVersionUID = -1352667720037212662L;
 	private final String skinName;
 	private String displayName;
 	

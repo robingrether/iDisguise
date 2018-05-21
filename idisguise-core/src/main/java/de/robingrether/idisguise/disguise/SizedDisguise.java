@@ -10,7 +10,6 @@ import de.robingrether.util.ObjectUtil;
  */
 public class SizedDisguise extends MobDisguise {
 	
-	private static final long serialVersionUID = 6370692880641733105L;
 	private int size;
 	
 	/**
@@ -65,7 +64,7 @@ public class SizedDisguise extends MobDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; size=" + size;
+		return String.format("%s; size=%s", super.toString(), size);
 	}
 	
 	static {

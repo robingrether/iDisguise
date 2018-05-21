@@ -10,7 +10,6 @@ import de.robingrether.util.ObjectUtil;
  */
 public class ChestedHorseDisguise extends HorseDisguise {
 	
-	private static final long serialVersionUID = -5787356640489884627L;
 	private boolean hasChest;
 	
 	/**
@@ -65,7 +64,7 @@ public class ChestedHorseDisguise extends HorseDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + (hasChest ? "chest" : "no-chest");
+		return String.format("%s; %s", super.toString(), hasChest ? "chest" : "no-chest");
 	}
 	
 	static {

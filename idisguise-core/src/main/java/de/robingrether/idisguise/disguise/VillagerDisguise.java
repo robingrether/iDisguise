@@ -10,7 +10,6 @@ import java.util.Locale;
  */
 public class VillagerDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = 8847244844878844913L;
 	private Profession profession;
 	
 	/**
@@ -50,7 +49,7 @@ public class VillagerDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + profession.name().toLowerCase(Locale.ENGLISH);
+		return String.format("%s; %s", super.toString(), profession.name().toLowerCase(Locale.ENGLISH));
 	}
 	
 	static {

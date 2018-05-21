@@ -8,7 +8,6 @@ package de.robingrether.idisguise.disguise;
  */
 public class AgeableDisguise extends MobDisguise {
 	
-	private static final long serialVersionUID = -2234799840705344148L;
 	protected boolean adult;
 	
 	/**

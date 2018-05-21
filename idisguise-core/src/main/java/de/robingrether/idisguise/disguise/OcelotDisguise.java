@@ -12,7 +12,6 @@ import org.bukkit.entity.Ocelot.Type;
  */
 public class OcelotDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = -1849874936924669239L;
 	private Type catType;
 	private boolean sitting;
 	

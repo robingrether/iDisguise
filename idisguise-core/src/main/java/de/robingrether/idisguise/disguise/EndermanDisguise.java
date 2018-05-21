@@ -18,7 +18,6 @@ import de.robingrether.idisguise.management.VersionHelper;
  */
 public class EndermanDisguise extends MobDisguise {
 	
-	private static final long serialVersionUID = -4717245165572013853L;
 	private Material blockInHand;
 	private int blockInHandData;
 	

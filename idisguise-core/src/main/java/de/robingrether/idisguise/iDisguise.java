@@ -7,7 +7,6 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -992,15 +991,8 @@ public class iDisguise extends JavaPlugin {
 	
 	private void loadDisguises() {
 		File dataFile = new File(getDataFolder(), "disguises.dat");
-		File oldDataFile = new File(getDataFolder(), "data.bin");
 		if(dataFile.exists()) {
 			DisguiseManager.updateDisguises(SLAPI.loadMap(dataFile));
-		} else if(oldDataFile.exists()) {
-			Object map = SLAPI.load(oldDataFile);
-			if(map instanceof Map) {
-				DisguiseManager.updateDisguises((Map<?, Disguise>)map);
-			}
-			oldDataFile.delete();
 		}
 	}
 	

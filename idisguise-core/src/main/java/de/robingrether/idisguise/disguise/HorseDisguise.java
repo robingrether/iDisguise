@@ -15,7 +15,6 @@ import de.robingrether.util.ObjectUtil;
  */
 public class HorseDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = 3739344872858787012L;
 	private boolean saddled;
 	private Armor armor;
 	
@@ -107,7 +106,7 @@ public class HorseDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + (saddled ? "saddled" : "not-saddled") + "; " + armor.name().toLowerCase(Locale.ENGLISH).replace("none", "no-armor");
+		return String.format("%s; %s; %s", super.toString(), saddled ? "saddled" : "not-saddled", armor.name().toLowerCase(Locale.ENGLISH).replace("none", "no-armor"));
 	}
 	
 	static {

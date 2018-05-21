@@ -18,7 +18,6 @@ import de.robingrether.idisguise.management.VersionHelper;
  */
 public class MinecartDisguise extends ObjectDisguise {
 	
-	private static final long serialVersionUID = -2064613105255090886L;
 	private Material displayedBlock;
 	private int displayedBlockData;
 	

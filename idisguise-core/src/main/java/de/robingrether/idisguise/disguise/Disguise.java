@@ -1,6 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -19,9 +18,8 @@ import de.robingrether.util.StringUtil;
  * @since 2.1.3
  * @author RobinGrether
  */
-public abstract class Disguise implements Serializable, Cloneable {
+public abstract class Disguise implements Cloneable {
 	
-	private static final long serialVersionUID = 3699593353745149494L;
 	protected final DisguiseType type;
 	private Visibility visibility = Visibility.EVERYONE;
 	private final List<String> visibilityParameter = new ArrayList<String>();

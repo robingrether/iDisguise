@@ -13,7 +13,6 @@ import de.robingrether.idisguise.management.VersionHelper;
  */
 public class ZombieVillagerDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = 3798088734739067588L;
 	private Profession profession;
 	
 	/**
@@ -53,7 +52,7 @@ public class ZombieVillagerDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + profession.name().toLowerCase(Locale.ENGLISH);
+		return String.format("%s; %s", super.toString(), profession.name().toLowerCase(Locale.ENGLISH));
 	}
 	
 	static {

@@ -8,7 +8,6 @@ package de.robingrether.idisguise.disguise;
  */
 public class CreeperDisguise extends MobDisguise {
 	
-	private static final long serialVersionUID = -5787233589068911050L;
 	private boolean powered;
 	
 	/**
@@ -55,7 +54,7 @@ public class CreeperDisguise extends MobDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + (powered ? "powered" : "not-powered");
+		return String.format("%s; %s", super.toString(), powered ? "powered" : "not-powered");
 	}
 	
 	static {

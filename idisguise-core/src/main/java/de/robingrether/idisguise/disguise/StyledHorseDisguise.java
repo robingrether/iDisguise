@@ -10,7 +10,6 @@ import java.util.Locale;
  */
 public class StyledHorseDisguise extends HorseDisguise {
 	
-	private static final long serialVersionUID = -8573196849561021899L;
 	private Style style;
 	private Color color;
 	
@@ -66,7 +65,9 @@ public class StyledHorseDisguise extends HorseDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + style.name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings") + "; " + color.name().toLowerCase(Locale.ENGLISH).replace('_', '-');
+		return String.format("%s; %s; %s", super.toString(),
+				style.name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings"),
+				color.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 	}
 	
 	static {

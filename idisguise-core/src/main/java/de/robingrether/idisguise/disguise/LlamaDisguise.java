@@ -10,7 +10,6 @@ import java.util.Locale;
  */
 public class LlamaDisguise extends AgeableDisguise {
 	
-	private static final long serialVersionUID = -6219216156842365747L;
 	private Color color;
 	private SaddleColor saddle;
 	private boolean hasChest;
@@ -100,7 +99,7 @@ public class LlamaDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return super.toString() + "; " + color.name().toLowerCase(Locale.ENGLISH) + "; " + saddle.name().toLowerCase(Locale.ENGLISH).replace('_', '-') + "; " + (hasChest ? "chest" : "no-chest");
+		return String.format("%s; %s; %s; %s", super.toString(), color.name().toLowerCase(Locale.ENGLISH), saddle.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), hasChest ? "chest" : "no-chest");
 	}
 	
 	static {

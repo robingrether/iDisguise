@@ -12,7 +12,6 @@ import java.util.HashSet;
  */
 public class MobDisguise extends Disguise {
 	
-	private static final long serialVersionUID = 7587147403290078928L;
 	private String customName = "";
 	private boolean customNameVisible = true;
 	
