@@ -1,9 +1,11 @@
 package de.robingrether.idisguise.management.util;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
@@ -15,43 +17,43 @@ import org.bukkit.entity.Player;
 
 import de.robingrether.idisguise.management.VersionHelper;
 
-//import static de.robingrether.idisguise.management.Reflection.*;
+import static de.robingrether.idisguise.management.Reflection.*;
 
 public final class EntityIdList {
 	
 	private EntityIdList() {}
 	
-	private static Map<Integer, LivingEntity> entities;
+	private static Map<Integer, UUID> entityUIDs;
 	
 	public static void init() {
 		legacyMode = !VersionHelper.requireVersion("v1_8_R2"); 			// are we before 1.8.3 (1_8_R2) ?
-		entities = new ConcurrentHashMap<Integer, LivingEntity>();
+		entityUIDs = new ConcurrentHashMap<Integer, UUID>();
 		for(World world : Bukkit.getWorlds()) {
 			for(LivingEntity livingEntity : world.getLivingEntities()) {
-				entities.put(livingEntity.getEntityId(), livingEntity);
+				entityUIDs.put(livingEntity.getEntityId(), livingEntity.getUniqueId());
 			}
 		}
 	}
 	
 	public static void addEntity(LivingEntity livingEntity) {
-		entities.put(livingEntity.getEntityId(), livingEntity);
+		entityUIDs.put(livingEntity.getEntityId(), livingEntity.getUniqueId());
 	}
 	
 	public static void removeEntity(int entityId) {
-		entities.remove(entityId);
+		entityUIDs.remove(entityId);
 	}
 	
 	public static void removeEntity(LivingEntity livingEntity) {
-		entities.remove(livingEntity.getEntityId());
+		entityUIDs.remove(livingEntity.getEntityId());
 	}
 	
 	public static Player getPlayerByEntityId(int entityId) {
-		LivingEntity livingEntity = entities.get(entityId);
-		return livingEntity instanceof Player ? (Player)livingEntity : null;
+		UUID uniqueId = entityUIDs.get(entityId);
+		return Bukkit.getPlayer(uniqueId);
 	}
 	
-	public static LivingEntity getEntityByEntityId(int entityId) {
-		return entities.get(entityId);
+	public static UUID getEntityUIDByEntityId(int entityId) {
+		return entityUIDs.get(entityId);
 //		for(World world : Bukkit.getWorlds()) {
 //			try {
 //				Object entity = World_getEntityById.invoke(CraftWorld_getHandle.invoke(world), entityId);
@@ -66,6 +68,34 @@ public final class EntityIdList {
 //			}
 //		}
 //		return null;
+	}
+	
+	public static LivingEntity getEntityByEntityId(int entityId) {
+		if(VersionHelper.require1_12()) {
+			Entity entity = Bukkit.getEntity(entityUIDs.get(entityId));
+			return entity instanceof LivingEntity ? (LivingEntity)entity : null;
+		} else {
+			try {
+				Object entity = MinecraftServer_getEntityByUID.invoke(MinecraftServer_getServer.invoke(null), entityUIDs.get(entityId));
+				return entity != null && Entity_getBukkitEntity.invoke(entity) instanceof LivingEntity ? (LivingEntity)Entity_getBukkitEntity.invoke(entity) : null;
+			} catch(IllegalAccessException|InvocationTargetException e) {
+			}
+			return null;
+		}
+	}
+	
+	public static LivingEntity getEntityByUID(UUID uniqueId) {
+		if(VersionHelper.require1_12()) {
+			Entity entity = Bukkit.getEntity(uniqueId);
+			return entity instanceof LivingEntity ? (LivingEntity)entity : null;
+		} else {
+			try {
+				Object entity = MinecraftServer_getEntityByUID.invoke(MinecraftServer_getServer.invoke(null), uniqueId);
+				return entity != null && Entity_getBukkitEntity.invoke(entity) instanceof LivingEntity ? (LivingEntity)Entity_getBukkitEntity.invoke(entity) : null;
+			} catch(IllegalAccessException|InvocationTargetException e) {
+			}
+			return null;
+		}
 	}
 	
 	private static boolean legacyMode = false;		// are we before 1.8.3 (1_8_R2) ?

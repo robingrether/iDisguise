@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.robingrether.idisguise</groupId>
   <artifactId>idisguise-core</artifactId>
-  <version>5.7.3</version>
+  <version>5.7.4-SNAPSHOT</version>
   <name>iDisguise</name>
   
   <properties>

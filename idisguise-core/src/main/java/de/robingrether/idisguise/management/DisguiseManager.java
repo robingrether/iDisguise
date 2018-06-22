@@ -103,6 +103,10 @@ public final class DisguiseManager {
 		return disguiseMap.isDisguised(livingEntity.getUniqueId());
 	}
 	
+	public static boolean isDisguised(UUID disguisable) {
+		return disguiseMap.isDisguised(disguisable);
+	}
+	
 	public static boolean isDisguisedTo(OfflinePlayer offlinePlayer, Player observer) {
 		return disguiseMap.isDisguised(offlinePlayer.getUniqueId()) && disguiseMap.getDisguise(offlinePlayer.getUniqueId()).isVisibleTo(observer);
 	}
@@ -115,6 +119,10 @@ public final class DisguiseManager {
 		return disguiseMap.isDisguised(livingEntity.getUniqueId()) && disguiseMap.getDisguise(livingEntity.getUniqueId()).isVisibleTo(observer);
 	}
 	
+	public static boolean isDisguisedTo(UUID disguisable, Player observer) {
+		return disguiseMap.isDisguised(disguisable) && disguiseMap.getDisguise(disguisable).isVisibleTo(observer);
+	}
+	
 	public static Disguise getDisguise(OfflinePlayer offlinePlayer) {
 		return disguiseMap.getDisguise(offlinePlayer.getUniqueId());
 	}
@@ -125,6 +133,10 @@ public final class DisguiseManager {
 	
 	public static Disguise getDisguise(LivingEntity livingEntity) {
 		return disguiseMap.getDisguise(livingEntity.getUniqueId());
+	}
+	
+	public static Disguise getDisguise(UUID disguisable) {
+		return disguiseMap.getDisguise(disguisable);
 	}
 	
 	public static int getNumberOfDisguisedPlayers() {

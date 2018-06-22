@@ -431,20 +431,20 @@ public final class PacketHandler {
 	}
 	
 	public static Object handlePacketPlayInUseEntity(final Player observer, final Object packet) throws Exception {
-		final LivingEntity livingEntity = EntityIdList.getEntityByEntityId(PacketPlayInUseEntity_entityId.getInt(packet));
+		final UUID livingEntity = EntityIdList.getEntityUIDByEntityId(PacketPlayInUseEntity_entityId.getInt(packet));
 		boolean attack = PacketPlayInUseEntity_getAction.invoke(packet).equals(EnumEntityUseAction_ATTACK.get(null));
-		if(livingEntity != null && livingEntity != observer && DisguiseManager.isDisguisedTo(livingEntity, observer) && !attack) {
+		if(livingEntity != null && !observer.getUniqueId().equals(livingEntity) && DisguiseManager.isDisguisedTo(livingEntity, observer) && !attack) {
 			if(ObjectUtil.equals(DisguiseManager.getDisguise(livingEntity).getType(), DisguiseType.SHEEP, DisguiseType.WOLF)) {
 				Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), new Runnable() {
 					
 					public void run() {
-						DisguiseManager.resendPackets(livingEntity);
+						DisguiseManager.resendPackets(EntityIdList.getEntityByUID(livingEntity));
 						observer.updateInventory();
 					}
 					
 				}, 2L);
 			}
-			if(livingEntity instanceof Player) Bukkit.getPluginManager().callEvent(new PlayerInteractDisguisedPlayerEvent(observer, (Player)livingEntity));
+			if(Bukkit.getPlayer(livingEntity) != null) Bukkit.getPluginManager().callEvent(new PlayerInteractDisguisedPlayerEvent(observer, Bukkit.getPlayer(livingEntity)));
 		}
 		return packet;
 	}
@@ -520,10 +520,11 @@ public final class PacketHandler {
 	}
 	
 	private static Object[] handlePacketPlayOutSpawnEntityLiving(final Player observer, final Object packet) throws Exception {
-		final LivingEntity livingEntity = EntityIdList.getEntityByEntityId(PacketPlayOutSpawnEntityLiving_entityId.getInt(packet));
-		if(livingEntity != null && DisguiseManager.isDisguisedTo(livingEntity, observer)) {
+		final UUID livingEntityUID = EntityIdList.getEntityUIDByEntityId(PacketPlayOutSpawnEntityLiving_entityId.getInt(packet));
+		if(livingEntityUID != null && DisguiseManager.isDisguisedTo(livingEntityUID, observer)) {
+			LivingEntity livingEntity = EntityIdList.getEntityByUID(livingEntityUID);
 			Object[] spawnPackets = getSpawnPackets(livingEntity);
-			if(DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.PLAYER) && !modifyPlayerListEntry) {
+			if(DisguiseManager.getDisguise(livingEntityUID).getType().equals(DisguiseType.PLAYER) && !modifyPlayerListEntry) {
 				final Object playerInfoRemovePacket = spawnPackets[2];
 				spawnPackets = new Object[] {spawnPackets[0], spawnPackets[1]};
 				Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), new Runnable() {
@@ -539,8 +540,8 @@ public final class PacketHandler {
 					}
 					
 				}, 40L);
-			} else if(DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.FALLING_BLOCK)) {
-				if(DisguiseManager.getDisguise(livingEntity) instanceof FallingBlockDisguise && ((FallingBlockDisguise)DisguiseManager.getDisguise(livingEntity)).onlyBlockCoordinates()) {
+			} else if(DisguiseManager.getDisguise(livingEntityUID).getType().equals(DisguiseType.FALLING_BLOCK)) {
+				if(DisguiseManager.getDisguise(livingEntityUID) instanceof FallingBlockDisguise && ((FallingBlockDisguise)DisguiseManager.getDisguise(livingEntityUID)).onlyBlockCoordinates()) {
 					if(VersionHelper.require1_9()) {
 						PacketPlayOutSpawnEntity_x.setDouble(spawnPackets[0], Math.floor(livingEntity.getLocation().getX()) + 0.5);
 						PacketPlayOutSpawnEntity_y.setDouble(spawnPackets[0], Math.floor(livingEntity.getLocation().getY()));
@@ -551,7 +552,7 @@ public final class PacketHandler {
 						PacketPlayOutSpawnEntity_z.setInt(spawnPackets[0], (int)((Math.floor(livingEntity.getLocation().getZ()) + 0.5) * 32));
 					}
 				}
-			} else if(DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.ENDER_DRAGON) ^ livingEntity instanceof EnderDragon) {
+			} else if(DisguiseManager.getDisguise(livingEntityUID).getType().equals(DisguiseType.ENDER_DRAGON) ^ livingEntity instanceof EnderDragon) {
 				byte yaw = PacketPlayOutSpawnEntityLiving_yaw.getByte(spawnPackets[0]);
 				if(yaw < 0) {
 					yaw += 128;
@@ -594,8 +595,8 @@ public final class PacketHandler {
 	}
 	
 	private static Object handlePacketPlayOutAnimation(final Player observer, final Object packet) throws Exception {
-		final LivingEntity livingEntity = EntityIdList.getEntityByEntityId(PacketPlayOutAnimation_entityId.getInt(packet));
-		if(livingEntity != null && livingEntity != observer && DisguiseManager.isDisguisedTo(livingEntity, observer) && !(DisguiseManager.getDisguise(livingEntity) instanceof PlayerDisguise)) {
+		final UUID livingEntity = EntityIdList.getEntityUIDByEntityId(PacketPlayOutAnimation_entityId.getInt(packet));
+		if(livingEntity != null && !observer.getUniqueId().equals(livingEntity) && DisguiseManager.isDisguisedTo(livingEntity, observer) && !(DisguiseManager.getDisguise(livingEntity) instanceof PlayerDisguise)) {
 			if(DisguiseManager.getDisguise(livingEntity) instanceof MobDisguise) {
 				if(PacketPlayOutAnimation_animationType.getInt(packet) == 2) {
 					return null;
@@ -610,8 +611,8 @@ public final class PacketHandler {
 	}
 	
 	private static Object handlePacketPlayOutEntityMetadata(final Player observer, final Object packet) throws Exception {
-		final LivingEntity livingEntity = EntityIdList.getEntityByEntityId(PacketPlayOutEntityMetadata_entityId.getInt(packet));
-		if(livingEntity != null && livingEntity != observer && DisguiseManager.isDisguisedTo(livingEntity, observer)/* && !(DisguiseManager.getDisguise(livingEntity) instanceof PlayerDisguise)*/) {
+		final UUID livingEntity = EntityIdList.getEntityUIDByEntityId(PacketPlayOutEntityMetadata_entityId.getInt(packet));
+		if(livingEntity != null && !observer.getUniqueId().equals(livingEntity) && DisguiseManager.isDisguisedTo(livingEntity, observer)/* && !(DisguiseManager.getDisguise(livingEntity) instanceof PlayerDisguise)*/) {
 			Object customizablePacket = clonePacket(packet);
 			boolean living = DisguiseManager.getDisguise(livingEntity) instanceof MobDisguise;
 			List metadataList = (List)PacketPlayOutEntityMetadata_metadataList.get(customizablePacket);
@@ -631,10 +632,11 @@ public final class PacketHandler {
 	}
 	
 	private static Object handlePacketPlayOutEntity(final Player observer, final Object packet) throws Exception {
-		final LivingEntity livingEntity = EntityIdList.getEntityByEntityId(PacketPlayOutEntity_entityId.getInt(packet));
-		if(livingEntity != null && livingEntity != observer && DisguiseManager.isDisguisedTo(livingEntity, observer)) {
-			if(DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.FALLING_BLOCK)) {
-				if(DisguiseManager.getDisguise(livingEntity) instanceof FallingBlockDisguise && ((FallingBlockDisguise)DisguiseManager.getDisguise(livingEntity)).onlyBlockCoordinates()) {
+		final UUID livingEntityUID = EntityIdList.getEntityUIDByEntityId(PacketPlayOutEntity_entityId.getInt(packet));
+		if(livingEntityUID != null && !observer.getUniqueId().equals(livingEntityUID) && DisguiseManager.isDisguisedTo(livingEntityUID, observer)) {
+			LivingEntity livingEntity = EntityIdList.getEntityByUID(livingEntityUID);
+			if(DisguiseManager.getDisguise(livingEntityUID).getType().equals(DisguiseType.FALLING_BLOCK)) {
+				if(DisguiseManager.getDisguise(livingEntityUID) instanceof FallingBlockDisguise && ((FallingBlockDisguise)DisguiseManager.getDisguise(livingEntityUID)).onlyBlockCoordinates()) {
 					Object customizablePacket = PacketPlayOutEntityTeleport_new.newInstance();
 					PacketPlayOutEntityTeleport_entityId.setInt(customizablePacket, livingEntity.getEntityId());
 					if(VersionHelper.require1_9()) {
@@ -651,7 +653,7 @@ public final class PacketHandler {
 					PacketPlayOutEntityTeleport_isOnGround.setBoolean(customizablePacket, PacketPlayOutEntity_isOnGround.getBoolean(packet));
 					return customizablePacket;
 				}
-			} else if(DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.ENDER_DRAGON) ^ livingEntity instanceof EnderDragon) {
+			} else if(DisguiseManager.getDisguise(livingEntityUID).getType().equals(DisguiseType.ENDER_DRAGON) ^ livingEntity instanceof EnderDragon) {
 				Object customizablePacket = clonePacket(packet);
 				byte yaw = PacketPlayOutEntity_yaw.getByte(customizablePacket);
 				if(yaw < 0) {
@@ -667,10 +669,11 @@ public final class PacketHandler {
 	}
 	
 	private static Object handlePacketPlayOutEntityTeleport(final Player observer, final Object packet) throws Exception {
-		final LivingEntity livingEntity = EntityIdList.getEntityByEntityId(PacketPlayOutEntityTeleport_entityId.getInt(packet));
-		if(livingEntity != null && livingEntity != observer && DisguiseManager.isDisguisedTo(livingEntity, observer)) {
-			if(DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.FALLING_BLOCK)) {
-				if(DisguiseManager.getDisguise(livingEntity) instanceof FallingBlockDisguise && ((FallingBlockDisguise)DisguiseManager.getDisguise(livingEntity)).onlyBlockCoordinates()) {
+		final UUID livingEntityUID = EntityIdList.getEntityUIDByEntityId(PacketPlayOutEntityTeleport_entityId.getInt(packet));
+		if(livingEntityUID != null && !observer.getUniqueId().equals(livingEntityUID) && DisguiseManager.isDisguisedTo(livingEntityUID, observer)) {
+			LivingEntity livingEntity = EntityIdList.getEntityByUID(livingEntityUID);
+			if(DisguiseManager.getDisguise(livingEntityUID).getType().equals(DisguiseType.FALLING_BLOCK)) {
+				if(DisguiseManager.getDisguise(livingEntityUID) instanceof FallingBlockDisguise && ((FallingBlockDisguise)DisguiseManager.getDisguise(livingEntityUID)).onlyBlockCoordinates()) {
 					Object customizablePacket = clonePacket(packet);
 					if(VersionHelper.require1_9()) {
 						PacketPlayOutEntityTeleport_x.setDouble(customizablePacket, Math.floor(livingEntity.getLocation().getX()) + 0.5);
@@ -683,7 +686,7 @@ public final class PacketHandler {
 					}
 					return customizablePacket;
 				}
-			} else if(DisguiseManager.getDisguise(livingEntity).getType().equals(DisguiseType.ENDER_DRAGON) ^ livingEntity instanceof EnderDragon) {
+			} else if(DisguiseManager.getDisguise(livingEntityUID).getType().equals(DisguiseType.ENDER_DRAGON) ^ livingEntity instanceof EnderDragon) {
 				Object customizablePacket = clonePacket(packet);
 				byte yaw = PacketPlayOutEntityTeleport_yaw.getByte(customizablePacket);
 				if(yaw < 0) {
@@ -699,16 +702,16 @@ public final class PacketHandler {
 	}
 	
 	private static Object handlePacketPlayOutUpdateAttributes(final Player observer, final Object packet) throws Exception {
-		final LivingEntity livingEntity = EntityIdList.getEntityByEntityId(PacketPlayOutUpdateAttributes_entityId.getInt(packet));
-		if(livingEntity != null && livingEntity != observer && DisguiseManager.isDisguisedTo(livingEntity, observer) && DisguiseManager.getDisguise(livingEntity) instanceof ObjectDisguise) {
+		final UUID livingEntity = EntityIdList.getEntityUIDByEntityId(PacketPlayOutUpdateAttributes_entityId.getInt(packet));
+		if(livingEntity != null && !observer.getUniqueId().equals(livingEntity) && DisguiseManager.isDisguisedTo(livingEntity, observer) && DisguiseManager.getDisguise(livingEntity) instanceof ObjectDisguise) {
 			return null;
 		}
 		return packet;
 	}
 	
 	private static Object handlePacketPlayOutCollect(final Player observer, final Object packet) throws Exception {
-		final LivingEntity livingEntity = EntityIdList.getEntityByEntityId(PacketPlayOutCollect_entityId.getInt(packet));
-		if(livingEntity != null && livingEntity != observer && DisguiseManager.isDisguisedTo(livingEntity, observer) && DisguiseManager.getDisguise(livingEntity) instanceof ObjectDisguise) {
+		final UUID livingEntity = EntityIdList.getEntityUIDByEntityId(PacketPlayOutCollect_entityId.getInt(packet));
+		if(livingEntity != null && !observer.getUniqueId().equals(livingEntity) && DisguiseManager.isDisguisedTo(livingEntity, observer) && DisguiseManager.getDisguise(livingEntity) instanceof ObjectDisguise) {
 			return null;
 		}
 		return packet;
@@ -778,9 +781,9 @@ public final class PacketHandler {
 		List<Object> playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(playerInfoPacket);
 		
 		for(int entityId : entityIds) {
-			LivingEntity livingEntity = EntityIdList.getEntityByEntityId(entityId);
-			if(livingEntity != null && !(livingEntity instanceof Player) && DisguiseManager.isDisguisedTo(livingEntity, observer) && DisguiseManager.getDisguise(livingEntity) instanceof PlayerDisguise) {
-				playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, ProfileHelper.getInstance().getGameProfile(livingEntity.getUniqueId(), "", ""), 35, null, null));
+			UUID livingEntity = EntityIdList.getEntityUIDByEntityId(entityId);
+			if(livingEntity != null && Bukkit.getPlayer(livingEntity) == null && DisguiseManager.isDisguisedTo(livingEntity, observer) && DisguiseManager.getDisguise(livingEntity) instanceof PlayerDisguise) {
+				playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, ProfileHelper.getInstance().getGameProfile(livingEntity, "", ""), 35, null, null));
 			}
 		}
 		
