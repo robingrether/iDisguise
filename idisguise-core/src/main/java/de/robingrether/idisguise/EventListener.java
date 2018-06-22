@@ -64,7 +64,8 @@ public class EventListener implements Listener {
 		Player player = event.getPlayer();
 		ProfileHelper.getInstance().registerGameProfile(player);
 		if(DisguiseManager.isDisguised(player)) {
-			player.sendMessage(plugin.getLanguage().JOIN_DISGUISED);
+			if(!plugin.getLanguage().JOIN_DISGUISED.isEmpty())
+				player.sendMessage(plugin.getLanguage().JOIN_DISGUISED);
 		}
 		if(plugin.getConfiguration().MODIFY_MESSAGE_JOIN) {
 			if(event.getJoinMessage() != null && DisguiseManager.isDisguised(player)) {
@@ -155,7 +156,8 @@ public class EventListener implements Listener {
 			event.setCancelled(true);
 			long lastSent = mapLastMessageSent.containsKey(player.getUniqueId()) ? mapLastMessageSent.get(player.getUniqueId()) : 0L;
 			if(lastSent + 3000L < System.currentTimeMillis()) {
-				player.sendMessage(plugin.getLanguage().MOVE_AS_SHULKER);
+				if(!plugin.getLanguage().MOVE_AS_SHULKER.isEmpty())
+					player.sendMessage(plugin.getLanguage().MOVE_AS_SHULKER);
 				mapLastMessageSent.put(player.getUniqueId(), System.currentTimeMillis());
 			}
 		}
