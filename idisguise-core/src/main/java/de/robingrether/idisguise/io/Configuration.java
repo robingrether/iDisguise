@@ -16,6 +16,7 @@ import de.robingrether.util.StringUtil;
 public class Configuration {
 	
 	/* Configuration options start here */
+	public static final String DISGUISE_VIEW_SELF_PATH = "disguise.view-self";
 	public static final String KEEP_DISGUISE_LEAVE_PATH = "disguise.keep-disguise-leave";
 	public static final String KEEP_DISGUISE_SHUTDOWN_PATH = "disguise.keep-disguise-shutdown";
 	public static final String MODIFY_MESSAGE_DEATH_PATH = "disguise.modify-message-death";
@@ -32,6 +33,7 @@ public class Configuration {
 	public static final String UPDATE_CHECK_PATH = "updates.check";
 	public static final String UPDATE_DOWNLOAD_PATH = "updates.download";
 	
+	public boolean DISGUISE_VIEW_SELF = true;
 	public boolean KEEP_DISGUISE_LEAVE = true;
 	public boolean KEEP_DISGUISE_SHUTDOWN = true;
 	public boolean MODIFY_MESSAGE_DEATH = false;

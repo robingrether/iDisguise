@@ -1,0 +1,1 @@
+PacketPlayOutPlayerInfo_new_full->NPacketPlayOutPlayerInfo(EnumPlayerInfoAction,{nms}.EntityPlayer[])

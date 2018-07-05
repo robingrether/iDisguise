@@ -31,6 +31,7 @@ public final class PacketHandler {
 	
 	private PacketHandler() {}
 	
+	public static boolean disguiseViewSelf;
 	public static boolean modifyScoreboardPackets;
 	public static boolean showOriginalPlayerName;
 	public static boolean modifyPlayerListEntry;
@@ -280,7 +281,10 @@ public final class PacketHandler {
 		return new Object[0];
 	}
 	
-	public static Object getPlayerInfo(OfflinePlayer offlinePlayer, Object context, int ping, Object gamemode, Object displayName) {
+	public static Object getPlayerInfo(OfflinePlayer offlinePlayer, Player observer, Object context, int ping, Object gamemode, Object displayName) {
+		if(offlinePlayer == observer) {
+			return getPlayerInfoSelf(offlinePlayer, context, ping, gamemode, displayName);
+		}
 		Disguise disguise = DisguiseManager.getDisguise(offlinePlayer);
 		try {
 			if(disguise == null) {
@@ -299,6 +303,33 @@ public final class PacketHandler {
 				}
 			} else if(!modifyPlayerListEntry) {
 				return PlayerInfoData_new.newInstance(context, offlinePlayer.isOnline() ? CraftPlayer_getProfile.invoke(offlinePlayer) : CraftOfflinePlayer_getProfile.invoke(offlinePlayer), ping, gamemode, displayName);
+			}
+		} catch(Exception e) {
+			if(VersionHelper.debug()) {
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot construct the required player info.", e);
+			}
+		}
+		return null;
+	}
+	
+	public static Object getPlayerInfoSelf(OfflinePlayer offlinePlayer, Object context, int ping, Object gamemode, Object displayName) {
+		Disguise disguise = DisguiseManager.getDisguise(offlinePlayer);
+		try {
+			if(disguise == null) {
+				return PlayerInfoData_new.newInstance(context, offlinePlayer.isOnline() ? CraftPlayer_getProfile.invoke(offlinePlayer) : CraftOfflinePlayer_getProfile.invoke(offlinePlayer), ping, gamemode, displayName);
+			} else if(disguise instanceof PlayerDisguise) {
+				return PlayerInfoData_new.newInstance(context,
+						ProfileHelper.getInstance().getGameProfile(formatUniqueId(offlinePlayer.getUniqueId()), ((PlayerDisguise)disguise).getSkinName(), ((PlayerDisguise)disguise).getDisplayName()),
+						ping, gamemode, displayName != null ? displayName : Array.get(CraftChatMessage_fromString.invoke(null, offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName()), 0));
+			} else {
+				String mhfSkin = disguise.getType().getMHFSkin();
+				if(mhfSkin != null) {
+					return PlayerInfoData_new.newInstance(context,
+							ProfileHelper.getInstance().getGameProfile(formatUniqueId(offlinePlayer.getUniqueId()), mhfSkin, offlinePlayer.getName()),
+							ping, gamemode, displayName != null ? displayName : Array.get(CraftChatMessage_fromString.invoke(null, offlinePlayer.isOnline() ? offlinePlayer.getPlayer().getPlayerListName() : offlinePlayer.getName()), 0));
+				} else {
+					return PlayerInfoData_new.newInstance(context, offlinePlayer.isOnline() ? CraftPlayer_getProfile.invoke(offlinePlayer) : CraftOfflinePlayer_getProfile.invoke(offlinePlayer), ping, gamemode, displayName);
+				}
 			}
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {
@@ -573,8 +604,8 @@ public final class PacketHandler {
 		List itemsToRemove = new ArrayList();
 		for(Object playerInfo : playerInfoList) {
 			OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer((UUID)GameProfile_getProfileId.invoke(PlayerInfoData_getProfile.invoke(playerInfo)));
-			if(offlinePlayer != null && offlinePlayer != observer && DisguiseManager.isDisguisedTo(offlinePlayer, observer)) {
-				Object newPlayerInfo = getPlayerInfo(offlinePlayer, customizablePacket, (Integer)PlayerInfoData_getPing.invoke(playerInfo), PlayerInfoData_getGamemode.invoke(playerInfo), PlayerInfoData_getDisplayName.invoke(playerInfo));
+			if(offlinePlayer != null && (disguiseViewSelf || offlinePlayer != observer) && DisguiseManager.isDisguisedTo(offlinePlayer, observer)) {
+				Object newPlayerInfo = getPlayerInfo(offlinePlayer, observer, customizablePacket, (Integer)PlayerInfoData_getPing.invoke(playerInfo), PlayerInfoData_getGamemode.invoke(playerInfo), PlayerInfoData_getDisplayName.invoke(playerInfo));
 				itemsToRemove.add(playerInfo);
 				if(newPlayerInfo != null) {
 					itemsToAdd.add(newPlayerInfo);

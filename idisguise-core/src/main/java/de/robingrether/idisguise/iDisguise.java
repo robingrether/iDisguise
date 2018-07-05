@@ -157,6 +157,9 @@ public class iDisguise extends JavaPlugin {
 //			EntityIdList.addPlayer(player);
 			ProfileHelper.getInstance().registerGameProfile(player);
 		}
+		for(DisguiseType type : DisguiseType.values()) {
+			if(type.getMHFSkin() != null) ProfileHelper.getInstance().loadGameProfileAsynchronously(type.getMHFSkin());
+		}
 		ChannelInjector.injectOnlinePlayers();
 		DisguiseManager.resendPackets();
 		if(getServer().getPluginManager().getPlugin("iDisguiseAdditions") != null) {
@@ -956,6 +959,7 @@ public class iDisguise extends JavaPlugin {
 		language.saveData();
 		
 		// reset config values
+		DisguiseManager.disguiseViewSelf = PacketHandler.disguiseViewSelf = configuration.DISGUISE_VIEW_SELF;
 		PacketHandler.showOriginalPlayerName = configuration.NAME_TAG_SHOWN;
 		PacketHandler.modifyPlayerListEntry = configuration.MODIFY_PLAYER_LIST_ENTRY;
 		DisguiseManager.modifyScoreboardPackets = PacketHandler.modifyScoreboardPackets = configuration.MODIFY_SCOREBOARD_PACKETS;

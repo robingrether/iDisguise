@@ -1,5 +1,6 @@
 package de.robingrether.idisguise.management;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,6 +33,7 @@ public final class DisguiseManager {
 	
 	private DisguiseManager() {}
 	
+	public static boolean disguiseViewSelf;
 	public static boolean modifyScoreboardPackets;
 	
 	private static DisguiseMap disguiseMap = DisguiseMap.emptyMap();
@@ -267,7 +269,7 @@ public final class DisguiseManager {
 					}
 					
 					if(isDisguisedTo(livingEntity, observer)) {
-						((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer, null))).sendPacketDirectly(playerInfoPacket);
+						((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacketDirectly(playerInfoPacket);
 					}
 					
 				} catch(Exception e) {
@@ -323,7 +325,7 @@ public final class DisguiseManager {
 				List<Object> playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(playerInfoPacket);
 				playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, ProfileHelper.getInstance().getGameProfile(livingEntity.getUniqueId(), "", ""), 35, null, null));
 				
-				((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer, null))).sendPacketDirectly(playerInfoPacket);
+				((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacketDirectly(playerInfoPacket);
 			}
 			
 		} catch(Exception e) {
@@ -378,9 +380,40 @@ public final class DisguiseManager {
 			} catch(Exception e) {
 			}
 		}
+		
+		// hide player from himself
+		if(disguiseViewSelf) {
+			try {
+				Object players = Array.newInstance(EntityPlayer, 1);
+				Array.set(players, 0, CraftPlayer_getHandle.invoke(player));
+				
+				// construct the player info packet
+				Object playerInfoPacket = PacketPlayOutPlayerInfo_new_full.newInstance(EnumPlayerInfoAction_REMOVE_PLAYER.get(null), players);
+				
+				((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(player))).sendPacket(playerInfoPacket);
+			} catch(Exception e) {
+			}
+		}
 	}
 	
 	private static void hidePlayerFromOne(Player observer, Player player) {
+		// hide player from himself
+		if(player == observer) {
+			if(disguiseViewSelf) {
+				try {
+					Object players = Array.newInstance(EntityPlayer, 1);
+					Array.set(players, 0, CraftPlayer_getHandle.invoke(player));
+					
+					// construct the player info packet
+					Object playerInfoPacket = PacketPlayOutPlayerInfo_new_full.newInstance(EnumPlayerInfoAction_REMOVE_PLAYER.get(null), players);
+					
+					((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(player))).sendPacket(playerInfoPacket);
+				} catch(Exception e) {
+				}
+			}
+			return;
+		}
+		
 		// hide the player
 		observer.hidePlayer(player);
 		
@@ -575,6 +608,21 @@ public final class DisguiseManager {
 			// update scoreboard hooks
 			ScoreboardHooks.updatePlayer(player);
 		}
+		
+		// show player to self
+		if(disguiseViewSelf) {
+			try {
+				Object players = Array.newInstance(EntityPlayer, 1);
+				Array.set(players, 0, CraftPlayer_getHandle.invoke(player));
+				
+				// construct the player info packet
+				Object playerInfoPacket = PacketPlayOutPlayerInfo_new_full.newInstance(EnumPlayerInfoAction_ADD_PLAYER.get(null), players);
+				
+				((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(player))).sendPacket(playerInfoPacket);
+				PlayerList_moveToWorld.invoke(MinecraftServer_getPlayerList.invoke(MinecraftServer_getServer.invoke(null)), CraftPlayer_getHandle.invoke(player), player.getWorld().getEnvironment().getId(), true, player.getLocation(), true);
+			} catch(Exception e) {
+			}
+		}
 	}
 	
 	private static void showPlayerToOne(final Player observer, final Player player) {
@@ -592,6 +640,24 @@ public final class DisguiseManager {
 	}
 	
 	private static void showPlayerToOne0(Player observer, Player player) {
+		// show player to self
+		if(player == observer) {
+			if(disguiseViewSelf) {
+				try {
+					Object players = Array.newInstance(EntityPlayer, 1);
+					Array.set(players, 0, CraftPlayer_getHandle.invoke(player));
+					
+					// construct the player info packet
+					Object playerInfoPacket = PacketPlayOutPlayerInfo_new_full.newInstance(EnumPlayerInfoAction_ADD_PLAYER.get(null), players);
+					
+					((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(player))).sendPacket(playerInfoPacket);
+					PlayerList_moveToWorld.invoke(MinecraftServer_getPlayerList.invoke(MinecraftServer_getServer.invoke(null)), CraftPlayer_getHandle.invoke(player), player.getWorld().getEnvironment().getId(), true, player.getLocation(), true);
+				} catch(Exception e) {
+				}
+			}
+			return;
+		}
+		
 		// show the player
 		observer.showPlayer(player);
 		

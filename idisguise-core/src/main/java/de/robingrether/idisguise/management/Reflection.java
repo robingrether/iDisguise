@@ -61,6 +61,7 @@ public class Reflection {
 	public static Constructor<?> PacketPlayOutPlayerInfo_new;
 	public static Field PacketPlayOutPlayerInfo_action;
 	public static Field PacketPlayOutPlayerInfo_playerInfoList;
+	public static Constructor<?> PacketPlayOutPlayerInfo_new_full;
 	
 	public static Class<?> PacketPlayOutBed;
 	public static Field PacketPlayOutBed_entityId;
@@ -276,6 +277,7 @@ public class Reflection {
 	public static Method MinecraftServer_getSessionService;
 	public static Method MinecraftServer_getUserCache;
 	public static Method MinecraftServer_getEntityByUID;
+	public static Method MinecraftServer_getPlayerList;
 	
 	public static Class<?> UserCache;
 	public static Method UserCache_getProfileById;
@@ -333,6 +335,9 @@ public class Reflection {
 	public static Class<?> EnumBoatType;
 	public static Method EnumBoatType_fromString;
 	
+	public static Class<?> PlayerList;
+	public static Method PlayerList_moveToWorld;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");
@@ -350,148 +355,39 @@ public class Reflection {
 						char type = basicMatcher.group(2).charAt(0);
 						String argument = basicMatcher.group(3);
 						if(type == 'C') {
-							field.set(null, Class.forName(argument.replace("{nms}", nms).replace("{obc}", obc)));
+							Class<?> clazz = parseClass(argument, nms, obc);
+							field.set(null, clazz);
 						} else if(type == 'F') {
 							Matcher fieldMatcher = fieldPattern.matcher(argument);
 							if(fieldMatcher.matches()) {
-								Field clazz = Reflection.class.getDeclaredField(fieldMatcher.group(1));
+								Class<?> clazz = parseClass(fieldMatcher.group(1), nms, obc);
 								String name = fieldMatcher.group(2);
-								field.set(null, ((Class<?>)clazz.get(null)).getDeclaredField(name));
+								field.set(null, clazz.getDeclaredField(name));
 								((AccessibleObject)field.get(null)).setAccessible(true);
 							}
 						} else if(type == 'M') {
 							Matcher methodMatcher = methodPattern.matcher(argument);
 							if(methodMatcher.matches()) {
-								Field clazz = Reflection.class.getDeclaredField(methodMatcher.group(1));
+								Class<?> clazz = parseClass(methodMatcher.group(1), nms, obc);
 								String name = methodMatcher.group(2);
 								String[] parameters = methodMatcher.group(3).length() > 0 ? methodMatcher.group(3).split(",") : new String[0];
 								Class<?>[] parameterTypes = new Class<?>[parameters.length];
 								for(int i = 0; i < parameters.length; i++) {
-									switch(parameters[i]) {
-										case "boolean":
-											parameterTypes[i] = boolean.class;
-											continue;
-										case "boolean[]":
-											parameterTypes[i] = boolean[].class;
-											continue;
-										case "byte":
-											parameterTypes[i] = byte.class;
-											continue;
-										case "byte[]":
-											parameterTypes[i] = byte[].class;
-											continue;
-										case "short":
-											parameterTypes[i] = short.class;
-											continue;
-										case "short[]":
-											parameterTypes[i] = short[].class;
-											continue;
-										case "int":
-											parameterTypes[i] = int.class;
-											continue;
-										case "int[]":
-											parameterTypes[i] = int[].class;
-											continue;
-										case "long":
-											parameterTypes[i] = long.class;
-											continue;
-										case "long[]":
-											parameterTypes[i] = long[].class;
-											continue;
-										case "float":
-											parameterTypes[i] = float.class;
-											continue;
-										case "float[]":
-											parameterTypes[i] = float[].class;
-											continue;
-										case "double":
-											parameterTypes[i] = double.class;
-											continue;
-										case "double[]":
-											parameterTypes[i] = double[].class;
-											continue;
-									}
-									if(parameters[i].endsWith("[]")) {
-										parameters[i] = "[L" + parameters[i].substring(0, parameters[i].length() - 2) + ";";
-									}
-									try {
-										parameterTypes[i] = Class.forName(parameters[i].replace("{nms}", nms).replace("{obc}", obc));
-										continue;
-									} catch(ClassNotFoundException e) {
-										if(VersionHelper.debug()) {
-											iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot find the given class file.", e);
-										}
-									}
-									parameterTypes[i] = null;
+									parameterTypes[i] = parseClass(parameters[i], nms, obc);
 								}
-								field.set(null, ((Class<?>)clazz.get(null)).getDeclaredMethod(name, parameterTypes));
+								field.set(null, clazz.getDeclaredMethod(name, parameterTypes));
 								((AccessibleObject)field.get(null)).setAccessible(true);
 							}
 						} else if(type == 'N') {
 							Matcher newMatcher = newPattern.matcher(argument);
 							if(newMatcher.matches()) {
-								Field clazz = Reflection.class.getDeclaredField(newMatcher.group(1));
+								Class<?> clazz = parseClass(newMatcher.group(1), nms, obc);
 								String[] parameters = newMatcher.group(2).length() > 0 ? newMatcher.group(2).split(",") : new String[0];
 								Class<?>[] parameterTypes = new Class<?>[parameters.length];
 								for(int i = 0; i < parameters.length; i++) {
-									switch(parameters[i]) {
-										case "boolean":
-											parameterTypes[i] = boolean.class;
-											continue;
-										case "boolean[]":
-											parameterTypes[i] = boolean[].class;
-											continue;
-										case "byte":
-											parameterTypes[i] = byte.class;
-											continue;
-										case "byte[]":
-											parameterTypes[i] = byte[].class;
-											continue;
-										case "short":
-											parameterTypes[i] = short.class;
-											continue;
-										case "short[]":
-											parameterTypes[i] = short[].class;
-											continue;
-										case "int":
-											parameterTypes[i] = int.class;
-											continue;
-										case "int[]":
-											parameterTypes[i] = int[].class;
-											continue;
-										case "long":
-											parameterTypes[i] = long.class;
-											continue;
-										case "long[]":
-											parameterTypes[i] = long[].class;
-											continue;
-										case "float":
-											parameterTypes[i] = float.class;
-											continue;
-										case "float[]":
-											parameterTypes[i] = float[].class;
-											continue;
-										case "double":
-											parameterTypes[i] = double.class;
-											continue;
-										case "double[]":
-											parameterTypes[i] = double[].class;
-											continue;
-									}
-									if(parameters[i].endsWith("[]")) {
-										parameters[i] = "[L" + parameters[i].substring(0, parameters[i].length() - 2) + ";";
-									}
-									try {
-										parameterTypes[i] = Class.forName(parameters[i].replace("{nms}", nms).replace("{obc}", obc));
-										continue;
-									} catch(ClassNotFoundException e) {
-										if(VersionHelper.debug()) {
-											iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot find the given class file.", e);
-										}
-									}
-									parameterTypes[i] = null;
+									parameterTypes[i] = parseClass(parameters[i], nms, obc);
 								}
-								field.set(null, ((Class<?>)clazz.get(null)).getConstructor(parameterTypes));
+								field.set(null, clazz.getConstructor(parameterTypes));
 								((AccessibleObject)field.get(null)).setAccessible(true);
 							}
 						} else {
@@ -511,6 +407,57 @@ public class Reflection {
 				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot load the required reflection configuration.", e);
 			}
 		}
+	}
+	
+	public static Class<?> parseClass(String clazz, String nms, String obc) {
+		switch(clazz) {
+			case "boolean":
+				return boolean.class;
+			case "boolean[]":
+				return boolean[].class;
+			case "byte":
+				return byte.class;
+			case "byte[]":
+				return byte[].class;
+			case "short":
+				return short.class;
+			case "short[]":
+				return short[].class;
+			case "int":
+				return int.class;
+			case "int[]":
+				return int[].class;
+			case "long":
+				return long.class;
+			case "long[]":
+				return long[].class;
+			case "float":
+				return float.class;
+			case "float[]":
+				return float[].class;
+			case "double":
+				return double.class;
+			case "double[]":
+				return double[].class;
+		}
+		if(clazz.endsWith("[]")) {
+			clazz = "[L" + clazz.substring(0, clazz.length() - 2) + ";";
+		}
+		try {
+			return Class.forName(clazz.replace("{nms}", nms).replace("{obc}", obc));
+		} catch(ClassNotFoundException e) {
+			try {
+				Field field = Reflection.class.getDeclaredField(clazz);
+				if(field.getType().equals(Class.class)) {
+					return (Class<?>)field.get(null);
+				}
+			} catch(NoSuchFieldException | IllegalArgumentException | IllegalAccessException e2) {
+			}
+			if(VersionHelper.debug()) {
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot find the given class file.", e);
+			}
+		}
+		return null;
 	}
 	
 }

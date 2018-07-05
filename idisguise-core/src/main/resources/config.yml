@@ -1,6 +1,10 @@
 # Options affecting the basic behavior of iDisguise (including the developer API)
 disguise:
    
+   # Do disguised players see their own disguise in 3rd person view.
+   # This ONLY works for PLAYER DISGUISES at the moment.
+   view-self: DISGUISE_VIEW_SELF
+   
    # Do disguised players keep their disguise when they leave the server
    keep-disguise-leave: KEEP_DISGUISE_LEAVE
    

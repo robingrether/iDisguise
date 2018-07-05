@@ -93,6 +93,7 @@ public class VersionHelper {
 				default:
 					return false;
 			}
+			Reflection.load("reflection/common2.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
 			ChannelInjector.init();
 			EntityIdList.init();
 			ProfileHelper.setInstance((ProfileHelper)Class.forName("de.robingrether.idisguise.management.profile.ProfileHelperUID").newInstance());

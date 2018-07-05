@@ -117,6 +117,7 @@ InventorySubcontainer_setItem->MInventorySubcontainer$setItem(int,{nms}.ItemStac
 MinecraftServer->C{nms}.MinecraftServer
 MinecraftServer_getServer->MMinecraftServer$getServer()
 MinecraftServer_getUserCache->MMinecraftServer$getUserCache()
+MinecraftServer_getPlayerList->MMinecraftServer$getPlayerList()
 
 PacketPlayInUseEntity->C{nms}.PacketPlayInUseEntity
 PacketPlayInUseEntity_entityId->FPacketPlayInUseEntity$a
@@ -198,6 +199,9 @@ PacketPlayOutSpawnEntityLiving_entityId->FPacketPlayOutSpawnEntityLiving$a
 
 PacketPlayOutUpdateAttributes->C{nms}.PacketPlayOutUpdateAttributes
 PacketPlayOutUpdateAttributes_entityId->FPacketPlayOutUpdateAttributes$a
+
+PlayerList->C{nms}.PlayerList
+PlayerList_moveToWorld->MPlayerList$moveToWorld({nms}.EntityPlayer,int,boolean,org.bukkit.Location,boolean)
 
 UserCache->C{nms}.UserCache
 UserCache_getProfileById->MUserCache$a(java.util.UUID)

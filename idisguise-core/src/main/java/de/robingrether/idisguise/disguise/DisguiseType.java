@@ -21,53 +21,53 @@ import de.robingrether.idisguise.management.VersionHelper;
 public enum DisguiseType {
 	
 	BAT(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityBat"),
-	BLAZE(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityBlaze"),
-	CAVE_SPIDER(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityCaveSpider"),
-	CHICKEN(Type.MOB, VersionHelper.EARLIEST, AgeableDisguise.class, "EntityChicken"),
-	COW(Type.MOB, VersionHelper.EARLIEST, AgeableDisguise.class, "EntityCow"),
-	CREEPER(Type.MOB, VersionHelper.EARLIEST, CreeperDisguise.class, "EntityCreeper"),
+	BLAZE(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityBlaze", "MHF_Blaze"),
+	CAVE_SPIDER(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityCaveSpider", "MHF_CaveSpider"),
+	CHICKEN(Type.MOB, VersionHelper.EARLIEST, AgeableDisguise.class, "EntityChicken", "MHF_Chicken"),
+	COW(Type.MOB, VersionHelper.EARLIEST, AgeableDisguise.class, "EntityCow", "MHF_Cow"),
+	CREEPER(Type.MOB, VersionHelper.EARLIEST, CreeperDisguise.class, "EntityCreeper", "MHF_Creeper"),
 	DONKEY(Type.MOB, VersionHelper.EARLIEST, ChestedHorseDisguise.class, "EntityHorseDonkey"),
-	ELDER_GUARDIAN(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityGuardianElder"),
-	ENDER_DRAGON(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityEnderDragon"),
-	ENDERMAN(Type.MOB, VersionHelper.EARLIEST, EndermanDisguise.class, "EntityEnderman"),
-	ENDERMITE(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityEndermite"),
-	EVOKER(Type.MOB, "v1_11_R1", MobDisguise.class, "EntityEvoker"),
-	GHAST(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityGhast"),
+	ELDER_GUARDIAN(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityGuardianElder", "MHF_EGuardian"),
+	ENDER_DRAGON(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityEnderDragon", "MHF_EnderDragon"),
+	ENDERMAN(Type.MOB, VersionHelper.EARLIEST, EndermanDisguise.class, "EntityEnderman", "MHF_Enderman"),
+	ENDERMITE(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityEndermite", "MHF_Endermite"),
+	EVOKER(Type.MOB, "v1_11_R1", MobDisguise.class, "EntityEvoker", "MHF_Illager"),
+	GHAST(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityGhast", "MHF_Ghast"),
 	GIANT(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityGiantZombie"),
-	GUARDIAN(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityGuardian"),
+	GUARDIAN(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityGuardian", "MHF_Guardian"),
 	HORSE(Type.MOB, VersionHelper.EARLIEST, StyledHorseDisguise.class, "EntityHorse"),
 	HUSK(Type.MOB, "v1_10_R1", AgeableDisguise.class, "EntityZombieHusk"),
 	ILLUSIONER(Type.MOB, "v1_12_R1", MobDisguise.class, "EntityIllagerIllusioner"),
-	IRON_GOLEM(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityIronGolem"),
+	IRON_GOLEM(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityIronGolem", "MHF_Golem"),
 	LLAMA(Type.MOB, "v1_11_R1", LlamaDisguise.class, "EntityLlama"),
-	MAGMA_CUBE(Type.MOB, VersionHelper.EARLIEST, SizedDisguise.class, "EntityMagmaCube"),
+	MAGMA_CUBE(Type.MOB, VersionHelper.EARLIEST, SizedDisguise.class, "EntityMagmaCube", "MHF_LavaSlime"),
 	MULE(Type.MOB, VersionHelper.EARLIEST, ChestedHorseDisguise.class, "EntityHorseMule"),
-	MUSHROOM_COW(Type.MOB, VersionHelper.EARLIEST, AgeableDisguise.class, "EntityMushroomCow"),
-	OCELOT(Type.MOB, VersionHelper.EARLIEST, OcelotDisguise.class, "EntityOcelot"),
-	PARROT(Type.MOB, "v1_12_R1", ParrotDisguise.class, "EntityParrot"),
-	PIG(Type.MOB, VersionHelper.EARLIEST, PigDisguise.class, "EntityPig"),
-	PIG_ZOMBIE(Type.MOB, VersionHelper.EARLIEST, AgeableDisguise.class, "EntityPigZombie"),
+	MUSHROOM_COW(Type.MOB, VersionHelper.EARLIEST, AgeableDisguise.class, "EntityMushroomCow", "MHF_MushroomCow"),
+	OCELOT(Type.MOB, VersionHelper.EARLIEST, OcelotDisguise.class, "EntityOcelot", "MHF_Ocelot"),
+	PARROT(Type.MOB, "v1_12_R1", ParrotDisguise.class, "EntityParrot", "MHF_Parrot"),
+	PIG(Type.MOB, VersionHelper.EARLIEST, PigDisguise.class, "EntityPig", "MHF_Pig"),
+	PIG_ZOMBIE(Type.MOB, VersionHelper.EARLIEST, AgeableDisguise.class, "EntityPigZombie", "MHF_PigZombie"),
 	POLAR_BEAR(Type.MOB, "v1_10_R1", AgeableDisguise.class, "EntityPolarBear"),
-	RABBIT(Type.MOB, VersionHelper.EARLIEST, RabbitDisguise.class, "EntityRabbit"),
-	SHEEP(Type.MOB, VersionHelper.EARLIEST, SheepDisguise.class, "EntitySheep"),
-	SHULKER(Type.MOB, "v1_9_R1", MobDisguise.class, "EntityShulker"),
+	RABBIT(Type.MOB, VersionHelper.EARLIEST, RabbitDisguise.class, "EntityRabbit", "MHF_Rabbit"),
+	SHEEP(Type.MOB, VersionHelper.EARLIEST, SheepDisguise.class, "EntitySheep", "MHF_Sheep"),
+	SHULKER(Type.MOB, "v1_9_R1", MobDisguise.class, "EntityShulker", "MHF_Shulker"),
 	SILVERFISH(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntitySilverfish"),
 	SKELETAL_HORSE(Type.MOB, VersionHelper.EARLIEST, HorseDisguise.class, "EntityHorseSkeleton"),
-	SKELETON(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntitySkeleton"),
-	SLIME(Type.MOB, VersionHelper.EARLIEST, SizedDisguise.class, "EntitySlime"),
-	SNOWMAN(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntitySnowman"),
-	SPIDER(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntitySpider"),
-	SQUID(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntitySquid"),
-	STRAY(Type.MOB, "v1_10_R1", MobDisguise.class, "EntitySkeletonStray"),
+	SKELETON(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntitySkeleton", "MHF_Skeleton"),
+	SLIME(Type.MOB, VersionHelper.EARLIEST, SizedDisguise.class, "EntitySlime", "MHF_Slime"),
+	SNOWMAN(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntitySnowman", "MHF_SnowGolem"),
+	SPIDER(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntitySpider", "MHF_Spider"),
+	SQUID(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntitySquid", "MHF_Squid"),
+	STRAY(Type.MOB, "v1_10_R1", MobDisguise.class, "EntitySkeletonStray", "MHF_Stray"),
 	UNDEAD_HORSE(Type.MOB, VersionHelper.EARLIEST, HorseDisguise.class, "EntityHorseZombie"),
-	VEX(Type.MOB, "v1_11_R1", MobDisguise.class, "EntityVex"),
-	VILLAGER(Type.MOB, VersionHelper.EARLIEST, VillagerDisguise.class, "EntityVillager"),
+	VEX(Type.MOB, "v1_11_R1", MobDisguise.class, "EntityVex", "MHF_Vex"),
+	VILLAGER(Type.MOB, VersionHelper.EARLIEST, VillagerDisguise.class, "EntityVillager", "MHF_Villager"),
 	VINDICATOR(Type.MOB, "v1_11_R1", MobDisguise.class, "EntityVindicator"),
-	WITCH(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityWitch"),
-	WITHER(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityWither"),
-	WITHER_SKELETON(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntitySkeletonWither"),
-	WOLF(Type.MOB, VersionHelper.EARLIEST, WolfDisguise.class, "EntityWolf"),
-	ZOMBIE(Type.MOB, VersionHelper.EARLIEST, AgeableDisguise.class, "EntityZombie"),
+	WITCH(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityWitch", "MHF_Witch"),
+	WITHER(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityWither", "MHF_Wither"),
+	WITHER_SKELETON(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntitySkeletonWither", "MHF_WSkeleton"),
+	WOLF(Type.MOB, VersionHelper.EARLIEST, WolfDisguise.class, "EntityWolf", "MHF_Wolf"),
+	ZOMBIE(Type.MOB, VersionHelper.EARLIEST, AgeableDisguise.class, "EntityZombie", "MHF_Zombie"),
 	ZOMBIE_VILLAGER(Type.MOB, VersionHelper.EARLIEST, ZombieVillagerDisguise.class, "EntityZombieVillager"),
 	
 	PLAYER(Type.PLAYER, VersionHelper.EARLIEST, PlayerDisguise.class, "EntityPlayer"),
@@ -84,6 +84,7 @@ public enum DisguiseType {
 	private final String requiredVersion;
 	private final Class<? extends Disguise> disguiseClass;
 	private final String nmsClass;
+	private final String mhfSkin;
 	private String translation;
 	
 	private DisguiseType(Type type, String requiredVersion, Class<? extends Disguise> disguiseClass, String nmsClass) {
@@ -91,6 +92,16 @@ public enum DisguiseType {
 		this.requiredVersion = requiredVersion;
 		this.disguiseClass = disguiseClass;
 		this.nmsClass = nmsClass;
+		this.mhfSkin = null;
+		this.translation = getDefaultCommandArgument();
+	}
+	
+	private DisguiseType(Type type, String requiredVersion, Class<? extends Disguise> disguiseClass, String nmsClass, String mhfSkin) {
+		this.type = type;
+		this.requiredVersion = requiredVersion;
+		this.disguiseClass = disguiseClass;
+		this.nmsClass = nmsClass;
+		this.mhfSkin = mhfSkin;
 		this.translation = getDefaultCommandArgument();
 	}
 	
@@ -186,6 +197,13 @@ public enum DisguiseType {
 	 */
 	public String getNMSClass() {
 		return nmsClass;
+	}
+	
+	/**
+	 * @since 5.7.4
+	 */
+	public String getMHFSkin() {
+		return mhfSkin;
 	}
 	
 	private static final Map<String, DisguiseType> commandMatcher = new ConcurrentHashMap<String, DisguiseType>();
