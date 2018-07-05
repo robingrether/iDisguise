@@ -119,27 +119,41 @@ public class EventListener implements Listener {
 			if(plugin.getConfiguration().MODIFY_MESSAGE_KILL) {
 				if(player.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
 					Entity damager = ((EntityDamageByEntityEvent)player.getLastDamageCause()).getDamager();
-					if(damager instanceof Player) {
-						Player killer = (Player)damager;
-						if(DisguiseManager.isDisguised(killer)) {
+					LivingEntity killer = null;
+					if(damager instanceof LivingEntity) {
+						killer = (LivingEntity)damager;
+					} else if(damager instanceof Projectile) {
+						killer = (LivingEntity)((Projectile)damager).getShooter();
+					}
+					if(killer != null && DisguiseManager.isDisguised(killer)) {
+						if(killer instanceof Player) {
+							Player killer2 = (Player)killer;
+							if(DisguiseManager.getDisguise(killer2) instanceof PlayerDisguise) {
+								event.setDeathMessage(event.getDeathMessage().replaceAll("(" + killer2.getDisplayName() + "|" + killer2.getName() + ")", ((PlayerDisguise)DisguiseManager.getDisguise(killer2)).getDisplayName()));
+							} else if(DisguiseManager.getDisguise(killer2) instanceof MobDisguise) {
+								event.setDeathMessage(event.getDeathMessage().replaceAll("(" + killer2.getDisplayName() + "|" + killer2.getName() + ")", StringUtil.capitalizeFully(DisguiseManager.getDisguise(killer2).getType().name().replace('_', ' '))));
+							} else {
+								event.setDeathMessage(null);
+							}
+						} else {
 							if(DisguiseManager.getDisguise(killer) instanceof PlayerDisguise) {
-								event.setDeathMessage(event.getDeathMessage().replaceAll("(" + killer.getDisplayName() + "|" + killer.getName() + ")", ((PlayerDisguise)DisguiseManager.getDisguise(killer)).getDisplayName()));
+								event.setDeathMessage(event.getDeathMessage().replaceAll(killer.getName(), ((PlayerDisguise)DisguiseManager.getDisguise(killer)).getDisplayName()));
 							} else if(DisguiseManager.getDisguise(killer) instanceof MobDisguise) {
-								event.setDeathMessage(event.getDeathMessage().replaceAll("(" + killer.getDisplayName() + "|" + killer.getName() + ")", StringUtil.capitalizeFully(DisguiseManager.getDisguise(killer).getType().name().replace('_', ' '))));
+								event.setDeathMessage(event.getDeathMessage().replaceAll(killer.getName(), StringUtil.capitalizeFully(DisguiseManager.getDisguise(killer).getType().name().replace('_', ' '))));
 							} else {
 								event.setDeathMessage(null);
 							}
 						}
-					} else if(damager instanceof Projectile && ((Projectile)damager).getShooter() instanceof Player) {
-						Player killer = (Player)((Projectile)damager).getShooter();
-						if(DisguiseManager.isDisguised(killer)) {
-							if(DisguiseManager.getDisguise(killer) instanceof PlayerDisguise) {
-								event.setDeathMessage(event.getDeathMessage().replaceAll("(" + killer.getDisplayName() + "|" + killer.getName() + ")", ((PlayerDisguise)DisguiseManager.getDisguise(killer)).getDisplayName()));
-							} else if(DisguiseManager.getDisguise(killer) instanceof MobDisguise) {
-								event.setDeathMessage(event.getDeathMessage().replaceAll("(" + killer.getDisplayName() + "|" + killer.getName() + ")", StringUtil.capitalizeFully(DisguiseManager.getDisguise(killer).getType().name().replace('_', ' '))));
-							} else {
-								event.setDeathMessage(null);
-							}
+					}
+				} else {
+					Player killer = player.getKiller();
+					if(killer != null && DisguiseManager.isDisguised(killer)) {
+						if(DisguiseManager.getDisguise(killer) instanceof PlayerDisguise) {
+							event.setDeathMessage(event.getDeathMessage().replaceAll("(" + killer.getDisplayName() + "|" + killer.getName() + ")", ((PlayerDisguise)DisguiseManager.getDisguise(killer)).getDisplayName()));
+						} else if(DisguiseManager.getDisguise(killer) instanceof MobDisguise) {
+							event.setDeathMessage(event.getDeathMessage().replaceAll("(" + killer.getDisplayName() + "|" + killer.getName() + ")", StringUtil.capitalizeFully(DisguiseManager.getDisguise(killer).getType().name().replace('_', ' '))));
+						} else {
+							event.setDeathMessage(null);
 						}
 					}
 				}
