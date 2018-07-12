@@ -797,7 +797,7 @@ public class iDisguise extends JavaPlugin {
 		}
 		if(args.length > 0) {
 			for(int i = 0; i < completions.size(); i++) {
-				if(!StringUtil.startsWithIgnoreCase(completions.get(i).replace("{", ""), args[args.length - 1])) {
+				if(!StringUtil.startsWithIgnoreCase(completions.get(i).replace("{", ""), args[args.length - 1].replace('_', '-'))) {
 					completions.remove(i);
 					i--;
 				}
