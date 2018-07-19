@@ -2,6 +2,11 @@ package de.robingrether.idisguise.disguise;
 
 import java.util.Locale;
 
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
+import de.robingrether.idisguise.management.VersionHelper;
+
 /**
  * Represents a disguise as a llama.
  * 
@@ -145,7 +150,7 @@ public class LlamaDisguise extends AgeableDisguise {
 		LIME,
 		PINK,
 		GRAY,
-		SILVER,
+		LIGHT_GRAY,
 		CYAN,
 		PURPLE,
 		BLUE,
@@ -154,6 +159,19 @@ public class LlamaDisguise extends AgeableDisguise {
 		RED,
 		BLACK,
 		NOT_SADDLED;
+		
+		/**
+		 * @since 5.8.1
+		 */
+		public ItemStack getItem() {
+			if(this == NOT_SADDLED) return null;
+			
+			if(VersionHelper.require1_13()) {
+				return new ItemStack(Material.valueOf(name() + "_CARPET"), 1);
+			} else {
+				return new ItemStack(Material.valueOf("CARPET"), 1, (short)ordinal());
+			}
+		}
 		
 	}
 	

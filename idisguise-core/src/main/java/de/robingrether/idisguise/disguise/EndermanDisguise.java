@@ -6,7 +6,9 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
 
 import de.robingrether.idisguise.management.VersionHelper;
 
@@ -18,8 +20,13 @@ import de.robingrether.idisguise.management.VersionHelper;
  */
 public class EndermanDisguise extends MobDisguise {
 	
-	private Material blockInHand;
-	private int blockInHandData;
+	private Material carriedBlock;
+	
+	/**
+	 * This will be a {@linkplain BlockData} for 1.13+
+	 * and an non-negative integer value for 1.12 and earlier.
+	 */
+	private Object blockData;
 	
 	/**
 	 * Creates an instance.
@@ -34,100 +41,165 @@ public class EndermanDisguise extends MobDisguise {
 	 * Creates an instance.
 	 * 
 	 * @since 4.0.1
-	 * @param blockInHand the carried block
 	 * @throws IllegalArgumentException Material is not a block.
 	 */
-	public EndermanDisguise(Material blockInHand) {
-		this(blockInHand, 0);
+	public EndermanDisguise(Material carriedBlock) {
+		this((Object)carriedBlock);
 	}
 	
 	/**
 	 * Creates an instance.
 	 * 
 	 * @since 4.0.1
-	 * @param blockInHand the carried block
-	 * @param blockInHandData the carried block's data value
 	 * @throws IllegalArgumentException Material is not a block or data value is negative.
+	 * 
+	 * @deprecated Numerical block data values should not be used anymore.
 	 */
-	public EndermanDisguise(Material blockInHand, int blockInHandData) {
-		super(DisguiseType.ENDERMAN);
-		if(blockInHand == null) {
-			blockInHand = Material.AIR;
-		}
-		if(!blockInHand.isBlock()) {
-			throw new IllegalArgumentException("Material must be a block!");
-		}
-		if(INVALID_MATERIALS.contains(blockInHand)) {
-			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
-		}
-		this.blockInHand = blockInHand;
-		if(blockInHandData < 0) {
-			throw new IllegalArgumentException("Data must be positive!");
-		}
-		this.blockInHandData = blockInHandData;
+	@Deprecated
+	public EndermanDisguise(Material carriedBlock, int blockData) {
+		this(carriedBlock);
+		setBlockInHandData(blockData);
 	}
 	
 	/**
-	 * Returns the carried block.
+	 * Creates an instance.
 	 * 
-	 * @since 4.0.1
-	 * @return the carried block
+	 * @since 5.8.1
+	 * @param carriedBlock Must be a valid {@linkplain Material}, {@linkplain BlockData} or <code>null</code>.
+	 * @throws IllegalArgumentException Carried block is not valid.
 	 */
-	public Material getBlockInHand() {
-		return blockInHand;
+	public EndermanDisguise(Object carriedBlock) {
+		super(DisguiseType.ENDERMAN);
+		setCarriedBlock(carriedBlock);
+	}
+	
+	public Material getCarriedBlock() {
+		return carriedBlock;
+	}
+	
+	public Object getBlockData() {
+		return blockData;
+	}
+	
+	/**
+	 * Sets the carried block.
+	 * 
+	 * @since 5.8.1
+	 * @param carriedBlock Must be a valid {@linkplain Material}, {@linkplain BlockData} or <code>null</code>.
+	 * @throws IllegalArgumentException Carried block is not valid.
+	 */
+	public void setCarriedBlock(Object carriedBlock) {
+		if(carriedBlock == null) {
+			carriedBlock = Material.AIR;
+		}
+		if(carriedBlock instanceof Material) {
+			this.carriedBlock = (Material)carriedBlock;
+			if(VersionHelper.require1_13()) {
+				this.blockData = this.carriedBlock.createBlockData();
+			} else {
+				this.blockData = 0;
+			}
+		} else if(VersionHelper.require1_13() && carriedBlock instanceof BlockData) {
+			this.carriedBlock = ((BlockData)carriedBlock).getMaterial();
+			this.blockData = carriedBlock;
+		} else {
+			throw new IllegalArgumentException("Carried block must be a Material, BlockData or null.");
+		}
+		
+		if(!this.carriedBlock.isBlock()) {
+			throw new IllegalArgumentException("Material must be a block!");
+		}
+		if(INVALID_MATERIALS.contains(this.carriedBlock)) {
+			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
+		}
 	}
 	
 	/**
 	 * Sets the carried block.<br>
-	 * This also resets the block data to 0.
+	 * Attempts to parse a {@linkplain Material} or a {@linkplain BlockData} from the given string.
 	 * 
-	 * @since 4.0.1
-	 * @param blockInHand the carried block
-	 * @throws IllegalArgumentException Material is not a block.
+	 * @since 5.8.1
+	 * @param carriedBlock
+	 * @return <code>true</code>, if the given string could be parsed properly.
+	 * @throws IllegalArgumentException The parsed block is not a valid.
 	 */
+	public boolean setCarriedBlock(String carriedBlock) {
+		Material material = Material.matchMaterial(carriedBlock);
+		if(material != null) {
+			setCarriedBlock(material);
+			return true;
+		} else if(VersionHelper.require1_13()) {
+			Object carriedBlock2 = null;
+			try {
+				carriedBlock2 = Bukkit.createBlockData(carriedBlock);
+			} catch(IllegalArgumentException e) {
+			}
+			if(carriedBlock2 != null) {
+				setCarriedBlock(carriedBlock2);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * @since 4.0.1
+	 * 
+	 * @deprecated Renamed to {@linkplain EndermanDisguise#getCarriedBlock()}
+	 */
+	@Deprecated
+	public Material getBlockInHand() {
+		return carriedBlock;
+	}
+	
+	/**
+	 * @since 4.0.1
+	 * 
+	 * @deprecated Replaced by {@linkplain EndermanDisguise#setCarriedBlock(Object)}
+	 */
+	@Deprecated
 	public void setBlockInHand(Material blockInHand) {
-		if(blockInHand == null) {
-			blockInHand = Material.AIR;
-		}
-		if(!blockInHand.isBlock()) {
-			throw new IllegalArgumentException("Material must be a block!");
-		}
-		if(INVALID_MATERIALS.contains(blockInHand)) {
-			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
-		}
-		this.blockInHand = blockInHand;
-		this.blockInHandData = 0;
+		setCarriedBlock(blockInHand);
 	}
 	
 	/**
-	 * Returns the carried block's data value.
-	 * 
 	 * @since 4.0.1
-	 * @return the carried block's data value
+	 * 
+	 * @deprecated Numerical block data values should not be used anymore.
 	 */
+	@Deprecated
 	public int getBlockInHandData() {
-		return blockInHandData;
+		if(VersionHelper.require1_13()) {
+			throw new UnsupportedOperationException("Numerical block data values are not supported anymore.");
+		}
+		return (Integer)blockData;
 	}
 	
 	/**
-	 * Sets the carried block's data value.
-	 * 
 	 * @since 4.0.1
-	 * @param blockInHandData the carried block's data value
-	 * @throws IllegalArgumentException Data value is negative.
+	 * 
+	 * @deprecated Numerical block data values should not be used anymore.
 	 */
+	@Deprecated
 	public void setBlockInHandData(int blockInHandData) {
-		if(blockInHandData < 0) {
-			throw new IllegalArgumentException("Data must be positive!");
+		if(VersionHelper.require1_13()) {
+			throw new UnsupportedOperationException("Numerical block data values are not supported anymore.");
 		}
-		this.blockInHandData = blockInHandData;
+		if(blockInHandData < 0) {
+			throw new IllegalArgumentException("Data must not be negative!");
+		}
+		this.blockData = blockInHandData;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return String.format("%s; block=%s; block-data=%s", super.toString(), blockInHand.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), blockInHandData);
+		if(VersionHelper.require1_13()) {
+			return String.format("%s; carried-block=%s", super.toString(), blockData);
+		} else {
+			return String.format("%s; block=%s; block-data=%s", super.toString(), carriedBlock.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), blockData);
+		}
 	}
 	
 	/**
@@ -137,30 +209,32 @@ public class EndermanDisguise extends MobDisguise {
 	 * @since 5.7.1
 	 */
 	public static final Set<Material> INVALID_MATERIALS;
+	// TODO
 	
 	static {
-		Set<Material> tempSet = new HashSet<Material>(Arrays.asList(Material.BARRIER, Material.BED_BLOCK, Material.COBBLE_WALL, Material.ENDER_PORTAL, Material.LAVA, Material.MELON_STEM,
+		Set<Material> tempSet = new HashSet<Material>(/*Arrays.asList(Material.BARRIER, Material.BED_BLOCK, Material.COBBLE_WALL, Material.ENDER_PORTAL, Material.LAVA, Material.MELON_STEM,
 				Material.PISTON_MOVING_PIECE, Material.PUMPKIN_STEM, Material.SIGN_POST, Material.SKULL, Material.STANDING_BANNER, Material.STATIONARY_LAVA, Material.STATIONARY_WATER,
 				Material.WALL_BANNER, Material.WALL_SIGN, Material.WATER));
 		if(VersionHelper.require1_9()) {
 			tempSet.add(Material.END_GATEWAY);
 		}
 		if(VersionHelper.require1_10()) {
-			tempSet.add(Material.STRUCTURE_VOID);
-		}
+			tempSet.add(Material.STRUCTURE_VOID*/);
+		//}
 		INVALID_MATERIALS = Collections.unmodifiableSet(tempSet);
-		
 		Set<String> parameterSuggestions = new HashSet<String>();
 		for(Material material : Material.values()) {
 			if(material.isBlock() && !INVALID_MATERIALS.contains(material)) {
 				parameterSuggestions.add(material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 			}
 		}
-		Subtypes.registerParameterizedSubtype(EndermanDisguise.class, "setBlockInHand", "block", Material.class, parameterSuggestions);
-//		for(int i = 0; i < 256; i++) {
-//			Subtypes.registerSubtype(EndermanDisguise.class, "setBlockInHandData", i, Integer.toString(i));
-//		}
-		Subtypes.registerParameterizedSubtype(EndermanDisguise.class, "setBlockInHandData", "block-data", int.class);
+		
+		if(VersionHelper.require1_13()) {
+			Subtypes.registerParameterizedSubtype(EndermanDisguise.class, "setCarriedBlock", "carried-block", String.class, parameterSuggestions);
+		} else {
+			Subtypes.registerParameterizedSubtype(EndermanDisguise.class, "setBlockInHand", "block", Material.class, parameterSuggestions);
+			Subtypes.registerParameterizedSubtype(EndermanDisguise.class, "setBlockInHandData", "block-data", int.class);
+		}
 	}
 	
 }

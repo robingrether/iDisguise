@@ -20,7 +20,6 @@ import org.bukkit.inventory.ItemStack;
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.api.PlayerInteractDisguisedPlayerEvent;
 import de.robingrether.idisguise.disguise.*;
-import de.robingrether.idisguise.disguise.LlamaDisguise.SaddleColor;
 import de.robingrether.idisguise.management.channel.InjectedPlayerConnection;
 import de.robingrether.idisguise.management.util.EntityIdList;
 
@@ -130,7 +129,7 @@ public final class PacketHandler {
 						LlamaDisguise llamaDisguise = (LlamaDisguise)mobDisguise;
 						EntityLlama_setVariant.invoke(entity, llamaDisguise.getColor().ordinal());
 						Object inventoryChest = EntityHorseAbstract_inventoryChest.get(entity);
-						InventorySubcontainer_setItem.invoke(inventoryChest, 1, CraftItemStack_asNMSCopy.invoke(null, llamaDisguise.getSaddle().equals(SaddleColor.NOT_SADDLED) ? null : new ItemStack(Material.CARPET, 1, (short)llamaDisguise.getSaddle().ordinal())));
+						InventorySubcontainer_setItem.invoke(inventoryChest, 1, CraftItemStack_asNMSCopy.invoke(null, llamaDisguise.getSaddle().getItem()));
 						EntityHorseChestedAbstract_setCarryingChest.invoke(entity, llamaDisguise.hasChest());
 					} else if(mobDisguise instanceof OcelotDisguise) {
 						OcelotDisguise ocelotDisguise = (OcelotDisguise)mobDisguise;
@@ -163,7 +162,11 @@ public final class PacketHandler {
 					EntityCreeper_setPowered.invoke(entity, ((CreeperDisguise)mobDisguise).isPowered());
 				} else if(mobDisguise instanceof EndermanDisguise) {
 					EndermanDisguise endermanDisguise = (EndermanDisguise)mobDisguise;
-					EntityEnderman_setCarried.invoke(entity, Block_fromLegacyData.invoke(Block_getById.invoke(null, endermanDisguise.getBlockInHand().getId()), endermanDisguise.getBlockInHandData()));
+					if(VersionHelper.require1_13()) {
+						EntityEnderman_setCarried.invoke(entity, CraftBlockData_getHandle.invoke(endermanDisguise.getBlockData()));
+					} else {
+						EntityEnderman_setCarried.invoke(entity, Block_fromLegacyData.invoke(Block_getById.invoke(null, endermanDisguise.getBlockInHand().getId()), endermanDisguise.getBlockInHandData()));
+					}
 				} else if(mobDisguise instanceof ParrotDisguise) {
 					ParrotDisguise parrotDisguise = (ParrotDisguise)mobDisguise;
 					EntityParrot_setVariant.invoke(entity, parrotDisguise.getVariant().ordinal());
@@ -198,7 +201,7 @@ public final class PacketHandler {
 					// send game profile to client
 					Object playerInfoPacket = PacketPlayOutPlayerInfo_new.newInstance();
 					PacketPlayOutPlayerInfo_action.set(playerInfoPacket, EnumPlayerInfoAction_ADD_PLAYER.get(null));
-					List<Object> playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(playerInfoPacket);
+					List playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(playerInfoPacket);
 					playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, gameProfile, 35, EnumGamemode_SURVIVAL.get(null), Array.get(CraftChatMessage_fromString.invoke(null, playerDisguise.getDisplayName()), 0)));
 					packets.add(playerInfoPacket);
 					
@@ -238,18 +241,31 @@ public final class PacketHandler {
 					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), 0));
 					packets.add(PacketPlayOutEntityMetadata_new_full.newInstance(livingEntity.getEntityId(), Entity_getDataWatcher.invoke(entity), true));
 				} else if(EntityFallingBlock.isInstance(entity)) {
-					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), objectDisguise instanceof FallingBlockDisguise ? ((FallingBlockDisguise)objectDisguise).getMaterial().getId() | (((FallingBlockDisguise)objectDisguise).getData() << 12) : 1));
+					int typeId = 1;
+					if(objectDisguise instanceof FallingBlockDisguise) {
+						FallingBlockDisguise fbDisguise = (FallingBlockDisguise)objectDisguise;
+						if(VersionHelper.require1_13()) {
+							typeId = (Integer)Block_getCombinedId.invoke(null, CraftBlockData_getHandle.invoke(fbDisguise.getMaterialData()));
+						} else {
+							typeId = fbDisguise.getMaterial().getId() | fbDisguise.getData() << 12;
+						}
+					}
+					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), typeId));
 				} else if(EntityItem.isInstance(entity)) {
 					if(objectDisguise instanceof ItemDisguise) {
 						ItemDisguise itemDisguise = (ItemDisguise)objectDisguise;
 						EntityItem_setItemStack.invoke(entity, CraftItemStack_asNMSCopy.invoke(null, itemDisguise.getItemStack()));
 					}
-					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), 0));
+					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), 1));
 					packets.add(PacketPlayOutEntityMetadata_new_full.newInstance(livingEntity.getEntityId(), Entity_getDataWatcher.invoke(entity), true));
 				} else if(EntityMinecartAbstract.isInstance(entity)) {
 					if(objectDisguise instanceof MinecartDisguise) {
 						MinecartDisguise minecartDisguise = (MinecartDisguise)objectDisguise;
-						EntityMinecartAbstract_setDisplayBlock.invoke(entity, Block_fromLegacyData.invoke(Block_getById.invoke(null, minecartDisguise.getDisplayedBlock().getId()), minecartDisguise.getDisplayedBlockData()));
+						if(VersionHelper.require1_13()) {
+							EntityMinecartAbstract_setDisplayBlock.invoke(entity, Block_getCombinedId.invoke(null, CraftBlockData_getHandle.invoke(minecartDisguise.getBlockData())));
+						} else {
+							EntityMinecartAbstract_setDisplayBlock.invoke(entity, Block_fromLegacyData.invoke(Block_getById.invoke(null, minecartDisguise.getDisplayedBlock().getId()), minecartDisguise.getDisplayedBlockData()));
+						}
 					}
 					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), 0));
 					packets.add(PacketPlayOutEntityMetadata_new_full.newInstance(livingEntity.getEntityId(), Entity_getDataWatcher.invoke(entity), true));
@@ -264,7 +280,7 @@ public final class PacketHandler {
 						AreaEffectCloudDisguise aecDisguise = (AreaEffectCloudDisguise)objectDisguise;
 						EntityAreaEffectCloud_setRadius.invoke(entity, aecDisguise.getRadius());
 						EntityAreaEffectCloud_setColor.invoke(entity, aecDisguise.getColor().asRGB());
-						EntityAreaEffectCloud_setParticle.invoke(entity, EnumParticle_valueOf.invoke(null, aecDisguise.getParticle().name()));
+						EntityAreaEffectCloud_setParticle.invoke(entity, CraftParticle_toNMS.invoke(null, aecDisguise.getParticle()));
 					}
 					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), 0));
 					packets.add(PacketPlayOutEntityMetadata_new_full.newInstance(livingEntity.getEntityId(), Entity_getDataWatcher.invoke(entity), true));

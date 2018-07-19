@@ -6,7 +6,9 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
 
 import de.robingrether.idisguise.management.VersionHelper;
 
@@ -19,12 +21,18 @@ import de.robingrether.idisguise.management.VersionHelper;
 public class FallingBlockDisguise extends ObjectDisguise {
 	
 	private Material material;
-	private int data;
+	
+	/**
+	 * This will be a {@linkplain BlockData} for 1.13+
+	 * and an non-negative integer value for 1.12 and earlier.
+	 */
+	private Object materialData;
+	
 	private boolean onlyBlockCoordinates;
 	
 	/**
 	 * Creates an instance.<br>
-	 * The default material is {@link Material#STONE}
+	 * The default material is {@linkplain Material#STONE}.
 	 * 
 	 * @since 5.1.1
 	 */
@@ -36,21 +44,21 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	 * Creates an instance.
 	 * 
 	 * @since 5.1.1
-	 * @param material the material
-	 * @throws IllegalArgumentException if the material is not a block
+	 * @throws IllegalArgumentException Material is not valid.
 	 */
 	public FallingBlockDisguise(Material material) {
-		this(material, 0);
+		this(material, false);
 	}
 	
 	/**
 	 * Creates an instance.
 	 * 
 	 * @since 5.2.2
-	 * @param material the material
-	 * @param data the block data
-	 * @throws IllegalArgumentException if the material is not a block, or if the data is negative
+	 * @throws IllegalArgumentException Material or data is not valid.
+	 * 
+	 * @deprecated Numerical block data values should not be used anymore.
 	 */
+	@Deprecated
 	public FallingBlockDisguise(Material material, int data) {
 		this(material, data, false);
 	}
@@ -59,24 +67,26 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	 * Creates an instance.
 	 * 
 	 * @since 5.4.1
-	 * @param material the material
-	 * @param data the block data
-	 * @param onlyBlockCoordinates makes the disguise appear on block coordinates only, so it looks like an actual block that you can't target
-	 * @throws IllegalArgumentException if the material is not a block, or if the data is negative
+	 * 
+	 * @deprecated Numerical block data values should not be used anymore.
 	 */
+	@Deprecated
 	public FallingBlockDisguise(Material material, int data, boolean onlyBlockCoordinates) {
+		this(material, onlyBlockCoordinates);
+		setData(data);
+	}
+	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 5.8.1
+	 * @param materialData Must be a valid {@linkplain Material} or {@linkplain BlockData}.
+	 * @param onlyBlockCoordinates makes the disguise appear on block coordinates only, so it looks like an actual block that you can't target
+	 * @throws IllegalArgumentException Material data is not valid.
+	 */
+	public FallingBlockDisguise(Object materialData, boolean onlyBlockCoordinates) {
 		super(DisguiseType.FALLING_BLOCK);
-		if(!material.isBlock()) {
-			throw new IllegalArgumentException("Material must be a block");
-		}
-		if(INVALID_MATERIALS.contains(material)) {
-			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
-		}
-		if(data < 0) {
-			throw new IllegalArgumentException("Data must be positive");
-		}
-		this.material = material;
-		this.data = data;
+		setMaterialData(materialData);
 		this.onlyBlockCoordinates = onlyBlockCoordinates;
 	}
 	
@@ -90,46 +100,93 @@ public class FallingBlockDisguise extends ObjectDisguise {
 		return material;
 	}
 	
+	public Object getMaterialData() {
+		return materialData;
+	}
+	
+	public void setMaterialData(Object materialData) {
+		if(materialData instanceof Material) {
+			this.material = (Material)materialData;
+			if(VersionHelper.require1_13()) {
+				this.materialData = this.material.createBlockData();
+			} else {
+				this.materialData = 0;
+			}
+		} else if(VersionHelper.require1_13() && materialData instanceof BlockData) {
+			this.material = ((BlockData)materialData).getMaterial();
+			this.materialData = materialData;
+		} else {
+			throw new IllegalArgumentException("Data must be a Material or BlockData.");
+		}
+		
+		if(!this.material.isBlock()) {
+			throw new IllegalArgumentException("Material must be a block");
+		}
+		if(INVALID_MATERIALS.contains(this.material)) {
+			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
+		}
+	}
+	
+	public boolean setMaterialData(String materialData) {
+		Material material = Material.matchMaterial(materialData);
+		if(material != null) {
+			setMaterialData(material);
+			return true;
+		} else if(VersionHelper.require1_13()) {
+			Object materialData2 = null;
+			try {
+				materialData2 = Bukkit.createBlockData(materialData);
+			} catch(IllegalArgumentException e) {
+			}
+			if(materialData2 != null) {
+				setMaterialData(materialData2);
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * Sets the material.<br>
 	 * This also resets the data to 0.
 	 * 
 	 * @since 5.1.1
-	 * @param material the material
-	 * @throws IllegalArgumentException if the material is not a block
+	 * @throws IllegalArgumentException Material is not valid.
+	 * 
+	 * @deprecated Replaced by {@linkplain FallingBlockDisguise#setMaterialData(Object)}
 	 */
+	@Deprecated
 	public void setMaterial(Material material) {
-		if(!material.isBlock()) {
-			throw new IllegalArgumentException("Material must be a block");
-		}
-		if(INVALID_MATERIALS.contains(material)) {
-			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
-		}
-		this.material = material;
-		this.data = 0;
+		setMaterialData(material);
 	}
 	
 	/**
-	 * Gets the block data.
-	 * 
 	 * @since 5.2.2
-	 * @return the block data
+	 * 
+	 * @deprecated Numerical block data values should not be used anymore.
 	 */
+	@Deprecated
 	public int getData() {
-		return data;
+		if(VersionHelper.require1_13()) {
+			throw new UnsupportedOperationException("Numerical block data values are not supported anymore.");
+		}
+		return (Integer)materialData;
 	}
 	
 	/**
-	 * Sets the block data.
-	 * 
 	 * @since 5.2.2
-	 * @param data the block data
+	 * 
+	 * @deprecated Numerical block data values should not be used anymore.
 	 */
+	@Deprecated
 	public void setData(int data) {
+		if(VersionHelper.require1_13()) {
+			throw new UnsupportedOperationException("Numerical block data values are not supported anymore.");
+		}
 		if(data < 0) {
 			throw new IllegalArgumentException("Data must be positive");
 		}
-		this.data = data;
+		this.materialData = data;
 	}
 	
 	/**
@@ -156,7 +213,11 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return String.format("%s; material=%s; material-data=%s; %s", super.toString(), material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), data, onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
+		if(VersionHelper.require1_13()) {
+			return String.format("%s; material=%s; %s", super.toString(), materialData, onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
+		} else {
+			return String.format("%s; material=%s; material-data=%s; %s", super.toString(), material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), materialData, onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
+		}
 	}
 	
 	/**
@@ -166,9 +227,10 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	 * @since 5.7.1
 	 */
 	public static final Set<Material> INVALID_MATERIALS;
+	// TODO
 	
 	static {
-		Set<Material> tempSet = new HashSet<Material>(Arrays.asList(Material.AIR, Material.BARRIER, Material.BED_BLOCK, Material.CHEST,
+		Set<Material> tempSet = new HashSet<Material>(/*Arrays.asList(Material.AIR, Material.BARRIER, Material.BED_BLOCK, Material.CHEST,
 				Material.COBBLE_WALL, Material.ENDER_CHEST, Material.ENDER_PORTAL, Material.LAVA, Material.MELON_STEM, Material.PISTON_MOVING_PIECE, Material.PORTAL,
 				Material.PUMPKIN_STEM, Material.SIGN_POST, Material.SKULL, Material.STANDING_BANNER, Material.STATIONARY_LAVA, Material.STATIONARY_WATER, Material.TRAPPED_CHEST,
 				Material.WALL_BANNER, Material.WALL_SIGN, Material.WATER));
@@ -181,8 +243,8 @@ public class FallingBlockDisguise extends ObjectDisguise {
 		if(VersionHelper.require1_11()) {
 			tempSet.addAll(Arrays.asList(Material.BLACK_SHULKER_BOX, Material.BLUE_SHULKER_BOX, Material.BROWN_SHULKER_BOX, Material.CYAN_SHULKER_BOX,
 					Material.GRAY_SHULKER_BOX, Material.GREEN_SHULKER_BOX, Material.LIGHT_BLUE_SHULKER_BOX, Material.LIME_SHULKER_BOX, Material.MAGENTA_SHULKER_BOX, Material.ORANGE_SHULKER_BOX,
-					Material.PINK_SHULKER_BOX, Material.PURPLE_SHULKER_BOX, Material.RED_SHULKER_BOX, Material.SILVER_SHULKER_BOX, Material.WHITE_SHULKER_BOX, Material.YELLOW_SHULKER_BOX));
-		}
+					Material.PINK_SHULKER_BOX, Material.PURPLE_SHULKER_BOX, Material.RED_SHULKER_BOX, Material.SILVER_SHULKER_BOX, Material.WHITE_SHULKER_BOX, Material.YELLOW_SHULKER_BOX)*/);
+		//}
 		INVALID_MATERIALS = Collections.unmodifiableSet(tempSet);
 		
 		Set<String> parameterSuggestions = new HashSet<String>();
@@ -191,9 +253,13 @@ public class FallingBlockDisguise extends ObjectDisguise {
 				parameterSuggestions.add(material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 			}
 		}
-		Subtypes.registerParameterizedSubtype(FallingBlockDisguise.class, "setMaterial", "material", Material.class, Collections.unmodifiableSet(parameterSuggestions));
 		
-		Subtypes.registerParameterizedSubtype(FallingBlockDisguise.class, "setData", "material-data", int.class);
+		if(VersionHelper.require1_13()) {
+			Subtypes.registerParameterizedSubtype(FallingBlockDisguise.class, "setMaterialData", "material", String.class, parameterSuggestions);
+		} else {
+			Subtypes.registerParameterizedSubtype(FallingBlockDisguise.class, "setMaterial", "material", Material.class, Collections.unmodifiableSet(parameterSuggestions));
+			Subtypes.registerParameterizedSubtype(FallingBlockDisguise.class, "setData", "material-data", int.class);
+		}
 		Subtypes.registerSubtype(FallingBlockDisguise.class, "setOnlyBlockCoordinates", true, "block-coordinates");
 		Subtypes.registerSubtype(FallingBlockDisguise.class, "setOnlyBlockCoordinates", false, "all-coordinates");
 	}

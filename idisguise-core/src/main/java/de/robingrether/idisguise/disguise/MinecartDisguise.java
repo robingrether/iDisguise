@@ -6,7 +6,9 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
 
 import de.robingrether.idisguise.management.VersionHelper;
 
@@ -19,11 +21,16 @@ import de.robingrether.idisguise.management.VersionHelper;
 public class MinecartDisguise extends ObjectDisguise {
 	
 	private Material displayedBlock;
-	private int displayedBlockData;
+	
+	/**
+	 * This will be a {@linkplain BlockData} for 1.13+
+	 * and an non-negative integer value for 1.12 and earlier.
+	 */
+	private Object blockData;
 	
 	/**
 	 * Creates an instance.<br>
-	 * The default block inside the cart is {@link Material#AIR}
+	 * The default block inside the cart is {@linkplain Material#AIR}.
 	 * 
 	 * @since 5.1.1
 	 */
@@ -32,103 +39,135 @@ public class MinecartDisguise extends ObjectDisguise {
 	}
 	
 	/**
-	 * Creates an instance.
-	 * 
 	 * @since 5.1.1
-	 * @param displayedBlock the block to display inside the cart
-	 * @throws IllegalArgumentException if the material is not a block
+	 * @throws IllegalArgumentException Material is not valid.
 	 */
 	public MinecartDisguise(Material displayedBlock) {
-		this(displayedBlock, 0);
+		this((Object)displayedBlock);
 	}
 	
 	/**
-	 * Creates an instance.
-	 * 
 	 * @since 5.1.1
-	 * @param displayedBlock the block to display inside the cart
-	 * @param displayedBlockData the data of the block inside
-	 * @throws IllegalArgumentException if the material is not a block, or if data is negative integer
+	 * @throws IllegalArgumentException Material or data is not valid.
+	 * 
+	 * @deprecated Numerical block data values should not be used anymore.
 	 */
+	@Deprecated
 	public MinecartDisguise(Material displayedBlock, int displayedBlockData) {
+		this(displayedBlock);
+		setDisplayedBlockData(displayedBlockData);
+	}
+	
+	public MinecartDisguise(Object displayedBlock) {
 		super(DisguiseType.MINECART);
-		if(displayedBlock == null) {
-			displayedBlock = Material.AIR;
-		}
-		if(!displayedBlock.isBlock()) {
-			throw new IllegalArgumentException("Material must be a block");
-		}
-		if(INVALID_MATERIALS.contains(displayedBlock)) {
-			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
-		}
-		this.displayedBlock = displayedBlock;
-		if(displayedBlockData < 0) {
-			throw new IllegalArgumentException("Data must be positive");
-		}
-		this.displayedBlockData = displayedBlockData;
+		setDisplayedBlock(displayedBlock);
 	}
 	
 	/**
-	 * Gets the block displayed inside the cart.
-	 * 
 	 * @since 5.1.1
-	 * @return the block displayed inside the cart
 	 */
 	public Material getDisplayedBlock() {
 		return displayedBlock;
 	}
 	
-	/**
-	 * Sets the block to display inside the cart.<br>
-	 * This also resets the block data to 0.
-	 * 
-	 * @since 5.1.1
-	 * @param displayedBlock the block to display inside the cart
-	 * @throws IllegalArgumentException if the material is not a block
-	 */
-	public void setDisplayedBlock(Material displayedBlock) {
+	public Object getBlockData() {
+		return blockData;
+	}
+	
+	public void setDisplayedBlock(Object displayedBlock) {
 		if(displayedBlock == null) {
 			displayedBlock = Material.AIR;
 		}
-		if(!displayedBlock.isBlock()) {
-			throw new IllegalArgumentException("Material must be a block");
+		if(displayedBlock instanceof Material) {
+			this.displayedBlock = (Material)displayedBlock;
+			if(VersionHelper.require1_13()) {
+				this.blockData = this.displayedBlock.createBlockData();
+			} else {
+				this.blockData = 0;
+			}
+		} else if(VersionHelper.require1_13() && displayedBlock instanceof BlockData) {
+			this.displayedBlock = ((BlockData)displayedBlock).getMaterial();
+			this.blockData = displayedBlock;
+		} else {
+			throw new IllegalArgumentException("Displayed block must be a Material, BlockData or null.");
 		}
-		if(INVALID_MATERIALS.contains(displayedBlock)) {
+		
+		if(!this.displayedBlock.isBlock()) {
+			throw new IllegalArgumentException("Material must be a block!");
+		}
+		if(INVALID_MATERIALS.contains(this.displayedBlock)) {
 			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
 		}
-		this.displayedBlock = displayedBlock;
-		this.displayedBlockData = 0;
 	}
 	
-	/**
-	 * Gets the data of the block inside the cart.
-	 * 
-	 * @since 5.1.1
-	 * @return the data value
-	 */
-	public int getDisplayedBlockData() {
-		return displayedBlockData;
-	}
-	
-	/**
-	 * Sets the data of the block inside the cart.
-	 * 
-	 * @since 5.1.1
-	 * @param displayedBlockData the data value
-	 * @throws IllegalArgumentException if the given data value is negative
-	 */
-	public void setDisplayedBlockData(int displayedBlockData) {
-		if(displayedBlockData < 0) {
-			throw new IllegalArgumentException("Data must be positive");
+	public boolean setDisplayedBlock(String displayedBlock) {
+		Material material = Material.matchMaterial(displayedBlock);
+		if(material != null) {
+			setDisplayedBlock((Object)material);
+			return true;
+		} else if(VersionHelper.require1_13()) {
+			Object displayedBlock2 = null;
+			try {
+				displayedBlock2 = Bukkit.createBlockData(displayedBlock);
+			} catch(IllegalArgumentException e) {
+			}
+			if(displayedBlock2 != null) {
+				setDisplayedBlock(displayedBlock2);
+				return true;
+			}
 		}
-		this.displayedBlockData = displayedBlockData;
+		return false;
+	}
+	
+	/**
+	 * @since 5.1.1
+	 * 
+	 * @deprecated Replaced by {@linkplain MinecartDisguise#setDisplayedBlock(Object)}
+	 */
+	@Deprecated
+	public void setDisplayedBlock(Material displayedBlock) {
+		setDisplayedBlock((Object)displayedBlock);
+	}
+	
+	/**
+	 * @since 5.1.1
+	 * 
+	 * @deprecated Numerical block data values should not be used anymore.
+	 */
+	@Deprecated
+	public int getDisplayedBlockData() {
+		if(VersionHelper.require1_13()) {
+			throw new UnsupportedOperationException("Numerical block data values are not supported anymore.");
+		}
+		return (Integer)blockData;
+	}
+	
+	/**
+	 * @since 5.1.1
+	 * @throws IllegalArgumentException Data is not valid.
+	 * 
+	 * @deprecated Numerical block data values should not be used anymore.
+	 */
+	@Deprecated
+	public void setDisplayedBlockData(int displayedBlockData) {
+		if(VersionHelper.require1_13()) {
+			throw new UnsupportedOperationException("Numerical block data values are not supported anymore.");
+		}
+		if(displayedBlockData < 0) {
+			throw new IllegalArgumentException("Data must not be negative!");
+		}
+		this.blockData = displayedBlockData;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return String.format("%s; block=%s; block-data=%s", super.toString(), displayedBlock.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), displayedBlockData);
+		if(VersionHelper.require1_13()) {
+			return String.format("%s; displayed-block=%s", super.toString(), blockData);
+		} else {
+			return String.format("%s; block=%s; block-data=%s", super.toString(), displayedBlock.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), blockData);
+		}
 	}
 	
 	/**
@@ -138,17 +177,18 @@ public class MinecartDisguise extends ObjectDisguise {
 	 * @since 5.7.1
 	 */
 	public static final Set<Material> INVALID_MATERIALS;
+	// TODO
 	
 	static {
-		Set<Material> tempSet = new HashSet<Material>(Arrays.asList(Material.BARRIER, Material.BED_BLOCK, Material.COBBLE_WALL, Material.ENDER_PORTAL, Material.LAVA, Material.MELON_STEM,
+		Set<Material> tempSet = new HashSet<Material>(/*Arrays.asList(Material.BARRIER, Material.BED_BLOCK, Material.COBBLE_WALL, Material.ENDER_PORTAL, Material.LAVA, Material.MELON_STEM,
 				Material.PISTON_MOVING_PIECE, Material.PUMPKIN_STEM, Material.SIGN_POST, Material.SKULL, Material.STANDING_BANNER, Material.STATIONARY_LAVA, Material.STATIONARY_WATER,
 				Material.WALL_BANNER, Material.WALL_SIGN, Material.WATER));
 		if(VersionHelper.require1_9()) {
 			tempSet.add(Material.END_GATEWAY);
 		}
 		if(VersionHelper.require1_10()) {
-			tempSet.add(Material.STRUCTURE_VOID);
-		}
+			tempSet.add(Material.STRUCTURE_VOID*/);
+		//}
 		INVALID_MATERIALS = Collections.unmodifiableSet(tempSet);
 		
 		Set<String> parameterSuggestions = new HashSet<String>();
@@ -157,11 +197,13 @@ public class MinecartDisguise extends ObjectDisguise {
 				parameterSuggestions.add(material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 			}
 		}
-		Subtypes.registerParameterizedSubtype(MinecartDisguise.class, "setDisplayedBlock", "block", Material.class, parameterSuggestions);
-//		for(int i = 0; i < 256; i++) {
-//			Subtypes.registerSubtype(MinecartDisguise.class, "setDisplayedBlockData", i, Integer.toString(i));
-//		}
-		Subtypes.registerParameterizedSubtype(MinecartDisguise.class, "setDisplayedBlockData", "block-data", int.class);
+		
+		if(VersionHelper.require1_13()) {
+			Subtypes.registerParameterizedSubtype(MinecartDisguise.class, "setDisplayedBlock", "displayed-block", String.class, parameterSuggestions);
+		} else {
+			Subtypes.registerParameterizedSubtype(MinecartDisguise.class, "setDisplayedBlock", "block", Material.class, parameterSuggestions);
+			Subtypes.registerParameterizedSubtype(MinecartDisguise.class, "setDisplayedBlockData", "block-data", int.class);
+		}
 	}
 	
 }

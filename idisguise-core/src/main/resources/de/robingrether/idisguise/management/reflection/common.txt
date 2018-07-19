@@ -1,6 +1,4 @@
 Block->C{nms}.Block
-Block_fromLegacyData->MBlock$fromLegacyData(int)
-Block_getById->MBlock$getById(int)
 
 CraftChatMessage->C{obc}.util.CraftChatMessage
 CraftChatMessage_fromComponent->MCraftChatMessage$fromComponent({nms}.IChatBaseComponent,{nms}.EnumChatFormat)

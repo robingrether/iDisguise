@@ -116,7 +116,7 @@ public class Reflection {
 	public static Method PlayerInfoData_getDisplayName;
 	
 	public static Class<?> World;
-	public static Method World_findNearbyPlayer;
+	public static Method World_findNearbyPlayer; // TODO: modified in 1.13
 	public static Method World_getEntityById;
 	
 	public static Class<?> Entity;
@@ -151,6 +151,7 @@ public class Reflection {
 	public static Class<?> Block;
 	public static Method Block_getById;
 	public static Method Block_fromLegacyData;
+	public static Method Block_getCombinedId;
 	
 	public static Class<?> EntityGuardian;
 	public static Method EntityGuardian_setElder;
@@ -320,8 +321,8 @@ public class Reflection {
 	public static Method EntityAreaEffectCloud_setParticle;
 	public static Method EntityAreaEffectCloud_setRadius;
 	
-	public static Class<?> EnumParticle;
-	public static Method EnumParticle_valueOf;
+	public static Class<?> CraftParticle;
+	public static Method CraftParticle_toNMS;
 	
 	public static Class<?> EntityTameableAnimal;
 	public static Method EntityTameableAnimal_setSitting;
@@ -337,6 +338,9 @@ public class Reflection {
 	
 	public static Class<?> PlayerList;
 	public static Method PlayerList_moveToWorld;
+	
+	public static Class<?> CraftBlockData;
+	public static Method CraftBlockData_getHandle;
 	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");

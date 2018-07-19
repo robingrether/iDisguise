@@ -1,3 +1,6 @@
+Block_fromLegacyData->MBlock$fromLegacyData(int)
+Block_getById->MBlock$getById(int)
+
 DataWatcherObject->C{nms}.DataWatcher$WatchableObject
 DataWatcherObject_getId->MDataWatcherObject$a()
 

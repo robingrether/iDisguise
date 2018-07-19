@@ -41,13 +41,7 @@ public class ItemDisguise extends ObjectDisguise {
 	 */
 	public ItemDisguise(ItemStack itemStack) {
 		super(DisguiseType.ITEM);
-		if(itemStack == null) {
-			throw new IllegalArgumentException("Item stack must not be null");
-		}
-		if(INVALID_MATERIALS.contains(itemStack.getType())) {
-			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
-		}
-		this.itemStack = itemStack;
+		setItemStack(itemStack);
 	}
 	
 	/**
@@ -185,9 +179,10 @@ public class ItemDisguise extends ObjectDisguise {
 	 * @since 5.7.1
 	 */
 	public static final Set<Material> INVALID_MATERIALS;
+	// TODO
 	
 	static {
-		Set<Material> tempSet = new HashSet<Material>(Arrays.asList(Material.ACACIA_DOOR, Material.AIR, Material.BED_BLOCK, Material.BIRCH_DOOR, Material.BREWING_STAND,
+		Set<Material> tempSet = new HashSet<Material>(/*Arrays.asList(Material.ACACIA_DOOR, Material.AIR, Material.BED_BLOCK, Material.BIRCH_DOOR, Material.BREWING_STAND,
 				Material.BURNING_FURNACE, Material.CAKE_BLOCK, Material.CARROT, Material.CAULDRON, Material.COCOA, Material.CROPS, Material.DARK_OAK_DOOR, Material.DAYLIGHT_DETECTOR_INVERTED,
 				Material.DIODE_BLOCK_OFF, Material.DIODE_BLOCK_ON, Material.DOUBLE_STEP, Material.DOUBLE_STONE_SLAB2, Material.ENDER_PORTAL, Material.FIRE, Material.FLOWER_POT,
 				Material.GLOWING_REDSTONE_ORE, Material.IRON_DOOR_BLOCK, Material.JUNGLE_DOOR, Material.LAVA, Material.MELON_STEM, Material.MONSTER_EGGS, Material.NETHER_WARTS,
@@ -196,8 +191,8 @@ public class ItemDisguise extends ObjectDisguise {
 				Material.STANDING_BANNER, Material.STATIONARY_LAVA, Material.STATIONARY_WATER, Material.SUGAR_CANE_BLOCK, Material.TRIPWIRE, Material.WALL_BANNER, Material.WALL_SIGN, Material.WATER,
 				Material.WOOD_DOUBLE_STEP, Material.WOODEN_DOOR));
 		if(VersionHelper.require1_9()) {
-			tempSet.addAll(Arrays.asList(Material.BEETROOT_BLOCK, Material.END_GATEWAY, Material.FROSTED_ICE, Material.PURPUR_DOUBLE_SLAB));
-		}
+			tempSet.addAll(Arrays.asList(Material.BEETROOT_BLOCK, Material.END_GATEWAY, Material.FROSTED_ICE, Material.PURPUR_DOUBLE_SLAB)*/);
+		//}
 		INVALID_MATERIALS = Collections.unmodifiableSet(tempSet);
 		
 		Set<String> parameterSuggestions = new HashSet<String>();
