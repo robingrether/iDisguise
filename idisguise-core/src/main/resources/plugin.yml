@@ -1,6 +1,7 @@
 name: iDisguise
 main: de.robingrether.idisguise.iDisguise
 version: ${project.version}
+api-version: 1.13
 author: RobinGrether
 description: Disguise as a mob or other player
 website: https://dev.bukkit.org/projects/idisguise

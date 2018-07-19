@@ -116,7 +116,6 @@ public class Reflection {
 	public static Method PlayerInfoData_getDisplayName;
 	
 	public static Class<?> World;
-	public static Method World_findNearbyPlayer; // TODO: modified in 1.13
 	public static Method World_getEntityById;
 	
 	public static Class<?> Entity;

@@ -25,7 +25,6 @@ Entity_getDataWatcher->MEntity$getDataWatcher()
 Entity_setLocation->MEntity$setLocation(double,double,double,float,float)
 Entity_world->FEntity$world
 Entity_getBukkitEntity->MEntity$getBukkitEntity()
-Entity_setCustomName->MEntity$setCustomName(java.lang.String)
 Entity_setCustomNameVisible->MEntity$setCustomNameVisible(boolean)
 
 EntityAgeable->C{nms}.EntityAgeable
@@ -119,7 +118,6 @@ MinecraftServer_getPlayerList->MMinecraftServer$getPlayerList()
 
 PacketPlayInUseEntity->C{nms}.PacketPlayInUseEntity
 PacketPlayInUseEntity_entityId->FPacketPlayInUseEntity$a
-PacketPlayInUseEntity_getAction->MPacketPlayInUseEntity$a()
 
 PacketPlayOutAnimation->C{nms}.PacketPlayOutAnimation
 PacketPlayOutAnimation_animationType->FPacketPlayOutAnimation$b

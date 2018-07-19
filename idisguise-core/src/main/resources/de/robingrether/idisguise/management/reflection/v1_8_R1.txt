@@ -5,6 +5,7 @@ DataWatcherObject->C{nms}.WatchableObject
 DataWatcherObject_getId->MDataWatcherObject$a()
 
 Entity_setEntityId->MEntity$d(int)
+Entity_setCustomName->MEntity$setCustomName(java.lang.String)
 
 EntityGuardian_setElder->MEntityGuardian$a(boolean)
 
@@ -39,6 +40,8 @@ EnumScoreboardAction_REMOVE->FEnumScoreboardAction$REMOVE
 MinecraftServer_getSessionService->MMinecraftServer$aB()
 MinecraftServer_getEntityByUID->MMinecraftServer$a(java.util.UUID)
 
+PacketPlayInUseEntity_getAction->MPacketPlayInUseEntity$a()
+
 PacketPlayOutNamedSoundEffect_pitch->FPacketPlayOutNamedSoundEffect$f
 PacketPlayOutNamedSoundEffect_volume->FPacketPlayOutNamedSoundEffect$e
 PacketPlayOutNamedSoundEffect_x->FPacketPlayOutNamedSoundEffect$b
@@ -63,5 +66,4 @@ PlayerInfoData_getPing->MPlayerInfoData$b()
 PlayerInfoData_getProfile->MPlayerInfoData$a()
 PlayerInfoData_new->NPlayerInfoData({nms}.PacketPlayOutPlayerInfo,com.mojang.authlib.GameProfile,int,{nms}.EnumGamemode,{nms}.IChatBaseComponent)
 
-World_findNearbyPlayer->MWorld$findNearbyPlayer(double,double,double,double)
 World_getEntityById->MWorld$a(int)

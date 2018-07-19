@@ -8,6 +8,7 @@ DataWatcherObject->C{nms}.DataWatcherObject
 DataWatcherObject_getId->MDataWatcherObject$a()
 
 Entity_setEntityId->MEntity$h(int)
+Entity_setCustomName->MEntity$setCustomName(java.lang.String)
 
 EntityAreaEffectCloud->C{nms}.EntityAreaEffectCloud
 EntityAreaEffectCloud_setColor->MEntityAreaEffectCloud$setColor(int)
@@ -68,6 +69,8 @@ MinecraftKey_new->NMinecraftKey(java.lang.String)
 MinecraftServer_getSessionService->MMinecraftServer$ay()
 MinecraftServer_getEntityByUID->MMinecraftServer$a(java.util.UUID)
 
+PacketPlayInUseEntity_getAction->MPacketPlayInUseEntity$a()
+
 PacketPlayOutNamedSoundEffect_pitch->FPacketPlayOutNamedSoundEffect$g
 PacketPlayOutNamedSoundEffect_soundCategory->FPacketPlayOutNamedSoundEffect$b
 PacketPlayOutNamedSoundEffect_volume->FPacketPlayOutNamedSoundEffect$f
@@ -101,5 +104,4 @@ RegistryMaterials_getValue->MRegistryMaterials$get(java.lang.Object)
 SoundEffect->C{nms}.SoundEffect
 SoundEffect_registry->FSoundEffect$a
 
-World_findNearbyPlayer->MWorld$a(double,double,double,double,boolean)
 World_getEntityById->MWorld$getEntity(int)

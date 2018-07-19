@@ -10,7 +10,7 @@ import de.robingrether.idisguise.management.util.EntityIdList;
 
 public class VersionHelper {
 	
-	public static final List<String> VERSIONS = Arrays.asList("v1_8_R1", "v1_8_R2", "v1_8_R3", "v1_9_R1", "v1_9_R2", "v1_10_R1", "v1_11_R1", "v1_12_R1");
+	public static final List<String> VERSIONS = Arrays.asList("v1_8_R1", "v1_8_R2", "v1_8_R3", "v1_9_R1", "v1_9_R2", "v1_10_R1", "v1_11_R1", "v1_12_R1", "v1_13_R1");
 	public static final String EARLIEST = VERSIONS.get(0);
 	
 	private static boolean initialized = false;
@@ -83,7 +83,7 @@ public class VersionHelper {
 			require1_10 = requireVersion("v1_10_R1");
 			require1_11 = requireVersion("v1_11_R1");
 			require1_12 = requireVersion("v1_12_R1");
-			require1_13 = false; // TODO
+			require1_13 = requireVersion("v1_13_R1");
 			
 			Reflection.load("reflection/common.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
 			Reflection.load("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);

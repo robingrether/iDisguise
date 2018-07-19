@@ -239,6 +239,8 @@ public class iDisguise extends JavaPlugin {
 							}
 						} else if(args[0].matches("\\{[A-Za-z0-9_]{1,16}\\}")) {
 							disguisable = getServer().getOfflinePlayer(args[0].substring(1, args[0].length() - 1));
+						//} else if(args[0].startsWith("@")) {
+							// TODO: rework selector
 						} else if(getServer().getPlayerExact(args[0]) != null) {
 							disguisable = getServer().getPlayerExact(args[0]);
 						} else if(getServer().matchPlayer(args[0]).size() == 1) {

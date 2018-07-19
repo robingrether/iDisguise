@@ -95,10 +95,10 @@ public final class PacketHandler {
 				}
 				
 				if(showOriginalPlayerName) {
-					Entity_setCustomName.invoke(entity, livingEntity.getName());
+					Entity_setCustomName.invoke(entity, VersionHelper.require1_13() ? Array.get(CraftChatMessage_fromString.invoke(null, livingEntity.getName()), 0) : livingEntity.getName());
 					Entity_setCustomNameVisible.invoke(entity, true);
 				} else if(mobDisguise.getCustomName() != null && !mobDisguise.getCustomName().isEmpty()) {
-					Entity_setCustomName.invoke(entity, mobDisguise.getCustomName());
+					Entity_setCustomName.invoke(entity, VersionHelper.require1_13() ? Array.get(CraftChatMessage_fromString.invoke(null, mobDisguise.getCustomName()), 0) : mobDisguise.getCustomName());
 					Entity_setCustomNameVisible.invoke(entity, mobDisguise.isCustomNameVisible());
 				}
 				
@@ -228,10 +228,10 @@ public final class PacketHandler {
 				Entity_setLocation.invoke(entity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 				Entity_setEntityId.invoke(entity, livingEntity.getEntityId());
 				if(showOriginalPlayerName) {
-					Entity_setCustomName.invoke(entity, livingEntity.getName());
+					Entity_setCustomName.invoke(entity, VersionHelper.require1_13() ? Array.get(CraftChatMessage_fromString.invoke(null, livingEntity.getName()), 0) : livingEntity.getName());
 					Entity_setCustomNameVisible.invoke(entity, true);
 				} else if(objectDisguise.getCustomName() != null && !objectDisguise.getCustomName().isEmpty()) {
-					Entity_setCustomName.invoke(entity, objectDisguise.getCustomName());
+					Entity_setCustomName.invoke(entity, VersionHelper.require1_13() ? Array.get(CraftChatMessage_fromString.invoke(null, objectDisguise.getCustomName()), 0) : objectDisguise.getCustomName());
 					Entity_setCustomNameVisible.invoke(entity, objectDisguise.isCustomNameVisible());
 				}
 				if(EntityBoat.isInstance(entity)) {
