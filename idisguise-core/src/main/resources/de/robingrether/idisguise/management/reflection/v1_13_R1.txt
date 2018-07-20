@@ -35,9 +35,18 @@ EntityMinecartAbstract_setDisplayBlock->MEntityMinecartAbstract$setDisplayBlock(
 EntityParrot->C{nms}.EntityParrot
 EntityParrot_setVariant->MEntityParrot$setVariant(int)
 
+EntityPhantom->C{nms}.EntityPhantom
+EntityPhantom_setSize->MEntityPhantom$setSize(int)
+
+EntityPufferFish->C{nms}.EntityPufferFish
+EntityPufferFish_setPuffState->MEntityPufferFish$setPuffState(int)
+
 EntityRabbit_setRabbitType->MEntityRabbit$setRabbitType(int)
 
 EntitySlime_setSize->MEntitySlime$setSize(int,boolean)
+
+EntityTropicalFish->C{nms}.EntityTropicalFish
+EntityTropicalFish_setVariant->MEntityTropicalFish$setVariant(int)
 
 EntityZombieVillager->C{nms}.EntityZombieVillager
 EntityZombieVillager_setProfession->MEntityZombieVillager$setProfession(int)

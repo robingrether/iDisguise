@@ -48,11 +48,14 @@ permissions:
          iDisguise.mob.blaze: true
          iDisguise.mob.cave_spider: true
          iDisguise.mob.chicken: true
+         iDisguise.mob.cod: true
          iDisguise.mob.cow: true
          iDisguise.mob.creeper: true
          iDisguise.mob.creeper.powered: true
          iDisguise.mob.custom-name: true
+         iDisguise.mob.dolphin: true
          iDisguise.mob.donkey: true
+         iDisguise.mob.drowned: true
          iDisguise.mob.elder_guardian: true
          iDisguise.mob.ender_dragon: true
          iDisguise.mob.enderman: true
@@ -75,12 +78,16 @@ permissions:
          iDisguise.mob.ocelot.type.*: true
          iDisguise.mob.parrot: true
          iDisguise.mob.parrot.variant.*: true
+         iDisguise.mob.phantom: true
+         iDisguise.mob.phantom.giant: true
          iDisguise.mob.pig: true
          iDisguise.mob.pig.saddled: true
          iDisguise.mob.pig_zombie: true
          iDisguise.mob.polar_bear: true
+         iDisguise.mob.pufferfish: true
          iDisguise.mob.rabbit: true
          iDisguise.mob.rabbit.type.*: true
+         iDisguise.mob.salmon: true
          iDisguise.mob.sheep: true
          iDisguise.mob.sheep.color.*: true
          iDisguise.mob.shulker: true
@@ -93,6 +100,8 @@ permissions:
          iDisguise.mob.spider: true
          iDisguise.mob.squid: true
          iDisguise.mob.stray: true
+         iDisguise.mob.tropical_fish: true
+         iDisguise.mob.turtle: true
          iDisguise.mob.undead_horse: true
          iDisguise.mob.vex: true
          iDisguise.mob.villager: true
@@ -117,6 +126,8 @@ permissions:
       default: op
    iDisguise.mob.chicken:
       default: op
+   iDisguise.mob.cod:
+      default: op
    iDisguise.mob.cow:
       default: op
    iDisguise.mob.creeper:
@@ -125,7 +136,11 @@ permissions:
       default: op
    iDisguise.mob.custom-name:
       default: op
+   iDisguise.mob.dolphin:
+      default: op
    iDisguise.mob.donkey:
+      default: op
+   iDisguise.mob.drowned:
       default: op
    iDisguise.mob.elder_guardian:
       default: op
@@ -204,6 +219,10 @@ permissions:
       default: op
    iDisguise.mob.parrot.variant.red:
       default: op
+   iDisguise.mob.phantom:
+      default: op
+   iDisguise.mob.phantom.giant:
+      default: op
    iDisguise.mob.pig:
       default: op
    iDisguise.mob.pig.saddled:
@@ -211,6 +230,8 @@ permissions:
    iDisguise.mob.pig_zombie:
       default: op
    iDisguise.mob.polar_bear:
+      default: op
+   iDisguise.mob.pufferfish:
       default: op
    iDisguise.mob.rabbit:
       default: op
@@ -239,6 +260,8 @@ permissions:
    iDisguise.mob.rabbit.type.killer:
       default: op
    iDisguise.mob.rabbit.type.white:
+      default: op
+   iDisguise.mob.salmon:
       default: op
    iDisguise.mob.sheep:
       default: op
@@ -314,6 +337,10 @@ permissions:
    iDisguise.mob.squid:
       default: op
    iDisguise.mob.stray:
+      default: op
+   iDisguise.mob.tropical_fish:
+      default: op
+   iDisguise.mob.turtle:
       default: op
    iDisguise.mob.undead_horse:
       default: op

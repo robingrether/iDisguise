@@ -342,6 +342,15 @@ public class Reflection {
 	public static Class<?> CraftBlockData;
 	public static Method CraftBlockData_getHandle;
 	
+	public static Class<?> EntityPhantom;
+	public static Method EntityPhantom_setSize;
+	
+	public static Class<?> EntityPufferFish;
+	public static Method EntityPufferFish_setPuffState;
+	
+	public static Class<?> EntityTropicalFish;
+	public static Method EntityTropicalFish_setVariant;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");

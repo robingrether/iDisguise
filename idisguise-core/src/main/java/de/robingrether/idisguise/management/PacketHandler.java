@@ -176,11 +176,21 @@ public final class PacketHandler {
 					EntityParrot_setVariant.invoke(entity, parrotDisguise.getVariant().ordinal());
 					EntityTameableAnimal_setSitting.invoke(entity, parrotDisguise.isSitting());
 				} else if(mobDisguise instanceof SizedDisguise) {
-					if(VersionHelper.require1_11()) {
-						EntitySlime_setSize.invoke(entity, ((SizedDisguise)mobDisguise).getSize(), false);
+					if(mobDisguise.getType().equals(DisguiseType.PHANTOM)) {
+						EntityPhantom_setSize.invoke(entity, ((SizedDisguise)mobDisguise).getSize());
 					} else {
-						EntitySlime_setSize.invoke(entity, ((SizedDisguise)mobDisguise).getSize());
+						if(VersionHelper.require1_11()) {
+							EntitySlime_setSize.invoke(entity, ((SizedDisguise)mobDisguise).getSize(), false);
+						} else {
+							EntitySlime_setSize.invoke(entity, ((SizedDisguise)mobDisguise).getSize());
+						}
 					}
+				} else if(mobDisguise instanceof PufferfishDisguise) {
+					EntityPufferFish_setPuffState.invoke(entity, ((PufferfishDisguise)mobDisguise).getPuffState().ordinal());
+				} else if(mobDisguise instanceof TropicalFishDisguise) {
+					TropicalFishDisguise tfDisguise = (TropicalFishDisguise)mobDisguise;
+					int variant = tfDisguise.getPatternColor().getWoolData() << 24 | tfDisguise.getBodyColor().getWoolData() << 16 | tfDisguise.getPattern().getData();
+					EntityTropicalFish_setVariant.invoke(entity, variant);
 				}
 				
 				if(EntityBat.isInstance(entity)) {

@@ -917,6 +917,8 @@ public class iDisguise extends JavaPlugin {
 							return (((SizedDisguise)disguise).getSize() < 5 || sender.hasPermission("iDisguise.mob.magma_cube.giant"));
 						case PARROT:
 							return sender.hasPermission("iDisguise.mob.parrot.variant." + ((ParrotDisguise)disguise).getVariant().name().toLowerCase(Locale.ENGLISH));
+						case PHANTOM:
+							return (((SizedDisguise)disguise).getSize() < 1 || sender.hasPermission("iDisguise.mob.phantom.giant"));
 						case SLIME:
 							return (((SizedDisguise)disguise).getSize() < 5 || sender.hasPermission("iDisguise.mob.slime.giant"));
 						default:

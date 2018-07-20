@@ -24,12 +24,12 @@ public enum DisguiseType {
 	BLAZE(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityBlaze", "MHF_Blaze"),
 	CAVE_SPIDER(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityCaveSpider", "MHF_CaveSpider"),
 	CHICKEN(Type.MOB, VersionHelper.EARLIEST, AgeableDisguise.class, "EntityChicken", "MHF_Chicken"),
-	// COD(Type.MOB, "v1_13_R1", MobDisguise.class, "EntityCod"),
+	COD(Type.MOB, "v1_13_R1", MobDisguise.class, "EntityCod"), // TODO: sound effects
 	COW(Type.MOB, VersionHelper.EARLIEST, AgeableDisguise.class, "EntityCow", "MHF_Cow"),
 	CREEPER(Type.MOB, VersionHelper.EARLIEST, CreeperDisguise.class, "EntityCreeper", "MHF_Creeper"),
-	// DOLPHIN(Type.MOB, "v1_13_R1", MobDisguise.class, "EntityDolphin"),
+	DOLPHIN(Type.MOB, "v1_13_R1", MobDisguise.class, "EntityDolphin"), // TODO: sound effects
 	DONKEY(Type.MOB, VersionHelper.EARLIEST, ChestedHorseDisguise.class, "EntityHorseDonkey"),
-	// DROWNED(Type.MOB, "v1_13_R1", AgeableDisguise.class, "EntityDrowned"),
+	DROWNED(Type.MOB, "v1_13_R1", AgeableDisguise.class, "EntityDrowned"), // TODO: sound effects
 	ELDER_GUARDIAN(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityGuardianElder", "MHF_EGuardian"),
 	ENDER_DRAGON(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntityEnderDragon", "MHF_EnderDragon"),
 	ENDERMAN(Type.MOB, VersionHelper.EARLIEST, EndermanDisguise.class, "EntityEnderman", "MHF_Enderman"),
@@ -48,13 +48,13 @@ public enum DisguiseType {
 	MUSHROOM_COW(Type.MOB, VersionHelper.EARLIEST, AgeableDisguise.class, "EntityMushroomCow", "MHF_MushroomCow"),
 	OCELOT(Type.MOB, VersionHelper.EARLIEST, OcelotDisguise.class, "EntityOcelot", "MHF_Ocelot"),
 	PARROT(Type.MOB, "v1_12_R1", ParrotDisguise.class, "EntityParrot", "MHF_Parrot"),
-	// PHANTOM(Type.MOB, "v1_13_R1", SizedDisguise.class, "EntityPhantom"), // TODO: size
+	PHANTOM(Type.MOB, "v1_13_R1", SizedDisguise.class, "EntityPhantom"), // TODO: sound effects
 	PIG(Type.MOB, VersionHelper.EARLIEST, PigDisguise.class, "EntityPig", "MHF_Pig"),
 	PIG_ZOMBIE(Type.MOB, VersionHelper.EARLIEST, AgeableDisguise.class, "EntityPigZombie", "MHF_PigZombie"),
 	POLAR_BEAR(Type.MOB, "v1_10_R1", AgeableDisguise.class, "EntityPolarBear"),
-	// PUFFERFISH(Type.MOB, "v1_13_R1", MobDisguise.class, "EntityPufferFish"), // TODO: puff state
+	PUFFERFISH(Type.MOB, "v1_13_R1", PufferfishDisguise.class, "EntityPufferFish"), // TODO: sound effects
 	RABBIT(Type.MOB, VersionHelper.EARLIEST, RabbitDisguise.class, "EntityRabbit", "MHF_Rabbit"),
-	// SALMON(Type.MOB, "v1_13_R1", MobDisguise.class, "EntitySalmon"),
+	SALMON(Type.MOB, "v1_13_R1", MobDisguise.class, "EntitySalmon"), // TODO: sound effects
 	SHEEP(Type.MOB, VersionHelper.EARLIEST, SheepDisguise.class, "EntitySheep", "MHF_Sheep"),
 	SHULKER(Type.MOB, "v1_9_R1", MobDisguise.class, "EntityShulker", "MHF_Shulker"),
 	SILVERFISH(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntitySilverfish"),
@@ -65,8 +65,8 @@ public enum DisguiseType {
 	SPIDER(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntitySpider", "MHF_Spider"),
 	SQUID(Type.MOB, VersionHelper.EARLIEST, MobDisguise.class, "EntitySquid", "MHF_Squid"),
 	STRAY(Type.MOB, "v1_10_R1", MobDisguise.class, "EntitySkeletonStray", "MHF_Stray"),
-	// TROPICAL_FISH(Type.MOB, "v1_13_R1", MobDisguise.class, "EntityTropicalFish"), // TODO: color & variant
-	// TURTLE(Type.MOB, "v1_13_R1", AgeableDisguise.class, "EntityTurtle"),
+	TROPICAL_FISH(Type.MOB, "v1_13_R1", TropicalFishDisguise.class, "EntityTropicalFish"), // TODO: sound effects
+	TURTLE(Type.MOB, "v1_13_R1", AgeableDisguise.class, "EntityTurtle"), // TODO: sound effects
 	UNDEAD_HORSE(Type.MOB, VersionHelper.EARLIEST, HorseDisguise.class, "EntityHorseZombie"),
 	VEX(Type.MOB, "v1_11_R1", MobDisguise.class, "EntityVex", "MHF_Vex"),
 	VILLAGER(Type.MOB, VersionHelper.EARLIEST, VillagerDisguise.class, "EntityVillager", "MHF_Villager"),

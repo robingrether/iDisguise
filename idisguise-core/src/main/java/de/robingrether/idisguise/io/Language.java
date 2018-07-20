@@ -94,9 +94,12 @@ public class Language {
 	public String DISGUISE_ALIAS_BLAZE = "";
 	public String DISGUISE_ALIAS_CAVE_SPIDER = "cavespider, bluespider, blue-spider";
 	public String DISGUISE_ALIAS_CHICKEN = "chick";
+	public String DISGUISE_ALIAS_COD = "";
 	public String DISGUISE_ALIAS_COW = "cattle, ox";
 	public String DISGUISE_ALIAS_CREEPER = "";
+	public String DISGUISE_ALIAS_DOLPHIN = "";
 	public String DISGUISE_ALIAS_DONKEY = "";
+	public String DISGUISE_ALIAS_DROWNED = "";
 	public String DISGUISE_ALIAS_ELDER_GUARDIAN = "";
 	public String DISGUISE_ALIAS_ENDER_DRAGON = "";
 	public String DISGUISE_ALIAS_ENDERMAN = "endermen";
@@ -115,10 +118,13 @@ public class Language {
 	public String DISGUISE_ALIAS_MUSHROOM_COW = "mushroom-cow, mooshroom";
 	public String DISGUISE_ALIAS_OCELOT = "cat";
 	public String DISGUISE_ALIAS_PARROT = "";
+	public String DISGUISE_ALIAS_PHANTOM = "";
 	public String DISGUISE_ALIAS_PIG = "";
 	public String DISGUISE_ALIAS_PIG_ZOMBIE = "pigzombie, pigman, pigmen";
 	public String DISGUISE_ALIAS_POLAR_BEAR = "polarbear, bear";
+	public String DISGUISE_ALIAS_PUFFERFISH = "puffer-fish";
 	public String DISGUISE_ALIAS_RABBIT = "bunny";
+	public String DISGUISE_ALIAS_SALMON = "";
 	public String DISGUISE_ALIAS_SHEEP = "";
 	public String DISGUISE_ALIAS_SHULKER = "";
 	public String DISGUISE_ALIAS_SILVERFISH = "";
@@ -129,6 +135,8 @@ public class Language {
 	public String DISGUISE_ALIAS_SPIDER = "";
 	public String DISGUISE_ALIAS_SQUID = "";
 	public String DISGUISE_ALIAS_STRAY = "";
+	public String DISGUISE_ALIAS_TROPICAL_FISH = "tropicalfish";
+	public String DISGUISE_ALIAS_TURTLE = "";
 	public String DISGUISE_ALIAS_UNDEAD_HORSE = "undeadhorse, zombie-horse, zombiehorse";
 	public String DISGUISE_ALIAS_VEX = "";
 	public String DISGUISE_ALIAS_VILLAGER = "";
