@@ -128,7 +128,7 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	}
 	
 	public boolean setMaterialData(String materialData) {
-		Material material = Material.matchMaterial(materialData);
+		Material material = Material.matchMaterial(materialData.replace('-', '_'));
 		if(material != null) {
 			setMaterialData(material);
 			return true;
@@ -214,7 +214,7 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	 */
 	public String toString() {
 		if(VersionHelper.require1_13()) {
-			return String.format("%s; material=%s; %s", super.toString(), materialData, onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
+			return String.format("%s; material=%s; %s", super.toString(), ((BlockData)materialData).getAsString(), onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
 		} else {
 			return String.format("%s; material=%s; material-data=%s; %s", super.toString(), material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), materialData, onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
 		}

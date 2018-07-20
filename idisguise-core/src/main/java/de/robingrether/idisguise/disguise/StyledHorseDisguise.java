@@ -1,6 +1,8 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Represents a disguise as a normal horse that can be 'styled'.
@@ -12,6 +14,7 @@ public class StyledHorseDisguise extends HorseDisguise {
 	
 	private Style style;
 	private Color color;
+	private Armor armor;
 	
 	/**
 	 * Creates an instance.
@@ -28,9 +31,10 @@ public class StyledHorseDisguise extends HorseDisguise {
 	 * @since 5.5.1
 	 */
 	public StyledHorseDisguise(boolean adult, Style style, Color color, boolean saddled, Armor armor) {
-		super(DisguiseType.HORSE, adult, saddled, armor);
+		super(DisguiseType.HORSE, adult, saddled);
 		this.style = style;
 		this.color = color;
+		this.armor = armor;
 	}
 	
 	/**
@@ -62,21 +66,53 @@ public class StyledHorseDisguise extends HorseDisguise {
 	}
 	
 	/**
+	 * @since 5.8.1
+	 */
+	public Armor getArmor() {
+		return armor;
+	}
+	
+	/**
+	 * @since 5.8.1
+	 */
+	public void setArmor(Armor armor) {
+		this.armor = armor;
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return String.format("%s; %s; %s", super.toString(),
-				style.name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings"),
-				color.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+		return String.format("%s; pattern=%s; color=%s; armor=%s", super.toString(),
+				style.name().toLowerCase(Locale.ENGLISH).replace('_', '-'),
+				color.name().toLowerCase(Locale.ENGLISH).replace('_', '-'),
+				armor.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 	}
 	
 	static {
+		Set<String> parameterSuggestions = new HashSet<String>();
 		for(Style style : Style.values()) {
-			Subtypes.registerSubtype(StyledHorseDisguise.class, "setStyle", style, style.name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings"));
+			parameterSuggestions.add(style.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
+		Subtypes.registerParameterizedSubtype(StyledHorseDisguise.class, "setStyle", "pattern", Style.class, parameterSuggestions);
+//		for(Style style : Style.values()) {
+//			Subtypes.registerSubtype(StyledHorseDisguise.class, "setStyle", style, style.name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings"));
+//		}
+		
+		parameterSuggestions = new HashSet<String>();
 		for(Color color : Color.values()) {
-			Subtypes.registerSubtype(StyledHorseDisguise.class, "setColor", color, color.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+			parameterSuggestions.add(color.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
+		Subtypes.registerParameterizedSubtype(StyledHorseDisguise.class, "setColor", "color", Color.class, parameterSuggestions);
+//		for(Color color : Color.values()) {
+//			Subtypes.registerSubtype(StyledHorseDisguise.class, "setColor", color, color.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+//		}
+		
+		parameterSuggestions = new HashSet<String>();
+		for(Armor armor : Armor.values()) {
+			parameterSuggestions.add(armor.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+		}
+		Subtypes.registerParameterizedSubtype(StyledHorseDisguise.class, "setArmor", "armor", Armor.class, parameterSuggestions);
 	}
 	
 	/**

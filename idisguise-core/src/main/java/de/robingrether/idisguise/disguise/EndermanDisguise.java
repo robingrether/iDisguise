@@ -124,7 +124,7 @@ public class EndermanDisguise extends MobDisguise {
 	 * @throws IllegalArgumentException The parsed block is not a valid.
 	 */
 	public boolean setCarriedBlock(String carriedBlock) {
-		Material material = Material.matchMaterial(carriedBlock);
+		Material material = Material.matchMaterial(carriedBlock.replace('-', '_'));
 		if(material != null) {
 			setCarriedBlock(material);
 			return true;
@@ -196,7 +196,7 @@ public class EndermanDisguise extends MobDisguise {
 	 */
 	public String toString() {
 		if(VersionHelper.require1_13()) {
-			return String.format("%s; carried-block=%s", super.toString(), blockData);
+			return String.format("%s; carried-block=%s", super.toString(), ((BlockData)blockData).getAsString());
 		} else {
 			return String.format("%s; block=%s; block-data=%s", super.toString(), carriedBlock.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), blockData);
 		}

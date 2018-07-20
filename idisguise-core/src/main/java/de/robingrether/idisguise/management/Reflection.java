@@ -160,6 +160,7 @@ public class Reflection {
 	public static Method EntityHorse_setVariant;
 	public static Method EntityHorse_setHasChest;
 	public static Field EntityHorse_inventoryChest;
+	public static Method EntityHorse_setArmor;
 	
 	public static Class<?> EntityHorseAbstract;
 	public static Field EntityHorseAbstract_inventoryChest;

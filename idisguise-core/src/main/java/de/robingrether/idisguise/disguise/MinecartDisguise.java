@@ -101,7 +101,7 @@ public class MinecartDisguise extends ObjectDisguise {
 	}
 	
 	public boolean setDisplayedBlock(String displayedBlock) {
-		Material material = Material.matchMaterial(displayedBlock);
+		Material material = Material.matchMaterial(displayedBlock.replace('-', '_'));
 		if(material != null) {
 			setDisplayedBlock((Object)material);
 			return true;
@@ -164,7 +164,7 @@ public class MinecartDisguise extends ObjectDisguise {
 	 */
 	public String toString() {
 		if(VersionHelper.require1_13()) {
-			return String.format("%s; displayed-block=%s", super.toString(), blockData);
+			return String.format("%s; displayed-block=%s", super.toString(), ((BlockData)blockData).getAsString());
 		} else {
 			return String.format("%s; block=%s; block-data=%s", super.toString(), displayedBlock.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), blockData);
 		}

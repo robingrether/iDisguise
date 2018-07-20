@@ -115,9 +115,13 @@ public final class PacketHandler {
 						HorseDisguise horseDisguise = (HorseDisguise)mobDisguise;
 						Object inventoryChest = VersionHelper.require1_11() ? EntityHorseAbstract_inventoryChest.get(entity) : EntityHorse_inventoryChest.get(entity);
 						InventorySubcontainer_setItem.invoke(inventoryChest, 0, CraftItemStack_asNMSCopy.invoke(null, horseDisguise.isSaddled() ? new ItemStack(Material.SADDLE) : null));
-						InventorySubcontainer_setItem.invoke(inventoryChest, 1, CraftItemStack_asNMSCopy.invoke(null, horseDisguise.getArmor().getItem()));
 						if(horseDisguise instanceof StyledHorseDisguise) {
 							EntityHorse_setVariant.invoke(entity, ((StyledHorseDisguise)horseDisguise).getColor().ordinal() & 0xFF | ((StyledHorseDisguise)horseDisguise).getStyle().ordinal() << 8);
+							if(VersionHelper.require1_13()) {
+								EntityHorse_setArmor.invoke(entity, CraftItemStack_asNMSCopy.invoke(null, horseDisguise.getArmor().getItem()));
+							} else {
+								InventorySubcontainer_setItem.invoke(inventoryChest, 1, CraftItemStack_asNMSCopy.invoke(null, horseDisguise.getArmor().getItem()));
+							}
 						} else if(horseDisguise instanceof ChestedHorseDisguise) {
 							if(VersionHelper.require1_11()) {
 								EntityHorseChestedAbstract_setCarryingChest.invoke(entity, ((ChestedHorseDisguise)horseDisguise).hasChest());
@@ -262,7 +266,7 @@ public final class PacketHandler {
 					if(objectDisguise instanceof MinecartDisguise) {
 						MinecartDisguise minecartDisguise = (MinecartDisguise)objectDisguise;
 						if(VersionHelper.require1_13()) {
-							EntityMinecartAbstract_setDisplayBlock.invoke(entity, Block_getCombinedId.invoke(null, CraftBlockData_getHandle.invoke(minecartDisguise.getBlockData())));
+							EntityMinecartAbstract_setDisplayBlock.invoke(entity, CraftBlockData_getHandle.invoke(minecartDisguise.getBlockData()));
 						} else {
 							EntityMinecartAbstract_setDisplayBlock.invoke(entity, Block_fromLegacyData.invoke(Block_getById.invoke(null, minecartDisguise.getDisplayedBlock().getId()), minecartDisguise.getDisplayedBlockData()));
 						}

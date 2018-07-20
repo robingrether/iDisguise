@@ -19,6 +19,8 @@ EntityAreaEffectCloud_setRadius->MEntityAreaEffectCloud$setRadius(float)
 
 EntityBoat_setType->MEntityBoat$setType({nms}.EntityBoat$EnumBoatType)
 
+EntityHorse_setArmor->MEntityHorse$h({nms}.ItemStack)
+
 EntityHorseAbstract->C{nms}.EntityHorseAbstract
 EntityHorseAbstract_inventoryChest->FEntityHorseAbstract$inventoryChest
 

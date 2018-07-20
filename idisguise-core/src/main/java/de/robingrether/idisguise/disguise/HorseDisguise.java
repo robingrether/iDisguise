@@ -1,9 +1,9 @@
 package de.robingrether.idisguise.disguise;
 
-import java.util.Locale;
-
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+
+import de.robingrether.idisguise.management.VersionHelper;
 
 import de.robingrether.util.ObjectUtil;
 
@@ -16,7 +16,6 @@ import de.robingrether.util.ObjectUtil;
 public class HorseDisguise extends AgeableDisguise {
 	
 	private boolean saddled;
-	private Armor armor;
 	
 	/**
 	 * Creates an instance.
@@ -26,26 +25,34 @@ public class HorseDisguise extends AgeableDisguise {
 	 * @throws IllegalArgumentException the given disguise type is not some sort of horse
 	 */
 	public HorseDisguise(DisguiseType type) {
-		this(type, true, false, Armor.NONE);
+		this(type, true, false);
 	}
 	
 	/**
 	 * Creates an instance.
 	 * 
 	 * @since 5.5.1
-	 * @param type the disguise type to use
-	 * @param adult whether the disguise shall appear as an adult or as a baby
-	 * @param saddled whether the disguise shall carry a saddle
-	 * @param armor the type of horse armor the disguise shall wear
+	 * @throws IllegalArgumentException the given disguise type is not some sort of horse
+	 * 
+	 * @deprecated Only {@linkplain StyledHorseDisguise} supports {@linkplain Armor}.
+	 */
+	@Deprecated
+	public HorseDisguise(DisguiseType type, boolean adult, boolean saddled, Armor armor) {
+		this(type, adult, saddled);
+	}
+	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 5.8.1
 	 * @throws IllegalArgumentException the given disguise type is not some sort of horse
 	 */
-	public HorseDisguise(DisguiseType type, boolean adult, boolean saddled, Armor armor) {
+	public HorseDisguise(DisguiseType type, boolean adult, boolean saddled) {
 		super(type, adult);
 		if(!ObjectUtil.equals(type, DisguiseType.DONKEY, DisguiseType.HORSE, DisguiseType.MULE, DisguiseType.SKELETAL_HORSE, DisguiseType.UNDEAD_HORSE)) {
 			throw new IllegalArgumentException();
 		}
 		this.saddled = saddled;
-		this.armor = armor;
 	}
 	
 	/**
@@ -69,23 +76,23 @@ public class HorseDisguise extends AgeableDisguise {
 	}
 	
 	/**
-	 * Gets the armor.
-	 * 
 	 * @since 3.0.3
-	 * @return the armor
+	 * 
+	 * @deprecated Only {@linkplain StyledHorseDisguise} supports {@linkplain Armor}.
 	 */
+	@Deprecated
 	public Armor getArmor() {
-		return armor;
+		throw new UnsupportedOperationException();
 	}
 	
 	/**
-	 * Sets the armor.
-	 * 
 	 * @since 3.0.3
-	 * @param armor the armor
+	 * 
+	 * @deprecated Only {@linkplain StyledHorseDisguise} supports {@linkplain Armor}.
 	 */
+	@Deprecated
 	public void setArmor(Armor armor) {
-		this.armor = armor;
+		throw new UnsupportedOperationException();
 	}
 	
 	/**
@@ -106,15 +113,12 @@ public class HorseDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return String.format("%s; %s; %s", super.toString(), saddled ? "saddled" : "not-saddled", armor.name().toLowerCase(Locale.ENGLISH).replace("none", "no-armor"));
+		return String.format("%s; %s", super.toString(), saddled ? "saddled" : "not-saddled");
 	}
 	
 	static {
 		Subtypes.registerSubtype(HorseDisguise.class, "setSaddled", true, "saddled");
 		Subtypes.registerSubtype(HorseDisguise.class, "setSaddled", false, "not-saddled");
-		for(Armor armor : Armor.values()) {
-			Subtypes.registerSubtype(HorseDisguise.class, "setArmor", armor, armor.name().toLowerCase(Locale.ENGLISH).replace("none", "no-armor"));
-		}
 	}
 	
 	/**
@@ -125,15 +129,15 @@ public class HorseDisguise extends AgeableDisguise {
 	 */
 	public enum Armor {
 		
-		IRON("IRON_BARDING"),
-		GOLD("GOLD_BARDING"),
-		DIAMOND("DIAMOND_BARDING"),
-		NONE(null);
+		IRON(VersionHelper.require1_13() ? "IRON_HORSE_ARMOR" : "IRON_BARDING"),
+		GOLD(VersionHelper.require1_13() ? "GOLDEN_HORSE_ARMOR" : "GOLD_BARDING"),
+		DIAMOND(VersionHelper.require1_13() ? "DIAMOND_HORSE_ARMOR" : "DIAMOND_BARDING"),
+		NONE("AIR");
 		
-		private String item;
+		private Material item;
 		
 		private Armor(String item) {
-			this.item = item;
+			this.item = Material.getMaterial(item);
 		}
 		
 		/**
@@ -143,7 +147,7 @@ public class HorseDisguise extends AgeableDisguise {
 		 * @return the associated item stack
 		 */
 		public ItemStack getItem() {
-			return Material.getMaterial(item) == null ? null : new ItemStack(Material.getMaterial(item), 1);
+			return new ItemStack(item, 1);
 		}
 		
 	}
