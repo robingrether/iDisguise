@@ -1,6 +1,8 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import org.bukkit.DyeColor;
 
@@ -152,18 +154,20 @@ public class WolfDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return String.format("%s; %s; %s; %s", super.toString(), state.name().toLowerCase(Locale.ENGLISH), collarColor.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), sitting ? "sitting" : "not-sitting");
+		return String.format("%s; %s; collar=%s; %s", super.toString(), state.name().toLowerCase(Locale.ENGLISH), collarColor.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), sitting ? "sitting" : "not-sitting");
 	}
 	
 	static {
 		for(State state : State.values()) {
 			Subtypes.registerSubtype(WolfDisguise.class, "setState", state, state.name().toLowerCase(Locale.ENGLISH));
 		}
-		Subtypes.registerSubtype(WolfDisguise.class, "setState", State.NORMAL, "not-tamed"); // legacy support
-		Subtypes.registerSubtype(WolfDisguise.class, "setState", State.NORMAL, "not-angry"); // legacy support
+		
+		Set<String> parameterSuggestions = new HashSet<String>();
 		for(DyeColor collarColor : DyeColor.values()) {
-			Subtypes.registerSubtype(WolfDisguise.class, "setCollarColor", collarColor, collarColor.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+			parameterSuggestions.add(collarColor.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
+		Subtypes.registerParameterizedSubtype(WolfDisguise.class, "setCollarColor", "collar", DyeColor.class, parameterSuggestions);
+		
 		Subtypes.registerSubtype(WolfDisguise.class, "setSitting", true, "sitting");
 		Subtypes.registerSubtype(WolfDisguise.class, "setSitting", false, "not-sitting");
 	}

@@ -1,6 +1,8 @@
 package de.robingrether.idisguise.disguise;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -25,7 +27,7 @@ public class LlamaDisguise extends AgeableDisguise {
 	 * @since 5.5.1
 	 */
 	public LlamaDisguise() {
-		this(true, Color.CREAMY, SaddleColor.NOT_SADDLED, false);
+		this(true, Color.CREAMY, SaddleColor.NONE, false);
 	}
 	
 	/**
@@ -104,16 +106,22 @@ public class LlamaDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return String.format("%s; %s; %s; %s", super.toString(), color.name().toLowerCase(Locale.ENGLISH), saddle.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), hasChest ? "chest" : "no-chest");
+		return String.format("%s; color=%s; saddle=%s; %s", super.toString(), color.name().toLowerCase(Locale.ENGLISH), saddle.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), hasChest ? "chest" : "no-chest");
 	}
 	
 	static {
+		Set<String> parameterSuggestions = new HashSet<String>();
 		for(Color color : Color.values()) {
-			Subtypes.registerSubtype(LlamaDisguise.class, "setColor", color, color.name().toLowerCase(Locale.ENGLISH));
+			parameterSuggestions.add(color.name().toLowerCase(Locale.ENGLISH));
 		}
+		Subtypes.registerParameterizedSubtype(LlamaDisguise.class, "setColor", "color", Color.class, parameterSuggestions);
+		
+		parameterSuggestions = new HashSet<String>();
 		for(SaddleColor saddle : SaddleColor.values()) {
-			Subtypes.registerSubtype(LlamaDisguise.class, "setSaddle", saddle, saddle.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+			parameterSuggestions.add(saddle.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
+		Subtypes.registerParameterizedSubtype(LlamaDisguise.class, "setSaddleColor", "saddle", SaddleColor.class, parameterSuggestions);
+		
 		Subtypes.registerSubtype(LlamaDisguise.class, "setHasChest", true, "chest");
 		Subtypes.registerSubtype(LlamaDisguise.class, "setHasChest", false, "no-chest");
 	}
@@ -135,7 +143,7 @@ public class LlamaDisguise extends AgeableDisguise {
 	
 	/**
 	 * Different saddle colors a llama can have.<br>
-	 * {@linkplain SaddleColor#NOT_SADDLED} means no saddle is shown.
+	 * {@linkplain SaddleColor#NONE} means no saddle is shown.
 	 * 
 	 * @since 5.5.1
 	 * @author RobinGrether
@@ -158,13 +166,13 @@ public class LlamaDisguise extends AgeableDisguise {
 		GREEN,
 		RED,
 		BLACK,
-		NOT_SADDLED;
+		NONE;
 		
 		/**
 		 * @since 5.8.1
 		 */
 		public ItemStack getItem() {
-			if(this == NOT_SADDLED) return null;
+			if(this == NONE) return null;
 			
 			if(VersionHelper.require1_13()) {
 				return new ItemStack(Material.valueOf(name() + "_CARPET"), 1);

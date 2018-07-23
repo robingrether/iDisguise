@@ -1,9 +1,14 @@
 package de.robingrether.idisguise.disguise;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Color;
 import org.bukkit.Particle;
@@ -85,6 +90,34 @@ public class AreaEffectCloudDisguise extends ObjectDisguise {
 	}
 	
 	/**
+	 * Match a default color from {@linkplain org.bukkit.Color} or parse the given string to an integer (RGB value).
+	 * 
+	 * @since 5.8.1
+	 * @return <code>true</code>, if a matching color (default or RGB) has been found and applied, <code>false</code> otherwise
+	 */
+	public boolean setColor(String color) {
+		if(defaultColors.containsKey(color.toLowerCase(Locale.ENGLISH))) {
+			setColor(defaultColors.get(color.toLowerCase(Locale.ENGLISH)));
+			return true;
+		} else {
+			try {
+				int rgb = Integer.parseInt(color);
+				setColor(rgb);
+				return true;
+			} catch(NumberFormatException e) {
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * This map holds the default values of {@linkplain org.bukkit.Color} mapped to their field names (lower case).
+	 * 
+	 * @since 5.8.1
+	 */
+	public static final Map<String, Color> defaultColors;
+	
+	/**
 	 * @since 5.7.1
 	 */
 	public Particle getParticle() {
@@ -102,27 +135,32 @@ public class AreaEffectCloudDisguise extends ObjectDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return String.format("%s; radius=%s; color=%s; %s", super.toString(), radius, color.asRGB(), particle.name().toLowerCase(Locale.ENGLISH));
+		return String.format("%s; radius=%s; color=%s; particle=%s", super.toString(), radius, color.asRGB(), particle.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 	}
 	
 	static {
-		Subtypes.registerParameterizedSubtype(AreaEffectCloudDisguise.class, "setRadius", "radius", float.class, Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("0.1", "0.5", "1.0", "2.0", "5.0", "10.0", "20.0"))));
-		Subtypes.registerParameterizedSubtype(AreaEffectCloudDisguise.class, "setColor", "color", int.class, Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("16711680", "65280", "255"))));
+		Map<String, Color> defaultColors2 = new HashMap<String, Color>();
 		try {
-			for(String colorName : new String[] {"AQUA", "BLACK", "BLUE", "FUCHSIA", "GRAY", "GREEN", "LIME", "MAROON", "NAVY", "OLIVE", "ORANGE", "PURPLE", "RED", "SILVER", "TEAL", "WHITE", "YELLOW"}) {
-				Subtypes.registerSubtype(AreaEffectCloudDisguise.class, "setColor", Color.class.getDeclaredField(colorName).get(null), colorName.toLowerCase(Locale.ENGLISH));
+			for(Field field : Color.class.getFields()) {
+				if(Modifier.isStatic(field.getModifiers()) && field.getType().equals(Color.class)) {
+					defaultColors2.put(field.getName().toLowerCase(Locale.ENGLISH), (Color)field.get(null));
+				}
 			}
-		} catch(Exception e) { // fail silently
+		} catch(IllegalAccessException e) { // fail silently
 		}
-		for(String particle : new String[] {"EXPLOSION_NORMAL", "EXPLOSION_LARGE", "EXPLOSION_HUGE", "FIREWORKS_SPARK", "WATER_BUBBLE", "WATER_SPLASH", "WATER_WAKE", "CRIT", "CRIT_MAGIC", "SMOKE_NORMAL",
-				"SMOKE_LARGE", "SPELL", "SPELL_INSTANT", "SPELL_MOB", "SPELL_MOB_AMBIENT", "SPELL_WITCH", "DRIP_WATER", "DRIP_LAVA", "VILLAGER_ANGRY", "VILLAGER_HAPPY", "NOTE", "PORTAL", "ENCHANTMENT_TABLE",
-				"FLAME", "REDSTONE", "SNOWBALL", "SNOW_SHOVEL", "HEART", "BARRIER", "ITEM_CRACK", "BLOCK_CRACK", "WATER_DROP", "DRAGON_BREATH", "END_ROD", "DAMAGE_INDICATOR", "SWEEP_ATTACK", "FALLING_DUST",
-				"TOTEM", "SPIT"}) {
-			try {
-				Subtypes.registerSubtype(AreaEffectCloudDisguise.class, "setParticle", Particle.valueOf(particle), particle.toLowerCase(Locale.ENGLISH).replace('_', '-'));
-			} catch(IllegalArgumentException e) { // fail silently
-			}
+		defaultColors = Collections.unmodifiableMap(defaultColors2);
+		
+		Subtypes.registerParameterizedSubtype(AreaEffectCloudDisguise.class, "setRadius", "radius", float.class, Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("0.1", "0.5", "1.0", "2.0", "5.0", "10.0", "20.0"))));
+		
+		Set<String> colors = new HashSet<String>(defaultColors.keySet());
+		colors.addAll(Arrays.asList("16711680", "65280", "255"));
+		Subtypes.registerParameterizedSubtype(AreaEffectCloudDisguise.class, "setColor", "color", String.class, colors);
+		
+		Set<String> parameterSuggestions = new HashSet<String>();
+		for(Particle particle : Particle.values()) {
+			parameterSuggestions.add(particle.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
+		Subtypes.registerParameterizedSubtype(AreaEffectCloudDisguise.class, "setParticle", "particle", Particle.class, parameterSuggestions);
 	}
 	
 }
