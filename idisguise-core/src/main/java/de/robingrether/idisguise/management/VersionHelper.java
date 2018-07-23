@@ -90,11 +90,12 @@ public class VersionHelper {
 			Reflection.load("reflection/common2.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
 			ChannelInjector.init();
 			EntityIdList.init();
-			ProfileHelper.setInstance((ProfileHelper)Class.forName("de.robingrether.idisguise.management.profile.ProfileHelperUID").newInstance());
+			ProfileHelper.setInstance((ProfileHelper)Class.forName("de.robingrether.idisguise.management.profile.ProfileHelperUID").getDeclaredConstructor().newInstance());
 			Reflection.EntityHumanNonAbstract = Class.forName("de.robingrether.idisguise.management.reflection.EntityHumanNonAbstract" + versionCode.replaceAll("[^0-9]*", ""));
 			Reflection.EntityHumanNonAbstract_new = Reflection.EntityHumanNonAbstract.getConstructor(Reflection.World, Reflection.GameProfile);
 			
-			if(require1_9) Sounds.init("sounds/112.yml");
+			if(require1_13) Sounds.init("sounds/113.yml");
+			else if(require1_9) Sounds.init("sounds/112.yml");
 			else Sounds.init("sounds/18.yml");
 			
 			initialized = true;

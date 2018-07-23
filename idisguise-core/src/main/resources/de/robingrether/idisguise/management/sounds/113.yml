@@ -1,0 +1,500 @@
+STEP:
+  STEP: [block.stone.step]
+  STEP_ANVIL: [block.anvil.step]
+  STEP_CLOTH: [block.cloth.step]
+  STEP_CORAL: [block.coral_block.step]
+  STEP_GLASS: [block.glass.step]
+  STEP_GRASS: [block.grass.step]
+  STEP_GRAVEL: [block.gravel.step]
+  STEP_LADDER: [block.ladder.step]
+  STEP_METAL: [block.metal.step]
+  STEP_SAND: [block.sand.step]
+  STEP_SLIME: [block.slime_block.step]
+  STEP_SNOW: [block.snow.step]
+  STEP_STONE: [block.stone.step]
+  STEP_WET_GRASS: [block.wet_grass.step]
+  STEP_WOOD: [block.wood.step]
+  STEP_WOOL: [block.wool.step]
+
+PLAYER:
+  DEATH: [entity.player.death]
+  BIG_FALL: [entity.player.big_fall]
+  SMALL_FALL: [entity.player.small_fall]
+  HURT: [entity.player.hurt, entity.player.hurt_drown, entity.player.hurt_on_fire]
+  SPLASH: [entity.player.splash, entity.player.splash.high_speed]
+  SWIM: [entity.player.swim]
+  EAT: [entity.generic.eat, entity.generic.drink, entity.player.burp]
+
+BAT:
+  DEATH: [entity.bat.death]
+  HURT: [entity.bat.hurt]
+  AMBIENT: [entity.bat.ambient, entity.bat.loop, entity.bat.takeoff]
+
+BLAZE:
+  DEATH: [entity.blaze.death]
+  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.blaze.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  AMBIENT: [entity.blaze.ambient, entity.blaze.burn, entity.blaze.shoot]
+
+CAVE_SPIDER:
+  DEATH: [entity.spider.death]
+  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.spider.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  STEP: [entity.spider.step]
+  AMBIENT: [entity.spider.ambient]
+
+CHICKEN:
+  DEATH: [entity.chicken.death]
+  HURT: [entity.chicken.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  STEP: [entity.chicken.step]
+  AMBIENT: [entity.chicken.ambient, entity.chicken.egg]
+
+COD:
+  DEATH: [entity.cod.death]
+  SMALL_FALL: [entity.cod.flop]
+  HURT: [entity.cod.hurt]
+  SWIM: [entity.fish.swim]
+  SPLASH: [entity.cod.flop]
+
+COW:
+  DEATH: [entity.cow.death]
+  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.cow.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  STEP: [entity.cow.step]
+  AMBIENT: [entity.cow.ambient, entity.cow.milk]
+
+CREEPER:
+  DEATH: [entity.creeper.death]
+  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.creeper.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+
+DOLPHIN:
+  DEATH: [entity.dolphin.death]
+  AMBIENT: [entity.dolphin.ambient, entity.dolphin.ambient_water, entity.dolphin.jump, entity.dolphin.play]
+  EAT: [entity.dolphin.eat]
+  HURT: [entity.dolphin.hurt]
+  SPLASH: [entity.dolphin.splash]
+  SWIM: [entity.dolphin.swim]
+  ANGRY: [entity.dolphin.attack]
+
+DONKEY:
+  DEATH: [entity.donkey.death]
+  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.donkey.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  STEP: [entity.horse.step, entity.horse.gallop]
+  STEP_WOOD: [entity.horse.step_wood]
+  AMBIENT: [entity.donkey.ambient, entity.donkey.chest]
+  ANGRY: [entity.donkey.angry]
+
+DROWNED:
+  DEATH: [entity.drowned.death, entity.drowned.death_water]
+  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.drowned.hurt, entity.drowned.hurt_water]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.drowned.swim]
+  STEP: [entity.drowned.step]
+  AMBIENT: [entity.drowned.ambient]
+  ANGRY: [entity.drowned.shoot]
+
+ELDER_GUARDIAN:
+  DEATH: [entity.elder_guardian.death, entity.elder_guardian.death_land]
+  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.elder_guardian.hurt, entity.elder_guardian.hurt_land]
+  SPLASH: [entity.elder_guardian.flop]
+  SWIM: [entity.hostile.swim]
+  AMBIENT: [entity.elder_guardian.ambient, entity.elder_guardian.ambient_land]
+  ANGRY: [entity.guardian.attack]
+
+ENDER_DRAGON:
+  DEATH: [entity.enderdragon.death]
+  HURT: [entity.enderdragon.hurt]
+  AMBIENT: [entity.enderdragon.ambient, entity.enderdragon.flap, entity.enderdragon.growl, entity.enderdragon.shoot]
+
+ENDERMAN:
+  DEATH: [entity.endermen.death]
+  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.endermen.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  AMBIENT: [entity.endermen.ambient, entity.endermen.scream, entity.endermen.stare, entity.endermen.teleport]
+
+ENDERMITE:
+  DEATH: [entity.endermite.death]
+  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.endermite.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  STEP: [entity.endermite.step]
+  AMBIENT: [entity.endermite.ambient]
+
+EVOKER:
+  DEATH: [entity.evoker.death]
+  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.evoker.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  AMBIENT: [entity.evoker.ambient]
+  ANGRY: [entity.evoker.prepare_attack, entity.evoker.prepare_summon, entity.evoker.prepare_wololo]
+
+GHAST:  DEATH: [entity.ghast.death]  HURT: [entity.ghast.hurt]
+  AMBIENT: [entity.ghast.ambient, entity.ghast.scream, entity.ghast.shoot, entity.ghast.warn]
+
+GIANT:  DEATH: [entity.hostile.death]  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.hostile.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+
+GUARDIAN:  DEATH: [entity.guardian.death, entity.guardian.death_land]  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.guardian.hurt, entity.guardian.hurt_land]
+  SPLASH: [entity.guardian.flop]
+  SWIM: [entity.hostile.swim]
+  AMBIENT: [entity.guardian.ambient, entity.guardian.ambient_land]
+  ANGRY: [entity.guardian.attack]
+
+HORSE:  DEATH: [entity.horse.death]  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.horse.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  STEP: [entity.horse.step, entity.horse.gallop]
+  STEP_WOOD: [entity.horse.step_wood]
+  AMBIENT: [entity.horse.ambient, entity.horse.breathe]
+  EAT: [entity.horse.eat]
+  ANGRY: [entity.horse.angry]
+
+HUSK:  DEATH: [entity.husk.death]  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.husk.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  STEP: [entity.husk.step]
+  AMBIENT: [entity.husk.ambient]
+
+ILLUSIONER:  DEATH: [entity.illusioner.death]  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.illusioner.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  AMBIENT: [entity.illusioner.ambient]
+  ANGRY: [entity.illusioner.cast_spell, entity.illusioner.prepare_blindness, entity.illusioner.prepare_mirror]
+
+IRON_GOLEM:  DEATH: [entity.iron_golem.death]  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.iron_golem.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  STEP: [entity.iron_golem.step]
+  ANGRY: [entity.iron_golem.attack]
+
+LLAMA:  DEATH: [entity.llama.death]  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.llama.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  STEP: [entitiy.llama.step]
+  AMBIENT: [entity.llama.ambient, entity.llama.chest, entity.llama.spit]
+  EAT: [entity.llama.eat]
+  ANGRY: [entity.llama.angry]
+
+MAGMA_CUBE:  BIG_FALL: [entity.generic.big_fall]  SMALL_FALL: [entity.generic.small_fall]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  DEATH: [entity.magma_cube.death, entity.magma_cube.death_small]
+  HURT: [entity.magma_cube.hurt, entity.magma_cube.hurt_small]
+  STEP: [entity.magma_cube.jump, entity.magma_cube.squish, entity.magma_cube.squish_small]
+
+MULE:  DEATH: [entity.mule.death]  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.mule.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  STEP: [entity.horse.step, entity.horse.gallop]
+  STEP_WOOD: [entity.horse.step_wood]
+  AMBIENT: [entity.mule.ambient, entity.mule.chest]
+
+MUSHROOM_COW:  DEATH: [entity.cow.death]  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.cow.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  STEP: [entity.cow.step]
+  AMBIENT: [entity.cow.ambient, entity.cow.milk, entity.mooshroom.shear]
+
+OCELOT:  DEATH: [entity.cat.death]  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.cat.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  AMBIENT: [entity.cat.ambient, entity.cat.hiss, entity.cat.purr, entity.cat.purreow]
+
+PARROT:  DEATH: [entity.parrot.death]  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.parrot.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  STEP: [entity.parrot.step]
+  AMBIENT: [entity.parrot.ambient, entity.parrot.fly, entity.parrot.imitate.blaze, entity.parrot.imitate.creeper, entity.parrot.imitate.drowned, entity.parrot.imitate.elder_guardian, entity.parrot.imitate.enderman, entity.parrot.imitate.ender_dragon, entity.parrot.imitate.endermite, entity.parrot.imitate.evoker, entity.parrot.imitate.ghast, entity.parrot.imitate.husk, entity.parrot.imitate.illusioner, entity.parrot.imitate.magma_cube, entity.parrot.imitate.phantom, entity.parrot.imitate.polar_bear, entity.parrot.imitate.shulker, entity.parrot.imitate.silverfish, entity.parrot.imitate.skeleton, entity.parrot.imitate.slime, entity.parrot.imitate.spider, entity.parrot.imitate.stray, entity.parrot.imitate.vex, entity.parrot.imitate.vindicator, entity.parrot.imitate.witch, entity.parrot.imitate.wither, entity.parrot.imitate.wither_skeleton, entity.parrot.imitate.wolf, entity.parrot.imitate.zombie, entity.parrot.imitate.zombie_pigman, entity.parrot.imitate.zombie_villager]
+  EAT: [entity.parrot.eat]
+
+PHANTOM:
+  AMBIENT: [entity.phantom.ambient, entity.phantom.swoop]
+  ANGRY: [entity.phantom.bite]
+  DEATH: [entity.phantom.death]
+  HURT: [entity.phantom.hurt]
+  STEP: [entity.phantom.flap]
+
+PIG:  DEATH: [entity.pig.death]  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.pig.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  STEP: [entity.pig.step]
+  AMBIENT: [entity.pig.ambient]
+
+PIG_ZOMBIE:  DEATH: [entity.zombie_pigman.death]  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.zombie_pigman.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  AMBIENT: [entity.zombie_pigman.ambient]
+  ANGRY: [entity.zombie_pigman.angry]
+
+POLAR_BEAR:  DEATH: [entity.polar_bear.death]  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.polar_bear.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  STEP: [entity.polar_bear.step]
+  AMBIENT: [entity.polar_bear.ambient, entity.polar_bear.ambient_baby, entity.polar_bear.warning]
+
+PUFFERFISH:
+  SWIM: [entity.fish.swim]
+  AMBIENT: [entity.puffer_fish.ambient, entity.puffer_fish.blow_out]
+  ANGRY: [entity.puffer_fish.sting, entity.puffer_fish.blow_up]
+  DEATH: [entity.puffer_fish.death]
+  SMALL_FALL: [entity.puffer_fish.flop]
+  SPLASH: [entity.puffer_fish.flop]
+  HURT: [entity.puffer_fish.hurt]
+
+RABBIT:  DEATH: [entity.rabbit.death]  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.rabbit.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  STEP: [entity.rabbit.jump]
+  AMBIENT: [entity.rabbit.ambient]
+  ANGRY: [entity.rabbit.attack]
+
+SALMON:
+  SWIM: [entity.fish.swim]
+  AMBIENT: [entity.salmon.ambient]
+  DEATH: [entity.salmon.death]
+  SMALL_FALL: [entity.salmon.flop]
+  SPLASH: [entity.salmon.flop]
+  HURT: [entity.salmon.hurt]
+
+SHEEP:  DEATH: [entity.sheep.death]  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.sheep.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  STEP: [entity.sheep.step]
+  AMBIENT: [entity.sheep.ambient, entity.sheep.shear]
+
+SHULKER:  DEATH: [entity.shulker.death]  HURT: [entity.shulker.hurt, entity.shulker.hurt_closed]
+  STEP: [entity.shulker.teleport]
+  AMBIENT: [entity.shulker.ambient, entity.shulker.close, entity.shulker.open]
+  ANGRY: [entity.shulker.shoot]
+
+SILVERFISH:  DEATH: [entity.silverfish.death]  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.silverfish.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  STEP: [entity.silverfish.step]
+  AMBIENT: [entity.silverfish.ambient]
+
+SKELETAL_HORSE:  DEATH: [entity.skeleton_horse.death]  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.skeleton_horse.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.skeleton_horse.swim]
+  STEP: [entity.horse.step, entity.horse.gallop, entity.skeleton_horse.gallop_water, entity.skeleton_horse.step_water]
+  STEP_WOOD: [entity.horse.step_wood]
+  AMBIENT: [entity.skeleton_horse.ambient, entity.skeleton_horse.ambient_water]
+
+SKELETON:  DEATH: [entity.skeleton.death]  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.skeleton.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  STEP: [entity.skeleton.step]
+  AMBIENT: [entity.skeleton.ambient]
+  ANGRY: [entity.skeleton.shoot]
+
+SLIME:  BIG_FALL: [entity.generic.big_fall]  SMALL_FALL: [entity.generic.small_fall]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  DEATH: [entity.slime.death, entity.slime.death_small]
+  HURT: [entity.slime.hurt, entity.slime.hurt_small]
+  STEP: [entity.slime.jump, entity.slime.jump_small, entity.slime.squish, entity.slime.squish_small]
+  ANGRY: [entity.slime.attack]
+
+SNOWMAN:  DEATH: [entity.snow_golem.death]  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.snow_golem.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  AMBIENT: [entity.snow_golem.ambient]
+  ANGRY: [entity.snow_golem.shoot]
+
+SPIDER:  DEATH: [entity.spider.death]  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.spider.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  STEP: [entity.spider.step]
+  AMBIENT: [entity.spider.ambient]
+
+SQUID:  DEATH: [entity.squid.death]  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.squid.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  AMBIENT: [entity.squid.ambient, entity.squid.squirt]
+
+STRAY:  DEATH: [entity.stray.death]  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.stray.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  STEP: [entity.stray.step]
+  AMBIENT: [entity.stray.ambient]
+
+TROPICAL_FISH:
+  SWIM: [entity.fish.swim]
+  AMBIENT: [entity.tropical_fish.ambient]
+  DEATH: [entity.tropical_fish.death]
+  SMALL_FALL: [entity.tropical_fish.flop]
+  SPLASH: [entity.tropical_fish.flop]
+  HURT: [entity.tropical_fish.hurt]
+
+TURTLE:
+  AMBIENT: [entity.turtle.ambient_land, entity.turtle.lay_egg]
+  DEATH: [entity.turtle.death, entity.turtle.death_baby]
+  HURT: [entity.turtle.hurt, entity.turtle.hurt_baby]
+  STEP: [entity.turtle.shamble, entity.turtle.shamble_baby]
+  SWIM: [entity.turtle.swim]
+  SPLASH: [entity.generic.splash]
+  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+
+UNDEAD_HORSE:  DEATH: [entity.zombie_horse.death]  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.zombie_horse.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  STEP: [entity.horse.step, entity.horse.gallop]
+  STEP_WOOD: [entity.horse.step_wood]
+  AMBIENT: [entity.zombie_horse.ambient]
+
+VEX:  DEATH: [entity.vex.death]  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.vex.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  AMBIENT: [entity.vex.ambient, entity.vex.charge]
+
+VILLAGER:  DEATH: [entity.villager.death]  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.villager.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  AMBIENT: [entity.villager.ambient, entity.villager.trade, entity.villager.yes]
+  ANGRY: [entity.villager.no]
+
+VINDICATOR:  DEATH: [entity.vindicator.death]  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.vindicator.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  AMBIENT: [entity.vindicator.ambient]
+
+WITCH:  DEATH: [entity.witch.death]  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.witch.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  AMBIENT: [entity.witch.ambient]
+  EAT: [entity.witch.drink]
+  ANGRY: [entity.witch.throw]
+
+WITHER:  DEATH: [entity.wither.death]  HURT: [entity.wither.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  AMBIENT: [entity.wither.ambient]
+  ANGRY: [entity.wither.shoot]
+
+WITHER_SKELETON:  DEATH: [entity.wither_skeleton.death]  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.wither_skeleton.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  STEP: [entity.wither_skeleton.step]
+  AMBIENT: [entity.wither_skeleton.ambient]
+
+WOLF:  DEATH: [entity.wolf.death]  BIG_FALL: [entity.generic.big_fall]
+  SMALL_FALL: [entity.generic.small_fall]
+  HURT: [entity.wolf.hurt]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
+  STEP: [entity.wolf.step]
+  AMBIENT: [entity.wolf.ambient, entity.wolf.howl, entity.wolf.pant, entity.wolf.shake, entity.wolf.whine]
+  ANGRY: [entity.wolf.growl]
+
+ZOMBIE:  DEATH: [entity.zombie.death]  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.zombie.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  STEP: [entity.zombie.step]
+  AMBIENT: [entity.zombie.ambient]
+
+ZOMBIE_VILLAGER:  DEATH: [entity.zombie_villager.death]  BIG_FALL: [entity.hostile.big_fall]
+  SMALL_FALL: [entity.hostile.small_fall]
+  HURT: [entity.zombie_villager.hurt]
+  SPLASH: [entity.hostile.splash]
+  SWIM: [entity.hostile.swim]
+  STEP: [entity.zombie_villager.step]
+  AMBIENT: [entity.zombie_villager.ambient]
+  
+ARMOR_STAND:
+  DEATH: [entity.armor_stand.break]
+  SMALL_FALL: [entity.armor_stand.fall]
+  HURT: [entity.armor_stand.hit]
+  SPLASH: [entity.generic.splash]
+  SWIM: [entity.generic.swim]
