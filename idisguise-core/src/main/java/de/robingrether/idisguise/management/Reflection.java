@@ -320,8 +320,11 @@ public class Reflection {
 	public static Method EntityAreaEffectCloud_setColor;
 	public static Method EntityAreaEffectCloud_setParticle;
 	public static Method EntityAreaEffectCloud_setRadius;
+	public static Method EntityAreaEffectCloud_setParticleParam1;
+	public static Method EntityAreaEffectCloud_setParticleParam2;
 	
 	public static Class<?> CraftParticle;
+	public static Method CraftParticle_getData;
 	public static Method CraftParticle_toNMS;
 	
 	public static Class<?> EntityTameableAnimal;

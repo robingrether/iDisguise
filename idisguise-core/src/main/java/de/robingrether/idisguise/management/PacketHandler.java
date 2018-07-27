@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -293,8 +294,20 @@ public final class PacketHandler {
 					if(objectDisguise instanceof AreaEffectCloudDisguise) {
 						AreaEffectCloudDisguise aecDisguise = (AreaEffectCloudDisguise)objectDisguise;
 						EntityAreaEffectCloud_setRadius.invoke(entity, aecDisguise.getRadius());
-						EntityAreaEffectCloud_setColor.invoke(entity, aecDisguise.getColor().asRGB());
-						EntityAreaEffectCloud_setParticle.invoke(entity, CraftParticle_toNMS.invoke(null, aecDisguise.getParticle()));
+						Class<?> parameterType = aecDisguise.getParameterType();
+						if(parameterType.equals(Void.class)) {
+							EntityAreaEffectCloud_setParticle.invoke(entity, VersionHelper.require1_13() ? CraftParticle_toNMS.invoke(null, aecDisguise.getParticle(), null) : CraftParticle_toNMS.invoke(null, aecDisguise.getParticle()));
+						} else if(parameterType.equals(Color.class)) {
+							EntityAreaEffectCloud_setParticle.invoke(entity, VersionHelper.require1_13() ? CraftParticle_toNMS.invoke(null, aecDisguise.getParticle(), null) : CraftParticle_toNMS.invoke(null, aecDisguise.getParticle()));
+							EntityAreaEffectCloud_setColor.invoke(entity, ((Color)aecDisguise.getParameter()).asRGB());
+						} else {
+							EntityAreaEffectCloud_setParticle.invoke(entity, VersionHelper.require1_13() ? CraftParticle_toNMS.invoke(null, aecDisguise.getParticle(), aecDisguise.getParameter()) : CraftParticle_toNMS.invoke(null, aecDisguise.getParticle()));
+							if(VersionHelper.require1_10() && !VersionHelper.require1_13()) {
+								int[] data = (int[])CraftParticle_getData.invoke(null, aecDisguise.getParticle(), aecDisguise.getParameter());
+								if(data.length >= 1) EntityAreaEffectCloud_setParticleParam1.invoke(entity, data[0]);
+								if(data.length >= 2) EntityAreaEffectCloud_setParticleParam2.invoke(entity, data[1]);
+							}
+						}
 					}
 					packets.add(PacketPlayOutSpawnEntity_new.newInstance(entity, objectDisguise.getTypeId(), 0));
 					packets.add(PacketPlayOutEntityMetadata_new_full.newInstance(livingEntity.getEntityId(), Entity_getDataWatcher.invoke(entity), true));

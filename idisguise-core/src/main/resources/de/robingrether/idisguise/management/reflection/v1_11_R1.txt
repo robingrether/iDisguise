@@ -14,6 +14,8 @@ EntityAreaEffectCloud->C{nms}.EntityAreaEffectCloud
 EntityAreaEffectCloud_setColor->MEntityAreaEffectCloud$setColor(int)
 EntityAreaEffectCloud_setParticle->MEntityAreaEffectCloud$setParticle({nms}.EnumParticle)
 EntityAreaEffectCloud_setRadius->MEntityAreaEffectCloud$setRadius(float)
+EntityAreaEffectCloud_setParticleParam1->MEntityAreaEffectCloud$b(int)
+EntityAreaEffectCloud_setParticleParam2->MEntityAreaEffectCloud$d(int)
 
 EntityBoat_setType->MEntityBoat$setType({nms}.EntityBoat$EnumBoatType)
 
@@ -46,6 +48,7 @@ EnumGamemode_SURVIVAL->FEnumGamemode$SURVIVAL
 
 CraftParticle->C{obc}.CraftParticle
 CraftParticle_toNMS->MCraftParticle$toNMS(org.bukkit.Particle)
+CraftParticle_getData->MCraftParticle$toData(org.bukkit.Particle,java.lang.Object)
 
 EnumPlayerInfoAction->C{nms}.PacketPlayOutPlayerInfo$EnumPlayerInfoAction
 EnumPlayerInfoAction_ADD_PLAYER->FEnumPlayerInfoAction$ADD_PLAYER

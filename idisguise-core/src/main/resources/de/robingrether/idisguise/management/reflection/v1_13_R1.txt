@@ -61,7 +61,7 @@ EnumGamemode->C{nms}.EnumGamemode
 EnumGamemode_SURVIVAL->FEnumGamemode$SURVIVAL
 
 CraftParticle->C{obc}.CraftParticle
-CraftParticle_toNMS->MCraftParticle$toNMS(org.bukkit.Particle)
+CraftParticle_toNMS->MCraftParticle$toNMS(org.bukkit.Particle,java.lang.Object)
 
 EnumPlayerInfoAction->C{nms}.PacketPlayOutPlayerInfo$EnumPlayerInfoAction
 EnumPlayerInfoAction_ADD_PLAYER->FEnumPlayerInfoAction$ADD_PLAYER

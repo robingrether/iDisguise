@@ -120,7 +120,7 @@ public class LlamaDisguise extends AgeableDisguise {
 		for(SaddleColor saddle : SaddleColor.values()) {
 			parameterSuggestions.add(saddle.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
-		Subtypes.registerParameterizedSubtype(LlamaDisguise.class, "setSaddleColor", "saddle", SaddleColor.class, parameterSuggestions);
+		Subtypes.registerParameterizedSubtype(LlamaDisguise.class, "setSaddle", "saddle", SaddleColor.class, parameterSuggestions);
 		
 		Subtypes.registerSubtype(LlamaDisguise.class, "setHasChest", true, "chest");
 		Subtypes.registerSubtype(LlamaDisguise.class, "setHasChest", false, "no-chest");
