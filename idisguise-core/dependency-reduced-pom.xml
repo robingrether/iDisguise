@@ -9,7 +9,7 @@
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-ssh-external</artifactId>
+        <artifactId>wagon-ssh</artifactId>
         <version>3.1.0</version>
       </extension>
     </extensions>
@@ -105,7 +105,7 @@
     <dependency>
       <groupId>de.robingrether.util</groupId>
       <artifactId>utility</artifactId>
-      <version>1.0.1</version>
+      <version>1.0.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -123,8 +123,8 @@
   </dependencies>
   <distributionManagement>
     <repository>
-      <id>robingrether-repository-sftp</id>
-      <url>scpexe://ssh.strato.de/repository/</url>
+      <id>robingrether-repository-ftp</id>
+      <url>sftp://ssh.strato.de/</url>
     </repository>
   </distributionManagement>
   <properties>

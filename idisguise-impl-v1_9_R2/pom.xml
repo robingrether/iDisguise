@@ -45,7 +45,7 @@
   	<extensions>
   		<extension>
   			<groupId>org.apache.maven.wagon</groupId>
-  			<artifactId>wagon-ssh-external</artifactId>
+  			<artifactId>wagon-ssh</artifactId>
   			<version>3.1.0</version>
   		</extension>
   	</extensions>
@@ -53,8 +53,8 @@
   
   <distributionManagement>
   	<repository>
-  		<id>robingrether-repository-sftp</id>
-  		<url>scpexe://ssh.strato.de/repository/</url>
+  		<id>robingrether-repository-ftp</id>
+  		<url>sftp://ssh.strato.de/</url>
   	</repository>
   </distributionManagement>
 </project>
