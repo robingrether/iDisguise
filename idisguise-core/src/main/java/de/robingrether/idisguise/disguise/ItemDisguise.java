@@ -9,6 +9,7 @@ import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import de.robingrether.idisguise.management.VersionHelper;
 
@@ -97,23 +98,27 @@ public class ItemDisguise extends ObjectDisguise {
 	}
 	
 	/**
-	 * Gets the data value.
-	 * 
 	 * @since 5.3.1
-	 * @return the data value
 	 */
+	@Deprecated
 	public int getData() {
 		return itemStack.getDurability();
 	}
 	
 	/**
-	 * Sets the data value.
-	 * 
 	 * @since 5.3.1
-	 * @param data the data value
 	 */
+	@Deprecated
 	public void setData(int data) {
 		itemStack.setDurability((short)data);
+	}
+	
+	public short getDurability() {
+		return itemStack.getDurability();
+	}
+	
+	public void setDurability(short durability) {
+		itemStack.setDurability(durability);
 	}
 	
 	/**
@@ -166,10 +171,38 @@ public class ItemDisguise extends ObjectDisguise {
 	}
 	
 	/**
+	 * @since 5.8.1
+	 */
+	public boolean isUnbreakable() {
+		return VersionHelper.require1_11() ? itemStack.getItemMeta().isUnbreakable() : false;
+	}
+	
+	/**
+	 * @since 5.8.1
+	 */
+	public void setUnbreakable(boolean unbreakable) {
+		if(!VersionHelper.require1_11()) return;
+		ItemMeta meta = itemStack.getItemMeta();
+		meta.setUnbreakable(unbreakable);
+		itemStack.setItemMeta(meta);
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return String.format("%s; material=%s; material-data=%s; amount=%s; %s", super.toString(), itemStack.getType().name().toLowerCase(Locale.ENGLISH).replace('_', '-'), itemStack.getDurability(), itemStack.getAmount(), isEnchanted() ? "enchanted" : "not-enchanted");
+		if(VersionHelper.require1_11()) {
+			return String.format("%s; material=%s; material-data=%s; amount=%s; %s; %s", super.toString(),
+					itemStack.getType().name().toLowerCase(Locale.ENGLISH).replace('_', '-'),
+					itemStack.getDurability(), itemStack.getAmount(),
+					isEnchanted() ? "enchanted" : "not-enchanted",
+					isUnbreakable() ? "unbreakable" : "not-unbreakable");
+		} else {
+			return String.format("%s; material=%s; material-data=%s; amount=%s; %s", super.toString(),
+					itemStack.getType().name().toLowerCase(Locale.ENGLISH).replace('_', '-'),
+					itemStack.getDurability(), itemStack.getAmount(),
+					isEnchanted() ? "enchanted" : "not-enchanted");
+		}
 	}
 	
 	/**
@@ -203,11 +236,16 @@ public class ItemDisguise extends ObjectDisguise {
 		}
 		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setMaterial", "material", Material.class, Collections.unmodifiableSet(parameterSuggestions));
 		
-		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setData", "material-data", int.class);
+		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setDurability", "durability", short.class);
 		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setAmount", "amount", int.class, Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("1", "2", "64"))));
 		
 		Subtypes.registerSubtype(ItemDisguise.class, "setEnchanted", true, "enchanted");
 		Subtypes.registerSubtype(ItemDisguise.class, "setEnchanted", false, "not-enchanted");
+		
+		if(VersionHelper.require1_11()) {
+			Subtypes.registerSubtype(ItemDisguise.class, "setUnbreakable", true, "unbreakable");
+			Subtypes.registerSubtype(ItemDisguise.class, "setUnbreakable", false, "not-unbreakable");
+		}
 	}
 	
 }

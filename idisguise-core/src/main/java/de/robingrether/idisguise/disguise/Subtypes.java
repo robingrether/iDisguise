@@ -271,6 +271,8 @@ public class Subtypes {
 		private void apply(Disguise disguise, String parameter) throws InvocationTargetException, IllegalAccessException {
 			if(parameterType == int.class) {
 				method.invoke(disguise, Integer.parseInt(parameter));
+			} else if(parameterType == short.class) {
+				method.invoke(disguise, Short.parseShort(parameter));
 			} else if(parameterType == float.class) {
 				method.invoke(disguise, Float.parseFloat(parameter));
 			} else if(parameterType == String.class) {
