@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 
 import de.robingrether.idisguise.management.channel.ChannelInjector;
 import de.robingrether.idisguise.management.util.EntityIdList;
+import de.robingrether.idisguise.management.util.VanillaTargetParser;
 
 public class VersionHelper {
 	
@@ -93,6 +94,9 @@ public class VersionHelper {
 			ProfileHelper.setInstance((ProfileHelper)Class.forName("de.robingrether.idisguise.management.profile.ProfileHelperUID").getDeclaredConstructor().newInstance());
 			Reflection.EntityHumanNonAbstract = Class.forName("de.robingrether.idisguise.management.reflection.EntityHumanNonAbstract" + versionCode.replaceAll("[^0-9]*", ""));
 			Reflection.EntityHumanNonAbstract_new = Reflection.EntityHumanNonAbstract.getConstructor(Reflection.World, Reflection.GameProfile);
+			
+			if(require1_13) VanillaTargetParser.setInstance((VanillaTargetParser)Class.forName("de.robingrether.idisguise.management.util.VanillaTargetParser113").getDeclaredConstructor().newInstance());
+			else VanillaTargetParser.setInstance((VanillaTargetParser)Class.forName("de.robingrether.idisguise.management.util.VanillaTargetParser18").getDeclaredConstructor().newInstance());
 			
 			if(require1_13) Sounds.init("sounds/113.yml");
 			else if(require1_9) Sounds.init("sounds/112.yml");
