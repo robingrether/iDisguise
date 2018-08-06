@@ -39,9 +39,9 @@ import de.robingrether.util.StringUtil;
 
 public class EventListener implements Listener {
 	
-	private iDisguise plugin;
+	private final iDisguise plugin;
 	
-	public EventListener(iDisguise plugin) {
+	EventListener(iDisguise plugin) {
 		this.plugin = plugin;
 	}
 	
