@@ -48,6 +48,8 @@ PacketPlayOutNamedSoundEffect_x->FPacketPlayOutNamedSoundEffect$b
 PacketPlayOutNamedSoundEffect_y->FPacketPlayOutNamedSoundEffect$c
 PacketPlayOutNamedSoundEffect_z->FPacketPlayOutNamedSoundEffect$d
 
+PacketPlayOutPosition_new->NPacketPlayOutPosition(double,double,double,float,float,java.util.Set)
+
 PacketPlayOutScoreboardTeam_color->FPacketPlayOutScoreboardTeam$f
 PacketPlayOutScoreboardTeam_entries->FPacketPlayOutScoreboardTeam$g
 PacketPlayOutScoreboardTeam_action->FPacketPlayOutScoreboardTeam$h
@@ -57,7 +59,11 @@ PacketPlayOutSpawnEntity_x->FPacketPlayOutSpawnEntity$b
 PacketPlayOutSpawnEntity_y->FPacketPlayOutSpawnEntity$c
 PacketPlayOutSpawnEntity_z->FPacketPlayOutSpawnEntity$d
 
+PacketPlayOutSpawnEntityLiving_x->FPacketPlayOutSpawnEntityLiving$c
+PacketPlayOutSpawnEntityLiving_y->FPacketPlayOutSpawnEntityLiving$d
+PacketPlayOutSpawnEntityLiving_z->FPacketPlayOutSpawnEntityLiving$e
 PacketPlayOutSpawnEntityLiving_yaw->FPacketPlayOutSpawnEntityLiving$i
+PacketPlayOutSpawnEntityLiving_pitch->FPacketPlayOutSpawnEntityLiving$j
 
 PlayerInfoData->C{nms}.PacketPlayOutPlayerInfo$PlayerInfoData
 PlayerInfoData_getDisplayName->MPlayerInfoData$d()
@@ -67,3 +73,11 @@ PlayerInfoData_getProfile->MPlayerInfoData$a()
 PlayerInfoData_new->NPlayerInfoData({nms}.PacketPlayOutPlayerInfo,com.mojang.authlib.GameProfile,int,{nms}.WorldSettings$EnumGamemode,{nms}.IChatBaseComponent)
 
 World_getEntityById->MWorld$a(int)
+World_getDifficulty->MWorld$getDifficulty()
+World_getType->MWorld$G()
+
+PacketPlayOutEntityLook->C{nms}.PacketPlayOutEntity$PacketPlayOutEntityLook
+PacketPlayOutRelEntityMove->C{nms}.PacketPlayOutEntity$PacketPlayOutRelEntityMove
+PacketPlayOutRelEntityMoveLook->C{nms}.PacketPlayOutEntity$PacketPlayOutRelEntityMoveLook
+
+NetworkManager_channel->FNetworkManager$k

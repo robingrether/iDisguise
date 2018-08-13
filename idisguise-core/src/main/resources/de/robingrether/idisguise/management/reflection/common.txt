@@ -51,8 +51,16 @@ EntityGuardian->C{nms}.EntityGuardian
 EntityHorse->C{nms}.EntityHorse
 EntityHorse_setVariant->MEntityHorse$setVariant(int)
 
+EntityHuman->C{nms}.EntityHuman
+EntityHuman_exp->FEntityHuman$exp
+EntityHuman_expTotal->FEntityHuman$expTotal
+EntityHuman_expLevel->FEntityHuman$expLevel
+
 EntityItem->C{nms}.EntityItem
 EntityItem_setItemStack->MEntityItem$setItemStack({nms}.ItemStack)
+
+EntityLiving->C{nms}.EntityLiving
+EntityLiving_getEffects->MEntityLiving$getEffects()
 
 EntityMinecartAbstract->C{nms}.EntityMinecartAbstract
 
@@ -65,6 +73,8 @@ EntityPig_setSaddle->MEntityPig$setSaddle(boolean)
 EntityPlayer->C{nms}.EntityPlayer
 EntityPlayer_getBukkitEntity->MEntityPlayer$getBukkitEntity()
 EntityPlayer_playerConnection->FEntityPlayer$playerConnection
+EntityPlayer_playerInteractManager->FEntityPlayer$playerInteractManager
+EntityPlayer_updateAbilities->MEntityPlayer$updateAbilities()
 
 EntityRabbit->C{nms}.EntityRabbit
 
@@ -80,6 +90,7 @@ EntityTameableAnimal_setSitting->MEntityTameableAnimal$setSitting(boolean)
 
 EntityTracker->C{nms}.EntityTracker
 EntityTracker_trackedEntities->FEntityTracker$trackedEntities
+EntityTracker_untrackPlayer->MEntityTracker$untrackPlayer({nms}.EntityPlayer)
 
 EntityTrackerEntry->C{nms}.EntityTrackerEntry
 EntityTrackerEntry_clear->MEntityTrackerEntry$clear({nms}.EntityPlayer)
@@ -116,6 +127,8 @@ MinecraftServer_getServer->MMinecraftServer$getServer()
 MinecraftServer_getUserCache->MMinecraftServer$getUserCache()
 MinecraftServer_getPlayerList->MMinecraftServer$getPlayerList()
 
+NetworkManager->C{nms}.NetworkManager
+
 PacketPlayInUseEntity->C{nms}.PacketPlayInUseEntity
 PacketPlayInUseEntity_entityId->FPacketPlayInUseEntity$a
 
@@ -141,6 +154,9 @@ PacketPlayOutEntity_yaw->FPacketPlayOutEntity$e
 PacketPlayOutEntityDestroy->C{nms}.PacketPlayOutEntityDestroy
 PacketPlayOutEntityDestroy_entityIds->FPacketPlayOutEntityDestroy$a
 
+PacketPlayOutEntityEffect->C{nms}.PacketPlayOutEntityEffect
+PacketPlayOutEntityEffect_new->NPacketPlayOutEntityEffect(int,{nms}.MobEffect)
+
 PacketPlayOutEntityMetadata->C{nms}.PacketPlayOutEntityMetadata
 PacketPlayOutEntityMetadata_entityId->FPacketPlayOutEntityMetadata$a
 PacketPlayOutEntityMetadata_metadataList->FPacketPlayOutEntityMetadata$b
@@ -157,10 +173,18 @@ PacketPlayOutEntityTeleport_y->FPacketPlayOutEntityTeleport$c
 PacketPlayOutEntityTeleport_yaw->FPacketPlayOutEntityTeleport$e
 PacketPlayOutEntityTeleport_z->FPacketPlayOutEntityTeleport$d
 
+PacketPlayOutExperience->C{nms}.PacketPlayOutExperience
+PacketPlayOutExperience_new->NPacketPlayOutExperience(float,int,int)
+
 PacketPlayOutNamedEntitySpawn->C{nms}.PacketPlayOutNamedEntitySpawn
 PacketPlayOutNamedEntitySpawn_entityId->FPacketPlayOutNamedEntitySpawn$a
 PacketPlayOutNamedEntitySpawn_new->NPacketPlayOutNamedEntitySpawn({nms}.EntityHuman)
 PacketPlayOutNamedEntitySpawn_profileId->FPacketPlayOutNamedEntitySpawn$b
+PacketPlayOutNamedEntitySpawn_x->FPacketPlayOutNamedEntitySpawn$c
+PacketPlayOutNamedEntitySpawn_y->FPacketPlayOutNamedEntitySpawn$d
+PacketPlayOutNamedEntitySpawn_z->FPacketPlayOutNamedEntitySpawn$e
+PacketPlayOutNamedEntitySpawn_yaw->FPacketPlayOutNamedEntitySpawn$f
+PacketPlayOutNamedEntitySpawn_pitch->FPacketPlayOutNamedEntitySpawn$g
 
 PacketPlayOutNamedSoundEffect->C{nms}.PacketPlayOutNamedSoundEffect
 PacketPlayOutNamedSoundEffect_new->NPacketPlayOutNamedSoundEffect()
@@ -170,6 +194,10 @@ PacketPlayOutPlayerInfo->C{nms}.PacketPlayOutPlayerInfo
 PacketPlayOutPlayerInfo_action->FPacketPlayOutPlayerInfo$a
 PacketPlayOutPlayerInfo_new->NPacketPlayOutPlayerInfo()
 PacketPlayOutPlayerInfo_playerInfoList->FPacketPlayOutPlayerInfo$b
+
+PacketPlayOutPosition->C{nms}.PacketPlayOutPosition
+
+PacketPlayOutRespawn->C{nms}.PacketPlayOutRespawn
 
 PacketPlayOutScoreboardScore->C{nms}.PacketPlayOutScoreboardScore
 PacketPlayOutScoreboardScore_new->NPacketPlayOutScoreboardScore()
@@ -193,17 +221,33 @@ PacketPlayOutSpawnEntityLiving->C{nms}.PacketPlayOutSpawnEntityLiving
 PacketPlayOutSpawnEntityLiving_new->NPacketPlayOutSpawnEntityLiving({nms}.EntityLiving)
 PacketPlayOutSpawnEntityLiving_entityId->FPacketPlayOutSpawnEntityLiving$a
 
+PacketPlayOutSpawnPosition->C{nms}.PacketPlayOutSpawnPosition
+PacketPlayOutSpawnPosition_new->NPacketPlayOutSpawnPosition({nms}.BlockPosition)
+
 PacketPlayOutUpdateAttributes->C{nms}.PacketPlayOutUpdateAttributes
 PacketPlayOutUpdateAttributes_entityId->FPacketPlayOutUpdateAttributes$a
 
+PlayerChunkMap->C{nms}.PlayerChunkMap
+PlayerChunkMap_addPlayer->MPlayerChunkMap$addPlayer({nms}.EntityPlayer)
+PlayerChunkMap_removePlayer->MPlayerChunkMap$removePlayer({nms}.EntityPlayer)
+
+PlayerConnection->C{nms}.PlayerConnection
+PlayerConnection_networkManager->FPlayerConnection$networkManager
+
+PlayerInteractManager->C{nms}.PlayerInteractManager
+PlayerInteractManager_getGameMode->MPlayerInteractManager$getGameMode()
+
 PlayerList->C{nms}.PlayerList
-PlayerList_moveToWorld->MPlayerList$moveToWorld({nms}.EntityPlayer,int,boolean,org.bukkit.Location,boolean)
+PlayerList_sendWorldInfo->MPlayerList$b({nms}.EntityPlayer,{nms}.WorldServer)
+PlayerList_updateClient->MPlayerList$updateClient({nms}.EntityPlayer)
 
 UserCache->C{nms}.UserCache
 UserCache_getProfileById->MUserCache$a(java.util.UUID)
 UserCache_putProfile->MUserCache$a(com.mojang.authlib.GameProfile)
 
 World->C{nms}.World
+World_getSpawn->MWorld$getSpawn()
 
 WorldServer->C{nms}.WorldServer
 WorldServer_entityTracker->FWorldServer$tracker
+WorldServer_getPlayerChunkMap->MWorldServer$getPlayerChunkMap()

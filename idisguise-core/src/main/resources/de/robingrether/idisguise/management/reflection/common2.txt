@@ -1,1 +1,3 @@
 PacketPlayOutPlayerInfo_new_full->NPacketPlayOutPlayerInfo(EnumPlayerInfoAction,{nms}.EntityPlayer[])
+
+PacketPlayOutRespawn_new->NPacketPlayOutRespawn(int,{nms}.EnumDifficulty,{nms}.WorldType,EnumGamemode)

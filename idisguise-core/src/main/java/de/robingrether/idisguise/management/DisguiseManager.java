@@ -1,7 +1,6 @@
 package de.robingrether.idisguise.management;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -13,18 +12,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Team;
 
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
-import de.robingrether.idisguise.management.channel.InjectedPlayerConnection;
-import de.robingrether.idisguise.management.hooks.ScoreboardHooks;
 import de.robingrether.idisguise.management.util.DisguiseMap;
 
 import static de.robingrether.idisguise.management.Reflection.*;
@@ -207,10 +203,10 @@ public final class DisguiseManager {
 				Player observer = offlinePlayer.getPlayer();
 				for(Object disguisable : getDisguisedEntities()) {
 					if(disguisable instanceof LivingEntity) {
-						hideEntityFromOne(observer, (LivingEntity)disguisable);
-					} else if(disguisable instanceof OfflinePlayer && ((OfflinePlayer)disguisable).isOnline()) {
+						hideEntityFromOne((LivingEntity)disguisable, observer);
+					}/* else if(disguisable instanceof OfflinePlayer && ((OfflinePlayer)disguisable).isOnline()) {
 						hidePlayerFromOne(observer, ((OfflinePlayer)disguisable).getPlayer());
-					}
+					}*/
 				}
 				if(seeThrough) {
 					seeThroughSet.add(offlinePlayer.getUniqueId());
@@ -219,10 +215,10 @@ public final class DisguiseManager {
 				}
 				for(Object disguisable : getDisguisedEntities()) {
 					if(disguisable instanceof LivingEntity) {
-						showEntityToOne(observer, (LivingEntity)disguisable);
-					} else if(disguisable instanceof OfflinePlayer && ((OfflinePlayer)disguisable).isOnline()) {
+						showEntityToOne((LivingEntity)disguisable, observer);
+					}/* else if(disguisable instanceof OfflinePlayer && ((OfflinePlayer)disguisable).isOnline()) {
 						showPlayerToOne(observer, ((OfflinePlayer)disguisable).getPlayer());
-					}
+					}*/
 				}
 			} else {
 				if(seeThrough) {
@@ -234,479 +230,213 @@ public final class DisguiseManager {
 		}
 	}
 	
-	private static void hideEntityFromAll(LivingEntity livingEntity) {
-		// do nothing if entity is invalid (dead or despawned)
-		if(!livingEntity.isValid()) {
-			return;
-		}
-		
-		// use other function if the entity is a player
-		if(livingEntity instanceof Player) {
-			hidePlayerFromAll((Player)livingEntity);
-			return;
-		}
-		
-		if(getDisguise(livingEntity) instanceof PlayerDisguise) {
-			Object playerInfoPacket = null;
-			
-			try {
-				// construct the player info packet
-				playerInfoPacket = PacketPlayOutPlayerInfo_new.newInstance();
-				PacketPlayOutPlayerInfo_action.set(playerInfoPacket, EnumPlayerInfoAction_REMOVE_PLAYER.get(null));
-				List<Object> playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(playerInfoPacket);
-				playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, ProfileHelper.getInstance().getGameProfile(livingEntity.getUniqueId(), "", ""), 35, null, null));
-			} catch(Exception e) {
-			}
-			
-			// do the actual sending and stuff
-			for(Player observer : Bukkit.getOnlinePlayers()) {
-				try {
-					
-					// clear the entity tracker entry
-					Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftPlayer_getHandle.invoke(observer)))), livingEntity.getEntityId());
-					if(entityTrackerEntry != null) {
-						EntityTrackerEntry_clear.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
-					}
-					
-					if(isDisguisedTo(livingEntity, observer)) {
-						((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacketDirectly(playerInfoPacket);
-					}
-					
-				} catch(Exception e) {
-				}
-			}
-			
-		} else {
-		
-			// do the actual sending and stuff
-			for(Player observer : Bukkit.getOnlinePlayers()) {
-				try {
-					
-					// clear the entity tracker entry
-					Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftPlayer_getHandle.invoke(observer)))), livingEntity.getEntityId());
-					if(entityTrackerEntry != null) {
-						EntityTrackerEntry_clear.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
-					}
-					
-				} catch(Exception e) {
-				}
-			}
-		}
-		
-		// we don't care about scoreboard packets for entities
-	}
+	// TODO: scoreboard updates in hide and show functions?
 	
-	private static void hideEntityFromOne(Player observer, LivingEntity livingEntity) {
+	public static void hideEntityFromAll(LivingEntity livingEntity) {
 		// do nothing if entity is invalid (dead or despawned)
-		if(!livingEntity.isValid()) {
-			return;
-		}
-		
-		// use other function if the entity is a player
-		if(livingEntity instanceof Player) {
-			hidePlayerFromOne(observer, (Player)livingEntity);
+		if(!(livingEntity instanceof Player) && !livingEntity.isValid()) {
 			return;
 		}
 		
 		try {
+			Object playerInfoPacket = null;
+			boolean isPlayer = livingEntity instanceof Player, disguisedAsPlayer = getDisguise(livingEntity) instanceof PlayerDisguise;
 			
-			// clear the entity tracker entry
-			Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftPlayer_getHandle.invoke(observer)))), livingEntity.getEntityId());
-			if(entityTrackerEntry != null) {
+			if(isPlayer || disguisedAsPlayer) {
+				// construct the packet
+				playerInfoPacket = PacketPlayOutPlayerInfo_new.newInstance();
+				PacketPlayOutPlayerInfo_action.set(playerInfoPacket, EnumPlayerInfoAction_REMOVE_PLAYER.get(null));
+				List playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(playerInfoPacket);
+				playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, ProfileHelper.getInstance().getGameProfile(livingEntity.getUniqueId(), "", ""), 35, null, null));
+			}
+			
+			Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftLivingEntity_getHandle.invoke(livingEntity)))), livingEntity.getEntityId());
+			
+			for(Player observer : Bukkit.getOnlinePlayers()) {
+				
+				if(livingEntity != observer) {
+					// hide the entity
+					EntityTrackerEntry_clear.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
+				}
+				
+				// send the player info removal if needed
+				if(isPlayer ? disguiseViewSelf || livingEntity != observer : disguisedAsPlayer && isDisguisedTo(livingEntity, observer)) {
+					PacketHandler.sendPacketUnaltered(observer, playerInfoPacket);
+				}
+				
+			}
+		} catch(Exception e) {
+		}
+	}
+	
+	public static void hideEntityFromOne(LivingEntity livingEntity, Player observer) {
+		// do nothing if entity is invalid (dead or despawned)
+		if(!(livingEntity instanceof Player) && !livingEntity.isValid()) {
+			return;
+		}
+		
+		try {
+			Object playerInfoPacket = null;
+			boolean isPlayer = livingEntity instanceof Player, disguisedAsPlayer = getDisguise(livingEntity) instanceof PlayerDisguise;
+			
+			if(isPlayer || disguisedAsPlayer) {
+				// construct the packet
+				playerInfoPacket = PacketPlayOutPlayerInfo_new.newInstance();
+				PacketPlayOutPlayerInfo_action.set(playerInfoPacket, EnumPlayerInfoAction_REMOVE_PLAYER.get(null));
+				List playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(playerInfoPacket);
+				playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, ProfileHelper.getInstance().getGameProfile(livingEntity.getUniqueId(), "", ""), 35, null, null));
+			}
+			
+			Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftLivingEntity_getHandle.invoke(livingEntity)))), livingEntity.getEntityId());
+			
+			if(livingEntity != observer) {
+				// hide the entity
 				EntityTrackerEntry_clear.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
 			}
 			
-			// remove player info if necessary
-			if(isDisguisedTo(livingEntity, observer) && getDisguise(livingEntity) instanceof PlayerDisguise) {
-				
-				// construct the player info packet
-				Object playerInfoPacket = PacketPlayOutPlayerInfo_new.newInstance();
-				PacketPlayOutPlayerInfo_action.set(playerInfoPacket, EnumPlayerInfoAction_REMOVE_PLAYER.get(null));
-				List<Object> playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(playerInfoPacket);
-				playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, ProfileHelper.getInstance().getGameProfile(livingEntity.getUniqueId(), "", ""), 35, null, null));
-				
-				((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacketDirectly(playerInfoPacket);
+			// send the player info removal if needed
+			if(isPlayer ? disguiseViewSelf || livingEntity != observer : disguisedAsPlayer && isDisguisedTo(livingEntity, observer)) {
+				PacketHandler.sendPacketUnaltered(observer, playerInfoPacket);
 			}
 			
 		} catch(Exception e) {
 		}
-		
-		// we don't care about scoreboard packets for entities
 	}
 	
-	private static void hidePlayerFromAll(Player player) {
-		List<Object> packets = new ArrayList<Object>();
-		
-		// do we care about scoreboard packets?
-		if(modifyScoreboardPackets) {
-			
-			// construct the scoreboard packets
-			Team team = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(player.getName());
-			if(team != null) {
-				try {
-					Object packet = PacketPlayOutScoreboardTeam_new.newInstance();
-					PacketPlayOutScoreboardTeam_teamName.set(packet, team.getName());
-					PacketPlayOutScoreboardTeam_action.setInt(packet, 4);
-					((Collection<String>)PacketPlayOutScoreboardTeam_entries.get(packet)).add(player.getName());
-					packets.add(packet);
-				} catch(Exception e) {
-				}
-			}
-			Set<Score> scores = Bukkit.getScoreboardManager().getMainScoreboard().getScores(player.getName());
-			for(Score score : scores) {
-				try {
-					Object packet = PacketPlayOutScoreboardScore_new.newInstance();
-					PacketPlayOutScoreboardScore_entry.set(packet, player.getName());
-					PacketPlayOutScoreboardScore_action.set(packet, EnumScoreboardAction_REMOVE.get(null));
-					PacketPlayOutScoreboardScore_objective.set(packet, score.getObjective().getName());
-					packets.add(packet);
-				} catch(Exception e) {
-				}
-			}
-		}
-		
-		// do the actual sending and stuff
-		for(Player observer : Bukkit.getOnlinePlayers()) {
-			if(observer == player) continue;
-			
-			// hide the player
-			observer.hidePlayer(player);
-			
-			// send the scoreboard packets
-			try {
-				for(Object packet : packets) {
-					((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacket(packet);
-				}
-			} catch(Exception e) {
-			}
-		}
-		
-		// hide player from himself
-		if(disguiseViewSelf) {
-			try {
-				Object players = Array.newInstance(EntityPlayer, 1);
-				Array.set(players, 0, CraftPlayer_getHandle.invoke(player));
-				
-				// construct the player info packet
-				Object playerInfoPacket = PacketPlayOutPlayerInfo_new_full.newInstance(EnumPlayerInfoAction_REMOVE_PLAYER.get(null), players);
-				
-				((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(player))).sendPacket(playerInfoPacket);
-			} catch(Exception e) {
-			}
-		}
-	}
-	
-	private static void hidePlayerFromOne(Player observer, Player player) {
-		// hide player from himself
-		if(player == observer) {
-			if(disguiseViewSelf) {
-				try {
-					Object players = Array.newInstance(EntityPlayer, 1);
-					Array.set(players, 0, CraftPlayer_getHandle.invoke(player));
-					
-					// construct the player info packet
-					Object playerInfoPacket = PacketPlayOutPlayerInfo_new_full.newInstance(EnumPlayerInfoAction_REMOVE_PLAYER.get(null), players);
-					
-					((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(player))).sendPacket(playerInfoPacket);
-				} catch(Exception e) {
-				}
-			}
-			return;
-		}
-		
-		// hide the player
-		observer.hidePlayer(player);
-		
-		// do we care about scoreboard packets?
-		if(modifyScoreboardPackets) {
-			
-			// construct the scoreboard packets
-			List<Object> packets = new ArrayList<Object>();
-			Team team = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(player.getName());
-			if(team != null) {
-				try {
-					Object packet = PacketPlayOutScoreboardTeam_new.newInstance();
-					PacketPlayOutScoreboardTeam_teamName.set(packet, team.getName());
-					PacketPlayOutScoreboardTeam_action.setInt(packet, 4);
-					((Collection<String>)PacketPlayOutScoreboardTeam_entries.get(packet)).add(player.getName());
-					packets.add(packet);
-				} catch(Exception e) {
-				}
-			}
-			Set<Score> scores = Bukkit.getScoreboardManager().getMainScoreboard().getScores(player.getName());
-			for(Score score : scores) {
-				try {
-					Object packet = PacketPlayOutScoreboardScore_new.newInstance();
-					PacketPlayOutScoreboardScore_entry.set(packet, player.getName());
-					PacketPlayOutScoreboardScore_action.set(packet, EnumScoreboardAction_REMOVE.get(null));
-					PacketPlayOutScoreboardScore_objective.set(packet, score.getObjective().getName());
-					packets.add(packet);
-				} catch(Exception e) {
-				}
-			}
-			
-			// send the scoreboard packets
-			try {
-				for(Object packet : packets) {
-					((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacket(packet);
-				}
-			} catch(Exception e) {
-			}
-		}
-	}
-	
-	private static void showEntityToAll(final LivingEntity livingEntity) {
+	public static void showEntityToAll(final LivingEntity livingEntity) {
 		// do nothing if entity is invalid (dead or despawned)
-		if(!livingEntity.isValid()) {
+		if(!(livingEntity instanceof Player) && !livingEntity.isValid()) {
 			return;
 		}
 		
-		// use other function if the entity is a player
-		if(livingEntity instanceof Player) {
-			showPlayerToAll((Player)livingEntity);
-			return;
-		}
-		
-		// are we in 1.9+ ?
 		if(VersionHelper.require1_9()) {
 			showEntityToAll0(livingEntity);
 		} else {
-			
 			// we have to delay the reappearance for 1.8.0 clients
-			Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), new Runnable() {
-				
-				public void run() {
-					showEntityToAll0(livingEntity);
-				}
-				
-			}, 10L);
+			Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), () -> showEntityToAll0(livingEntity), 10L);
 		}
 	}
 	
 	private static void showEntityToAll0(LivingEntity livingEntity) {
-		// do the actual sending and stuff
-		for(Player observer : Bukkit.getOnlinePlayers()) {
-			try {
+		try {
+			Object playerInfoPacket = null;
+			boolean isPlayer = livingEntity instanceof Player;
+			
+			if(isPlayer) {
+				// construct the packet
+				Object players = Array.newInstance(EntityPlayer, 1);
+				Array.set(players, 0, CraftPlayer_getHandle.invoke(livingEntity));
+				playerInfoPacket = PacketPlayOutPlayerInfo_new_full.newInstance(EnumPlayerInfoAction_ADD_PLAYER.get(null), players);
+			}
+			
+			Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftLivingEntity_getHandle.invoke(livingEntity)))), livingEntity.getEntityId());
+			
+			for(Player observer : Bukkit.getOnlinePlayers()) {
 				
-				// update the entity tracker entry
-				Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftPlayer_getHandle.invoke(observer)))), livingEntity.getEntityId());
-				if(entityTrackerEntry != null) {
+				if(livingEntity != observer) {
+					// show the entity
 					EntityTrackerEntry_updatePlayer.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
 				}
 				
-			} catch(Exception e) {
-			}
-		}
-		
-		// we don't care about scoreboard packets for entities
-	}
-	
-	private static void showEntityToOne(final Player observer, final LivingEntity livingEntity) {
-		// do nothing if entity is invalid (dead or despawned)
-		if(!livingEntity.isValid()) {
-			return;
-		}
-		
-		// use other function if the entity is a player
-		if(livingEntity instanceof Player) {
-			showPlayerToOne(observer, (Player)livingEntity);
-			return;
-		}
-		
-		// are we in 1.9+ ?
-		if(VersionHelper.require1_9()) {
-			showEntityToOne0(observer, livingEntity);
-		} else {
-			
-			// we have to delay the reappearance for 1.8.0 clients
-			Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), new Runnable() {
-				
-				public void run() {
-					showEntityToOne0(observer, livingEntity);
+				// send the player info
+				if(isPlayer && (disguiseViewSelf || livingEntity != observer)) {
+					PacketHandler.sendPacket(observer, playerInfoPacket);
 				}
 				
-			}, 10L);
+			}
+			
+			if(isPlayer && disguiseViewSelf) {
+				respawnPlayerToSelf((Player)livingEntity);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
-	private static void showEntityToOne0(Player observer, LivingEntity livingEntity) {
-		// update the entity tracker entry
+	public static void showEntityToOne(final LivingEntity livingEntity, final Player observer) {
+		// do nothing if entity is invalid (dead or despawned)
+		if(!(livingEntity instanceof Player) && !livingEntity.isValid()) {
+			return;
+		}
+		
+		if(VersionHelper.require1_9()) {
+			showEntityToOne0(livingEntity, observer);
+		} else {
+			// we have to delay the reappearance for 1.8.0 clients
+			Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), () -> showEntityToOne0(livingEntity, observer), 10L);
+		}
+	}
+	
+	private static void showEntityToOne0(LivingEntity livingEntity, Player observer) {
 		try {
-			Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftPlayer_getHandle.invoke(observer)))), livingEntity.getEntityId());
-			if(entityTrackerEntry != null) {
+			Object playerInfoPacket = null;
+			boolean isPlayer = livingEntity instanceof Player;
+			
+			if(isPlayer) {
+				// construct the packet
+				Object players = Array.newInstance(EntityPlayer, 1);
+				Array.set(players, 0, CraftPlayer_getHandle.invoke(livingEntity));
+				playerInfoPacket = PacketPlayOutPlayerInfo_new_full.newInstance(EnumPlayerInfoAction_ADD_PLAYER.get(null), players);
+			}
+			
+			Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftLivingEntity_getHandle.invoke(livingEntity)))), livingEntity.getEntityId());
+			
+			if(livingEntity != observer) {
+				// show the entity
 				EntityTrackerEntry_updatePlayer.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
+			}
+			
+			// send the player info
+			if(isPlayer && (disguiseViewSelf || livingEntity != observer)) {
+				PacketHandler.sendPacket(observer, playerInfoPacket);
+			}
+			
+			if(isPlayer && disguiseViewSelf && livingEntity == observer) {
+				respawnPlayerToSelf((Player)livingEntity);
 			}
 		} catch(Exception e) {
 		}
-		
-		// we don't care about scoreboard packets for entities
 	}
 	
-	private static void showPlayerToAll(final Player player) {
+	private static void respawnPlayerToSelf(Player player) throws Exception {
+		Object entityPlayer = CraftPlayer_getHandle.invoke(player);
+		Object world = Entity_world.get(entityPlayer);
+		Location location = player.getLocation();
+		
+		EntityTracker_untrackPlayer.invoke(WorldServer_entityTracker.get(world), entityPlayer);
+		
+		PlayerChunkMap_removePlayer.invoke(WorldServer_getPlayerChunkMap.invoke(world), entityPlayer);
+		
+		int actualDimension = location.getWorld().getEnvironment().getId();
+		int tempDimension = actualDimension == 1 ? 0 : actualDimension + 1;
+		
+		PacketHandler.sendPacketUnaltered(player, PacketPlayOutRespawn_new.newInstance(tempDimension, World_getDifficulty.invoke(world), World_getType.invoke(world), PlayerInteractManager_getGameMode.invoke(EntityPlayer_playerInteractManager.get(entityPlayer))));
+		PacketHandler.sendPacketUnaltered(player, PacketPlayOutRespawn_new.newInstance(actualDimension, World_getDifficulty.invoke(world), World_getType.invoke(world), PlayerInteractManager_getGameMode.invoke(EntityPlayer_playerInteractManager.get(entityPlayer))));
+		
 		if(VersionHelper.require1_9()) {
-			showPlayerToAll0(player);
+			PacketHandler.sendPacketUnaltered(player, PacketPlayOutPosition_new.newInstance(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch(), Collections.emptySet(), 27));
 		} else {
-			Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), new Runnable() {
-				
-				public void run() {
-					showPlayerToAll0(player);
-				}
-				
-			}, 10L);
+			PacketHandler.sendPacketUnaltered(player, PacketPlayOutPosition_new.newInstance(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch(), Collections.emptySet()));
 		}
-	}
-	
-	private static void showPlayerToAll0(Player player) {
-		List<Object> packets = new ArrayList<Object>();
+		PacketHandler.sendPacketUnaltered(player, PacketPlayOutSpawnPosition_new.newInstance(World_getSpawn.invoke(world)));
+		PacketHandler.sendPacketUnaltered(player, PacketPlayOutExperience_new.newInstance(EntityHuman_exp.get(entityPlayer), EntityHuman_expTotal.get(entityPlayer), EntityHuman_expLevel.get(entityPlayer)));
 		
-		// do we care about scoreboard packets?
-		if(modifyScoreboardPackets) {
-			
-			// construct the scoreboard packets
-			Team team = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(player.getName());
-			if(team != null) {
-				try {
-					Object packet = PacketPlayOutScoreboardTeam_new.newInstance();
-					PacketPlayOutScoreboardTeam_teamName.set(packet, team.getName());
-					PacketPlayOutScoreboardTeam_action.setInt(packet, 3);
-					((Collection<String>)PacketPlayOutScoreboardTeam_entries.get(packet)).add(player.getName());
-					packets.add(packet);
-				} catch(Exception e) {
-				}
-			}
-			Set<Score> scores = Bukkit.getScoreboardManager().getMainScoreboard().getScores(player.getName());
-			for(Score score : scores) {
-				try {
-					Object packet = PacketPlayOutScoreboardScore_new.newInstance();
-					PacketPlayOutScoreboardScore_entry.set(packet, player.getName());
-					PacketPlayOutScoreboardScore_action.set(packet, EnumScoreboardAction_CHANGE.get(null));
-					PacketPlayOutScoreboardScore_objective.set(packet, score.getObjective().getName());
-					PacketPlayOutScoreboardScore_score.setInt(packet, score.getScore());
-					packets.add(packet);
-				} catch(Exception e) {
-				}
-			}
-		}
+		PlayerList_sendWorldInfo.invoke(MinecraftServer_getPlayerList.invoke(MinecraftServer_getServer.invoke(null)), entityPlayer, world);
 		
-		// do all the sending and stuff
-		for(Player observer : Bukkit.getOnlinePlayers()) {
-			if(observer == player) continue;
-			
-			// show the player
-			observer.showPlayer(player);
-			
-			// send the scoreboard packets
-			try {
-				for(Object packet : packets) {
-					((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacket(packet);
-				}
-			} catch(Exception e) {
-			}
-		}
+		PlayerChunkMap_addPlayer.invoke(WorldServer_getPlayerChunkMap.invoke(world), entityPlayer);
 		
-		if(modifyScoreboardPackets) {
-			// update scoreboard hooks
-			ScoreboardHooks.updatePlayer(player);
-		}
+		PlayerList_updateClient.invoke(MinecraftServer_getPlayerList.invoke(MinecraftServer_getServer.invoke(null)), entityPlayer);
 		
-		// show player to self
-		if(disguiseViewSelf) {
-			try {
-				Object players = Array.newInstance(EntityPlayer, 1);
-				Array.set(players, 0, CraftPlayer_getHandle.invoke(player));
-				
-				// construct the player info packet
-				Object playerInfoPacket = PacketPlayOutPlayerInfo_new_full.newInstance(EnumPlayerInfoAction_ADD_PLAYER.get(null), players);
-				
-				((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(player))).sendPacket(playerInfoPacket);
-				PlayerList_moveToWorld.invoke(MinecraftServer_getPlayerList.invoke(MinecraftServer_getServer.invoke(null)), CraftPlayer_getHandle.invoke(player), player.getWorld().getEnvironment().getId(), true, player.getLocation(), true);
-			} catch(Exception e) {
-			}
-		}
-	}
-	
-	private static void showPlayerToOne(final Player observer, final Player player) {
-		if(VersionHelper.require1_9()) {
-			showPlayerToOne0(observer, player);
-		} else {
-			Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), new Runnable() {
-				
-				public void run() {
-					showPlayerToOne0(observer, player);
-				}
-				
-			}, 10L);
-		}
-	}
-	
-	private static void showPlayerToOne0(Player observer, Player player) {
-		// show player to self
-		if(player == observer) {
-			if(disguiseViewSelf) {
-				try {
-					Object players = Array.newInstance(EntityPlayer, 1);
-					Array.set(players, 0, CraftPlayer_getHandle.invoke(player));
-					
-					// construct the player info packet
-					Object playerInfoPacket = PacketPlayOutPlayerInfo_new_full.newInstance(EnumPlayerInfoAction_ADD_PLAYER.get(null), players);
-					
-					((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(player))).sendPacket(playerInfoPacket);
-					PlayerList_moveToWorld.invoke(MinecraftServer_getPlayerList.invoke(MinecraftServer_getServer.invoke(null)), CraftPlayer_getHandle.invoke(player), player.getWorld().getEnvironment().getId(), true, player.getLocation(), true);
-				} catch(Exception e) {
-				}
-			}
-			return;
-		}
+		EntityPlayer_updateAbilities.invoke(entityPlayer);
 		
-		// show the player
-		observer.showPlayer(player);
-		
-		// do we care about scoreboard packets?
-		if(modifyScoreboardPackets) {
-			
-			// construct the scoreboard packets
-			List<Object> packets = new ArrayList<Object>();
-			Team team = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(player.getName());
-			if(team != null) {
-				try {
-					Object packet = PacketPlayOutScoreboardTeam_new.newInstance();
-					PacketPlayOutScoreboardTeam_teamName.set(packet, team.getName());
-					PacketPlayOutScoreboardTeam_action.setInt(packet, 3);
-					((Collection<String>)PacketPlayOutScoreboardTeam_entries.get(packet)).add(player.getName());
-					packets.add(packet);
-				} catch(Exception e) {
-				}
-			}
-			Set<Score> scores = Bukkit.getScoreboardManager().getMainScoreboard().getScores(player.getName());
-			for(Score score : scores) {
-				try {
-					Object packet = PacketPlayOutScoreboardScore_new.newInstance();
-					PacketPlayOutScoreboardScore_entry.set(packet, player.getName());
-					PacketPlayOutScoreboardScore_action.set(packet, EnumScoreboardAction_CHANGE.get(null));
-					PacketPlayOutScoreboardScore_objective.set(packet, score.getObjective().getName());
-					PacketPlayOutScoreboardScore_score.setInt(packet, score.getScore());
-					packets.add(packet);
-				} catch(Exception e) {
-				}
-			}
-			
-			// send the scoreboard packets
-			try {
-				for(Object packet : packets) {
-					((InjectedPlayerConnection)EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))).sendPacket(packet);
-				}
-			} catch(Exception e) {
-			}
-			
-			// update scoreboard hooks
-			ScoreboardHooks.updatePlayer(player);
-			
+		for(Object effect : (Collection)EntityLiving_getEffects.invoke(entityPlayer)) {
+			PacketHandler.sendPacketUnaltered(player, PacketPlayOutEntityEffect_new.newInstance(player.getEntityId(), effect));
 		}
 	}
 	
 	public static void resendPackets(Player player) {
-		hidePlayerFromAll(player);
-		showPlayerToAll(player);
+		/*hidePlayerFromAll(player);
+		showPlayerToAll(player);*/ resendPackets((LivingEntity)player);
 	}
 	
 	public static void resendPackets(LivingEntity livingEntity) {
@@ -719,10 +449,10 @@ public final class DisguiseManager {
 			if(disguisable instanceof LivingEntity) {
 				hideEntityFromAll((LivingEntity)disguisable);
 				showEntityToAll((LivingEntity)disguisable);
-			} else if(disguisable instanceof OfflinePlayer && ((OfflinePlayer)disguisable).isOnline()) {
+			}/* else if(disguisable instanceof OfflinePlayer && ((OfflinePlayer)disguisable).isOnline()) {
 				hidePlayerFromAll(((OfflinePlayer)disguisable).getPlayer());
 				showPlayerToAll(((OfflinePlayer)disguisable).getPlayer());
-			}
+			}*/
 		}
 	}
 	

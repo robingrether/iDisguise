@@ -74,6 +74,8 @@ PacketPlayOutNamedSoundEffect_x->FPacketPlayOutNamedSoundEffect$c
 PacketPlayOutNamedSoundEffect_y->FPacketPlayOutNamedSoundEffect$d
 PacketPlayOutNamedSoundEffect_z->FPacketPlayOutNamedSoundEffect$e
 
+PacketPlayOutPosition_new->NPacketPlayOutPosition(double,double,double,float,float,java.util.Set,int)
+
 PacketPlayOutScoreboardTeam_collisionRule->FPacketPlayOutScoreboardTeam$f
 PacketPlayOutScoreboardTeam_color->FPacketPlayOutScoreboardTeam$g
 PacketPlayOutScoreboardTeam_entries->FPacketPlayOutScoreboardTeam$h
@@ -84,7 +86,11 @@ PacketPlayOutSpawnEntity_x->FPacketPlayOutSpawnEntity$c
 PacketPlayOutSpawnEntity_y->FPacketPlayOutSpawnEntity$d
 PacketPlayOutSpawnEntity_z->FPacketPlayOutSpawnEntity$e
 
+PacketPlayOutSpawnEntityLiving_x->FPacketPlayOutSpawnEntityLiving$d
+PacketPlayOutSpawnEntityLiving_y->FPacketPlayOutSpawnEntityLiving$e
+PacketPlayOutSpawnEntityLiving_z->FPacketPlayOutSpawnEntityLiving$f
 PacketPlayOutSpawnEntityLiving_yaw->FPacketPlayOutSpawnEntityLiving$j
+PacketPlayOutSpawnEntityLiving_pitch->FPacketPlayOutSpawnEntityLiving$k
 
 PlayerInfoData->C{nms}.PacketPlayOutPlayerInfo$PlayerInfoData
 PlayerInfoData_getDisplayName->MPlayerInfoData$d()
@@ -101,3 +107,11 @@ SoundEffect->C{nms}.SoundEffect
 SoundEffect_registry->FSoundEffect$a
 
 World_getEntityById->MWorld$getEntity(int)
+World_getDifficulty->MWorld$getDifficulty()
+World_getType->MWorld$L()
+
+PacketPlayOutEntityLook->C{nms}.PacketPlayOutEntity$PacketPlayOutEntityLook
+PacketPlayOutRelEntityMove->C{nms}.PacketPlayOutEntity$PacketPlayOutRelEntityMove
+PacketPlayOutRelEntityMoveLook->C{nms}.PacketPlayOutEntity$PacketPlayOutRelEntityMoveLook
+
+NetworkManager_channel->FNetworkManager$channel

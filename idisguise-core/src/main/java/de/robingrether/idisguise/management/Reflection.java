@@ -32,6 +32,13 @@ public class Reflection {
 	public static Class<?> EntityPlayer;
 	public static Method EntityPlayer_getBukkitEntity;
 	public static Field EntityPlayer_playerConnection;
+	public static Field EntityPlayer_playerInteractManager;
+	public static Method EntityPlayer_updateAbilities;
+	
+	public static Class<?> EntityHuman;
+	public static Field EntityHuman_exp;
+	public static Field EntityHuman_expTotal;
+	public static Field EntityHuman_expLevel;
 	
 	public static Class<?> DataWatcherItem;
 	public static Field DataWatcherItem_dataWatcherObject;
@@ -51,11 +58,20 @@ public class Reflection {
 	public static Constructor<?> PacketPlayOutNamedEntitySpawn_new;
 	public static Field PacketPlayOutNamedEntitySpawn_entityId;
 	public static Field PacketPlayOutNamedEntitySpawn_profileId;
+	public static Field PacketPlayOutNamedEntitySpawn_x;
+	public static Field PacketPlayOutNamedEntitySpawn_y;
+	public static Field PacketPlayOutNamedEntitySpawn_z;
+	public static Field PacketPlayOutNamedEntitySpawn_yaw;
+	public static Field PacketPlayOutNamedEntitySpawn_pitch;
 	
 	public static Class<?> PacketPlayOutSpawnEntityLiving;
 	public static Constructor<?> PacketPlayOutSpawnEntityLiving_new;
 	public static Field PacketPlayOutSpawnEntityLiving_entityId;
+	public static Field PacketPlayOutSpawnEntityLiving_x;
+	public static Field PacketPlayOutSpawnEntityLiving_y;
+	public static Field PacketPlayOutSpawnEntityLiving_z;
 	public static Field PacketPlayOutSpawnEntityLiving_yaw;
+	public static Field PacketPlayOutSpawnEntityLiving_pitch;
 	
 	public static Class<?> PacketPlayOutPlayerInfo;
 	public static Constructor<?> PacketPlayOutPlayerInfo_new;
@@ -84,6 +100,10 @@ public class Reflection {
 	public static Field PacketPlayOutEntity_yaw;
 	public static Field PacketPlayOutEntity_pitch;
 	public static Field PacketPlayOutEntity_isOnGround;
+	
+	public static Class<?> PacketPlayOutEntityLook;
+	public static Class<?> PacketPlayOutRelEntityMove;
+	public static Class<?> PacketPlayOutRelEntityMoveLook;
 	
 	public static Class<?> PacketPlayOutEntityTeleport;
 	public static Constructor<?> PacketPlayOutEntityTeleport_new;
@@ -117,6 +137,9 @@ public class Reflection {
 	
 	public static Class<?> World;
 	public static Method World_getEntityById;
+	public static Method World_getDifficulty;
+	public static Method World_getType;
+	public static Method World_getSpawn;
 	
 	public static Class<?> Entity;
 	public static Field Entity_world;
@@ -295,9 +318,11 @@ public class Reflection {
 	
 	public static Class<?> WorldServer;
 	public static Field WorldServer_entityTracker;
+	public static Method WorldServer_getPlayerChunkMap;
 	
 	public static Class<?> EntityTracker;
 	public static Field EntityTracker_trackedEntities;
+	public static Method EntityTracker_untrackPlayer;
 	
 	public static Class<?> IntHashMap;
 	public static Method IntHashMap_get;
@@ -340,7 +365,8 @@ public class Reflection {
 	public static Method EnumBoatType_fromString;
 	
 	public static Class<?> PlayerList;
-	public static Method PlayerList_moveToWorld;
+	public static Method PlayerList_sendWorldInfo;
+	public static Method PlayerList_updateClient;
 	
 	public static Class<?> CraftBlockData;
 	public static Method CraftBlockData_getHandle;
@@ -354,10 +380,41 @@ public class Reflection {
 	public static Class<?> EntityTropicalFish;
 	public static Method EntityTropicalFish_setVariant;
 	
+	public static Class<?> PlayerConnection;
+	public static Field PlayerConnection_networkManager;
+	
+	public static Class<?> NetworkManager;
+	public static Field NetworkManager_channel;
+	
+	public static Class<?> PacketPlayOutRespawn;
+	public static Constructor<?> PacketPlayOutRespawn_new;
+	
+	public static Class<?> PlayerInteractManager;
+	public static Method PlayerInteractManager_getGameMode;
+	
+	public static Class<?> PacketPlayOutPosition;
+	public static Constructor<?> PacketPlayOutPosition_new;
+	
+	public static Class<?> PacketPlayOutSpawnPosition;
+	public static Constructor<?> PacketPlayOutSpawnPosition_new;
+	
+	public static Class<?> PacketPlayOutExperience;
+	public static Constructor<?> PacketPlayOutExperience_new;
+	
+	public static Class<?> PlayerChunkMap;
+	public static Method PlayerChunkMap_removePlayer;
+	public static Method PlayerChunkMap_addPlayer;
+	
+	public static Class<?> PacketPlayOutEntityEffect;
+	public static Constructor<?> PacketPlayOutEntityEffect_new;
+	
+	public static Class<?> EntityLiving;
+	public static Method EntityLiving_getEffects;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
-	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_]+)\\$(.+)");
-	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");
-	private static final Pattern newPattern = Pattern.compile("([A-Za-z0-9_]+)\\(([^\\(\\)]*)\\)");
+	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_\\.{}]+)\\$(.+)");
+	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_\\.{}]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");
+	private static final Pattern newPattern = Pattern.compile("([A-Za-z0-9_\\.{}]+)\\(([^\\(\\)]*)\\)");
 	
 	public static void load(String file, String nms, String obc) {
 		try {
