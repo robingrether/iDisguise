@@ -1,6 +1,8 @@
 package de.robingrether.idisguise.io;
 
 import java.io.File;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -40,13 +42,18 @@ public class Language {
 	public String UNDISGUISE_SUCCESS_SELF = ChatColor.GOLD + "You undisguised.";
 	public String UNDISGUISE_SUCCESS_OTHER = ChatColor.GOLD + "%player% undisguised.";
 	public String UNDISGUISE_SUCCESS_MULTIPLE = ChatColor.GOLD + "%share% out of %total% disguised entities undisguised.";
-	public String HELP_BASE2 = ChatColor.GOLD + (ChatColor.ITALIC + "%command% " + ChatColor.GOLD + "- %description%");
-	public String HELP_TYPES2 = ChatColor.GOLD + "%types%";
+	@LastUpdated(50801)
+	public String HELP_BASE = ChatColor.GOLD + (ChatColor.ITALIC + "%command% " + ChatColor.GOLD + "- %description%");
+	@LastUpdated(50801)
+	public String HELP_TYPES = ChatColor.GOLD + "%types%";
 	public String HELP_TYPES_AVAILABLE = "%type%";
+	@LastUpdated(50801)
 	public String HELP_TYPES_NOT_SUPPORTED = ChatColor.GRAY + (ChatColor.STRIKETHROUGH + "%type%");
+	@LastUpdated(50801)
 	public String HELP_TYPES_NO_PERMISSION = ChatColor.GRAY + (ChatColor.STRIKETHROUGH + "%type%");
-	public String HELP_HELP_NEW = ChatColor.GRAY + "Use " + ChatColor.ITALIC + "%command% " + ChatColor.GRAY + "to read the other pages:";
-	public String HELP_HELP_NEW2 = ChatColor.GRAY + "%title%(%page%), ";
+	@LastUpdated(50801)
+	public String HELP_INFO = ChatColor.GRAY + "Use " + ChatColor.ITALIC + "%command% " + ChatColor.GRAY + "to read the other pages:";
+	public String HELP_INFO_FORMAT = ChatColor.GRAY + "%title%(%page%), ";
 	public String HELP_PLAYER_SELF = "Disguise yourself as a player";
 	public String HELP_PLAYER_OTHER = "Disguise a player as a player";
 	public String HELP_RANDOM_SELF = "Disguise yourself as a randomly chosen mob";
@@ -80,13 +87,17 @@ public class Language {
 	public String SEE_THROUGH_DISABLE_SELF = ChatColor.GOLD + "See-through mode is now " + ChatColor.RED + "disabled " + ChatColor.GOLD + "for you.";
 	public String SEE_THROUGH_DISABLE_OTHER = ChatColor.GOLD + "See-through mode is now " + ChatColor.RED + "disabled " + ChatColor.GOLD + "for %player%.";
 	public String SEE_THROUGH_ENTITY = ChatColor.RED + "See-through mode is only for players.";
-	public String HELP_TARGET_UID2 = ChatColor.GOLD + "<account-id> - Select a player by account id";
-	public String HELP_TARGET_EID2 = ChatColor.GOLD + "[entity-id] - Select an entity/player by entity id";
+	@LastUpdated(50801)
+	public String HELP_TARGET_UID = ChatColor.GOLD + "<account-id> - Select a player by account id";
+	@LastUpdated(50801)
+	public String HELP_TARGET_EID = ChatColor.GOLD + "[entity-id] - Select an entity/player by entity id";
 	public String HELP_TARGET_VANILLA = ChatColor.GOLD + "@p/@r/@a/@e/@s[...] - Select entities/players with vanilla selector";
-	public String HELP_TARGET_NAME_EXACT2 = ChatColor.GOLD + "{player-name} - Select a player by EXACT account name";
-	public String HELP_TARGET_NAME_MATCH2 = ChatColor.GOLD + "player-name - Match an ONLINE player";
+	@LastUpdated(50801)
+	public String HELP_TARGET_NAME_EXACT = ChatColor.GOLD + "{player-name} - Select a player by EXACT account name";
+	@LastUpdated(50801)
+	public String HELP_TARGET_NAME_MATCH = ChatColor.GOLD + "player-name - Match an ONLINE player";
 	public String HELP_TARGET_VANILLA_TIP = ChatColor.GRAY + "Tip: You can use vanilla target selectors in command blocks like this " + ChatColor.ITALIC + "#p/#r/#a/#e/#s[...]";
-	public String HELP_PAGE_TITLE = ChatColor.GRAY + "==== " + ChatColor.BOLD + "%name% " + ChatColor.GRAY + "%version% ==== " + ChatColor.BOLD + "%title% " + ChatColor.GRAY + "(%page%/%total%) ====";
+	public String HELP_TITLE = ChatColor.GRAY + "==== " + ChatColor.BOLD + "%name% " + ChatColor.GRAY + "%version% ==== " + ChatColor.BOLD + "%title% " + ChatColor.GRAY + "(%page%/%total%) ====";
 	public String HELP_TITLE_DISGUISE = "Disguise";
 	public String HELP_TITLE_UNDISGUISE = "Undisguise";
 	public String HELP_TITLE_TYPES = "Types";
@@ -168,9 +179,10 @@ public class Language {
 		File languageFile = new File(plugin.getDataFolder(), "language.yml");
 		FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(languageFile);
 		try {
+			int fileVersion = UpdateCheck.extractVersionNumber(fileConfiguration.getString("version", "iDisguise 5.7.3"));
 			for(Field field : getClass().getDeclaredFields()) {
 				if(field.getType().equals(String.class)) {
-					if(fileConfiguration.isString(field.getName().toLowerCase(Locale.ENGLISH).replace('_', '-'))) {
+					if((!field.isAnnotationPresent(LastUpdated.class) || field.getAnnotation(LastUpdated.class).value() <= fileVersion) && fileConfiguration.isString(field.getName().toLowerCase(Locale.ENGLISH).replace('_', '-'))) {
 						field.set(this, fileConfiguration.getString(field.getName().toLowerCase(Locale.ENGLISH).replace('_', '-')));
 					}
 				}
@@ -189,10 +201,16 @@ public class Language {
 					fileConfiguration.set(field.getName().toLowerCase(Locale.ENGLISH).replace('_', '-'), field.get(this));
 				}
 			}
+			fileConfiguration.set("version", plugin.getFullName());
 			fileConfiguration.save(languageFile);
 		} catch(Exception e) {
 			plugin.getLogger().log(Level.SEVERE, "An error occured while saving the language file.", e);
 		}
+	}
+	
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface LastUpdated {
+		int value();
 	}
 	
 }

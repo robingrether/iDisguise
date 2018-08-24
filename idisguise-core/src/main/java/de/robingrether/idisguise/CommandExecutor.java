@@ -102,15 +102,15 @@ public class CommandExecutor implements TabExecutor {
 							if(DisguiseManager.isDisguised(player)) {
 								if(DisguiseManager.getDisguise(player) instanceof PlayerDisguise) {
 									PlayerDisguise disguise = (PlayerDisguise)DisguiseManager.getDisguise(player);
-									sender.sendMessage((disguiseSelf ? plugin.getLanguage().STATUS_PLAYER_SELF : plugin.getLanguage().STATUS_PLAYER_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().getCustomCommandArgument()).replace("%name%", disguise.getDisplayName()));
+									sender.sendMessage((disguiseSelf ? plugin.getLanguage().STATUS_PLAYER_SELF : plugin.getLanguage().STATUS_PLAYER_OTHER).replace("%player%", player.getName() != null ? player.getName() : player.getUniqueId().toString()).replace("%type%", disguise.getType().getCustomCommandArgument()).replace("%name%", disguise.getDisplayName()));
 									sender.sendMessage(plugin.getLanguage().STATUS_SUBTYPES.replace("%subtypes%", disguise.toString()));
 								} else {
-									Disguise disguise = DisguiseManager.getDisguise(player); // TODO: fix player name null
-									sender.sendMessage((disguiseSelf ? plugin.getLanguage().STATUS_SELF : plugin.getLanguage().STATUS_OTHER).replace("%player%", player.getName()).replace("%type%", disguise.getType().getCustomCommandArgument()));
+									Disguise disguise = DisguiseManager.getDisguise(player);
+									sender.sendMessage((disguiseSelf ? plugin.getLanguage().STATUS_SELF : plugin.getLanguage().STATUS_OTHER).replace("%player%", player.getName() != null ? player.getName() : player.getUniqueId().toString()).replace("%type%", disguise.getType().getCustomCommandArgument()));
 									sender.sendMessage(plugin.getLanguage().STATUS_SUBTYPES.replace("%subtypes%", disguise.toString()));
 								}
 							} else {
-								sender.sendMessage((disguiseSelf ? plugin.getLanguage().STATUS_NOT_DISGUISED_SELF : plugin.getLanguage().STATUS_NOT_DISGUISED_OTHER).replace("%player%", player.getName()));
+								sender.sendMessage((disguiseSelf ? plugin.getLanguage().STATUS_NOT_DISGUISED_SELF : plugin.getLanguage().STATUS_NOT_DISGUISED_OTHER).replace("%player%", player.getName() != null ? player.getName() : player.getUniqueId().toString()));
 							}
 						} else {
 							LivingEntity livingEntity = (LivingEntity)target;
@@ -135,11 +135,11 @@ public class CommandExecutor implements TabExecutor {
 							if(target instanceof OfflinePlayer) {
 								OfflinePlayer player = (OfflinePlayer)target;
 								if(args.length < 2) {
-									sender.sendMessage((DisguiseManager.canSeeThrough(player) ? disguiseSelf ? plugin.getLanguage().SEE_THROUGH_STATUS_ON_SELF : plugin.getLanguage().SEE_THROUGH_STATUS_ON_OTHER : disguiseSelf ? plugin.getLanguage().SEE_THROUGH_STATUS_OFF_SELF : plugin.getLanguage().SEE_THROUGH_STATUS_OFF_OTHER).replace("%player%", player.getName()));
+									sender.sendMessage((DisguiseManager.canSeeThrough(player) ? disguiseSelf ? plugin.getLanguage().SEE_THROUGH_STATUS_ON_SELF : plugin.getLanguage().SEE_THROUGH_STATUS_ON_OTHER : disguiseSelf ? plugin.getLanguage().SEE_THROUGH_STATUS_OFF_SELF : plugin.getLanguage().SEE_THROUGH_STATUS_OFF_OTHER).replace("%player%", player.getName() != null ? player.getName() : player.getUniqueId().toString()));
 								} else if(StringUtil.equalsIgnoreCase(args[1], "on", "off")) {
 									boolean seeThrough = args[1].equalsIgnoreCase("on");
 									DisguiseManager.setSeeThrough(player, seeThrough);
-									sender.sendMessage((seeThrough ? disguiseSelf ? plugin.getLanguage().SEE_THROUGH_ENABLE_SELF : plugin.getLanguage().SEE_THROUGH_ENABLE_OTHER : disguiseSelf ? plugin.getLanguage().SEE_THROUGH_DISABLE_SELF : plugin.getLanguage().SEE_THROUGH_DISABLE_OTHER).replace("%player%", player.getName()));
+									sender.sendMessage((seeThrough ? disguiseSelf ? plugin.getLanguage().SEE_THROUGH_ENABLE_SELF : plugin.getLanguage().SEE_THROUGH_ENABLE_OTHER : disguiseSelf ? plugin.getLanguage().SEE_THROUGH_DISABLE_SELF : plugin.getLanguage().SEE_THROUGH_DISABLE_OTHER).replace("%player%", player.getName() != null ? player.getName() : player.getUniqueId().toString()));
 								} else {
 									sender.sendMessage(plugin.getLanguage().WRONG_USAGE_SEE_THROUGH.replace("%argument%", args[1]));
 								}
@@ -152,7 +152,7 @@ public class CommandExecutor implements TabExecutor {
 					}
 				} else {
 					Disguise disguise = null;
-					if(StringUtil.equalsIgnoreCase(args[0], "player", "p")) { // TODO: ensure restricted names are not used
+					if(StringUtil.equalsIgnoreCase(args[0], "player", "p")) {
 						if(args.length < 2) {
 							sender.sendMessage(plugin.getLanguage().WRONG_USAGE_NO_NAME);
 							return true;
@@ -228,7 +228,7 @@ public class CommandExecutor implements TabExecutor {
 							Object target = targets.iterator().next();
 							if(successes == 1) {
 								sender.sendMessage((disguiseSelf ? plugin.getLanguage().DISGUISE_SUCCESS_SELF : plugin.getLanguage().DISGUISE_SUCCESS_OTHER)
-										.replace("%player%", target instanceof OfflinePlayer ? ((OfflinePlayer)target).getName() : ((LivingEntity)target).getType().name() + " [" + ((LivingEntity)target).getEntityId() + "]").replace("%type%", disguise.getType().getCustomCommandArgument()));
+										.replace("%player%", target instanceof OfflinePlayer ? ((OfflinePlayer)target).getName() != null ? ((OfflinePlayer)target).getName() : ((OfflinePlayer)target).getUniqueId().toString() : ((LivingEntity)target).getType().name() + " [" + ((LivingEntity)target).getEntityId() + "]").replace("%type%", disguise.getType().getCustomCommandArgument()));
 							} else {
 								sender.sendMessage(plugin.getLanguage().EVENT_CANCELLED);
 							}
@@ -497,29 +497,29 @@ public class CommandExecutor implements TabExecutor {
 					sender.sendMessage(plugin.getLanguage().EASTER_EGG_BIRTHDAY.replace("%age%", Integer.toString(today.get(Calendar.YEAR) - 2012)));
 				}
 				if(sender.hasPermission("iDisguise.player.display-name")) {
-					sender.sendMessage(plugin.getLanguage().HELP_BASE2.replace("%command%", disguiseCommand + " player [skin] <name>").replace("%description%", self ? plugin.getLanguage().HELP_PLAYER_SELF : plugin.getLanguage().HELP_PLAYER_OTHER));
+					sender.sendMessage(plugin.getLanguage().HELP_BASE.replace("%command%", disguiseCommand + " player [skin] <name>").replace("%description%", self ? plugin.getLanguage().HELP_PLAYER_SELF : plugin.getLanguage().HELP_PLAYER_OTHER));
 				} else {
-					sender.sendMessage(plugin.getLanguage().HELP_BASE2.replace("%command%", disguiseCommand + " player <name>").replace("%description%", self ? plugin.getLanguage().HELP_PLAYER_SELF : plugin.getLanguage().HELP_PLAYER_OTHER));
+					sender.sendMessage(plugin.getLanguage().HELP_BASE.replace("%command%", disguiseCommand + " player <name>").replace("%description%", self ? plugin.getLanguage().HELP_PLAYER_SELF : plugin.getLanguage().HELP_PLAYER_OTHER));
 				}
-				sender.sendMessage(plugin.getLanguage().HELP_BASE2.replace("%command%", disguiseCommand + " [subtypes ...] <type> [subtypes ...]").replace("%description%", self ? plugin.getLanguage().HELP_DISGUISE_SELF : plugin.getLanguage().HELP_DISGUISE_OTHER));
-				sender.sendMessage(plugin.getLanguage().HELP_BASE2.replace("%command%", disguiseCommand + " <subtypes ...>").replace("%description%", plugin.getLanguage().HELP_SUBTYPE));
+				sender.sendMessage(plugin.getLanguage().HELP_BASE.replace("%command%", disguiseCommand + " [subtypes ...] <type> [subtypes ...]").replace("%description%", self ? plugin.getLanguage().HELP_DISGUISE_SELF : plugin.getLanguage().HELP_DISGUISE_OTHER));
+				sender.sendMessage(plugin.getLanguage().HELP_BASE.replace("%command%", disguiseCommand + " <subtypes ...>").replace("%description%", plugin.getLanguage().HELP_SUBTYPE));
 				if(sender.hasPermission("iDisguise.random")) {
-					sender.sendMessage(plugin.getLanguage().HELP_BASE2.replace("%command%", disguiseCommand + " random").replace("%description%", self ? plugin.getLanguage().HELP_RANDOM_SELF : plugin.getLanguage().HELP_RANDOM_OTHER));
+					sender.sendMessage(plugin.getLanguage().HELP_BASE.replace("%command%", disguiseCommand + " random").replace("%description%", self ? plugin.getLanguage().HELP_RANDOM_SELF : plugin.getLanguage().HELP_RANDOM_OTHER));
 				}
-				sender.sendMessage(plugin.getLanguage().HELP_BASE2.replace("%command%", disguiseCommand + " status").replace("%description%", self ? plugin.getLanguage().HELP_STATUS_SELF : plugin.getLanguage().HELP_STATUS_OTHER));
+				sender.sendMessage(plugin.getLanguage().HELP_BASE.replace("%command%", disguiseCommand + " status").replace("%description%", self ? plugin.getLanguage().HELP_STATUS_SELF : plugin.getLanguage().HELP_STATUS_OTHER));
 			}
 		});
 		
 		helpPages.add(new HelpPage(plugin.getLanguage().HELP_TITLE_UNDISGUISE) {
 			void sendContent(CommandSender sender, String alias, boolean self, String disguiseCommand, String undisguiseCommand) {
 				if(self) {
-					sender.sendMessage(plugin.getLanguage().HELP_BASE2.replace("%command%", undisguiseCommand).replace("%description%", plugin.getLanguage().HELP_UNDISGUISE_SELF));
+					sender.sendMessage(plugin.getLanguage().HELP_BASE.replace("%command%", undisguiseCommand).replace("%description%", plugin.getLanguage().HELP_UNDISGUISE_SELF));
 				}
 				if(sender.hasPermission("iDisguise.undisguise.all")) {
-					sender.sendMessage(plugin.getLanguage().HELP_BASE2.replace("%command%", undisguiseCommand + " <*/*o/*p/*e> [ignore]").replace("%description%", plugin.getLanguage().HELP_UNDISGUISE_ALL_NEW));
+					sender.sendMessage(plugin.getLanguage().HELP_BASE.replace("%command%", undisguiseCommand + " <*/*o/*p/*e> [ignore]").replace("%description%", plugin.getLanguage().HELP_UNDISGUISE_ALL_NEW));
 				}
 				if(sender.hasPermission("iDisguise.undisguise.others")) {
-					sender.sendMessage(plugin.getLanguage().HELP_BASE2.replace("%command%", undisguiseCommand + " <target> [ignore]").replace("%description%", plugin.getLanguage().HELP_UNDISGUISE_OTHER));
+					sender.sendMessage(plugin.getLanguage().HELP_BASE.replace("%command%", undisguiseCommand + " <target> [ignore]").replace("%description%", plugin.getLanguage().HELP_UNDISGUISE_OTHER));
 				}
 			}
 		});
@@ -527,7 +527,7 @@ public class CommandExecutor implements TabExecutor {
 		helpPages.add(new HelpPage(plugin.getLanguage().HELP_TITLE_TYPES) {
 			void sendContent(CommandSender sender, String alias, boolean self, String disguiseCommand, String undisguiseCommand) {
 				StringBuilder builder = new StringBuilder();
-				String color = ChatColor.getLastColors(plugin.getLanguage().HELP_TYPES2);
+				String color = ChatColor.getLastColors(plugin.getLanguage().HELP_TYPES);
 				for(DisguiseType type : DisguiseType.values()) {
 					if(!type.isPlayer()) {
 						String format = !type.isAvailable() ? plugin.getLanguage().HELP_TYPES_NOT_SUPPORTED : plugin.hasPermission(sender, type) ? plugin.getLanguage().HELP_TYPES_AVAILABLE : plugin.getLanguage().HELP_TYPES_NO_PERMISSION;
@@ -538,7 +538,7 @@ public class CommandExecutor implements TabExecutor {
 					}
 				}
 				if(builder.length() > 2) {
-					sender.sendMessage(plugin.getLanguage().HELP_TYPES2.replace("%types%", builder.substring(0, builder.length() - 2)));
+					sender.sendMessage(plugin.getLanguage().HELP_TYPES.replace("%types%", builder.substring(0, builder.length() - 2)));
 				}
 			}
 		});
@@ -546,17 +546,17 @@ public class CommandExecutor implements TabExecutor {
 		helpPages.add(new HelpPage(plugin.getLanguage().HELP_TITLE_FEATURES) {
 			void sendContent(CommandSender sender, String alias, boolean self, String disguiseCommand, String undisguiseCommand) {
 				if(sender.hasPermission("iDisguise.reload")) {
-					sender.sendMessage(plugin.getLanguage().HELP_BASE2.replace("%command%", "/" + alias + " reload").replace("%description%", plugin.getLanguage().HELP_RELOAD));
+					sender.sendMessage(plugin.getLanguage().HELP_BASE.replace("%command%", "/" + alias + " reload").replace("%description%", plugin.getLanguage().HELP_RELOAD));
 				}
 				if(sender.hasPermission("iDisguise.see-through")) {
-					sender.sendMessage(plugin.getLanguage().HELP_BASE2.replace("%command%", disguiseCommand + " see-through [on/off]").replace("%description%", self ? plugin.getLanguage().HELP_SEE_THROUGH_SELF : plugin.getLanguage().HELP_SEE_THROUGH_OTHER));
+					sender.sendMessage(plugin.getLanguage().HELP_BASE.replace("%command%", disguiseCommand + " see-through [on/off]").replace("%description%", self ? plugin.getLanguage().HELP_SEE_THROUGH_SELF : plugin.getLanguage().HELP_SEE_THROUGH_OTHER));
 				}
 			}
 		});
 		
 		helpPages.add(new HelpPage(plugin.getLanguage().HELP_TITLE_TARGETS) {
 			void sendContent(CommandSender sender, String alias, boolean self, String disguiseCommand, String undisguiseCommand) {
-				for(String message : new String[] {plugin.getLanguage().HELP_TARGET_UID2, plugin.getLanguage().HELP_TARGET_EID2, plugin.getLanguage().HELP_TARGET_VANILLA, plugin.getLanguage().HELP_TARGET_NAME_EXACT2, plugin.getLanguage().HELP_TARGET_NAME_MATCH2, plugin.getLanguage().HELP_TARGET_VANILLA_TIP}) {
+				for(String message : new String[] {plugin.getLanguage().HELP_TARGET_UID, plugin.getLanguage().HELP_TARGET_EID, plugin.getLanguage().HELP_TARGET_VANILLA, plugin.getLanguage().HELP_TARGET_NAME_EXACT, plugin.getLanguage().HELP_TARGET_NAME_MATCH, plugin.getLanguage().HELP_TARGET_VANILLA_TIP}) {
 					sender.sendMessage(message);
 				}
 			}
@@ -588,13 +588,13 @@ public class CommandExecutor implements TabExecutor {
 		}
 		
 		final void send(CommandSender sender, int pageNumber, int totalPages,  String alias, boolean self, String disguiseCommand, String undisguiseCommand) {
-			sender.sendMessage(plugin.getLanguage().HELP_PAGE_TITLE.replace("%title%", title).replace("%name%", "iDisguise").replace("%version%", plugin.getVersion()).replace("%page%", Integer.toString(pageNumber)).replace("%total%", Integer.toString(totalPages)));
+			sender.sendMessage(plugin.getLanguage().HELP_TITLE.replace("%title%", title).replace("%name%", "iDisguise").replace("%version%", plugin.getVersion()).replace("%page%", Integer.toString(pageNumber)).replace("%total%", Integer.toString(totalPages)));
 			sendContent(sender, alias, self, disguiseCommand, undisguiseCommand);
-			sender.sendMessage(plugin.getLanguage().HELP_HELP_NEW.replace("%command%", "/" + alias + " help [page]"));
+			sender.sendMessage(plugin.getLanguage().HELP_INFO.replace("%command%", "/" + alias + " help [page]"));
 			
 			StringBuilder builder = new StringBuilder();
 			for(int i = 1; i < helpPages.size(); i++) {
-				builder.append(plugin.getLanguage().HELP_HELP_NEW2.replace("%title%", helpPages.get(i).title).replace("%page%", Integer.toString(i)));
+				builder.append(plugin.getLanguage().HELP_INFO_FORMAT.replace("%title%", helpPages.get(i).title).replace("%page%", Integer.toString(i)));
 			}
 			if(builder.length() > 2) sender.sendMessage(builder.substring(0, builder.length() - 2));
 		}
