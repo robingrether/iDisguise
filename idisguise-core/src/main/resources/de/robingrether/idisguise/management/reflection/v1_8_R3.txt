@@ -1,6 +1,8 @@
 Block_fromLegacyData->MBlock$fromLegacyData(int)
 Block_getById->MBlock$getById(int)
 
+DataWatcher_getString->MDataWatcher$getString(int)
+
 DataWatcherObject->C{nms}.DataWatcher$WatchableObject
 DataWatcherObject_getId->MDataWatcherObject$a()
 
@@ -42,6 +44,8 @@ MinecraftServer_getEntityByUID->MMinecraftServer$a(java.util.UUID)
 
 PacketPlayInUseEntity_getAction->MPacketPlayInUseEntity$a()
 
+PacketPlayOutNamedEntitySpawn_dataWatcher->FPacketPlayOutNamedEntitySpawn$i
+
 PacketPlayOutNamedSoundEffect_pitch->FPacketPlayOutNamedSoundEffect$f
 PacketPlayOutNamedSoundEffect_volume->FPacketPlayOutNamedSoundEffect$e
 PacketPlayOutNamedSoundEffect_x->FPacketPlayOutNamedSoundEffect$b
@@ -64,6 +68,7 @@ PacketPlayOutSpawnEntityLiving_y->FPacketPlayOutSpawnEntityLiving$d
 PacketPlayOutSpawnEntityLiving_z->FPacketPlayOutSpawnEntityLiving$e
 PacketPlayOutSpawnEntityLiving_yaw->FPacketPlayOutSpawnEntityLiving$i
 PacketPlayOutSpawnEntityLiving_pitch->FPacketPlayOutSpawnEntityLiving$j
+PacketPlayOutSpawnEntityLiving_dataWatcher->FPacketPlayOutSpawnEntityLiving$l
 
 PlayerInfoData->C{nms}.PacketPlayOutPlayerInfo$PlayerInfoData
 PlayerInfoData_getDisplayName->MPlayerInfoData$d()

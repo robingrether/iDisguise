@@ -2,19 +2,17 @@ package de.robingrether.idisguise.management.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -28,13 +26,13 @@ public final class EntityIdList {
 	
 	private static Map<Integer, UUID> entityUIDs;
 	private static Map<UUID, String> playerNames;
-	private static Set<UUID> enderDragons;
+	private static Map<UUID, EntityType> entityTypes;
 	
 	public static void init() {
 		legacyMode = !VersionHelper.requireVersion("v1_8_R2"); 			// are we before 1.8.3 (1_8_R2) ?
 		entityUIDs = new ConcurrentHashMap<Integer, UUID>();
 		playerNames = new ConcurrentHashMap<UUID, String>();
-		enderDragons = Collections.newSetFromMap(new ConcurrentHashMap<UUID, Boolean>());
+		entityTypes = new ConcurrentHashMap<UUID, EntityType>();
 		for(World world : Bukkit.getWorlds()) {
 			for(LivingEntity livingEntity : world.getLivingEntities()) {
 				addEntity(livingEntity);
@@ -44,16 +42,20 @@ public final class EntityIdList {
 	
 	public static void addEntity(LivingEntity livingEntity) {
 		entityUIDs.put(livingEntity.getEntityId(), livingEntity.getUniqueId());
+		entityTypes.put(livingEntity.getUniqueId(), livingEntity.getType());
 		if(livingEntity instanceof Player) playerNames.put(livingEntity.getUniqueId(), livingEntity.getName());
-		else if(livingEntity instanceof EnderDragon) enderDragons.add(livingEntity.getUniqueId());
 	}
 	
 	public static void removeEntity(int entityId) {
-		entityUIDs.remove(entityId);
+		UUID uniqueId = entityUIDs.remove(entityId);
+		if(uniqueId != null) {
+			entityTypes.remove(uniqueId);
+			playerNames.remove(uniqueId);
+		}
 	}
 	
 	public static void removeEntity(LivingEntity livingEntity) {
-		entityUIDs.remove(livingEntity.getEntityId());
+		removeEntity(livingEntity.getEntityId());
 	}
 	
 	public static Player getPlayerByEntityId(int entityId) {
@@ -128,12 +130,16 @@ public final class EntityIdList {
 		return Math.sqrt(closestDistanceSquared) <= maxDistance ? closestEntity : null;
 	}
 	
+	public static EntityType getEntityType(UUID uniqueId) {
+		return entityTypes.get(uniqueId);
+	}
+	
 	public static boolean isEnderDragon(UUID uniqueId) {
-		return enderDragons.contains(uniqueId);
+		return EntityType.ENDER_DRAGON.equals(getEntityType(uniqueId));
 	}
 	
 	public static boolean isPlayer(UUID uniqueId) {
-		return playerNames.containsKey(uniqueId);
+		return EntityType.PLAYER.equals(getEntityType(uniqueId));
 	}
 	
 	public static String getPlayerName(UUID uniqueId) {

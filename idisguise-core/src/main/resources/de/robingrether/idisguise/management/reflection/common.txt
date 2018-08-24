@@ -20,6 +20,8 @@ CraftPlayer_getProfile->MCraftPlayer$getProfile()
 CraftWorld->C{obc}.CraftWorld
 CraftWorld_getHandle->MCraftWorld$getHandle()
 
+DataWatcher->C{nms}.DataWatcher
+
 Entity->C{nms}.Entity
 Entity_getDataWatcher->MEntity$getDataWatcher()
 Entity_setLocation->MEntity$setLocation(double,double,double,float,float)

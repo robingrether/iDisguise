@@ -63,6 +63,7 @@ public class Reflection {
 	public static Field PacketPlayOutNamedEntitySpawn_z;
 	public static Field PacketPlayOutNamedEntitySpawn_yaw;
 	public static Field PacketPlayOutNamedEntitySpawn_pitch;
+	public static Field PacketPlayOutNamedEntitySpawn_dataWatcher;
 	
 	public static Class<?> PacketPlayOutSpawnEntityLiving;
 	public static Constructor<?> PacketPlayOutSpawnEntityLiving_new;
@@ -72,6 +73,7 @@ public class Reflection {
 	public static Field PacketPlayOutSpawnEntityLiving_z;
 	public static Field PacketPlayOutSpawnEntityLiving_yaw;
 	public static Field PacketPlayOutSpawnEntityLiving_pitch;
+	public static Field PacketPlayOutSpawnEntityLiving_dataWatcher;
 	
 	public static Class<?> PacketPlayOutPlayerInfo;
 	public static Constructor<?> PacketPlayOutPlayerInfo_new;
@@ -149,6 +151,7 @@ public class Reflection {
 	public static Method Entity_setCustomName;
 	public static Method Entity_setCustomNameVisible;
 	public static Method Entity_getBukkitEntity;
+	public static Field Entity_CUSTOM_NAME;
 	
 	public static Class<?> EntityAgeable;
 	public static Method EntityAgeable_setAge;
@@ -410,6 +413,10 @@ public class Reflection {
 	
 	public static Class<?> EntityLiving;
 	public static Method EntityLiving_getEffects;
+	
+	public static Class<?> DataWatcher;
+	public static Method DataWatcher_get;
+	public static Method DataWatcher_getString;
 	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_\\.{}]+)\\$(.+)");

@@ -1,6 +1,7 @@
 package de.robingrether.idisguise.management;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -27,6 +29,7 @@ import de.robingrether.idisguise.management.util.EntityIdList;
 
 import static de.robingrether.idisguise.management.Reflection.*;
 import de.robingrether.util.ObjectUtil;
+import de.robingrether.util.StringUtil;
 import io.netty.channel.Channel;
 
 public final class PacketHandler {
@@ -41,7 +44,7 @@ public final class PacketHandler {
 	
 	public static boolean bungeeCord;
 	
-	private static Object[] getSpawnPackets(UUID disguisable, String customName, int entityId, double posX, double posY, double posZ, float rotYaw, float rotPitch, Player observer) { // TODO: custom name
+	private static Object[] getSpawnPackets(UUID disguisable, String customName, int entityId, double posX, double posY, double posZ, float rotYaw, float rotPitch, Player observer) {
 		try {
 			Disguise disguise = DisguiseManager.getDisguise(disguisable);
 			if(disguise == null) return null;
@@ -438,6 +441,21 @@ public final class PacketHandler {
 		return null;
 	}
 	
+	private static String getCustomName(Object dataWatcher) {
+		try {
+			if(VersionHelper.require1_13()) {
+				return (String)CraftChatMessage_fromComponent.invoke(null, ((Optional)DataWatcher_get.invoke(dataWatcher, Entity_CUSTOM_NAME.get(null))).orElse(null), EnumChatFormat_WHITE.get(null));
+			} else if(VersionHelper.require1_9()) {
+				return (String)DataWatcher_get.invoke(dataWatcher, Entity_CUSTOM_NAME.get(null));
+			} else {
+				return (String)DataWatcher_getString.invoke(dataWatcher, 2);
+			}
+		} catch(InvocationTargetException|IllegalAccessException e) {
+			// TODO: debug message
+		}
+		return "";
+	}
+	
 	private static UUID formatUniqueId(UUID origin) {
 		return bungeeCord ? new UUID(origin.getMostSignificantBits() & 0xFFFFFFFFFFFF0FFFL | 0x0000000000005000, origin.getLeastSignificantBits()) : origin; // TODO: use different version
 	}
@@ -573,7 +591,7 @@ public final class PacketHandler {
 			if(disguisable != null && EntityIdList.isPlayer(disguisable) && !observer.getUniqueId().equals(disguisable) && DisguiseManager.isDisguisedTo(disguisable, observer)) {
 				Object[] spawnPackets = VersionHelper.require1_9() ?
 						getSpawnPackets(disguisable,
-								null,
+								EntityIdList.getPlayerName(disguisable),
 								PacketPlayOutNamedEntitySpawn_entityId.getInt(packet),
 								PacketPlayOutNamedEntitySpawn_x.getDouble(packet),
 								PacketPlayOutNamedEntitySpawn_y.getDouble(packet),
@@ -582,7 +600,7 @@ public final class PacketHandler {
 								PacketPlayOutNamedEntitySpawn_pitch.getByte(packet) * 360.0F / 256.0F,
 								observer) :
 						getSpawnPackets(disguisable,
-								null,
+								EntityIdList.getPlayerName(disguisable),
 								PacketPlayOutNamedEntitySpawn_entityId.getInt(packet),
 								PacketPlayOutNamedEntitySpawn_x.getInt(packet) / 32.0,
 								PacketPlayOutNamedEntitySpawn_y.getInt(packet) / 32.0,
@@ -619,9 +637,11 @@ public final class PacketHandler {
 		localHandlers.put(PacketPlayOutSpawnEntityLiving, (final Player observer, final Object packet) -> {
 			final UUID disguisable = EntityIdList.getEntityUIDByEntityId(PacketPlayOutSpawnEntityLiving_entityId.getInt(packet));
 			if(disguisable != null && DisguiseManager.isDisguisedTo(disguisable, observer)) {
+				String customName = getCustomName(PacketPlayOutSpawnEntityLiving_dataWatcher.get(packet));
+				if(customName == null || customName.isEmpty()) customName = StringUtil.capitalizeFully(EntityIdList.getEntityType(disguisable).name().replace('_', ' '));
 				Object[] spawnPackets = VersionHelper.require1_9() ?
 						getSpawnPackets(disguisable,
-								null,
+								customName,
 								PacketPlayOutSpawnEntityLiving_entityId.getInt(packet),
 								PacketPlayOutSpawnEntityLiving_x.getDouble(packet),
 								PacketPlayOutSpawnEntityLiving_y.getDouble(packet),
@@ -630,7 +650,7 @@ public final class PacketHandler {
 								PacketPlayOutSpawnEntityLiving_pitch.getByte(packet) * 360.0F / 256.0F,
 								observer) :
 						getSpawnPackets(disguisable,
-								null,
+								customName,
 								PacketPlayOutSpawnEntityLiving_entityId.getInt(packet),
 								PacketPlayOutSpawnEntityLiving_x.getInt(packet) / 32.0,
 								PacketPlayOutSpawnEntityLiving_y.getInt(packet) / 32.0,

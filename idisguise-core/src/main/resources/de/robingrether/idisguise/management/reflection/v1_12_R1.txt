@@ -1,6 +1,8 @@
 Block_fromLegacyData->MBlock$fromLegacyData(int)
 Block_getById->MBlock$getById(int)
 
+DataWatcher_get->MDataWatcher$get({nms}.DataWatcherObject)
+
 DataWatcherItem->C{nms}.DataWatcher$Item
 DataWatcherItem_dataWatcherObject->FDataWatcherItem$a
 
@@ -9,6 +11,7 @@ DataWatcherObject_getId->MDataWatcherObject$a()
 
 Entity_setEntityId->MEntity$h(int)
 Entity_setCustomName->MEntity$setCustomName(java.lang.String)
+Entity_CUSTOM_NAME->FEntity$aB
 
 EntityAreaEffectCloud->C{nms}.EntityAreaEffectCloud
 EntityAreaEffectCloud_setColor->MEntityAreaEffectCloud$setColor(int)
@@ -69,6 +72,8 @@ MinecraftServer_getSessionService->MMinecraftServer$az()
 
 PacketPlayInUseEntity_getAction->MPacketPlayInUseEntity$a()
 
+PacketPlayOutNamedEntitySpawn_dataWatcher->FPacketPlayOutNamedEntitySpawn$h
+
 PacketPlayOutNamedSoundEffect_pitch->FPacketPlayOutNamedSoundEffect$g
 PacketPlayOutNamedSoundEffect_soundCategory->FPacketPlayOutNamedSoundEffect$b
 PacketPlayOutNamedSoundEffect_volume->FPacketPlayOutNamedSoundEffect$f
@@ -93,6 +98,7 @@ PacketPlayOutSpawnEntityLiving_y->FPacketPlayOutSpawnEntityLiving$e
 PacketPlayOutSpawnEntityLiving_z->FPacketPlayOutSpawnEntityLiving$f
 PacketPlayOutSpawnEntityLiving_yaw->FPacketPlayOutSpawnEntityLiving$j
 PacketPlayOutSpawnEntityLiving_pitch->FPacketPlayOutSpawnEntityLiving$k
+PacketPlayOutSpawnEntityLiving_dataWatcher->FPacketPlayOutSpawnEntityLiving$m
 
 PlayerInfoData->C{nms}.PacketPlayOutPlayerInfo$PlayerInfoData
 PlayerInfoData_getDisplayName->MPlayerInfoData$d()
