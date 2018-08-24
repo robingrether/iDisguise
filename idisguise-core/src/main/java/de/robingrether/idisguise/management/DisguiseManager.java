@@ -197,7 +197,7 @@ public final class DisguiseManager {
 		return seeThroughSet.contains(offlinePlayer.getUniqueId());
 	}
 	
-	public static void setSeeThrough(OfflinePlayer offlinePlayer, boolean seeThrough) {
+	public static synchronized void setSeeThrough(OfflinePlayer offlinePlayer, boolean seeThrough) {
 		if(seeThroughSet.contains(offlinePlayer.getUniqueId()) != seeThrough) {
 			if(offlinePlayer.isOnline()) {
 				Player observer = offlinePlayer.getPlayer();
@@ -232,7 +232,7 @@ public final class DisguiseManager {
 	
 	// TODO: scoreboard updates in hide and show functions?
 	
-	public static void hideEntityFromAll(LivingEntity livingEntity) {
+	public static synchronized void hideEntityFromAll(LivingEntity livingEntity) {
 		// do nothing if entity is invalid (dead or despawned)
 		if(!(livingEntity instanceof Player) && !livingEntity.isValid()) {
 			return;
@@ -269,7 +269,7 @@ public final class DisguiseManager {
 		}
 	}
 	
-	public static void hideEntityFromOne(LivingEntity livingEntity, Player observer) {
+	public static synchronized void hideEntityFromOne(LivingEntity livingEntity, Player observer) {
 		// do nothing if entity is invalid (dead or despawned)
 		if(!(livingEntity instanceof Player) && !livingEntity.isValid()) {
 			return;
@@ -317,7 +317,7 @@ public final class DisguiseManager {
 		}
 	}
 	
-	private static void showEntityToAll0(LivingEntity livingEntity) {
+	private static synchronized void showEntityToAll0(LivingEntity livingEntity) {
 		try {
 			Object playerInfoPacket = null;
 			boolean isPlayer = livingEntity instanceof Player;
@@ -333,14 +333,14 @@ public final class DisguiseManager {
 			
 			for(Player observer : Bukkit.getOnlinePlayers()) {
 				
-				if(livingEntity != observer) {
-					// show the entity
-					EntityTrackerEntry_updatePlayer.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
-				}
-				
 				// send the player info
 				if(isPlayer && (disguiseViewSelf || livingEntity != observer)) {
 					PacketHandler.sendPacket(observer, playerInfoPacket);
+				}
+				
+				if(livingEntity != observer) {
+					// show the entity
+					EntityTrackerEntry_updatePlayer.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
 				}
 				
 			}
@@ -367,7 +367,7 @@ public final class DisguiseManager {
 		}
 	}
 	
-	private static void showEntityToOne0(LivingEntity livingEntity, Player observer) {
+	private static synchronized void showEntityToOne0(LivingEntity livingEntity, Player observer) {
 		try {
 			Object playerInfoPacket = null;
 			boolean isPlayer = livingEntity instanceof Player;
@@ -381,14 +381,14 @@ public final class DisguiseManager {
 			
 			Object entityTrackerEntry = IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftLivingEntity_getHandle.invoke(livingEntity)))), livingEntity.getEntityId());
 			
-			if(livingEntity != observer) {
-				// show the entity
-				EntityTrackerEntry_updatePlayer.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
-			}
-			
 			// send the player info
 			if(isPlayer && (disguiseViewSelf || livingEntity != observer)) {
 				PacketHandler.sendPacket(observer, playerInfoPacket);
+			}
+			
+			if(livingEntity != observer) {
+				// show the entity
+				EntityTrackerEntry_updatePlayer.invoke(entityTrackerEntry, CraftPlayer_getHandle.invoke(observer));
 			}
 			
 			if(isPlayer && disguiseViewSelf && livingEntity == observer) {
@@ -439,12 +439,12 @@ public final class DisguiseManager {
 		showPlayerToAll(player);*/ resendPackets((LivingEntity)player);
 	}
 	
-	public static void resendPackets(LivingEntity livingEntity) {
+	public static synchronized void resendPackets(LivingEntity livingEntity) {
 		hideEntityFromAll(livingEntity);
 		showEntityToAll(livingEntity);
 	}
 	
-	public static void resendPackets() {
+	public static synchronized void resendPackets() {
 		for(Object disguisable : getDisguisedEntities()) {
 			if(disguisable instanceof LivingEntity) {
 				hideEntityFromAll((LivingEntity)disguisable);
