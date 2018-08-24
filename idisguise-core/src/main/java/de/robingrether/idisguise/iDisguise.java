@@ -29,8 +29,6 @@ import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.Disguise.Visibility;
 import de.robingrether.idisguise.disguise.DisguiseType;
 import de.robingrether.idisguise.disguise.EndermanDisguise;
-import de.robingrether.idisguise.disguise.FallingBlockDisguise;
-import de.robingrether.idisguise.disguise.ItemDisguise;
 import de.robingrether.idisguise.disguise.MobDisguise;
 import de.robingrether.idisguise.disguise.ObjectDisguise;
 import de.robingrether.idisguise.disguise.SheepDisguise;
@@ -315,7 +313,7 @@ public class iDisguise extends JavaPlugin {
 		return false;
 	}
 	
-	boolean hasPermission(CommandSender sender, Disguise disguise) { // TODO: rework subtype permissions
+	boolean hasPermission(CommandSender sender, Disguise disguise) {
 		if(ObjectUtil.equals(disguise.getVisibility(), Visibility.ONLY_LIST, Visibility.NOT_LIST) && !sender.hasPermission("iDisguise.visibility.list")) return false;
 		if(ObjectUtil.equals(disguise.getVisibility(), Visibility.ONLY_PERMISSION, Visibility.NOT_PERMISSION) && !sender.hasPermission("iDisguise.visibility.permission")) return false;
 		if(disguise instanceof PlayerDisguise) {
@@ -349,7 +347,7 @@ public class iDisguise extends JavaPlugin {
 						case CREEPER:
 							return (!((CreeperDisguise)disguise).isPowered() || sender.hasPermission("iDisguise.mob.creeper.powered"));
 						case ENDERMAN:
-							return (((EndermanDisguise)disguise).getBlockInHand().equals(Material.AIR) || sender.hasPermission("iDisguise.mob.enderman.block"));
+							return (((EndermanDisguise)disguise).getCarriedBlock().equals(Material.AIR) || sender.hasPermission("iDisguise.mob.enderman.block"));
 						case MAGMA_CUBE:
 							return (((SizedDisguise)disguise).getSize() < 5 || sender.hasPermission("iDisguise.mob.magma_cube.giant"));
 						case PARROT:
@@ -365,14 +363,7 @@ public class iDisguise extends JavaPlugin {
 			} else if(disguise instanceof ObjectDisguise) {
 				ObjectDisguise objectDisguise = (ObjectDisguise)disguise;
 				if(objectDisguise.getCustomName() != null && !objectDisguise.getCustomName().isEmpty() && !sender.hasPermission("iDisguise.object.custom-name")) return false;
-				switch(disguise.getType()) {
-					case FALLING_BLOCK:	
-						return sender.hasPermission("iDisguise.object.falling_block.material." + ((FallingBlockDisguise)disguise).getMaterial().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-					case ITEM:
-						return sender.hasPermission("iDisguise.object.item.material." + ((ItemDisguise)disguise).getMaterial().name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-					default:
-						return true;
-				}
+				return true;
 			}
 		}
 		return false;

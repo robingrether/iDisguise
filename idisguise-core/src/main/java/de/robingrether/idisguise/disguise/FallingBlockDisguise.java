@@ -1,6 +1,8 @@
 package de.robingrether.idisguise.disguise;
 
-import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
@@ -104,44 +106,53 @@ public class FallingBlockDisguise extends ObjectDisguise {
 		return materialData;
 	}
 	
-	public void setMaterialData(Object materialData) {
-		if(materialData instanceof Material) {
-			this.material = (Material)materialData;
+	public void setMaterialData(Object paramMaterialData) {
+		Material localMaterial;
+		Object localMaterialData;
+		
+		if(paramMaterialData instanceof Material) {
+			localMaterial = (Material)paramMaterialData;
 			if(VersionHelper.require1_13()) {
-				this.materialData = this.material.createBlockData();
+				localMaterialData = localMaterial.createBlockData();
 			} else {
-				this.materialData = 0;
+				localMaterialData = 0;
 			}
-		} else if(VersionHelper.require1_13() && materialData instanceof BlockData) {
-			this.material = ((BlockData)materialData).getMaterial();
-			this.materialData = materialData;
+		} else if(VersionHelper.require1_13() && paramMaterialData instanceof BlockData) {
+			localMaterial = ((BlockData)paramMaterialData).getMaterial();
+			localMaterialData = paramMaterialData;
 		} else {
 			throw new IllegalArgumentException("Data must be a Material or BlockData.");
 		}
 		
-		if(!this.material.isBlock()) {
+		if(!localMaterial.isBlock()) {
 			throw new IllegalArgumentException("Material must be a block");
 		}
-		if(INVALID_MATERIALS.contains(this.material)) {
+		if(localMaterial.name().startsWith("LEGACY")) {
+			throw new IllegalArgumentException("Legacy materials are invalid!");
+		}
+		if(INVALID_MATERIALS.contains(localMaterial)) {
 			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
 		}
+		
+		this.material = localMaterial;
+		this.materialData = localMaterialData;
 	}
 	
 	public boolean setMaterialData(String materialData) {
-		Material material = Material.matchMaterial(materialData.replace('-', '_'));
-		if(material != null) {
-			setMaterialData(material);
-			return true;
-		} else if(VersionHelper.require1_13()) {
-			Object materialData2 = null;
-			try {
-				materialData2 = Bukkit.createBlockData(materialData);
-			} catch(IllegalArgumentException e) {
-			}
-			if(materialData2 != null) {
-				setMaterialData(materialData2);
+		try {
+			Material material = Material.matchMaterial(materialData.replace('-', '_'));
+			if(material != null) {
+				setMaterialData(material);
 				return true;
+			} else if(VersionHelper.require1_13()) {
+				Object materialData2 = null;
+				materialData2 = Bukkit.createBlockData(materialData);
+				if(materialData2 != null) {
+					setMaterialData(materialData2);
+					return true;
+				}
 			}
+		} catch(IllegalArgumentException e) {
 		}
 		return false;
 	}
@@ -214,9 +225,14 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	 */
 	public String toString() {
 		if(VersionHelper.require1_13()) {
-			return String.format("%s; material=%s; %s", super.toString(), ((BlockData)materialData).getAsString(), onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
+			return String.format("%s; material=%s; %s", super.toString(),
+					((BlockData)materialData).getAsString(),
+					onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
 		} else {
-			return String.format("%s; material=%s; material-data=%s; %s", super.toString(), material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), materialData, onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
+			return String.format("%s; material=%s; material-data=%s; %s", super.toString(),
+					material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'),
+					materialData,
+					onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
 		}
 	}
 	
@@ -227,24 +243,31 @@ public class FallingBlockDisguise extends ObjectDisguise {
 	 * @since 5.7.1
 	 */
 	public static final Set<Material> INVALID_MATERIALS;
-	// TODO
 	
 	static {
-		Set<Material> tempSet = new HashSet<Material>(/*Arrays.asList(Material.AIR, Material.BARRIER, Material.BED_BLOCK, Material.CHEST,
-				Material.COBBLE_WALL, Material.ENDER_CHEST, Material.ENDER_PORTAL, Material.LAVA, Material.MELON_STEM, Material.PISTON_MOVING_PIECE, Material.PORTAL,
-				Material.PUMPKIN_STEM, Material.SIGN_POST, Material.SKULL, Material.STANDING_BANNER, Material.STATIONARY_LAVA, Material.STATIONARY_WATER, Material.TRAPPED_CHEST,
-				Material.WALL_BANNER, Material.WALL_SIGN, Material.WATER));
-		if(VersionHelper.require1_9()) {
-			tempSet.add(Material.END_GATEWAY);
+		Set<Material> tempSet = new HashSet<Material>();
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(FallingBlockDisguise.class.getResourceAsStream("falling_block.txt")));
+			String line;
+			while((line = reader.readLine()) != null) {
+				if(line.startsWith("*")) {
+					if(VersionHelper.require1_13()) continue;
+					line = line.substring(1);
+				}
+				Material material = Material.getMaterial(line);
+				if(material != null) tempSet.add(material);
+			}
+			reader.close();
+		} catch(IOException e) { // fail silently
+		} finally {
+			if(reader != null) {
+				try {
+					reader.close();
+				} catch(IOException e) {
+				}
+			}
 		}
-		if(VersionHelper.require1_10()) {
-			tempSet.add(Material.STRUCTURE_VOID);
-		}
-		if(VersionHelper.require1_11()) {
-			tempSet.addAll(Arrays.asList(Material.BLACK_SHULKER_BOX, Material.BLUE_SHULKER_BOX, Material.BROWN_SHULKER_BOX, Material.CYAN_SHULKER_BOX,
-					Material.GRAY_SHULKER_BOX, Material.GREEN_SHULKER_BOX, Material.LIGHT_BLUE_SHULKER_BOX, Material.LIME_SHULKER_BOX, Material.MAGENTA_SHULKER_BOX, Material.ORANGE_SHULKER_BOX,
-					Material.PINK_SHULKER_BOX, Material.PURPLE_SHULKER_BOX, Material.RED_SHULKER_BOX, Material.SILVER_SHULKER_BOX, Material.WHITE_SHULKER_BOX, Material.YELLOW_SHULKER_BOX)*/);
-		//}
 		INVALID_MATERIALS = Collections.unmodifiableSet(tempSet);
 		
 		Set<String> parameterSuggestions = new HashSet<String>();

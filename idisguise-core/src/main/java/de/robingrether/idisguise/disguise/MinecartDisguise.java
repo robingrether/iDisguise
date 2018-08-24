@@ -1,6 +1,8 @@
 package de.robingrether.idisguise.disguise;
 
-import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
@@ -74,47 +76,56 @@ public class MinecartDisguise extends ObjectDisguise {
 		return blockData;
 	}
 	
-	public void setDisplayedBlock(Object displayedBlock) {
-		if(displayedBlock == null) {
-			displayedBlock = Material.AIR;
+	public void setDisplayedBlock(Object paramDisplayedBlock) {
+		Material localDisplayedBlock;
+		Object localBlockData;
+		if(paramDisplayedBlock == null) {
+			paramDisplayedBlock = Material.AIR;
 		}
-		if(displayedBlock instanceof Material) {
-			this.displayedBlock = (Material)displayedBlock;
+		
+		if(paramDisplayedBlock instanceof Material) {
+			localDisplayedBlock = (Material)paramDisplayedBlock;
 			if(VersionHelper.require1_13()) {
-				this.blockData = this.displayedBlock.createBlockData();
+				localBlockData = localDisplayedBlock.createBlockData();
 			} else {
-				this.blockData = 0;
+				localBlockData = 0;
 			}
-		} else if(VersionHelper.require1_13() && displayedBlock instanceof BlockData) {
-			this.displayedBlock = ((BlockData)displayedBlock).getMaterial();
-			this.blockData = displayedBlock;
+		} else if(VersionHelper.require1_13() && paramDisplayedBlock instanceof BlockData) {
+			localDisplayedBlock = ((BlockData)paramDisplayedBlock).getMaterial();
+			localBlockData = paramDisplayedBlock;
 		} else {
 			throw new IllegalArgumentException("Displayed block must be a Material, BlockData or null.");
 		}
 		
-		if(!this.displayedBlock.isBlock()) {
+		if(!localDisplayedBlock.isBlock()) {
 			throw new IllegalArgumentException("Material must be a block!");
 		}
-		if(INVALID_MATERIALS.contains(this.displayedBlock)) {
+		if(localDisplayedBlock.name().startsWith("LEGACY")) {
+			throw new IllegalArgumentException("Legacy materials are invalid!");
+		}
+		if(INVALID_MATERIALS.contains(localDisplayedBlock)) {
 			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
 		}
+		
+		this.displayedBlock = localDisplayedBlock;
+		this.blockData = localBlockData;
 	}
 	
 	public boolean setDisplayedBlock(String displayedBlock) {
-		Material material = Material.matchMaterial(displayedBlock.replace('-', '_'));
-		if(material != null) {
-			setDisplayedBlock((Object)material);
-			return true;
-		} else if(VersionHelper.require1_13()) {
-			Object displayedBlock2 = null;
-			try {
-				displayedBlock2 = Bukkit.createBlockData(displayedBlock);
-			} catch(IllegalArgumentException e) {
-			}
-			if(displayedBlock2 != null) {
-				setDisplayedBlock(displayedBlock2);
+		try {
+			Material material = Material.matchMaterial(displayedBlock.replace('-', '_'));
+			if(material != null) {
+				setDisplayedBlock((Object)material);
 				return true;
+			} else if(VersionHelper.require1_13()) {
+				Object displayedBlock2 = null;
+				displayedBlock2 = Bukkit.createBlockData(displayedBlock);
+				if(displayedBlock2 != null) {
+					setDisplayedBlock(displayedBlock2);
+					return true;
+				}
 			}
+		} catch(IllegalArgumentException e) {
 		}
 		return false;
 	}
@@ -177,18 +188,31 @@ public class MinecartDisguise extends ObjectDisguise {
 	 * @since 5.7.1
 	 */
 	public static final Set<Material> INVALID_MATERIALS;
-	// TODO
 	
 	static {
-		Set<Material> tempSet = new HashSet<Material>(/*Arrays.asList(Material.BARRIER, Material.BED_BLOCK, Material.COBBLE_WALL, Material.ENDER_PORTAL, Material.LAVA, Material.MELON_STEM,
-				Material.PISTON_MOVING_PIECE, Material.PUMPKIN_STEM, Material.SIGN_POST, Material.SKULL, Material.STANDING_BANNER, Material.STATIONARY_LAVA, Material.STATIONARY_WATER,
-				Material.WALL_BANNER, Material.WALL_SIGN, Material.WATER));
-		if(VersionHelper.require1_9()) {
-			tempSet.add(Material.END_GATEWAY);
+		Set<Material> tempSet = new HashSet<Material>();
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(MinecartDisguise.class.getResourceAsStream("minecart.txt")));
+			String line;
+			while((line = reader.readLine()) != null) {
+				if(line.startsWith("*")) {
+					if(VersionHelper.require1_13()) continue;
+					line = line.substring(1);
+				}
+				Material material = Material.getMaterial(line);
+				if(material != null) tempSet.add(material);
+			}
+			reader.close();
+		} catch(IOException e) { // fail silently
+		} finally {
+			if(reader != null) {
+				try {
+					reader.close();
+				} catch(IOException e) {
+				}
+			}
 		}
-		if(VersionHelper.require1_10()) {
-			tempSet.add(Material.STRUCTURE_VOID*/);
-		//}
 		INVALID_MATERIALS = Collections.unmodifiableSet(tempSet);
 		
 		Set<String> parameterSuggestions = new HashSet<String>();

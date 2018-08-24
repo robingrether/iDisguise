@@ -1,6 +1,8 @@
 package de.robingrether.idisguise.disguise;
 
-import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
@@ -85,33 +87,42 @@ public class EndermanDisguise extends MobDisguise {
 	 * Sets the carried block.
 	 * 
 	 * @since 5.8.1
-	 * @param carriedBlock Must be a valid {@linkplain Material}, {@linkplain BlockData} or <code>null</code>.
+	 * @param paramCarriedBlock Must be a valid {@linkplain Material}, {@linkplain BlockData} or <code>null</code>.
 	 * @throws IllegalArgumentException Carried block is not valid.
 	 */
-	public void setCarriedBlock(Object carriedBlock) {
-		if(carriedBlock == null) {
-			carriedBlock = Material.AIR;
+	public void setCarriedBlock(Object paramCarriedBlock) {
+		Material localCarriedBlock;
+		Object localBlockData;
+		if(paramCarriedBlock == null) {
+			paramCarriedBlock = Material.AIR;
 		}
-		if(carriedBlock instanceof Material) {
-			this.carriedBlock = (Material)carriedBlock;
+		
+		if(paramCarriedBlock instanceof Material) {
+			localCarriedBlock = (Material)paramCarriedBlock;
 			if(VersionHelper.require1_13()) {
-				this.blockData = this.carriedBlock.createBlockData();
+				localBlockData = localCarriedBlock.createBlockData();
 			} else {
-				this.blockData = 0;
+				localBlockData = 0;
 			}
-		} else if(VersionHelper.require1_13() && carriedBlock instanceof BlockData) {
-			this.carriedBlock = ((BlockData)carriedBlock).getMaterial();
-			this.blockData = carriedBlock;
+		} else if(VersionHelper.require1_13() && paramCarriedBlock instanceof BlockData) {
+			localCarriedBlock = ((BlockData)paramCarriedBlock).getMaterial();
+			localBlockData = paramCarriedBlock;
 		} else {
 			throw new IllegalArgumentException("Carried block must be a Material, BlockData or null.");
 		}
 		
-		if(!this.carriedBlock.isBlock()) {
+		if(!localCarriedBlock.isBlock()) {
 			throw new IllegalArgumentException("Material must be a block!");
 		}
-		if(INVALID_MATERIALS.contains(this.carriedBlock)) {
+		if(localCarriedBlock.name().startsWith("LEGACY")) {
+			throw new IllegalArgumentException("Legacy materials are invalid!");
+		}
+		if(INVALID_MATERIALS.contains(localCarriedBlock)) {
 			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
 		}
+		
+		this.carriedBlock = localCarriedBlock;
+		this.blockData = localBlockData;
 	}
 	
 	/**
@@ -124,20 +135,20 @@ public class EndermanDisguise extends MobDisguise {
 	 * @throws IllegalArgumentException The parsed block is not a valid.
 	 */
 	public boolean setCarriedBlock(String carriedBlock) {
-		Material material = Material.matchMaterial(carriedBlock.replace('-', '_'));
-		if(material != null) {
-			setCarriedBlock(material);
-			return true;
-		} else if(VersionHelper.require1_13()) {
-			Object carriedBlock2 = null;
-			try {
-				carriedBlock2 = Bukkit.createBlockData(carriedBlock);
-			} catch(IllegalArgumentException e) {
-			}
-			if(carriedBlock2 != null) {
-				setCarriedBlock(carriedBlock2);
+		try {
+			Material material = Material.matchMaterial(carriedBlock.replace('-', '_'));
+			if(material != null) {
+				setCarriedBlock(material);
 				return true;
+			} else if(VersionHelper.require1_13()) {
+				Object carriedBlock2 = null;
+				carriedBlock2 = Bukkit.createBlockData(carriedBlock);
+				if(carriedBlock2 != null) {
+					setCarriedBlock(carriedBlock2);
+					return true;
+				}
 			}
+		} catch(IllegalArgumentException e) {
 		}
 		return false;
 	}
@@ -209,19 +220,33 @@ public class EndermanDisguise extends MobDisguise {
 	 * @since 5.7.1
 	 */
 	public static final Set<Material> INVALID_MATERIALS;
-	// TODO
 	
 	static {
-		Set<Material> tempSet = new HashSet<Material>(/*Arrays.asList(Material.BARRIER, Material.BED_BLOCK, Material.COBBLE_WALL, Material.ENDER_PORTAL, Material.LAVA, Material.MELON_STEM,
-				Material.PISTON_MOVING_PIECE, Material.PUMPKIN_STEM, Material.SIGN_POST, Material.SKULL, Material.STANDING_BANNER, Material.STATIONARY_LAVA, Material.STATIONARY_WATER,
-				Material.WALL_BANNER, Material.WALL_SIGN, Material.WATER));
-		if(VersionHelper.require1_9()) {
-			tempSet.add(Material.END_GATEWAY);
+		Set<Material> tempSet = new HashSet<Material>();
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(EndermanDisguise.class.getResourceAsStream("enderman.txt")));
+			String line;
+			while((line = reader.readLine()) != null) {
+				if(line.startsWith("*")) {
+					if(VersionHelper.require1_13()) continue;
+					line = line.substring(1);
+				}
+				Material material = Material.getMaterial(line);
+				if(material != null) tempSet.add(material);
+			}
+			reader.close();
+		} catch(IOException e) { // fail silently
+		} finally {
+			if(reader != null) {
+				try {
+					reader.close();
+				} catch(IOException e) {
+				}
+			}
 		}
-		if(VersionHelper.require1_10()) {
-			tempSet.add(Material.STRUCTURE_VOID*/);
-		//}
 		INVALID_MATERIALS = Collections.unmodifiableSet(tempSet);
+		
 		Set<String> parameterSuggestions = new HashSet<String>();
 		for(Material material : Material.values()) {
 			if(material.isBlock() && !INVALID_MATERIALS.contains(material)) {

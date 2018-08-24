@@ -1,5 +1,8 @@
 package de.robingrether.idisguise.disguise;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -92,6 +95,9 @@ public class ItemDisguise extends ObjectDisguise {
 	public void setMaterial(Material material) {
 		if(INVALID_MATERIALS.contains(material)) {
 			throw new IllegalArgumentException("Material is invalid! Disguise would be invisible.");
+		}
+		if(material.name().startsWith("LEGACY")) {
+			throw new IllegalArgumentException("Legacy materials are invalid!");
 		}
 		itemStack.setType(material);
 		itemStack.setDurability((short)0);
@@ -212,20 +218,31 @@ public class ItemDisguise extends ObjectDisguise {
 	 * @since 5.7.1
 	 */
 	public static final Set<Material> INVALID_MATERIALS;
-	// TODO
 	
 	static {
-		Set<Material> tempSet = new HashSet<Material>(/*Arrays.asList(Material.ACACIA_DOOR, Material.AIR, Material.BED_BLOCK, Material.BIRCH_DOOR, Material.BREWING_STAND,
-				Material.BURNING_FURNACE, Material.CAKE_BLOCK, Material.CARROT, Material.CAULDRON, Material.COCOA, Material.CROPS, Material.DARK_OAK_DOOR, Material.DAYLIGHT_DETECTOR_INVERTED,
-				Material.DIODE_BLOCK_OFF, Material.DIODE_BLOCK_ON, Material.DOUBLE_STEP, Material.DOUBLE_STONE_SLAB2, Material.ENDER_PORTAL, Material.FIRE, Material.FLOWER_POT,
-				Material.GLOWING_REDSTONE_ORE, Material.IRON_DOOR_BLOCK, Material.JUNGLE_DOOR, Material.LAVA, Material.MELON_STEM, Material.MONSTER_EGGS, Material.NETHER_WARTS,
-				Material.PISTON_EXTENSION, Material.PISTON_MOVING_PIECE, Material.PORTAL, Material.POTATO, Material.PUMPKIN_STEM, Material.REDSTONE_COMPARATOR_ON,
-				Material.REDSTONE_COMPARATOR_OFF, Material.REDSTONE_LAMP_ON, Material.REDSTONE_TORCH_OFF, Material.REDSTONE_WIRE, Material.SIGN_POST, Material.SKULL, Material.SPRUCE_DOOR,
-				Material.STANDING_BANNER, Material.STATIONARY_LAVA, Material.STATIONARY_WATER, Material.SUGAR_CANE_BLOCK, Material.TRIPWIRE, Material.WALL_BANNER, Material.WALL_SIGN, Material.WATER,
-				Material.WOOD_DOUBLE_STEP, Material.WOODEN_DOOR));
-		if(VersionHelper.require1_9()) {
-			tempSet.addAll(Arrays.asList(Material.BEETROOT_BLOCK, Material.END_GATEWAY, Material.FROSTED_ICE, Material.PURPUR_DOUBLE_SLAB)*/);
-		//}
+		Set<Material> tempSet = new HashSet<Material>();
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(EndermanDisguise.class.getResourceAsStream("item.txt")));
+			String line;
+			while((line = reader.readLine()) != null) {
+				if(line.startsWith("*")) {
+					if(VersionHelper.require1_13()) continue;
+					line = line.substring(1);
+				}
+				Material material = Material.getMaterial(line);
+				if(material != null) tempSet.add(material);
+			}
+			reader.close();
+		} catch(IOException e) { // fail silently
+		} finally {
+			if(reader != null) {
+				try {
+					reader.close();
+				} catch(IOException e) {
+				}
+			}
+		}
 		INVALID_MATERIALS = Collections.unmodifiableSet(tempSet);
 		
 		Set<String> parameterSuggestions = new HashSet<String>();
