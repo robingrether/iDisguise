@@ -514,7 +514,11 @@ public final class PacketHandler {
 				if(VersionHelper.require1_9()) {
 					PacketPlayOutScoreboardTeam_collisionRule.set(clone, PacketPlayOutScoreboardTeam_collisionRule.get(packet));
 				}
-				PacketPlayOutScoreboardTeam_color.setInt(clone, PacketPlayOutScoreboardTeam_color.getInt(packet));
+				if(VersionHelper.require1_13()) {
+					PacketPlayOutScoreboardTeam_color.set(clone, PacketPlayOutScoreboardTeam_color.get(packet));
+				} else {
+					PacketPlayOutScoreboardTeam_color.setInt(clone, PacketPlayOutScoreboardTeam_color.getInt(packet));
+				}
 				((Collection<String>)PacketPlayOutScoreboardTeam_entries.get(clone)).addAll((Collection<String>)PacketPlayOutScoreboardTeam_entries.get(packet));
 				PacketPlayOutScoreboardTeam_action.setInt(clone, PacketPlayOutScoreboardTeam_action.getInt(packet));
 				PacketPlayOutScoreboardTeam_friendlyFlags.setInt(clone, PacketPlayOutScoreboardTeam_friendlyFlags.getInt(packet));
