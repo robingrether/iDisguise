@@ -88,6 +88,8 @@ PacketPlayOutNamedSoundEffect_z->FPacketPlayOutNamedSoundEffect$e
 
 PacketPlayOutPosition_new->NPacketPlayOutPosition(double,double,double,float,float,java.util.Set,int)
 
+PacketPlayOutRespawn_new->NPacketPlayOutRespawn(int,{nms}.EnumDifficulty,{nms}.WorldType,EnumGamemode)
+
 PacketPlayOutScoreboardTeam_collisionRule->FPacketPlayOutScoreboardTeam$f
 PacketPlayOutScoreboardTeam_color->FPacketPlayOutScoreboardTeam$g
 PacketPlayOutScoreboardTeam_entries->FPacketPlayOutScoreboardTeam$h

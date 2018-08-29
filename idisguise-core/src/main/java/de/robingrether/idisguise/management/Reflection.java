@@ -322,6 +322,7 @@ public class Reflection {
 	public static Class<?> WorldServer;
 	public static Field WorldServer_entityTracker;
 	public static Method WorldServer_getPlayerChunkMap;
+	public static Field WorldServer_dimension;
 	
 	public static Class<?> EntityTracker;
 	public static Field EntityTracker_trackedEntities;
@@ -417,6 +418,11 @@ public class Reflection {
 	public static Class<?> DataWatcher;
 	public static Method DataWatcher_get;
 	public static Method DataWatcher_getString;
+	
+	public static Class<?> DimensionManager;
+	public static Method DimensionManager_getDimensionID;
+	public static Field DimensionManager_OVERWORLD;
+	public static Field DimensionManager_NETHER;
 	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_\\.{}]+)\\$(.+)");

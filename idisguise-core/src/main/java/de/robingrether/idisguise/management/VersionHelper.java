@@ -7,16 +7,15 @@ import org.bukkit.Bukkit;
 
 import de.robingrether.idisguise.management.channel.ChannelInjector;
 import de.robingrether.idisguise.management.util.EntityIdList;
-import de.robingrether.idisguise.management.util.VanillaTargetParser;
 
 public class VersionHelper {
 	
-	public static final List<String> VERSIONS = Arrays.asList("v1_8_R1", "v1_8_R2", "v1_8_R3", "v1_9_R1", "v1_9_R2", "v1_10_R1", "v1_11_R1", "v1_12_R1", "v1_13_R1");
+	public static final List<String> VERSIONS = Arrays.asList("v1_8_R1", "v1_8_R2", "v1_8_R3", "v1_9_R1", "v1_9_R2", "v1_10_R1", "v1_11_R1", "v1_12_R1", "v1_13_R1", "v1_13_R2");
 	public static final String EARLIEST = VERSIONS.get(0);
 	
 	private static boolean initialized = false;
 	private static String versionCode, orgBukkitCraftbukkit = "org.bukkit.craftbukkit", netMinecraftServer = "net.minecraft.server", orgBukkitCraftbukkitVersioned, netMinecraftServerVersioned;
-	private static boolean debug, require1_9, require1_10, require1_11, require1_12, require1_13;
+	private static boolean debug, require1_9, require1_10, require1_11, require1_12, require1_13, require1_13_1;
 	
 	public static String getVersionCode() {
 		return versionCode;
@@ -46,6 +45,10 @@ public class VersionHelper {
 			}
 		}
 		return false;
+	}
+	
+	public static boolean require1_13_1() {
+		return require1_13_1;
 	}
 	
 	public static boolean require1_13() {
@@ -85,6 +88,7 @@ public class VersionHelper {
 			require1_11 = requireVersion("v1_11_R1");
 			require1_12 = requireVersion("v1_12_R1");
 			require1_13 = requireVersion("v1_13_R1");
+			require1_13_1 = requireVersion("v1_13_R2");
 			
 			Reflection.load("reflection/common.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
 			Reflection.load("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
@@ -94,9 +98,6 @@ public class VersionHelper {
 			ProfileHelper.setInstance((ProfileHelper)Class.forName("de.robingrether.idisguise.management.profile.ProfileHelperUID").getDeclaredConstructor().newInstance());
 			Reflection.EntityHumanNonAbstract = Class.forName("de.robingrether.idisguise.management.reflection.EntityHumanNonAbstract" + versionCode.replaceAll("[^0-9]*", ""));
 			Reflection.EntityHumanNonAbstract_new = Reflection.EntityHumanNonAbstract.getConstructor(Reflection.World, Reflection.GameProfile);
-			
-			if(require1_13) VanillaTargetParser.setInstance((VanillaTargetParser)Class.forName("de.robingrether.idisguise.management.util.VanillaTargetParser113").getDeclaredConstructor().newInstance());
-			else VanillaTargetParser.setInstance((VanillaTargetParser)Class.forName("de.robingrether.idisguise.management.util.VanillaTargetParser18").getDeclaredConstructor().newInstance());
 			
 			if(require1_13) Sounds.init("sounds/113.yml");
 			else if(require1_9) Sounds.init("sounds/112.yml");

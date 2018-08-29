@@ -407,9 +407,15 @@ public final class DisguiseManager {
 		
 		PlayerChunkMap_removePlayer.invoke(WorldServer_getPlayerChunkMap.invoke(world), entityPlayer);
 		
-		int actualDimension = location.getWorld().getEnvironment().getId();
-		int tempDimension = actualDimension == 1 ? 0 : actualDimension + 1;
-		
+		Object actualDimension;
+		Object tempDimension;
+		if(VersionHelper.require1_13_1()) {
+			actualDimension = WorldServer_dimension.get(world);
+			tempDimension = (int)DimensionManager_getDimensionID.invoke(actualDimension) >= 0 ? DimensionManager_NETHER.get(null) : DimensionManager_OVERWORLD.get(null);
+		} else {
+			actualDimension = location.getWorld().getEnvironment().getId();
+			tempDimension = (int)actualDimension == 1 ? 0 : (int)actualDimension + 1;
+		}
 		PacketHandler.sendPacketUnaltered(player, PacketPlayOutRespawn_new.newInstance(tempDimension, World_getDifficulty.invoke(world), World_getType.invoke(world), PlayerInteractManager_getGameMode.invoke(EntityPlayer_playerInteractManager.get(entityPlayer))));
 		PacketHandler.sendPacketUnaltered(player, PacketPlayOutRespawn_new.newInstance(actualDimension, World_getDifficulty.invoke(world), World_getType.invoke(world), PlayerInteractManager_getGameMode.invoke(EntityPlayer_playerInteractManager.get(entityPlayer))));
 		

@@ -4,21 +4,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -31,7 +40,6 @@ import de.robingrether.idisguise.disguise.Subtypes;
 import de.robingrether.idisguise.disguise.DisguiseType.Type;
 import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.util.EntityIdList;
-import de.robingrether.idisguise.management.util.VanillaTargetParser;
 import de.robingrether.util.ObjectUtil;
 import de.robingrether.util.RandomUtil;
 import de.robingrether.util.StringUtil;
@@ -81,7 +89,7 @@ public class CommandExecutor implements TabExecutor {
 				} else if(args.length > 1) {
 					if(sender.hasPermission("iDisguise.others")) {
 						targets = parseTargets(args[0], sender);
-						if(targets.size() == 0) {
+						if(targets.isEmpty()) {
 							sender.sendMessage(plugin.getLanguage().CANNOT_FIND_TARGETS);
 							return true;
 						}
@@ -297,7 +305,7 @@ public class CommandExecutor implements TabExecutor {
 				} else {
 					if(sender.hasPermission("iDisguise.undisguise.others")) {
 						targets = parseTargets(args[0], sender);
-						if(targets.size() == 0) {
+						if(targets.isEmpty()) {
 							sender.sendMessage(plugin.getLanguage().CANNOT_FIND_TARGETS);
 							return true;
 						}
@@ -372,7 +380,9 @@ public class CommandExecutor implements TabExecutor {
 					}
 					if(sender instanceof Player) { // TODO: target suggestions
 						for(Entity entity : ((Player)sender).getNearbyEntities(5.0, 5.0, 5.0)) {
-							if(entity instanceof LivingEntity) {
+							
+							// living only							no players						no Citizen NPCs
+							if(entity instanceof LivingEntity && !(entity instanceof Player) && !entity.hasMetadata("NPC")) {
 								completions.add("[" + entity.getEntityId() + "]");
 							}
 						}
@@ -460,7 +470,9 @@ public class CommandExecutor implements TabExecutor {
 	
 	private Collection<? extends Object> parseTargets(String argument, CommandSender sender) {
 		if(argument.charAt(0) == '@' || argument.charAt(0) == '#') {
-			return VanillaTargetParser.getInstance().parseVanillaTargets('@' + argument.substring(1), sender);
+			Collection<? extends LivingEntity> targets = VanillaTargetSelector.select('@' + argument.substring(1), sender);
+			targets.removeIf(livingEntity -> livingEntity.hasMetadata("NPC"));
+			return targets;
 		} else {
 			List<Object> targets = new ArrayList<Object>();
 			for(String arg : argument.split(",")) {
@@ -479,6 +491,7 @@ public class CommandExecutor implements TabExecutor {
 				}
 				if(target != null) targets.add(target);
 			}
+			targets.removeIf(target -> target instanceof LivingEntity && ((LivingEntity)target).hasMetadata("NPC"));
 			return targets;
 		}
 	}
@@ -600,6 +613,217 @@ public class CommandExecutor implements TabExecutor {
 		}
 		
 		abstract void sendContent(CommandSender sender, String alias, boolean self, String disguiseCommand, String undisguiseCommand);
+		
+	}
+	
+	public static final class VanillaTargetSelector {
+		
+		private VanillaTargetSelector() {}
+		
+		private static final BiConsumer<Location, List<? extends LivingEntity>> sortArbitrary = (loc, list) -> {};
+		private static final BiConsumer<Location, List<? extends LivingEntity>> sortNearest = (loc, list) -> list.sort((entity1, entity2) -> Double.compare(loc.distance(entity1.getLocation()), loc.distance(entity2.getLocation())));
+		private static final BiConsumer<Location, List<? extends LivingEntity>> sortFurthest = (loc, list) -> list.sort((entity1, entity2) -> Double.compare(loc.distance(entity2.getLocation()), loc.distance(entity1.getLocation())));
+		private static final BiConsumer<Location, List<? extends LivingEntity>> sortRandom = (loc, list) -> Collections.shuffle(list);
+		
+		private static final Pattern basePattern = Pattern.compile("@([praes])(?:\\[(.+)\\])?");
+		
+		public static Collection<? extends LivingEntity> select(final String argument, final CommandSender sender) {
+			Matcher base = basePattern.matcher(argument);
+			if(!base.matches()) return Collections.emptySet();
+			
+			char mode = base.group(1).charAt(0);
+			
+			Map<String, String> arguments = new HashMap<String, String>();
+			if(base.group(2) != null && !base.group(2).isEmpty()) {
+				for(String kv : base.group(2).split(",")) {
+					if(!kv.contains("=")) continue;
+					String[] s = kv.split("=");
+					arguments.put(s[0], s[1]);
+				}
+			}
+			
+			Location location = sender instanceof LivingEntity ? ((LivingEntity)sender).getLocation() : new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
+			Predicate<LivingEntity> predicate = livingEntity -> true;
+			
+			if(arguments.containsKey("x")) location.setX(Double.parseDouble(arguments.get("x")));
+			if(arguments.containsKey("y")) location.setY(Double.parseDouble(arguments.get("y")));
+			if(arguments.containsKey("z")) location.setZ(Double.parseDouble(arguments.get("z")));
+			
+			if(arguments.containsKey("distance") || arguments.containsKey("r") || arguments.containsKey("rm") || arguments.containsKey("dx") || arguments.containsKey("dy") || arguments.containsKey("dz")) {
+				predicate = predicate.and(livingEntity -> location.getWorld().equals(livingEntity.getWorld()));
+				if(arguments.containsKey("distance")) {
+					String[] s = arguments.get("distance").split("\\.\\.");
+					double minDistance = !s[0].isEmpty() ? Double.parseDouble(s[0]) : -1, maxDistance = s.length > 1 ? !s[1].isEmpty() ? Double.parseDouble(s[1]) : Double.MAX_VALUE : minDistance;
+					predicate = predicate.and(livingEntity -> {
+						double distance = location.distance(livingEntity.getLocation());
+						return distance >= minDistance && distance <= maxDistance;
+					});
+				} else {
+					if(arguments.containsKey("r")) {
+						double maxRadius = Double.parseDouble(arguments.get("r"));
+						predicate = predicate.and(livingEntity -> location.distance(livingEntity.getLocation()) <= maxRadius);
+					}
+					if(arguments.containsKey("rm")) {
+						double minRadius = Double.parseDouble(arguments.get("rm"));
+						predicate = predicate.and(livingEntity -> location.distance(livingEntity.getLocation()) >= minRadius);
+					}
+				}
+				
+				if(arguments.containsKey("dx")) {
+					double dx = Double.parseDouble(arguments.get("dx"));
+					predicate = predicate.and(livingEntity -> Math.abs(location.getX() - livingEntity.getLocation().getX()) <= dx);
+				}
+				if(arguments.containsKey("dy")) {
+					double dy = Double.parseDouble(arguments.get("dy"));
+					predicate = predicate.and(livingEntity -> Math.abs(location.getY() - livingEntity.getLocation().getY()) <= dy);
+				}
+				if(arguments.containsKey("dz")) {
+					double dz = Double.parseDouble(arguments.get("dz"));
+					predicate = predicate.and(livingEntity -> Math.abs(location.getZ() - livingEntity.getLocation().getZ()) <= dz);
+				}
+			}
+			
+			// scores are not supported at the moment
+			
+			if(arguments.containsKey("tag")) {
+				String value = arguments.get("tag");
+				final String tag = value.startsWith("!") ? value.substring(1) : value;
+				if(value.startsWith("!")) {
+					predicate = predicate.and(livingEntity -> !livingEntity.getScoreboardTags().contains(tag));
+				} else {
+					predicate = predicate.and(livingEntity -> livingEntity.getScoreboardTags().contains(tag));
+				}
+			}
+			
+			if(arguments.containsKey("level")) {
+				String[] s = arguments.get("level").split("\\.\\.");
+				int minLevel = !s[0].isEmpty() ? Integer.parseInt(s[0]) : -1, maxLevel = s.length > 1 ? !s[1].isEmpty() ? Integer.parseInt(s[1]) : Integer.MAX_VALUE : minLevel;
+				predicate = predicate.and(livingEntity -> livingEntity instanceof Player ? ((Player)livingEntity).getLevel() >= minLevel && ((Player)livingEntity).getLevel() <= maxLevel : true);
+			} else {
+				if(arguments.containsKey("l")) {
+					int maxLevel = Integer.parseInt(arguments.get("l"));
+					predicate = predicate.and(livingEntity -> livingEntity instanceof Player ? ((Player)livingEntity).getLevel() <= maxLevel : true);
+				}
+				if(arguments.containsKey("lm")) {
+					int minLevel = Integer.parseInt(arguments.get("lm"));
+					predicate = predicate.and(livingEntity -> livingEntity instanceof Player ? ((Player)livingEntity).getLevel() >= minLevel : true);
+				}
+			}
+			
+			if(arguments.containsKey("m")) {
+				String value = arguments.get("m");
+				GameMode gameMode;
+				switch(value.startsWith("!") ? value.substring(1) : value) {
+					case "0":
+					case "s":
+					case "survival":
+						gameMode = GameMode.SURVIVAL;
+						break;
+					case "1":
+					case "c":
+					case "creative":
+						gameMode = GameMode.CREATIVE;
+						break;
+					case "2":
+					case "a":
+					case "adventure":
+						gameMode = GameMode.ADVENTURE;
+						break;
+					case "3":
+					case "sp":
+					case "spectator":
+						gameMode = GameMode.SPECTATOR;
+						break;
+					default:
+						gameMode = null;
+						break;
+				}
+				if(value.startsWith("!")) {
+					predicate.and(livingEntity -> livingEntity instanceof HumanEntity ? !gameMode.equals(((HumanEntity)livingEntity).getGameMode()) : true);
+				} else {
+					predicate.and(livingEntity -> livingEntity instanceof HumanEntity ? gameMode.equals(((HumanEntity)livingEntity).getGameMode()) : true);
+				}
+			}
+			
+			if(arguments.containsKey("name")) {
+				String value = arguments.get("name");
+				final String name = (value.startsWith("!") ? value.substring(1) : value).replace("\"", "");
+				if(value.startsWith("!")) {
+					predicate.and(livingEntity -> livingEntity instanceof HumanEntity ? !name.equals(((HumanEntity)livingEntity).getName()) : !name.equals(livingEntity.getCustomName()));
+				} else {
+					predicate.and(livingEntity -> livingEntity instanceof HumanEntity ? name.equals(((HumanEntity)livingEntity).getName()) : name.equals(livingEntity.getCustomName()));
+				}
+			}
+			
+			// x and y rotation are not supported
+			
+			if(arguments.containsKey("type")) {
+				String value = arguments.get("type");
+				EntityType type = EntityType.valueOf((value.startsWith("!") ? value.substring(1) : value).toUpperCase(Locale.ENGLISH).replace('-', '_'));
+				if(value.startsWith("!")) {
+					predicate = predicate.and(livingEntity -> !type.equals(livingEntity.getType()));
+				} else {
+					predicate = predicate.and(livingEntity -> type.equals(livingEntity.getType()));
+				}
+			}
+			
+			List<? extends LivingEntity> targets = null;
+			BiConsumer<Location, List<? extends LivingEntity>> sort = sortArbitrary;
+			int limit = Integer.MAX_VALUE;
+			switch(mode) {
+				case 'p':
+					targets = new ArrayList<Player>(Bukkit.getOnlinePlayers());
+					sort = sortNearest;
+					limit = 1;
+					break;
+				case 'r':
+					targets = arguments.containsKey("type") ? new ArrayList<LivingEntity>(location.getWorld().getLivingEntities()) : new ArrayList<Player>(Bukkit.getOnlinePlayers());
+					sort = sortRandom;
+					limit = 1;
+					break;
+				case 'a':
+					targets = new ArrayList<Player>(Bukkit.getOnlinePlayers());
+					break;
+				case 'e':
+					targets = new ArrayList<LivingEntity>(location.getWorld().getLivingEntities());
+					break;
+				case 's':
+					targets = sender instanceof LivingEntity ? new ArrayList<LivingEntity>(Arrays.asList((LivingEntity)sender)) : new ArrayList<LivingEntity>();
+					limit = 1;
+					break;
+			}
+			
+			if(arguments.containsKey("limit") || arguments.containsKey("c")) {
+				int localLimit = Integer.parseInt(arguments.containsKey("limit") ? arguments.get("limit") : arguments.get("c"));
+				if(localLimit < 0) {
+					localLimit *= -1;
+					sort = sortFurthest;
+				}
+				limit = localLimit;
+			}
+			
+			if(arguments.containsKey("sort")) {
+				switch(arguments.get("sort")) {
+					case "nearest":
+						sort = sortNearest;
+						break;
+					case "furthest":
+						sort = sortFurthest;
+						break;
+					case "random":
+						sort = sortRandom;
+						break;
+					case "arbitrary":
+						sort = sortArbitrary;
+						break;
+				}
+			}
+			
+			targets.removeIf(predicate.negate());
+			sort.accept(location, targets);
+			
+			return limit < targets.size() ? targets.subList(0, limit) : targets;
+		}
 		
 	}
 	
