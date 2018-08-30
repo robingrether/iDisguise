@@ -10,12 +10,13 @@ import de.robingrether.idisguise.management.util.EntityIdList;
 
 public class VersionHelper {
 	
-	public static final List<String> VERSIONS = Arrays.asList("v1_8_R1", "v1_8_R2", "v1_8_R3", "v1_9_R1", "v1_9_R2", "v1_10_R1", "v1_11_R1", "v1_12_R1", "v1_13_R1", "v1_13_R2");
+	public static final String v1_8 = "v1_8_R3", v1_9 = "v1_9_R2", v1_10 = "v1_10_R1", v1_11 = "v1_11_R1", v1_12 = "v1_12_R1", v1_13 = "v1_13_R2";
+	public static final List<String> VERSIONS = Arrays.asList(v1_8, v1_9, v1_10, v1_11, v1_12, v1_13);
 	public static final String EARLIEST = VERSIONS.get(0);
 	
 	private static boolean initialized = false;
 	private static String versionCode, orgBukkitCraftbukkit = "org.bukkit.craftbukkit", netMinecraftServer = "net.minecraft.server", orgBukkitCraftbukkitVersioned, netMinecraftServerVersioned;
-	private static boolean debug, require1_9, require1_10, require1_11, require1_12, require1_13, require1_13_1;
+	private static boolean debug, require1_9, require1_10, require1_11, require1_12, require1_13;
 	
 	public static String getVersionCode() {
 		return versionCode;
@@ -45,10 +46,6 @@ public class VersionHelper {
 			}
 		}
 		return false;
-	}
-	
-	public static boolean require1_13_1() {
-		return require1_13_1;
 	}
 	
 	public static boolean require1_13() {
@@ -83,12 +80,11 @@ public class VersionHelper {
 			netMinecraftServerVersioned = netMinecraftServer + "." + versionCode;
 			VersionHelper.debug = debug;
 			
-			require1_9 = requireVersion("v1_9_R1");
-			require1_10 = requireVersion("v1_10_R1");
-			require1_11 = requireVersion("v1_11_R1");
-			require1_12 = requireVersion("v1_12_R1");
-			require1_13 = requireVersion("v1_13_R1");
-			require1_13_1 = requireVersion("v1_13_R2");
+			require1_9 = requireVersion(v1_9);
+			require1_10 = requireVersion(v1_10);
+			require1_11 = requireVersion(v1_11);
+			require1_12 = requireVersion(v1_12);
+			require1_13 = requireVersion(v1_13);
 			
 			Reflection.load("reflection/common.txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);
 			Reflection.load("reflection/" + versionCode + ".txt", netMinecraftServerVersioned, orgBukkitCraftbukkitVersioned);

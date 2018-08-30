@@ -29,7 +29,6 @@ public final class EntityIdList {
 	private static Map<UUID, EntityType> entityTypes;
 	
 	public static void init() {
-		legacyMode = !VersionHelper.requireVersion("v1_8_R2"); 			// are we before 1.8.3 (1_8_R2) ?
 		entityUIDs = new ConcurrentHashMap<Integer, UUID>();
 		playerNames = new ConcurrentHashMap<UUID, String>();
 		entityTypes = new ConcurrentHashMap<UUID, EntityType>();
@@ -109,10 +108,8 @@ public final class EntityIdList {
 		}
 	}
 	
-	private static boolean legacyMode = false;		// are we before 1.8.3 (1_8_R2) ?
-	
 	public static LivingEntity getClosestEntity(Location location, double maxDistance) {
-		List<Entity> nearbyEntities = new ArrayList<Entity>(legacyMode ? location.getWorld().getEntities() : location.getWorld().getNearbyEntities(location, maxDistance, maxDistance, maxDistance));
+		List<Entity> nearbyEntities = new ArrayList<Entity>(location.getWorld().getNearbyEntities(location, maxDistance, maxDistance, maxDistance));
 		for(Iterator<Entity> iterator = nearbyEntities.iterator(); iterator.hasNext();) {
 			if(!(iterator.next() instanceof LivingEntity)) {
 				iterator.remove();

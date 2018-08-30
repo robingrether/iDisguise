@@ -409,7 +409,7 @@ public final class DisguiseManager {
 		
 		Object actualDimension;
 		Object tempDimension;
-		if(VersionHelper.require1_13_1()) {
+		if(VersionHelper.require1_13()) {
 			actualDimension = WorldServer_dimension.get(world);
 			tempDimension = (int)DimensionManager_getDimensionID.invoke(actualDimension) >= 0 ? DimensionManager_NETHER.get(null) : DimensionManager_OVERWORLD.get(null);
 		} else {
