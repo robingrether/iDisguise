@@ -21,6 +21,7 @@ import org.bukkit.entity.Player;
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
+import de.robingrether.idisguise.management.hooks.ScoreboardHooks;
 import de.robingrether.idisguise.management.util.DisguiseMap;
 
 import static de.robingrether.idisguise.management.Reflection.*;
@@ -230,8 +231,6 @@ public final class DisguiseManager {
 		}
 	}
 	
-	// TODO: scoreboard updates in hide and show functions?
-	
 	public static synchronized void hideEntityFromAll(LivingEntity livingEntity) {
 		// do nothing if entity is invalid (dead or despawned)
 		if(!(livingEntity instanceof Player) && !livingEntity.isValid()) {
@@ -351,6 +350,11 @@ public final class DisguiseManager {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		
+		if(modifyScoreboardPackets && livingEntity instanceof Player) {
+			// update scoreboard hooks
+			ScoreboardHooks.updatePlayer((Player)livingEntity);
+		}
 	}
 	
 	public static void showEntityToOne(final LivingEntity livingEntity, final Player observer) {
@@ -395,6 +399,11 @@ public final class DisguiseManager {
 				respawnPlayerToSelf((Player)livingEntity);
 			}
 		} catch(Exception e) {
+		}
+		
+		if(modifyScoreboardPackets && livingEntity instanceof Player) {
+			// update scoreboard hooks
+			ScoreboardHooks.updatePlayer((Player)livingEntity);
 		}
 	}
 	

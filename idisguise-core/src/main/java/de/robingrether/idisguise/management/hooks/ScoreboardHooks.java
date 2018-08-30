@@ -19,23 +19,13 @@ public class ScoreboardHooks {
 		if(nametagEdit) {
 			final com.nametagedit.plugin.NametagEdit plugin = (com.nametagedit.plugin.NametagEdit)Bukkit.getPluginManager().getPlugin("NametagEdit");
 			plugin.getHandler().getNametagManager().reset(player.getName());
-			Bukkit.getScheduler().runTaskLaterAsynchronously(iDisguise.getInstance(), new Runnable() {
-				
-				public void run() {
-					plugin.getHandler().applyTagToPlayer(player, false);
-				}
-				
-			}, 5L);
+			Bukkit.getScheduler().runTaskLaterAsynchronously(iDisguise.getInstance(), () -> plugin.getHandler().applyTagToPlayer(player, false), 5L);
 		}
 		
 		if(coloredTags) {
-			Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), new Runnable() {
-				
-				public void run() {
+			Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), () -> {
 					com.gmail.filoghost.coloredtags.ColoredTags.updateNametag(player);
 					com.gmail.filoghost.coloredtags.ColoredTags.updateTab(player);
-				}
-				
 			}, 5L);
 		}
 	}
