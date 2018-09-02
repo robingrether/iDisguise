@@ -58,7 +58,7 @@ public class ZombieVillagerDisguise extends AgeableDisguise {
 	static {
 		if(VersionHelper.require1_9()) {
 			for(Profession profession : Profession.values()) {
-				Subtypes.registerSubtype(ZombieVillagerDisguise.class, "setProfession", profession, profession.name().toLowerCase(Locale.ENGLISH));
+				Subtypes.registerSimpleSubtype(ZombieVillagerDisguise.class, disguise -> disguise.setProfession(profession), profession.name().toLowerCase(Locale.ENGLISH));
 			}
 		}
 	}

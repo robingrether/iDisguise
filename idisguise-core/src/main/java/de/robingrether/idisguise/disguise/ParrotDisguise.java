@@ -75,10 +75,10 @@ public class ParrotDisguise extends MobDisguise {
 	
 	static {
 		for(Variant variant : Variant.values()) {
-			Subtypes.registerSubtype(ParrotDisguise.class, "setVariant", variant, variant.name().toLowerCase(Locale.ENGLISH));
+			Subtypes.registerSimpleSubtype(ParrotDisguise.class, disguise -> disguise.setVariant(variant), variant.name().toLowerCase(Locale.ENGLISH));
 		}
-		Subtypes.registerSubtype(ParrotDisguise.class, "setSitting", true, "sitting");
-		Subtypes.registerSubtype(ParrotDisguise.class, "setSitting", false, "not-sitting");
+		Subtypes.registerSimpleSubtype(ParrotDisguise.class, disguise -> disguise.setSitting(true), "sitting");
+		Subtypes.registerSimpleSubtype(ParrotDisguise.class, disguise -> disguise.setSitting(false), "not-sitting");
 	}
 	
 	/**

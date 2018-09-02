@@ -58,8 +58,8 @@ public class CreeperDisguise extends MobDisguise {
 	}
 	
 	static {
-		Subtypes.registerSubtype(CreeperDisguise.class, "setPowered", true, "powered");
-		Subtypes.registerSubtype(CreeperDisguise.class, "setPowered", false, "not-powered");
+		Subtypes.registerSimpleSubtype(CreeperDisguise.class, disguise -> disguise.setPowered(true), "powered");
+		Subtypes.registerSimpleSubtype(CreeperDisguise.class, disguise -> disguise.setPowered(false), "not-powered");
 	}
 	
 }

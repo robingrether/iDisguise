@@ -1,7 +1,6 @@
 package de.robingrether.idisguise.disguise;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -103,9 +102,9 @@ public abstract class Disguise implements Cloneable {
 			case NOT_LIST:
 				return !visibilityParameter.contains(player.getName().toLowerCase(Locale.ENGLISH));
 			case ONLY_PERMISSION:
-				return player.hasPermission(visibilityParameter.get(0));
+				return player.hasPermission(visibilityParameter.isEmpty() ? "test.perm" : visibilityParameter.get(0));
 			case NOT_PERMISSION:
-				return !player.hasPermission(visibilityParameter.get(0));
+				return !player.hasPermission(visibilityParameter.isEmpty() ? "test.perm" : visibilityParameter.get(0));
 			default:
 				return false;
 		}
@@ -117,7 +116,7 @@ public abstract class Disguise implements Cloneable {
 	 * @since 3.0.1
 	 * @return a clone of this instance
 	 */
-	public final Disguise clone() {
+	public final Disguise clone() { // TODO: rework cloning
 		return fromString(toString());
 	}
 	
@@ -157,8 +156,8 @@ public abstract class Disguise implements Cloneable {
 		for(Visibility visibility : Visibility.values()) {
 			tempSet.add(visibility.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
-		Subtypes.registerParameterizedSubtype(Disguise.class, "setVisibility", "visibility", Visibility.class, Collections.unmodifiableSet(tempSet));
-		Subtypes.registerParameterizedSubtype(Disguise.class, "setVisibilityParameter", "visibility-param", String[].class);
+		Subtypes.registerParameterizedSubtype(Disguise.class, (disguise, parameter) -> disguise.setVisibility(Visibility.valueOf(parameter.toUpperCase(Locale.ENGLISH).replace('-', '_'))), "visibility", tempSet);
+		Subtypes.registerParameterizedSubtype(Disguise.class, (disguise, parameter) -> disguise.setVisibilityParameter(parameter.split(",")), "visibility-param");
 	}
 	
 	/**

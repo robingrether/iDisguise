@@ -111,23 +111,36 @@ public class MinecartDisguise extends ObjectDisguise {
 		this.blockData = localBlockData;
 	}
 	
-	public boolean setDisplayedBlock(String displayedBlock) {
-		try {
-			Material material = Material.matchMaterial(displayedBlock.replace('-', '_'));
-			if(material != null) {
-				setDisplayedBlock((Object)material);
-				return true;
-			} else if(VersionHelper.require1_13()) {
-				Object displayedBlock2 = null;
+	public void setDisplayedBlock(String displayedBlock) {
+		Material material = Material.matchMaterial(displayedBlock.replace('-', '_'));
+		if(material != null) {
+			setDisplayedBlock((Object)material);
+			return;
+		} else if(VersionHelper.require1_13()) {
+			BlockData displayedBlock2 = null;
+			try {
 				displayedBlock2 = Bukkit.createBlockData(displayedBlock);
-				if(displayedBlock2 != null) {
-					setDisplayedBlock(displayedBlock2);
-					return true;
+			} catch(IllegalArgumentException e) { // fail silently
+			}
+			if(displayedBlock2 != null) {
+				setDisplayedBlock(displayedBlock2);
+				return;
+			}
+		} else if(displayedBlock.contains(":")) {
+			String[] s = displayedBlock.split(":", 2);
+			material = Material.matchMaterial(s[0].replace('-', '_'));
+			if(material != null) {
+				try {
+					Short data = Short.parseShort(s[1]);
+					setDisplayedBlock((Object)material);
+					setDisplayedBlockData(data);
+					return;
+				} catch(NumberFormatException e) {
+					throw new IllegalArgumentException("Invalid data value!");
 				}
 			}
-		} catch(IllegalArgumentException e) {
 		}
-		return false;
+		throw new IllegalArgumentException("Unknown argument!");
 	}
 	
 	/**
@@ -177,7 +190,7 @@ public class MinecartDisguise extends ObjectDisguise {
 		if(VersionHelper.require1_13()) {
 			return String.format("%s; displayed-block=%s", super.toString(), ((BlockData)blockData).getAsString());
 		} else {
-			return String.format("%s; block=%s; block-data=%s", super.toString(), displayedBlock.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), blockData);
+			return String.format("%s; displayed-block=%s:%s", super.toString(), displayedBlock.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), blockData);
 		}
 	}
 	
@@ -222,12 +235,7 @@ public class MinecartDisguise extends ObjectDisguise {
 			}
 		}
 		
-		if(VersionHelper.require1_13()) {
-			Subtypes.registerParameterizedSubtype(MinecartDisguise.class, "setDisplayedBlock", "displayed-block", String.class, parameterSuggestions);
-		} else {
-			Subtypes.registerParameterizedSubtype(MinecartDisguise.class, "setDisplayedBlock", "block", Material.class, parameterSuggestions);
-			Subtypes.registerParameterizedSubtype(MinecartDisguise.class, "setDisplayedBlockData", "block-data", int.class);
-		}
+		Subtypes.registerParameterizedSubtype(MinecartDisguise.class, (disguise, parameter) -> disguise.setDisplayedBlock(parameter), "displayed-block", parameterSuggestions);
 	}
 	
 }

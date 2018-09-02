@@ -10,12 +10,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -193,8 +195,8 @@ public class CommandExecutor implements TabExecutor {
 							}
 						}
 						boolean match = false;
-						List<String> unknown_args = new ArrayList<String>(Arrays.asList(args));
-						for(Iterator<String> iterator = unknown_args.iterator(); iterator.hasNext(); ) {
+						Map<String, String> unknown_args = new ArrayList<String>(Arrays.asList(args)).stream().collect(Collectors.toMap(x -> x, x -> ""));
+						for(Iterator<String> iterator = unknown_args.keySet().iterator(); iterator.hasNext(); ) {
 							DisguiseType type = DisguiseType.fromString(iterator.next());
 							if(type != null) {
 								if(match) {
@@ -215,15 +217,27 @@ public class CommandExecutor implements TabExecutor {
 							}
 						}
 						if(disguise != null) {
-							for(Iterator<String> iterator = unknown_args.iterator(); iterator.hasNext(); ) {
-								if(Subtypes.applySubtype(disguise, iterator.next())) {
-									match = true;
-									iterator.remove();
+							for(Iterator<Entry<String, String>> iterator = unknown_args.entrySet().iterator(); iterator.hasNext(); ) {
+								Entry<String, String> entry = iterator.next();
+								Object value = Subtypes.applySubtype(disguise, entry.getKey());
+								if(value instanceof Boolean) {
+									if((Boolean)value) {
+										match = true;
+										iterator.remove();
+									} else {
+										entry.setValue("Unknown argument.");
+									}
+								} else if(value instanceof String) {
+									entry.setValue((String)value);
 								}
 							}
 						}
 						if(!unknown_args.isEmpty()) {
-							sender.sendMessage(plugin.getLanguage().WRONG_USAGE_UNKNOWN_ARGUMENTS.replace("%arguments%", StringUtil.join(", ", unknown_args.toArray(new String[0]))));
+							sender.sendMessage(plugin.getLanguage().WRONG_USAGE_UNKNOWN_ARGUMENTS);
+							for(Iterator<Entry<String, String>> iterator = unknown_args.entrySet().iterator(); iterator.hasNext(); ) {
+								Entry<String, String> entry = iterator.next();
+								sender.sendMessage(plugin.getLanguage().WRONG_USAGE_UNKNOWN_ARGUMENTS2.replace("%argument%", entry.getKey()).replace("%message%", entry.getValue()));
+							}
 						}
 						if(!match) return true;
 					}
@@ -328,7 +342,7 @@ public class CommandExecutor implements TabExecutor {
 		return true;
 	}
 	
-	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) { // TODO: suggest help page numbers
 		List<String> completions = new ArrayList<String>();
 		if(command.getName().equalsIgnoreCase("disguise")) {
 			if(sender instanceof Player) {
@@ -601,6 +615,7 @@ public class CommandExecutor implements TabExecutor {
 		}
 		
 		final void send(CommandSender sender, int pageNumber, int totalPages,  String alias, boolean self, String disguiseCommand, String undisguiseCommand) {
+			sender.sendMessage("");
 			sender.sendMessage(plugin.getLanguage().HELP_TITLE.replace("%title%", title).replace("%name%", "iDisguise").replace("%version%", plugin.getVersion()).replace("%page%", Integer.toString(pageNumber)).replace("%total%", Integer.toString(totalPages)));
 			sendContent(sender, alias, self, disguiseCommand, undisguiseCommand);
 			sender.sendMessage(plugin.getLanguage().HELP_INFO.replace("%command%", "/" + alias + " help [page]"));

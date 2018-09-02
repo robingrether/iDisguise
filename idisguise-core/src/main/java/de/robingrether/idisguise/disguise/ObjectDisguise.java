@@ -1,8 +1,9 @@
 package de.robingrether.idisguise.disguise;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
+
+import org.bukkit.ChatColor;
 
 /**
  * Represents a disguise as an object.
@@ -12,7 +13,6 @@ import java.util.HashSet;
  */
 public class ObjectDisguise extends Disguise {
 	
-	private final int typeId;
 	private String customName = "";
 	private boolean customNameVisible = true;
 	
@@ -28,7 +28,6 @@ public class ObjectDisguise extends Disguise {
 		if(!type.isObject()) {
 			throw new IllegalArgumentException("DisguiseType must be an object");
 		}
-		typeId = getTypeId(type);
 	}
 	
 	/**
@@ -55,7 +54,7 @@ public class ObjectDisguise extends Disguise {
 		} else if(customName.length() > 64) {
 			customName = customName.substring(0, 64);
 		}
-		this.customName = customName;
+		this.customName = ChatColor.translateAlternateColorCodes('&', customName);
 	}
 	
 	/**
@@ -96,7 +95,7 @@ public class ObjectDisguise extends Disguise {
 	 * @return the type id for this disguise
 	 */
 	public int getTypeId() {
-		return typeId;
+		return getTypeId(type);
 	}
 	
 	/**
@@ -133,9 +132,9 @@ public class ObjectDisguise extends Disguise {
 	}
 	
 	static {
-		Subtypes.registerParameterizedSubtype(ObjectDisguise.class, "setCustomName", "custom-name", String.class, Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("Hello\\sWorld!", "Notch", "I'm\\syour\\sfather"))));
-		Subtypes.registerSubtype(ObjectDisguise.class, "setCustomNameVisible", true, "custom-name-visible");
-		Subtypes.registerSubtype(ObjectDisguise.class, "setCustomNameVisible", false, "custom-name-invisible");
+		Subtypes.registerParameterizedSubtype(ObjectDisguise.class, (disguise, parameter) -> disguise.setCustomName(parameter), "custom-name", new HashSet<String>(Arrays.asList("Hello\\sWorld!", "Notch", "I'm\\syour\\sfather")));
+		Subtypes.registerSimpleSubtype(ObjectDisguise.class, disguise -> disguise.setCustomNameVisible(true), "custom-name-visible");
+		Subtypes.registerSimpleSubtype(ObjectDisguise.class, disguise -> disguise.setCustomNameVisible(false), "custom-name-invisible");
 	}
 	
 }

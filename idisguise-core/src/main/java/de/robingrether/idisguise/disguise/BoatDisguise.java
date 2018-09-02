@@ -65,7 +65,7 @@ public class BoatDisguise extends ObjectDisguise {
 	static {
 		if(VersionHelper.require1_9()) {
 			for(BoatType boatType : BoatType.values()) {
-				Subtypes.registerSubtype(BoatDisguise.class, "setBoatType", boatType, boatType.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+				Subtypes.registerSimpleSubtype(BoatDisguise.class, disguise -> disguise.setBoatType(boatType), boatType.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 			}
 		}
 	}

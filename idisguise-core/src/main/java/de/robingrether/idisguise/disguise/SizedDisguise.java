@@ -61,7 +61,7 @@ public class SizedDisguise extends MobDisguise {
 	 */
 	public void setSize(int size) {
 		if(size < minSize || size > maxSize) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Only values between 1 and 100 are allowed!");
 		}
 		this.size = size;
 	}
@@ -74,13 +74,13 @@ public class SizedDisguise extends MobDisguise {
 	}
 	
 	static {
-		Subtypes.registerSubtype(SizedDisguise.class, "setSize", 1, "tiny");
-		Subtypes.registerSubtype(SizedDisguise.class, "setSize", 2, "normal");
-		Subtypes.registerSubtype(SizedDisguise.class, "setSize", 4, "big");
+		Subtypes.registerSimpleSubtype(SizedDisguise.class, disguise -> disguise.setSize(1), "tiny");
+		Subtypes.registerSimpleSubtype(SizedDisguise.class, disguise -> disguise.setSize(2), "normal");
+		Subtypes.registerSimpleSubtype(SizedDisguise.class, disguise -> disguise.setSize(4), "big");
 //		for(int i = 1; i <= 100; i++) {
 //			Subtypes.registerSubtype(SizedDisguise.class, "setSize", i, Integer.toString(i));
 //		}
-		Subtypes.registerParameterizedSubtype(SizedDisguise.class, "setSize", "size", int.class);
+		Subtypes.registerParameterizedSubtype(SizedDisguise.class, (disguise, parameter) -> disguise.setSize(Integer.parseInt(parameter)), "size");
 	}
 	
 }

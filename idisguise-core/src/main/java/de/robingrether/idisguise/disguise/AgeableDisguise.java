@@ -60,8 +60,8 @@ public class AgeableDisguise extends MobDisguise {
 	}
 	
 	static {
-		Subtypes.registerSubtype(AgeableDisguise.class, "setAdult", true, "adult");
-		Subtypes.registerSubtype(AgeableDisguise.class, "setAdult", false, "baby");
+		Subtypes.registerSimpleSubtype(AgeableDisguise.class, disguise -> disguise.setAdult(true), "adult");
+		Subtypes.registerSimpleSubtype(AgeableDisguise.class, disguise -> disguise.setAdult(false), "baby");
 	}
 	
 }

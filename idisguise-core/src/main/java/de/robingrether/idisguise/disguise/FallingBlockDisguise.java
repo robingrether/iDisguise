@@ -138,23 +138,36 @@ public class FallingBlockDisguise extends ObjectDisguise {
 		this.materialData = localMaterialData;
 	}
 	
-	public boolean setMaterialData(String materialData) {
-		try {
-			Material material = Material.matchMaterial(materialData.replace('-', '_'));
-			if(material != null) {
-				setMaterialData(material);
-				return true;
-			} else if(VersionHelper.require1_13()) {
-				Object materialData2 = null;
+	public void setMaterialData(String materialData) {
+		Material material = Material.matchMaterial(materialData.replace('-', '_'));
+		if(material != null) {
+			setMaterialData(material);
+			return;
+		} else if(VersionHelper.require1_13()) {
+			BlockData materialData2 = null;
+			try {
 				materialData2 = Bukkit.createBlockData(materialData);
-				if(materialData2 != null) {
-					setMaterialData(materialData2);
-					return true;
+			} catch(IllegalArgumentException e) { // fail silently
+			}
+			if(materialData2 != null) {
+				setMaterialData(materialData2);
+				return;
+			}
+		} else if(materialData.contains(":")) {
+			String[] s = materialData.split(":", 2);
+			material = Material.matchMaterial(s[0].replace('-', '_'));
+			if(material != null) {
+				try {
+					Short data = Short.parseShort(s[1]);
+					setMaterialData(material);
+					setData(data);
+					return;
+				} catch(NumberFormatException e) {
+					throw new IllegalArgumentException("Invalid data value!");
 				}
 			}
-		} catch(IllegalArgumentException e) {
 		}
-		return false;
+		throw new IllegalArgumentException("Unknown argument!");
 	}
 	
 	/**
@@ -229,7 +242,7 @@ public class FallingBlockDisguise extends ObjectDisguise {
 					((BlockData)materialData).getAsString(),
 					onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
 		} else {
-			return String.format("%s; material=%s; material-data=%s; %s", super.toString(),
+			return String.format("%s; material=%s:%s; %s", super.toString(),
 					material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'),
 					materialData,
 					onlyBlockCoordinates ? "block-coordinates" : "all-coordinates");
@@ -277,14 +290,10 @@ public class FallingBlockDisguise extends ObjectDisguise {
 			}
 		}
 		
-		if(VersionHelper.require1_13()) {
-			Subtypes.registerParameterizedSubtype(FallingBlockDisguise.class, "setMaterialData", "material", String.class, parameterSuggestions);
-		} else {
-			Subtypes.registerParameterizedSubtype(FallingBlockDisguise.class, "setMaterial", "material", Material.class, Collections.unmodifiableSet(parameterSuggestions));
-			Subtypes.registerParameterizedSubtype(FallingBlockDisguise.class, "setData", "material-data", int.class);
-		}
-		Subtypes.registerSubtype(FallingBlockDisguise.class, "setOnlyBlockCoordinates", true, "block-coordinates");
-		Subtypes.registerSubtype(FallingBlockDisguise.class, "setOnlyBlockCoordinates", false, "all-coordinates");
+		Subtypes.registerParameterizedSubtype(FallingBlockDisguise.class, (disguise, parameter) -> disguise.setMaterialData(parameter), "material", parameterSuggestions);
+		
+		Subtypes.registerSimpleSubtype(FallingBlockDisguise.class, disguise -> disguise.setOnlyBlockCoordinates(true), "block-coordinates");
+		Subtypes.registerSimpleSubtype(FallingBlockDisguise.class, disguise -> disguise.setOnlyBlockCoordinates(false), "all-coordinates");
 	}
 	
 }

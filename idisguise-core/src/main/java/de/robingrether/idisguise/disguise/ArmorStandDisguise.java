@@ -58,8 +58,8 @@ public class ArmorStandDisguise extends ObjectDisguise {
 	}
 	
 	static {
-		Subtypes.registerSubtype(ArmorStandDisguise.class, "setShowArms", true, "show-arms");
-		Subtypes.registerSubtype(ArmorStandDisguise.class, "setShowArms", false, "hide-arms");
+		Subtypes.registerSimpleSubtype(ArmorStandDisguise.class, disguise -> disguise.setShowArms(true), "show-arms");
+		Subtypes.registerSimpleSubtype(ArmorStandDisguise.class, disguise -> disguise.setShowArms(false), "hide-arms");
 	}
 	
 }

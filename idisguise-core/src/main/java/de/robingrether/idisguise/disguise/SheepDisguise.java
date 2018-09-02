@@ -69,7 +69,7 @@ public class SheepDisguise extends AgeableDisguise {
 		for(DyeColor color : DyeColor.values()) {
 			parameterSuggestions.add(color.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
-		Subtypes.registerParameterizedSubtype(SheepDisguise.class, "setColor", "color", DyeColor.class, parameterSuggestions);
+		Subtypes.registerParameterizedSubtype(SheepDisguise.class, (disguise, parameter) -> disguise.setColor(DyeColor.valueOf(parameter.toUpperCase(Locale.ENGLISH).replace('-', '_'))), "color", parameterSuggestions);
 	}
 	
 }

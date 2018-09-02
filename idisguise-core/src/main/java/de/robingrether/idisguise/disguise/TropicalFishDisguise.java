@@ -59,14 +59,14 @@ public class TropicalFishDisguise extends MobDisguise {
 		for(DyeColor color : DyeColor.values()) {
 			parameterSuggestions.add(color.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
-		Subtypes.registerParameterizedSubtype(TropicalFishDisguise.class, "setBodyColor", "body-color", DyeColor.class, parameterSuggestions);
-		Subtypes.registerParameterizedSubtype(TropicalFishDisguise.class, "setPatternColor", "pattern-color", DyeColor.class, parameterSuggestions);
+		Subtypes.registerParameterizedSubtype(TropicalFishDisguise.class, (disguise, parameter) -> disguise.setBodyColor(DyeColor.valueOf(parameter.toUpperCase(Locale.ENGLISH).replace('-', '_'))), "body-color", parameterSuggestions);
+		Subtypes.registerParameterizedSubtype(TropicalFishDisguise.class, (disguise, parameter) -> disguise.setPatternColor(DyeColor.valueOf(parameter.toUpperCase(Locale.ENGLISH).replace('-', '_'))), "pattern-color", parameterSuggestions);
 		
 		parameterSuggestions = new HashSet<String>();
 		for(Pattern pattern : Pattern.values()) {
 			parameterSuggestions.add(pattern.name().toLowerCase(Locale.ENGLISH));
 		}
-		Subtypes.registerParameterizedSubtype(TropicalFishDisguise.class, "setPattern", "pattern", Pattern.class, parameterSuggestions);
+		Subtypes.registerParameterizedSubtype(TropicalFishDisguise.class, (disguise, parameter) -> disguise.setPattern(Pattern.valueOf(parameter.toUpperCase(Locale.ENGLISH))), "pattern", parameterSuggestions);
 	}
 	
 	public enum Pattern {

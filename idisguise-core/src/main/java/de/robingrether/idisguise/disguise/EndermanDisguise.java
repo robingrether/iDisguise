@@ -130,27 +130,38 @@ public class EndermanDisguise extends MobDisguise {
 	 * Attempts to parse a {@linkplain Material} or a {@linkplain BlockData} from the given string.
 	 * 
 	 * @since 5.8.1
-	 * @param carriedBlock
-	 * @return <code>true</code>, if the given string could be parsed properly.
-	 * @throws IllegalArgumentException The parsed block is not a valid.
+	 * @throws IllegalArgumentException The parsed value is not valid or no value could be parsed.
 	 */
-	public boolean setCarriedBlock(String carriedBlock) {
-		try {
-			Material material = Material.matchMaterial(carriedBlock.replace('-', '_'));
-			if(material != null) {
-				setCarriedBlock(material);
-				return true;
-			} else if(VersionHelper.require1_13()) {
-				Object carriedBlock2 = null;
+	public void setCarriedBlock(String carriedBlock) {
+		Material material = Material.matchMaterial(carriedBlock.replace('-', '_'));
+		if(material != null) {
+			setCarriedBlock(material);
+			return;
+		} else if(VersionHelper.require1_13()) {
+			BlockData carriedBlock2 = null;
+			try {
 				carriedBlock2 = Bukkit.createBlockData(carriedBlock);
-				if(carriedBlock2 != null) {
-					setCarriedBlock(carriedBlock2);
-					return true;
+			} catch(IllegalArgumentException e) { // fail silently
+			}
+			if(carriedBlock2 != null) {
+				setCarriedBlock(carriedBlock2);
+				return;
+			}
+		} else if(carriedBlock.contains(":")) {
+			String[] s = carriedBlock.split(":", 2);
+			material = Material.matchMaterial(s[0].replace('-', '_'));
+			if(material != null) {
+				try {
+					Short data = Short.parseShort(s[1]);
+					setCarriedBlock(material);
+					setBlockInHandData(data);
+					return;
+				} catch(NumberFormatException e) {
+					throw new IllegalArgumentException("Invalid data value!");
 				}
 			}
-		} catch(IllegalArgumentException e) {
 		}
-		return false;
+		throw new IllegalArgumentException("Unknown argument!");
 	}
 	
 	/**
@@ -209,7 +220,7 @@ public class EndermanDisguise extends MobDisguise {
 		if(VersionHelper.require1_13()) {
 			return String.format("%s; carried-block=%s", super.toString(), ((BlockData)blockData).getAsString());
 		} else {
-			return String.format("%s; block=%s; block-data=%s", super.toString(), carriedBlock.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), blockData);
+			return String.format("%s; carried-block=%s:%s", super.toString(), carriedBlock.name().toLowerCase(Locale.ENGLISH).replace('_', '-'), blockData);
 		}
 	}
 	
@@ -254,12 +265,7 @@ public class EndermanDisguise extends MobDisguise {
 			}
 		}
 		
-		if(VersionHelper.require1_13()) {
-			Subtypes.registerParameterizedSubtype(EndermanDisguise.class, "setCarriedBlock", "carried-block", String.class, parameterSuggestions);
-		} else {
-			Subtypes.registerParameterizedSubtype(EndermanDisguise.class, "setBlockInHand", "block", Material.class, parameterSuggestions);
-			Subtypes.registerParameterizedSubtype(EndermanDisguise.class, "setBlockInHandData", "block-data", int.class);
-		}
+		Subtypes.registerParameterizedSubtype(EndermanDisguise.class, (disguise, parameter) -> disguise.setCarriedBlock(parameter), "carried-block", parameterSuggestions);
 	}
 	
 }

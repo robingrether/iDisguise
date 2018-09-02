@@ -33,7 +33,7 @@ public class ItemDisguise extends ObjectDisguise {
 	 * @since 5.1.1
 	 */
 	public ItemDisguise() {
-		this(new ItemStack(Material.STONE, 1, (short)0));
+		this(new ItemStack(Material.STONE, 1));
 	}
 	
 	/**
@@ -251,17 +251,17 @@ public class ItemDisguise extends ObjectDisguise {
 				parameterSuggestions.add(material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 			}
 		}
-		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setMaterial", "material", Material.class, Collections.unmodifiableSet(parameterSuggestions));
+		Subtypes.registerParameterizedSubtype(ItemDisguise.class, (disguise, parameter) -> disguise.setMaterial(Material.valueOf(parameter.toUpperCase(Locale.ENGLISH).replace('-', '_'))), "material", parameterSuggestions);
 		
-		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setDurability", "durability", short.class);
-		Subtypes.registerParameterizedSubtype(ItemDisguise.class, "setAmount", "amount", int.class, Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("1", "2", "64"))));
+		Subtypes.registerParameterizedSubtype(ItemDisguise.class, (disguise, parameter) -> disguise.setDurability(Short.valueOf(parameter)), "durability");
+		Subtypes.registerParameterizedSubtype(ItemDisguise.class, (disguise, parameter) -> disguise.setAmount(Integer.valueOf(parameter)), "amount", new HashSet<String>(Arrays.asList("1", "2", "64")));
 		
-		Subtypes.registerSubtype(ItemDisguise.class, "setEnchanted", true, "enchanted");
-		Subtypes.registerSubtype(ItemDisguise.class, "setEnchanted", false, "not-enchanted");
+		Subtypes.registerSimpleSubtype(ItemDisguise.class, disguise -> disguise.setEnchanted(true), "enchanted");
+		Subtypes.registerSimpleSubtype(ItemDisguise.class, disguise -> disguise.setEnchanted(false), "not-enchanted");
 		
 		if(VersionHelper.require1_11()) {
-			Subtypes.registerSubtype(ItemDisguise.class, "setUnbreakable", true, "unbreakable");
-			Subtypes.registerSubtype(ItemDisguise.class, "setUnbreakable", false, "not-unbreakable");
+			Subtypes.registerSimpleSubtype(ItemDisguise.class, disguise -> disguise.setUnbreakable(true), "unbreakable");
+			Subtypes.registerSimpleSubtype(ItemDisguise.class, disguise -> disguise.setUnbreakable(false), "not-unbreakable");
 		}
 	}
 	

@@ -117,8 +117,8 @@ public class HorseDisguise extends AgeableDisguise {
 	}
 	
 	static {
-		Subtypes.registerSubtype(HorseDisguise.class, "setSaddled", true, "saddled");
-		Subtypes.registerSubtype(HorseDisguise.class, "setSaddled", false, "not-saddled");
+		Subtypes.registerSimpleSubtype(HorseDisguise.class, disguise -> disguise.setSaddled(true), "saddled");
+		Subtypes.registerSimpleSubtype(HorseDisguise.class, disguise -> disguise.setSaddled(false), "not-saddled");
 	}
 	
 	/**

@@ -114,16 +114,16 @@ public class LlamaDisguise extends AgeableDisguise {
 		for(Color color : Color.values()) {
 			parameterSuggestions.add(color.name().toLowerCase(Locale.ENGLISH));
 		}
-		Subtypes.registerParameterizedSubtype(LlamaDisguise.class, "setColor", "color", Color.class, parameterSuggestions);
+		Subtypes.registerParameterizedSubtype(LlamaDisguise.class, (disguise, parameter) -> disguise.setColor(Color.valueOf(parameter.toUpperCase(Locale.ENGLISH))), "color", parameterSuggestions);
 		
 		parameterSuggestions = new HashSet<String>();
 		for(SaddleColor saddle : SaddleColor.values()) {
 			parameterSuggestions.add(saddle.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
-		Subtypes.registerParameterizedSubtype(LlamaDisguise.class, "setSaddle", "saddle", SaddleColor.class, parameterSuggestions);
+		Subtypes.registerParameterizedSubtype(LlamaDisguise.class, (disguise, parameter) -> disguise.setSaddle(SaddleColor.valueOf(parameter.toUpperCase(Locale.ENGLISH).replace('-', '_'))), "saddle", parameterSuggestions);
 		
-		Subtypes.registerSubtype(LlamaDisguise.class, "setHasChest", true, "chest");
-		Subtypes.registerSubtype(LlamaDisguise.class, "setHasChest", false, "no-chest");
+		Subtypes.registerSimpleSubtype(LlamaDisguise.class, disguise -> disguise.setHasChest(true), "chest");
+		Subtypes.registerSimpleSubtype(LlamaDisguise.class, disguise -> disguise.setHasChest(false), "no-chest");
 	}
 	
 	/**

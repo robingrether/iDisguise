@@ -21,7 +21,9 @@ public class Language {
 	public String CANNOT_FIND_TARGETS = ChatColor.RED + "No target entities were found.";
 	public String WRONG_USAGE_NO_NAME = ChatColor.RED + "Wrong usage: account name required";
 	public String WRONG_USAGE_TWO_DISGUISE_TYPES = ChatColor.RED + "Wrong usage: two disguise types given";
-	public String WRONG_USAGE_UNKNOWN_ARGUMENTS = ChatColor.RED + "Wrong usage: unknown arguments " + ChatColor.ITALIC + "%arguments%";
+	@LastUpdated(50801)
+	public String WRONG_USAGE_UNKNOWN_ARGUMENTS = ChatColor.RED + "Wrong usage: the following arguments could not be identified";
+	public String WRONG_USAGE_UNKNOWN_ARGUMENTS2 = ChatColor.GRAY + " " + ChatColor.ITALIC + "%argument%" + ChatColor.GRAY + " -> %message%";
 	public String WRONG_USAGE_SEE_THROUGH = ChatColor.RED + "Wrong usage: unknown argument " + ChatColor.ITALIC + "%argument%";
 	public String INVALID_NAME = ChatColor.RED + "The given account name is invalid.";
 	public String EVENT_CANCELLED = ChatColor.RED + "Another plugin prohibits you to do that.";

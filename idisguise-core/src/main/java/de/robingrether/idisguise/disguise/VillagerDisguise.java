@@ -54,7 +54,7 @@ public class VillagerDisguise extends AgeableDisguise {
 	
 	static {
 		for(Profession profession : Profession.values()) {
-			Subtypes.registerSubtype(VillagerDisguise.class, "setProfession", profession, profession.name().toLowerCase(Locale.ENGLISH));
+			Subtypes.registerSimpleSubtype(VillagerDisguise.class, disguise -> disguise.setProfession(profession), profession.name().toLowerCase(Locale.ENGLISH));
 		}
 	}
 	

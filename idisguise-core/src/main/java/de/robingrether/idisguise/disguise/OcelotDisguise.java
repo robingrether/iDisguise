@@ -79,10 +79,10 @@ public class OcelotDisguise extends AgeableDisguise {
 	
 	static {
 		for(Type catType : Type.values()) {
-			Subtypes.registerSubtype(OcelotDisguise.class, "setCatType", catType, catType.name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", ""));
+			Subtypes.registerSimpleSubtype(OcelotDisguise.class, disguise -> disguise.setCatType(catType), catType.name().toLowerCase(Locale.ENGLISH).replaceAll("_.*", ""));
 		}
-		Subtypes.registerSubtype(OcelotDisguise.class, "setSitting", true, "sitting");
-		Subtypes.registerSubtype(OcelotDisguise.class, "setSitting", false, "not-sitting");
+		Subtypes.registerSimpleSubtype(OcelotDisguise.class, disguise -> disguise.setSitting(true), "sitting");
+		Subtypes.registerSimpleSubtype(OcelotDisguise.class, disguise -> disguise.setSitting(false), "not-sitting");
 	}
 	
 }

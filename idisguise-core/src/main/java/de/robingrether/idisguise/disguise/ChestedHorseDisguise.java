@@ -1,5 +1,6 @@
 package de.robingrether.idisguise.disguise;
 
+import de.robingrether.idisguise.disguise.HorseDisguise.Armor;
 import de.robingrether.util.ObjectUtil;
 
 /**
@@ -19,7 +20,7 @@ public class ChestedHorseDisguise extends HorseDisguise {
 	 * @param type the disguise type (must be either {@linkplain DisguiseType#DONKEY} or {@linkplain DisguiseType#MULE})
 	 */
 	public ChestedHorseDisguise(DisguiseType type) {
-		this(type, true, false, false, Armor.NONE);
+		this(type, true, false, false);
 	}
 	
 	/**
@@ -27,13 +28,22 @@ public class ChestedHorseDisguise extends HorseDisguise {
 	 * 
 	 * @since 5.5.1
 	 * @param type the disguise type (must be either {@linkplain DisguiseType#DONKEY} or {@linkplain DisguiseType#MULE})
-	 * @param adult whether the disguise should appear as an adult or as a baby
-	 * @param hasChest whether the disguise should have a chest or not
-	 * @param saddled whether the disguise should be saddled or not
-	 * @param armor the type of armor the disguise should carry
+	 * 
+	 * @deprecated Only {@linkplain StyledHorseDisguise} supports {@linkplain Armor}.
 	 */
+	@Deprecated
 	public ChestedHorseDisguise(DisguiseType type, boolean adult, boolean hasChest, boolean saddled, Armor armor) {
-		super(type, adult, saddled, armor);
+		this(type, adult, hasChest, saddled);
+	}
+	
+	/**
+	 * Creates an instance.
+	 * 
+	 * @since 5.8.1
+	 * @param type the disguise type (must be either {@linkplain DisguiseType#DONKEY} or {@linkplain DisguiseType#MULE})
+	 */
+	public ChestedHorseDisguise(DisguiseType type, boolean adult, boolean hasChest, boolean saddled) {
+		super(type, adult, saddled);
 		if(!ObjectUtil.equals(type, DisguiseType.DONKEY, DisguiseType.MULE)) {
 			throw new IllegalArgumentException();
 		}
@@ -68,8 +78,8 @@ public class ChestedHorseDisguise extends HorseDisguise {
 	}
 	
 	static {
-		Subtypes.registerSubtype(ChestedHorseDisguise.class, "setHasChest", true, "chest");
-		Subtypes.registerSubtype(ChestedHorseDisguise.class, "setHasChest", false, "no-chest");
+		Subtypes.registerSimpleSubtype(ChestedHorseDisguise.class, disguise -> disguise.setHasChest(true), "chest");
+		Subtypes.registerSimpleSubtype(ChestedHorseDisguise.class, disguise -> disguise.setHasChest(false), "no-chest");
 	}
 	
 }

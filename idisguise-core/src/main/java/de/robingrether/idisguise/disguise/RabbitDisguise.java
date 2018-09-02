@@ -1,7 +1,5 @@
 package de.robingrether.idisguise.disguise;
 
-import java.util.Locale;
-
 /**
  * Represents a disguise as a rabbit.
  * 
@@ -67,12 +65,12 @@ public class RabbitDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return String.format("%s; %s", super.toString(), rabbitType.name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer"));
+		return String.format("%s; %s", super.toString(), rabbitType.toString());
 	}
 	
 	static {
 		for(RabbitType rabbitType : RabbitType.values()) {
-			Subtypes.registerSubtype(RabbitDisguise.class, "setRabbitType", rabbitType, rabbitType.name().toLowerCase(Locale.ENGLISH).replace("_and_", "-").replace("the_killer_bunny", "killer"));
+			Subtypes.registerSimpleSubtype(RabbitDisguise.class, disguise -> disguise.setRabbitType(rabbitType), rabbitType.toString());
 		}
 	}
 	
@@ -84,18 +82,20 @@ public class RabbitDisguise extends AgeableDisguise {
 	 */
 	public enum RabbitType {
 		
-		BROWN(0),
-		WHITE(1),
-		BLACK(2),
-		BLACK_AND_WHITE(3),
-		GOLD(4),
-		SALT_AND_PEPPER(5),
-		THE_KILLER_BUNNY(99);
+		BROWN(0, "brown"),
+		WHITE(1, "white"),
+		BLACK(2, "black"),
+		BLACK_AND_WHITE(3, "black-white"),
+		GOLD(4, "gold"),
+		SALT_AND_PEPPER(5, "salt-pepper"),
+		THE_KILLER_BUNNY(99, "killer");
 		
-		private int id;
+		private final int id;
+		private final String name;
 		
-		private RabbitType(int id) {
+		private RabbitType(int id, String name) {
 			this.id = id;
+			this.name = name;
 		}
 		
 		/**
@@ -107,6 +107,10 @@ public class RabbitDisguise extends AgeableDisguise {
 		 */
 		public int getId() {
 			return id;
+		}
+		
+		public String toString() {
+			return name;
 		}
 		
 	}

@@ -159,17 +159,17 @@ public class WolfDisguise extends AgeableDisguise {
 	
 	static {
 		for(State state : State.values()) {
-			Subtypes.registerSubtype(WolfDisguise.class, "setState", state, state.name().toLowerCase(Locale.ENGLISH));
+			Subtypes.registerSimpleSubtype(WolfDisguise.class, disguise -> disguise.setState(state), state.name().toLowerCase(Locale.ENGLISH));
 		}
 		
 		Set<String> parameterSuggestions = new HashSet<String>();
 		for(DyeColor collarColor : DyeColor.values()) {
 			parameterSuggestions.add(collarColor.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
-		Subtypes.registerParameterizedSubtype(WolfDisguise.class, "setCollarColor", "collar", DyeColor.class, parameterSuggestions);
+		Subtypes.registerParameterizedSubtype(WolfDisguise.class, (disguise, parameter) -> disguise.setCollarColor(DyeColor.valueOf(parameter.toUpperCase(Locale.ENGLISH).replace('-', '_'))), "collar", parameterSuggestions);
 		
-		Subtypes.registerSubtype(WolfDisguise.class, "setSitting", true, "sitting");
-		Subtypes.registerSubtype(WolfDisguise.class, "setSitting", false, "not-sitting");
+		Subtypes.registerSimpleSubtype(WolfDisguise.class, disguise -> disguise.setSitting(true), "sitting");
+		Subtypes.registerSimpleSubtype(WolfDisguise.class, disguise -> disguise.setSitting(false), "not-sitting");
 	}
 	
 	public enum State {

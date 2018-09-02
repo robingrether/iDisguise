@@ -24,7 +24,7 @@ public class PufferfishDisguise extends MobDisguise {
 	
 	static {
 		for(PuffState puffState : PuffState.values()) {
-			Subtypes.registerSubtype(PufferfishDisguise.class, "setPuffState", puffState, puffState.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+			Subtypes.registerSimpleSubtype(PufferfishDisguise.class, disguise -> disguise.setPuffState(puffState), puffState.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
 	}
 	

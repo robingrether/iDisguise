@@ -96,12 +96,7 @@ public enum DisguiseType {
 	private String translation;
 	
 	private DisguiseType(Type type, String requiredVersion, Class<? extends Disguise> disguiseClass, String nmsClass) {
-		this.type = type;
-		this.requiredVersion = requiredVersion;
-		this.disguiseClass = disguiseClass;
-		this.nmsClass = nmsClass;
-		this.mhfSkin = null;
-		this.translation = getDefaultCommandArgument();
+		this(type, requiredVersion, disguiseClass, nmsClass, null);
 	}
 	
 	private DisguiseType(Type type, String requiredVersion, Class<? extends Disguise> disguiseClass, String nmsClass, String mhfSkin) {
@@ -344,31 +339,6 @@ public enum DisguiseType {
 		MOB,
 		PLAYER,
 		OBJECT;
-		
-	}
-	
-	/**
-	 * This class provides the capability to match a {@linkplain DisguiseType} from one of its command arguments.
-	 * 
-	 * @since 5.1.1
-	 * @author RobinGrether
-	 * @deprecated Replaced by {@link DisguiseType#fromString(String)}.
-	 */
-	@Deprecated
-	public static class Matcher {
-		
-		/**
-		 * Find a matching {@linkplain DisguiseType} from one of its command arguments.
-		 * 
-		 * @since 5.1.1
-		 * @param string the command argument
-		 * @return the matching {@linkplain DisguiseType}, if one is found
-		 * @deprecated Replaced by {@link DisguiseType#fromString(String)}.
-		 */
-		@Deprecated
-		public static DisguiseType match(String string) {
-			return commandMatcher.get(string.toLowerCase(Locale.ENGLISH).replace('_', '-'));
-		}
 		
 	}
 	

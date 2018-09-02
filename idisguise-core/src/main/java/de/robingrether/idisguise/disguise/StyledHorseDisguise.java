@@ -94,25 +94,19 @@ public class StyledHorseDisguise extends HorseDisguise {
 		for(Style style : Style.values()) {
 			parameterSuggestions.add(style.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
-		Subtypes.registerParameterizedSubtype(StyledHorseDisguise.class, "setStyle", "pattern", Style.class, parameterSuggestions);
-//		for(Style style : Style.values()) {
-//			Subtypes.registerSubtype(StyledHorseDisguise.class, "setStyle", style, style.name().toLowerCase(Locale.ENGLISH).replace('_', '-').replaceAll("white$", "white-stripes").replace("none", "no-markings"));
-//		}
+		Subtypes.registerParameterizedSubtype(StyledHorseDisguise.class, (disguise, parameter) -> disguise.setStyle(Style.valueOf(parameter.toUpperCase(Locale.ENGLISH).replace('-', '_'))), "pattern", parameterSuggestions);
 		
 		parameterSuggestions = new HashSet<String>();
 		for(Color color : Color.values()) {
 			parameterSuggestions.add(color.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
-		Subtypes.registerParameterizedSubtype(StyledHorseDisguise.class, "setColor", "color", Color.class, parameterSuggestions);
-//		for(Color color : Color.values()) {
-//			Subtypes.registerSubtype(StyledHorseDisguise.class, "setColor", color, color.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
-//		}
+		Subtypes.registerParameterizedSubtype(StyledHorseDisguise.class, (disguise, parameter) -> disguise.setColor(Color.valueOf(parameter.toUpperCase(Locale.ENGLISH).replace('-', '_'))), "color", parameterSuggestions);
 		
 		parameterSuggestions = new HashSet<String>();
 		for(Armor armor : Armor.values()) {
 			parameterSuggestions.add(armor.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
-		Subtypes.registerParameterizedSubtype(StyledHorseDisguise.class, "setArmor", "armor", Armor.class, parameterSuggestions);
+		Subtypes.registerParameterizedSubtype(StyledHorseDisguise.class, (disguise, parameter) -> disguise.setArmor(Armor.valueOf(parameter.toUpperCase(Locale.ENGLISH).replace('-', '_'))), "armor", parameterSuggestions);
 	}
 	
 	/**

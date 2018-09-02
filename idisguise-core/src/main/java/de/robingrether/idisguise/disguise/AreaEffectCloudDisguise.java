@@ -208,7 +208,7 @@ public class AreaEffectCloudDisguise extends ObjectDisguise {
 	 * @since 5.8.1
 	 * @return <code>true</code>, if the given string representation could be matched to a <strong>valid</strong> parameter, <code>false</code> otherwise
 	 */
-	public boolean setParameter(String parameter) {
+	public boolean setParameterFromString(String parameter) { // TODO: throw an exception if nothing could be matched
 		parameter = parameter.toLowerCase(Locale.ENGLISH).replace('-', '_');
 		Class<?> parameterType = getParameterType(particle);
 		if(parameterType.equals(Void.class)) {
@@ -279,7 +279,8 @@ public class AreaEffectCloudDisguise extends ObjectDisguise {
 		}
 		DEFAULT_COLORS = Collections.unmodifiableMap(defaultColors2);
 		
-		Subtypes.registerParameterizedSubtype(AreaEffectCloudDisguise.class, "setRadius", "radius", float.class, Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("0.1", "0.5", "1.0", "2.0", "5.0", "10.0", "20.0"))));
+		Subtypes.registerParameterizedSubtype(AreaEffectCloudDisguise.class, (disguise, parameter) -> disguise.setRadius(Float.parseFloat(parameter)), "radius",
+				new HashSet<String>(Arrays.asList("0.1", "0.5", "1.0", "2.0", "5.0", "10.0", "20.0")));
 		
 		Set<String> parameterSuggestions = new HashSet<String>();
 		Map<Particle, Object> localMap = new HashMap<Particle, Object>(Particle.values().length);
@@ -298,12 +299,12 @@ public class AreaEffectCloudDisguise extends ObjectDisguise {
 				localMap.put(particle, Material.STONE.createBlockData());
 			}
 		}
-		Subtypes.registerParameterizedSubtype(AreaEffectCloudDisguise.class, "setParticle", "particle", Particle.class, parameterSuggestions);
+		Subtypes.registerParameterizedSubtype(AreaEffectCloudDisguise.class, (disguise, parameter) -> disguise.setParticle(Particle.valueOf(parameter.toUpperCase(Locale.ENGLISH).replace('-', '_'))), "particle", parameterSuggestions);
 		DEFAULT_PARAMETERS = Collections.unmodifiableMap(localMap);
 		
 //		Set<String> colors = new HashSet<String>(defaultColors.keySet());
 //		colors.addAll(Arrays.asList("16711680", "65280", "255"));
-		Subtypes.registerParameterizedSubtype(AreaEffectCloudDisguise.class, "setParameter", "parameter", String.class);
+		Subtypes.registerParameterizedSubtype(AreaEffectCloudDisguise.class, (disguise, parameter) -> disguise.setParameterFromString(parameter), "parameter");
 		
 	}
 	

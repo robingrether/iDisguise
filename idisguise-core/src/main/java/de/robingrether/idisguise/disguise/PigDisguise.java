@@ -59,8 +59,8 @@ public class PigDisguise extends AgeableDisguise {
 	}
 	
 	static {
-		Subtypes.registerSubtype(PigDisguise.class, "setSaddled", true, "saddled");
-		Subtypes.registerSubtype(PigDisguise.class, "setSaddled", false, "not-saddled");
+		Subtypes.registerSimpleSubtype(PigDisguise.class, disguise -> disguise.setSaddled(true), "saddled");
+		Subtypes.registerSimpleSubtype(PigDisguise.class, disguise -> disguise.setSaddled(false), "not-saddled");
 	}
 	
 }
