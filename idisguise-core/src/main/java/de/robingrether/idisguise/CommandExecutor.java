@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -17,7 +18,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -195,7 +195,9 @@ public class CommandExecutor implements TabExecutor {
 							}
 						}
 						boolean match = false;
-						Map<String, String> unknown_args = new ArrayList<String>(Arrays.asList(args)).stream().collect(Collectors.toMap(x -> x, x -> ""));
+						Map<String, String> unknown_args = new LinkedHashMap<String, String>();
+						for(String arg : args) unknown_args.put(arg, "");
+						
 						for(Iterator<String> iterator = unknown_args.keySet().iterator(); iterator.hasNext(); ) {
 							DisguiseType type = DisguiseType.fromString(iterator.next());
 							if(type != null) {
