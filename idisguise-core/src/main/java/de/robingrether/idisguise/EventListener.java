@@ -24,7 +24,8 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.server.PluginEvent;
+import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
@@ -253,7 +254,12 @@ public class EventListener implements Listener {
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPluginEvent(PluginEvent event) {
+	public void onPluginEnable(PluginEnableEvent event) {
+		if(plugin.getConfiguration().MODIFY_SCOREBOARD_PACKETS && StringUtil.equals(event.getPlugin().getName(), "NametagEdit", "ColoredTags")) ScoreboardHooks.setup();
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPluginDisable(PluginDisableEvent event) {
 		if(plugin.getConfiguration().MODIFY_SCOREBOARD_PACKETS && StringUtil.equals(event.getPlugin().getName(), "NametagEdit", "ColoredTags")) ScoreboardHooks.setup();
 	}
 	
