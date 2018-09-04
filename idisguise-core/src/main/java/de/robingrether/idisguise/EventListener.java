@@ -24,6 +24,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.server.PluginEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
@@ -34,6 +35,7 @@ import de.robingrether.idisguise.io.UpdateCheck;
 import de.robingrether.idisguise.management.DisguiseManager;
 import de.robingrether.idisguise.management.ProfileHelper;
 import de.robingrether.idisguise.management.channel.ChannelInjector;
+import de.robingrether.idisguise.management.hooks.ScoreboardHooks;
 import de.robingrether.idisguise.management.util.EntityIdList;
 import de.robingrether.util.StringUtil;
 
@@ -248,6 +250,11 @@ public class EventListener implements Listener {
 			}
 			
 		}, 40L);
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPluginEvent(PluginEvent event) {
+		if(plugin.getConfiguration().MODIFY_SCOREBOARD_PACKETS && StringUtil.equals(event.getPlugin().getName(), "NametagEdit", "ColoredTags")) ScoreboardHooks.setup();
 	}
 	
 }

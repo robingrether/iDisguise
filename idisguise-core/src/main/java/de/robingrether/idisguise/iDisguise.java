@@ -145,7 +145,6 @@ public class iDisguise extends JavaPlugin {
 		getLogger().log(Level.INFO, String.format("%s enabled!", getFullName()));
 		enabled = true;
 		for(Player player : Bukkit.getOnlinePlayers()) {
-//			EntityIdList.addPlayer(player);
 			ProfileHelper.getInstance().registerGameProfile(player);
 		}
 		for(DisguiseType type : DisguiseType.values()) {

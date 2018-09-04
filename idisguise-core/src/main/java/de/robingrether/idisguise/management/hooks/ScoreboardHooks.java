@@ -11,8 +11,8 @@ public class ScoreboardHooks {
 	public static boolean coloredTags = false;
 	
 	public static void setup() {
-		nametagEdit = Bukkit.getPluginManager().getPlugin("NametagEdit") != null;
-		coloredTags = Bukkit.getPluginManager().getPlugin("ColoredTags") != null;
+		nametagEdit = Bukkit.getPluginManager().isPluginEnabled("NametagEdit");
+		coloredTags = Bukkit.getPluginManager().isPluginEnabled("ColoredTags");
 	}
 	
 	public static void updatePlayer(final Player player) {
