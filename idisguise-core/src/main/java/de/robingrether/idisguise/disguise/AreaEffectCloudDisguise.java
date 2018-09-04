@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -18,6 +19,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
+import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.management.VersionHelper;
 
 /**
@@ -162,7 +164,7 @@ public class AreaEffectCloudDisguise extends ObjectDisguise {
 	public String getParameterStringRepresentation() {
 		Class<?> parameterType = getParameterType(particle);
 		if(parameterType.equals(Color.class)) {
-			return Integer.toString(((Color)parameter).asRGB());
+			return Integer.toString(((Color)parameter).asRGB(), 16);
 		} else if(parameterType.equals(ItemStack.class)) {
 			return ((ItemStack)parameter).getType().name().toLowerCase(Locale.ENGLISH).replace('_', '-');
 		} else if(parameterType.equals(MaterialData.class)) {
@@ -206,51 +208,54 @@ public class AreaEffectCloudDisguise extends ObjectDisguise {
 	 * This function is used to parse the command argument <em>parameter=...</em>
 	 * 
 	 * @since 5.8.1
-	 * @return <code>true</code>, if the given string representation could be matched to a <strong>valid</strong> parameter, <code>false</code> otherwise
+	 * 
+	 * @throws IllegalArgumentException If the parsed parameter is invalid or no value could be parsed.
 	 */
-	public boolean setParameterFromString(String parameter) { // TODO: throw an exception if nothing could be matched
+	public void setParameterFromString(String parameter) {
 		parameter = parameter.toLowerCase(Locale.ENGLISH).replace('-', '_');
 		Class<?> parameterType = getParameterType(particle);
 		if(parameterType.equals(Void.class)) {
 			setParameter(null);
+			return;
 		} else if(parameterType.equals(Color.class)) {
 			if(parameter.isEmpty()) {
 				setParameter(null);
-				return true;
+				return;
 			} else if(DEFAULT_COLORS.containsKey(parameter)) {
 				setParameter(DEFAULT_COLORS.get(parameter));
-				return true;
+				return;
 			} else {
 				try {
-					setParameter(Color.fromRGB(Integer.parseInt(parameter)));
-					return true;
-				} catch(NumberFormatException e) { // fail silently
+					setParameter(Color.fromRGB(Integer.parseInt(parameter, 16)));
+					return;
+				} catch(NumberFormatException e) {
+					throw new IllegalArgumentException("Invalid color: expected hexadecimal RGB format");
 				}
 			}
 		} else if(parameterType.equals(ItemStack.class)) {
 			if(Material.matchMaterial(parameter) != null) {
 				setParameter(new ItemStack(Material.matchMaterial(parameter)));
-				return true;
+				return;
 			}
 		} else if(parameterType.equals(MaterialData.class)) {
 			if(Material.matchMaterial(parameter) != null) {
 				setParameter(new MaterialData(Material.matchMaterial(parameter)));
-				return true;
+				return;
 			}
 		} else if(VersionHelper.require1_13() && parameterType.equals(BlockData.class)) {
 			if(Material.matchMaterial(parameter) != null) {
 				setParameter(Material.matchMaterial(parameter).createBlockData());
-				return true;
+				return;
 			} else {
 				try {
 					setParameter(Bukkit.createBlockData(parameter));
-					return true;
+					return;
 				} catch(IllegalArgumentException e) { // fail silently
 				}
 			}
 		}
 		
-		return false;
+		throw new IllegalArgumentException("Unknown parameter!");
 	}
 	
 	/**
@@ -275,7 +280,8 @@ public class AreaEffectCloudDisguise extends ObjectDisguise {
 					defaultColors2.put(field.getName().toLowerCase(Locale.ENGLISH), (Color)field.get(null));
 				}
 			}
-		} catch(IllegalAccessException e) { // fail silently
+		} catch(IllegalAccessException e) {
+			iDisguise.getInstance().getLogger().log(Level.SEVERE, "An unexpected exception occured.", e);
 		}
 		DEFAULT_COLORS = Collections.unmodifiableMap(defaultColors2);
 		
