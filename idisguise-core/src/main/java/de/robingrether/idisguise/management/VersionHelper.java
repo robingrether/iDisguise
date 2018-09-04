@@ -2,9 +2,11 @@ package de.robingrether.idisguise.management;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 
+import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.management.channel.ChannelInjector;
 import de.robingrether.idisguise.management.util.EntityIdList;
 
@@ -102,6 +104,7 @@ public class VersionHelper {
 			initialized = true;
 			return true;
 		} catch(Exception e) {
+			iDisguise.getInstance().getLogger().log(Level.SEVERE, "An unexpected exception occured.", e);
 			initialized = false;
 			return false;
 		}

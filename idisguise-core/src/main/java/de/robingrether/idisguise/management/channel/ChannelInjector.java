@@ -29,9 +29,7 @@ public final class ChannelInjector {
 			channel.pipeline().addBefore("packet_handler", "iDisguise", channelHandler);
 			channelHandlerMap.put(player, channelHandler);
 		} catch(Exception e) {
-			if(VersionHelper.debug()) {
-				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot inject the given player connection: " + player.getName(), e);
-			}
+			iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot inject the given player connection: " + player.getName(), e);
 		}
 	}
 	
@@ -43,7 +41,7 @@ public final class ChannelInjector {
 			channel.pipeline().remove(channelHandler);
 		} catch(Exception e) {
 			if(VersionHelper.debug()) {
-				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot remove the given player connection: " + player.getName(), e);
+				iDisguise.getInstance().getLogger().log(Level.INFO, "Cannot remove the given player connection: " + player.getName(), e);
 			}
 		}
 	}

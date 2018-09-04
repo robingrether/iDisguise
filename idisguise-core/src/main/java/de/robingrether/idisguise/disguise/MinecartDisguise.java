@@ -7,11 +7,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 
+import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.management.VersionHelper;
 
 /**
@@ -217,12 +219,13 @@ public class MinecartDisguise extends ObjectDisguise {
 				if(material != null) tempSet.add(material);
 			}
 			reader.close();
-		} catch(IOException e) { // fail silently
+		} catch(IOException e) {
+			iDisguise.getInstance().getLogger().log(Level.SEVERE, "An unexpected exception occured.", e);
 		} finally {
 			if(reader != null) {
 				try {
 					reader.close();
-				} catch(IOException e) {
+				} catch(IOException e) { // fail silently
 				}
 			}
 		}

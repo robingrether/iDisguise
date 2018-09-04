@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -16,6 +17,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.management.VersionHelper;
 
 import static de.robingrether.idisguise.management.Reflection.*;
@@ -64,20 +66,6 @@ public final class EntityIdList {
 	
 	public static UUID getEntityUIDByEntityId(int entityId) {
 		return entityUIDs.get(entityId);
-//		for(World world : Bukkit.getWorlds()) {
-//			try {
-//				Object entity = World_getEntityById.invoke(CraftWorld_getHandle.invoke(world), entityId);
-//				if(entity != null) {
-//					Object bukkitEntity = Entity_getBukkitEntity.invoke(entity);
-//					if(bukkitEntity instanceof LivingEntity) {
-//						return (LivingEntity)bukkitEntity;
-//					}
-//					break;
-//				}
-//			} catch(Exception e) {
-//			}
-//		}
-//		return null;
 	}
 	
 	public static LivingEntity getEntityByEntityId(int entityId) {
@@ -89,6 +77,7 @@ public final class EntityIdList {
 				Object entity = MinecraftServer_getEntityByUID.invoke(MinecraftServer_getServer.invoke(null), entityUIDs.get(entityId));
 				return entity != null && Entity_getBukkitEntity.invoke(entity) instanceof LivingEntity ? (LivingEntity)Entity_getBukkitEntity.invoke(entity) : null;
 			} catch(IllegalAccessException|InvocationTargetException e) {
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "An unexpected exception occured.", e);
 			}
 			return null;
 		}
@@ -103,6 +92,7 @@ public final class EntityIdList {
 				Object entity = MinecraftServer_getEntityByUID.invoke(MinecraftServer_getServer.invoke(null), uniqueId);
 				return entity != null && Entity_getBukkitEntity.invoke(entity) instanceof LivingEntity ? (LivingEntity)Entity_getBukkitEntity.invoke(entity) : null;
 			} catch(IllegalAccessException|InvocationTargetException e) {
+				iDisguise.getInstance().getLogger().log(Level.SEVERE, "An unexpected exception occured.", e);
 			}
 			return null;
 		}

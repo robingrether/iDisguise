@@ -8,12 +8,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.management.VersionHelper;
 
 /**
@@ -234,12 +236,13 @@ public class ItemDisguise extends ObjectDisguise {
 				if(material != null) tempSet.add(material);
 			}
 			reader.close();
-		} catch(IOException e) { // fail silently
+		} catch(IOException e) {
+			iDisguise.getInstance().getLogger().log(Level.SEVERE, "An unexpected exception occured.", e);
 		} finally {
 			if(reader != null) {
 				try {
 					reader.close();
-				} catch(IOException e) {
+				} catch(IOException e) { // fail silently
 				}
 			}
 		}

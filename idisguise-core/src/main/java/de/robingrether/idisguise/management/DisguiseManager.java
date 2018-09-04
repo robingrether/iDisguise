@@ -179,7 +179,7 @@ public final class DisguiseManager {
 				}
 			} catch(Exception e) {
 				if(VersionHelper.debug()) {
-					iDisguise.getInstance().getLogger().log(Level.SEVERE, "An unexpected exception occured.", e);
+					iDisguise.getInstance().getLogger().log(Level.INFO, "An unexpected exception occured.", e);
 				}
 			}
 		}
@@ -265,6 +265,7 @@ public final class DisguiseManager {
 				
 			}
 		} catch(Exception e) {
+			iDisguise.getInstance().getLogger().log(Level.SEVERE, "An unexpected exception occured.", e);
 		}
 	}
 	
@@ -299,6 +300,7 @@ public final class DisguiseManager {
 			}
 			
 		} catch(Exception e) {
+			iDisguise.getInstance().getLogger().log(Level.SEVERE, "An unexpected exception occured.", e);
 		}
 	}
 	
@@ -348,7 +350,7 @@ public final class DisguiseManager {
 				respawnPlayerToSelf((Player)livingEntity);
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			iDisguise.getInstance().getLogger().log(Level.SEVERE, "An unexpected exception occured.", e);
 		}
 		
 		if(modifyScoreboardPackets && livingEntity instanceof Player) {
@@ -399,6 +401,7 @@ public final class DisguiseManager {
 				respawnPlayerToSelf((Player)livingEntity);
 			}
 		} catch(Exception e) {
+			iDisguise.getInstance().getLogger().log(Level.SEVERE, "An unexpected exception occured.", e);
 		}
 		
 		if(modifyScoreboardPackets && livingEntity instanceof Player) {

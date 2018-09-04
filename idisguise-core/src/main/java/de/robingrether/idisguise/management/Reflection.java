@@ -477,21 +477,15 @@ public class Reflection {
 								((AccessibleObject)field.get(null)).setAccessible(true);
 							}
 						} else {
-							if(VersionHelper.debug()) {
-								iDisguise.getInstance().getLogger().log(Level.WARNING, "Cannot parse line: " + line);
-							}
+							iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot parse line: " + line);
 						}
 					} catch(Exception e) {
-						if(VersionHelper.debug()) {
-							iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot parse line: " + line, e);
-						}
+						iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot parse line: " + line, e);
 					}
 				}
 			}
 		} catch(IOException e) {
-			if(VersionHelper.debug()) {
-				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot load the required reflection configuration.", e);
-			}
+			iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot load the required reflection configuration.", e);
 		}
 	}
 	
@@ -540,7 +534,7 @@ public class Reflection {
 			} catch(NoSuchFieldException | IllegalArgumentException | IllegalAccessException e2) {
 			}
 			if(VersionHelper.debug()) {
-				iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot find the given class file.", e);
+				iDisguise.getInstance().getLogger().log(Level.INFO, "Cannot find the given class file.", e);
 			}
 		}
 		return null;
