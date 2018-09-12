@@ -6,6 +6,7 @@ author: RobinGrether
 description: Disguise as a mob or other player
 website: https://www.spigotmc.org/resources/idisguise.5509/
 softdepend: [NametagEdit, ColoredTags]
+loadbefore: [MinecraftTrainSimulator]
 commands:
    disguise:
       description: Disguise.
