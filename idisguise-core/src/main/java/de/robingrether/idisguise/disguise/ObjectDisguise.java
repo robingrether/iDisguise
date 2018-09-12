@@ -49,12 +49,13 @@ public class ObjectDisguise extends Disguise {
 	 * @param customName the custom name
 	 */
 	public void setCustomName(String customName) {
-		if(customName == null) {
-			customName = "";
-		} else if(customName.length() > 64) {
-			customName = customName.substring(0, 64);
-		}
-		this.customName = ChatColor.translateAlternateColorCodes('&', customName);
+		if(customName == null) customName = "";
+		
+		customName = ChatColor.translateAlternateColorCodes('&', customName.replace("\\s", " "));
+		
+		if(customName.length() > 64) customName = customName.substring(0, 64);
+		
+		this.customName = customName;
 	}
 	
 	/**
