@@ -28,6 +28,7 @@ permissions:
          iDisguise.player.display-name: true
          iDisguise.player.name.*: true
          iDisguise.random: true
+         iDisguise.status.detailed: true
          iDisguise.undisguise: true
          iDisguise.visibility.*: true
    iDisguise.admin:
@@ -482,6 +483,8 @@ permissions:
       default: op
    iDisguise.see-through:
       default: op
+   iDisguise.status.detailed:
+      default: true
    iDisguise.undisguise:
       default: op
    iDisguise.undisguise.all:

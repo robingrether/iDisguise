@@ -110,13 +110,13 @@ public class CommandExecutor implements TabExecutor {
 						if(target instanceof OfflinePlayer) {
 							OfflinePlayer player = (OfflinePlayer)target;
 							if(DisguiseManager.isDisguised(player)) {
-								if(DisguiseManager.getDisguise(player) instanceof PlayerDisguise) {
-									PlayerDisguise disguise = (PlayerDisguise)DisguiseManager.getDisguise(player);
-									sender.sendMessage((disguiseSelf ? plugin.getLanguage().STATUS_PLAYER_SELF : plugin.getLanguage().STATUS_PLAYER_OTHER).replace("%player%", player.getName() != null ? player.getName() : player.getUniqueId().toString()).replace("%type%", disguise.getType().getCustomCommandArgument()).replace("%name%", disguise.getDisplayName()));
-									sender.sendMessage(plugin.getLanguage().STATUS_SUBTYPES.replace("%subtypes%", disguise.toString()));
-								} else {
-									Disguise disguise = DisguiseManager.getDisguise(player);
-									sender.sendMessage((disguiseSelf ? plugin.getLanguage().STATUS_SELF : plugin.getLanguage().STATUS_OTHER).replace("%player%", player.getName() != null ? player.getName() : player.getUniqueId().toString()).replace("%type%", disguise.getType().getCustomCommandArgument()));
+								Disguise disguise = DisguiseManager.getDisguise(player);
+								boolean isPlayerDisguise = disguise instanceof PlayerDisguise;
+								sender.sendMessage((disguiseSelf ? isPlayerDisguise ? plugin.getLanguage().STATUS_PLAYER_SELF : plugin.getLanguage().STATUS_SELF : isPlayerDisguise ? plugin.getLanguage().STATUS_PLAYER_OTHER : plugin.getLanguage().STATUS_OTHER)
+										.replace("%player%", player.getName() != null ? player.getName() : player.getUniqueId().toString())
+										.replace("%type%", disguise.getType().getCustomCommandArgument())
+										.replace("%name%", isPlayerDisguise ? ((PlayerDisguise)disguise).getDisplayName() : ""));
+								if(sender.hasPermission("iDisguise.status.detailed") && !plugin.getLanguage().STATUS_SUBTYPES.isEmpty()) {
 									sender.sendMessage(plugin.getLanguage().STATUS_SUBTYPES.replace("%subtypes%", disguise.toString()));
 								}
 							} else {
@@ -125,13 +125,13 @@ public class CommandExecutor implements TabExecutor {
 						} else {
 							LivingEntity livingEntity = (LivingEntity)target;
 							if(DisguiseManager.isDisguised(livingEntity)) {
-								if(DisguiseManager.getDisguise(livingEntity) instanceof PlayerDisguise) {
-									PlayerDisguise disguise = (PlayerDisguise)DisguiseManager.getDisguise(livingEntity);
-									sender.sendMessage(plugin.getLanguage().STATUS_PLAYER_OTHER.replace("%player%", livingEntity.getType().name() + " [" + livingEntity.getEntityId() + "]").replace("%type%", disguise.getType().getCustomCommandArgument()).replace("%name%", disguise.getDisplayName()));
-									sender.sendMessage(plugin.getLanguage().STATUS_SUBTYPES.replace("%subtypes%", disguise.toString()));
-								} else {
-									Disguise disguise = DisguiseManager.getDisguise(livingEntity);
-									sender.sendMessage(plugin.getLanguage().STATUS_OTHER.replace("%player%", livingEntity.getType().name() + " [" + livingEntity.getEntityId() + "]").replace("%type%", disguise.getType().getCustomCommandArgument()));
+								Disguise disguise = DisguiseManager.getDisguise(livingEntity);
+								boolean isPlayerDisguise = disguise instanceof PlayerDisguise;
+								sender.sendMessage((isPlayerDisguise ? plugin.getLanguage().STATUS_PLAYER_OTHER : plugin.getLanguage().STATUS_OTHER)
+										.replace("%player%", livingEntity.getType().name() + " [" + livingEntity.getEntityId() + "]")
+										.replace("%type%", disguise.getType().getCustomCommandArgument())
+										.replace("%name%", isPlayerDisguise ? ((PlayerDisguise)disguise).getDisplayName() : ""));
+								if(sender.hasPermission("iDisguise.status.detailed") && !plugin.getLanguage().STATUS_SUBTYPES.isEmpty()) {
 									sender.sendMessage(plugin.getLanguage().STATUS_SUBTYPES.replace("%subtypes%", disguise.toString()));
 								}
 							} else {
