@@ -959,7 +959,7 @@ public final class PacketHandler {
 			for(int entityId : entityIds) {
 				UUID disguisable = EntityIdList.getEntityUIDByEntityId(entityId);
 				if(disguisable != null && Bukkit.getPlayer(disguisable) == null && DisguiseManager.isDisguisedTo(disguisable, observer) && DisguiseManager.getDisguise(disguisable) instanceof PlayerDisguise) {
-					playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, ProfileHelper.getInstance().getGameProfile(disguisable, "", ""), 35, null, null));
+					playerInfoList.add(PlayerInfoData_new.newInstance(playerInfoPacket, ProfileHelper.getInstance().getGameProfile(disguisable, "", ""), 35, EnumGamemode_SURVIVAL.get(null), null));
 				}
 			}
 			
