@@ -54,8 +54,8 @@ public class Language {
 	@LastUpdated(50801)
 	public String HELP_TYPES_NO_PERMISSION = ChatColor.GRAY + (ChatColor.STRIKETHROUGH + "%type%");
 	@LastUpdated(50801)
-	public String HELP_INFO = ChatColor.GRAY + "Use " + ChatColor.ITALIC + "%command% " + ChatColor.GRAY + "to read the other pages:";
-	public String HELP_INFO_FORMAT = ChatColor.GRAY + "%title%(%page%), ";
+	public String HELP_INFO = ChatColor.GRAY + "Use " + ChatColor.ITALIC + "%command% " + ChatColor.GRAY + "to read the other pages.";
+//	public String HELP_INFO_FORMAT = ChatColor.GRAY + "%title%(%page%), ";
 	public String HELP_PLAYER_SELF = "Disguise yourself as a player";
 	public String HELP_PLAYER_OTHER = "Disguise a player as a player";
 	public String HELP_RANDOM_SELF = "Disguise yourself as a randomly chosen mob";

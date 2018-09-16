@@ -537,6 +537,8 @@ public class CommandExecutor implements TabExecutor {
 				}
 				sender.sendMessage(plugin.getLanguage().HELP_BASE.replace("%command%", disguiseCommand + " status").replace("%description%", self ? plugin.getLanguage().HELP_STATUS_SELF : plugin.getLanguage().HELP_STATUS_OTHER));
 			}
+			
+			boolean isVisibleTo(CommandSender sender) { return true; }
 		});
 		
 		helpPages.add(new HelpPage(plugin.getLanguage().HELP_TITLE_UNDISGUISE) {
@@ -551,6 +553,8 @@ public class CommandExecutor implements TabExecutor {
 					sender.sendMessage(plugin.getLanguage().HELP_BASE.replace("%command%", undisguiseCommand + " <target> [ignore]").replace("%description%", plugin.getLanguage().HELP_UNDISGUISE_OTHER));
 				}
 			}
+			
+			boolean isVisibleTo(CommandSender sender) { return true; }
 		});
 		
 		helpPages.add(new HelpPage(plugin.getLanguage().HELP_TITLE_TYPES) {
@@ -570,6 +574,8 @@ public class CommandExecutor implements TabExecutor {
 					sender.sendMessage(plugin.getLanguage().HELP_TYPES.replace("%types%", builder.substring(0, builder.length() - 2)));
 				}
 			}
+			
+			boolean isVisibleTo(CommandSender sender) { return true; }
 		});
 		
 		helpPages.add(new HelpPage(plugin.getLanguage().HELP_TITLE_FEATURES) {
@@ -581,6 +587,8 @@ public class CommandExecutor implements TabExecutor {
 					sender.sendMessage(plugin.getLanguage().HELP_BASE.replace("%command%", disguiseCommand + " see-through [on/off]").replace("%description%", self ? plugin.getLanguage().HELP_SEE_THROUGH_SELF : plugin.getLanguage().HELP_SEE_THROUGH_OTHER));
 				}
 			}
+			
+			boolean isVisibleTo(CommandSender sender) { return sender.hasPermission("iDisguise.reload") || sender.hasPermission("iDisguise.see-through"); }
 		});
 		
 		helpPages.add(new HelpPage(plugin.getLanguage().HELP_TITLE_TARGETS) {
@@ -589,6 +597,8 @@ public class CommandExecutor implements TabExecutor {
 					sender.sendMessage(message);
 				}
 			}
+			
+			boolean isVisibleTo(CommandSender sender) { return sender.hasPermission("iDisguise.others"); }
 		});
 	}
 	
@@ -601,11 +611,13 @@ public class CommandExecutor implements TabExecutor {
 		boolean self = command.getName().equalsIgnoreCase("disguise");
 		String disguiseCommand = "/" + (self ? alias : alias + " <target>");
 		String undisguiseCommand = "/" + (alias.equals("d") ? "ud" : alias.endsWith("s") ? "undis" : "undisguise");
-		int totalPages = helpPages.size() - 1;
+		List<HelpPage> localHelpPages = new ArrayList<HelpPage>(helpPages);
+		localHelpPages.removeIf(helpPage -> helpPage != null && !helpPage.isVisibleTo(sender));
+		int totalPages = localHelpPages.size() - 1;
 		if(pageNumber < 1) pageNumber = 1;
 		if(pageNumber > totalPages) pageNumber = totalPages;
 		
-		helpPages.get(pageNumber).send(sender, pageNumber, totalPages, alias, self, disguiseCommand, undisguiseCommand);
+		localHelpPages.get(pageNumber).send(sender, pageNumber, totalPages, alias, self, disguiseCommand, undisguiseCommand);
 	}
 	
 	abstract class HelpPage {
@@ -617,19 +629,22 @@ public class CommandExecutor implements TabExecutor {
 		}
 		
 		final void send(CommandSender sender, int pageNumber, int totalPages,  String alias, boolean self, String disguiseCommand, String undisguiseCommand) {
+			if(!isVisibleTo(sender)) return;
 			sender.sendMessage("");
 			sender.sendMessage(plugin.getLanguage().HELP_TITLE.replace("%title%", title).replace("%name%", "iDisguise").replace("%version%", plugin.getVersion()).replace("%page%", Integer.toString(pageNumber)).replace("%total%", Integer.toString(totalPages)));
 			sendContent(sender, alias, self, disguiseCommand, undisguiseCommand);
 			sender.sendMessage(plugin.getLanguage().HELP_INFO.replace("%command%", "/" + alias + " help [page]"));
 			
-			StringBuilder builder = new StringBuilder();
-			for(int i = 1; i < helpPages.size(); i++) {
-				builder.append(plugin.getLanguage().HELP_INFO_FORMAT.replace("%title%", helpPages.get(i).title).replace("%page%", Integer.toString(i)));
-			}
-			if(builder.length() > 2) sender.sendMessage(builder.substring(0, builder.length() - 2));
+//			StringBuilder builder = new StringBuilder();
+//			for(int i = 1; i < helpPages.size(); i++) {
+//				builder.append(plugin.getLanguage().HELP_INFO_FORMAT.replace("%title%", helpPages.get(i).title).replace("%page%", Integer.toString(i)));
+//			}
+//			if(builder.length() > 2) sender.sendMessage(builder.substring(0, builder.length() - 2));
 		}
 		
 		abstract void sendContent(CommandSender sender, String alias, boolean self, String disguiseCommand, String undisguiseCommand);
+		
+		abstract boolean isVisibleTo(CommandSender sender);
 		
 	}
 	
