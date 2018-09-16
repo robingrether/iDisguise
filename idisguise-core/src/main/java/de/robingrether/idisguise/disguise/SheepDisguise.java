@@ -1,8 +1,6 @@
 package de.robingrether.idisguise.disguise;
 
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.Set;
 
 import org.bukkit.DyeColor;
 
@@ -61,15 +59,13 @@ public class SheepDisguise extends AgeableDisguise {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return String.format("%s; color=%s", super.toString(), color.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+		return String.format("%s; %s", super.toString(), color.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 	}
 	
 	static {
-		Set<String> parameterSuggestions = new HashSet<String>();
 		for(DyeColor color : DyeColor.values()) {
-			parameterSuggestions.add(color.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
+			Subtypes.registerSimpleSubtype(SheepDisguise.class, (disguise) -> disguise.setColor(color), color.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 		}
-		Subtypes.registerParameterizedSubtype(SheepDisguise.class, (disguise, parameter) -> disguise.setColor(DyeColor.valueOf(parameter.toUpperCase(Locale.ENGLISH).replace('-', '_'))), "color", parameterSuggestions);
 	}
 	
 }

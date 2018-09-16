@@ -129,6 +129,28 @@ public class ItemDisguise extends ObjectDisguise {
 		itemStack.setDurability(durability);
 	}
 	
+	public void setMaterial(String paramMaterial) {
+		Material material = Material.matchMaterial(paramMaterial.replace('-', '_'));
+		if(material != null) {
+			setMaterial(material);
+			return;
+		} else if(paramMaterial.contains(":")) {
+			String[] s = paramMaterial.split(":", 2);
+			material = Material.matchMaterial(s[0].replace('-', '_'));
+			if(material != null) {
+				try {
+					short durability = Short.parseShort(s[1]);
+					setMaterial(material);
+					setDurability(durability);
+					return;
+				} catch(NumberFormatException e) {
+					throw new IllegalArgumentException("Invalid data value!");
+				}
+			}
+		}
+		throw new IllegalArgumentException("Unknown argument!");
+	}
+	
 	/**
 	 * Gets the amount.
 	 * 
@@ -200,13 +222,13 @@ public class ItemDisguise extends ObjectDisguise {
 	 */
 	public String toString() {
 		if(VersionHelper.require1_11()) {
-			return String.format("%s; material=%s; material-data=%s; amount=%s; %s; %s", super.toString(),
+			return String.format("%s; material=%s:%s; amount=%s; %s; %s", super.toString(),
 					itemStack.getType().name().toLowerCase(Locale.ENGLISH).replace('_', '-'),
 					itemStack.getDurability(), itemStack.getAmount(),
 					isEnchanted() ? "enchanted" : "not-enchanted",
 					isUnbreakable() ? "unbreakable" : "not-unbreakable");
 		} else {
-			return String.format("%s; material=%s; material-data=%s; amount=%s; %s", super.toString(),
+			return String.format("%s; material=%s:%s; amount=%s; %s", super.toString(),
 					itemStack.getType().name().toLowerCase(Locale.ENGLISH).replace('_', '-'),
 					itemStack.getDurability(), itemStack.getAmount(),
 					isEnchanted() ? "enchanted" : "not-enchanted");
@@ -254,9 +276,8 @@ public class ItemDisguise extends ObjectDisguise {
 				parameterSuggestions.add(material.name().toLowerCase(Locale.ENGLISH).replace('_', '-'));
 			}
 		}
-		Subtypes.registerParameterizedSubtype(ItemDisguise.class, (disguise, parameter) -> disguise.setMaterial(Material.valueOf(parameter.toUpperCase(Locale.ENGLISH).replace('-', '_'))), "material", parameterSuggestions);
+		Subtypes.registerParameterizedSubtype(ItemDisguise.class, (disguise, parameter) -> disguise.setMaterial(parameter), "material", parameterSuggestions);
 		
-		Subtypes.registerParameterizedSubtype(ItemDisguise.class, (disguise, parameter) -> disguise.setDurability(Short.valueOf(parameter)), "durability");
 		Subtypes.registerParameterizedSubtype(ItemDisguise.class, (disguise, parameter) -> disguise.setAmount(Integer.valueOf(parameter)), "amount", new HashSet<String>(Arrays.asList("1", "2", "64")));
 		
 		Subtypes.registerSimpleSubtype(ItemDisguise.class, disguise -> disguise.setEnchanted(true), "enchanted");
