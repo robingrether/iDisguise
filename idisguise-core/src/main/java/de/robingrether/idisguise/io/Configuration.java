@@ -33,7 +33,7 @@ public class Configuration {
 	public static final String UPDATE_CHECK_PATH = "updates.check";
 	public static final String UPDATE_DOWNLOAD_PATH = "updates.download";
 	
-	public boolean DISGUISE_VIEW_SELF = true;
+	public boolean DISGUISE_VIEW_SELF = false;
 	public boolean KEEP_DISGUISE_LEAVE = true;
 	public boolean KEEP_DISGUISE_SHUTDOWN = true;
 	public boolean MODIFY_MESSAGE_DEATH = false;
