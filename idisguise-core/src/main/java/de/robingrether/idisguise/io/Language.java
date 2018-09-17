@@ -29,7 +29,8 @@ public class Language {
 	public String EVENT_CANCELLED = ChatColor.RED + "Another plugin prohibits you to do that.";
 	public String DISGUISE_SUCCESS_SELF = ChatColor.GOLD + "You disguised as a %type%.";
 	public String DISGUISE_SUCCESS_OTHER = ChatColor.GOLD + "%player% disguised as a %type%.";
-	public String DISGUISE_SUCCESS_MULTIPLE = ChatColor.GOLD + "%share% out of %total% entities disguised as a %type%.";
+	@LastUpdated(50801)
+	public String DISGUISE_SUCCESS_MULTIPLE = ChatColor.GOLD + "%share% out of %total% selected entities disguised as a %type%.";
 	public String STATUS_PLAYER_SELF = ChatColor.GOLD + "You are disguised as a %type% called %name%.";
 	public String STATUS_PLAYER_OTHER = ChatColor.GOLD + "%player% is disguised as a %type% called %name%.";
 	public String STATUS_SELF = ChatColor.GOLD + "You are disguised as a %type%.";
@@ -43,7 +44,8 @@ public class Language {
 	public String UNDISGUISE_NOT_DISGUISED_OTHER = ChatColor.RED + "%player% is not disguised.";
 	public String UNDISGUISE_SUCCESS_SELF = ChatColor.GOLD + "You undisguised.";
 	public String UNDISGUISE_SUCCESS_OTHER = ChatColor.GOLD + "%player% undisguised.";
-	public String UNDISGUISE_SUCCESS_MULTIPLE = ChatColor.GOLD + "%share% out of %total% disguised entities undisguised.";
+	@LastUpdated(50801)
+	public String UNDISGUISE_SUCCESS_MULTIPLE = ChatColor.GOLD + "%share% out of %total% selected entities undisguised.";
 	@LastUpdated(50801)
 	public String HELP_BASE = ChatColor.GOLD + (ChatColor.ITALIC + "%command% " + ChatColor.GOLD + "- %description%");
 	@LastUpdated(50801)
@@ -95,7 +97,7 @@ public class Language {
 	public String HELP_TARGET_EID = ChatColor.GOLD + "[entity-id] - Select an entity/player by entity id";
 	public String HELP_TARGET_VANILLA = ChatColor.GOLD + "@p/@r/@a/@e/@s[...] - Select entities/players with vanilla selector";
 	@LastUpdated(50801)
-	public String HELP_TARGET_NAME_EXACT = ChatColor.GOLD + "{player-name} - Select a player by EXACT account name";
+	public String HELP_TARGET_NAME_EXACT = ChatColor.GOLD + "\"player-name\" - Select a player by EXACT account name";
 	@LastUpdated(50801)
 	public String HELP_TARGET_NAME_MATCH = ChatColor.GOLD + "player-name - Match an ONLINE player";
 	public String HELP_TARGET_VANILLA_TIP = ChatColor.GRAY + "Tip: You can use vanilla target selectors in command blocks like this " + ChatColor.ITALIC + "#p/#r/#a/#e/#s[...]";
@@ -105,6 +107,7 @@ public class Language {
 	public String HELP_TITLE_TYPES = "Types";
 	public String HELP_TITLE_FEATURES = "Features";
 	public String HELP_TITLE_TARGETS = "Targets";
+	public String HELP_UNDISGUISE_TIP = ChatColor.GRAY + "Tip: Append " + ChatColor.ITALIC + "ignore" + ChatColor.GRAY + " to the end of the command to bypass the plugin's API.";
 	
 	public String DISGUISE_ALIAS_BAT = "";
 	public String DISGUISE_ALIAS_BLAZE = "";

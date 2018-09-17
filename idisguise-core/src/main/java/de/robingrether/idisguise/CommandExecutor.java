@@ -392,7 +392,7 @@ public class CommandExecutor implements TabExecutor {
 				}
 				if(sender.hasPermission("iDisguise.others")) {
 					for(Player player : Bukkit.getOnlinePlayers()) {
-						completions.add("{" + player.getName() + "}");
+						completions.add(player.getName());
 					}
 					if(sender instanceof Player) { // TODO: target suggestions
 						for(Entity entity : ((Player)sender).getNearbyEntities(5.0, 5.0, 5.0)) {
@@ -456,7 +456,7 @@ public class CommandExecutor implements TabExecutor {
 				if(sender.hasPermission("iDisguise.undisguise.others")) {
 					for(Player player : Bukkit.getOnlinePlayers()) {
 						if(DisguiseManager.isDisguised(player)) {
-							completions.add("{" + player.getName() + "}");
+							completions.add(player.getName());
 						}
 					}
 					if(sender instanceof Player) {
@@ -473,7 +473,7 @@ public class CommandExecutor implements TabExecutor {
 		}
 		if(args.length > 0) {
 			for(int i = 0; i < completions.size(); i++) {
-				if(!StringUtil.startsWithIgnoreCase(completions.get(i).replace("{", ""), args[args.length - 1].replace('_', '-'))) {
+				if(!StringUtil.startsWithIgnoreCase(completions.get(i).replace("\"", ""), args[args.length - 1].replace('_', '-'))) {
 					completions.remove(i);
 					i--;
 				}
@@ -483,6 +483,8 @@ public class CommandExecutor implements TabExecutor {
 	}
 	
 	private final Pattern accountIdPattern = Pattern.compile("<?([0-9A-Fa-f]{8})-?([0-9A-Fa-f]{4})-?([0-9A-Fa-f]{4})-?([0-9A-Fa-f]{4})-?([0-9A-Fa-f]{12})>?");
+	private final Pattern entityIdPattern = Pattern.compile("\\[([0-9]+)\\]");
+	private final Pattern playerNamePattern = Pattern.compile("(?:\\{|\")([A-Za-z0-9_]{1,16})(?:\\}|\")");
 	
 	private Collection<? extends Object> parseTargets(String argument, CommandSender sender) {
 		if(argument.charAt(0) == '@' || argument.charAt(0) == '#') {
@@ -496,14 +498,20 @@ public class CommandExecutor implements TabExecutor {
 				Matcher matcher = accountIdPattern.matcher(arg);
 				if(matcher.matches()) {
 					target = Bukkit.getOfflinePlayer(UUID.fromString(matcher.group(1) + "-" + matcher.group(2) + "-" + matcher.group(3) + "-" + matcher.group(4) + "-" + matcher.group(5)));
-				} else if(arg.matches("\\[[0-9]+\\]")) {
-					target = EntityIdList.getEntityByEntityId(Integer.parseInt(arg.substring(1, arg.length() - 1)));
-				} else if(arg.matches("\\{[A-Za-z0-9_]{1,16}\\}")) {
-					target = Bukkit.getOfflinePlayer(arg.substring(1, arg.length() - 1));
-				} else if(Bukkit.getPlayerExact(arg) != null) {
-					target = Bukkit.getPlayerExact(arg);
-				} else if(Bukkit.matchPlayer(arg).size() == 1) {
-					target = Bukkit.matchPlayer(arg).get(0);
+				} else {
+					matcher = entityIdPattern.matcher(arg);
+					if(matcher.matches()) {
+						target = EntityIdList.getEntityByEntityId(Integer.parseInt(matcher.group(1)));
+					} else {
+						matcher = playerNamePattern.matcher(arg);
+						if(matcher.matches()) {
+							target = Bukkit.getOfflinePlayer(matcher.group(1));
+						} else if(Bukkit.getPlayerExact(arg) != null) {
+							target = Bukkit.getPlayerExact(arg);
+						} else if(Bukkit.matchPlayer(arg).size() == 1) {
+							target = Bukkit.matchPlayer(arg).get(0);
+						}
+					}
 				}
 				if(target != null) targets.add(target);
 			}
@@ -551,6 +559,9 @@ public class CommandExecutor implements TabExecutor {
 				}
 				if(sender.hasPermission("iDisguise.undisguise.others")) {
 					sender.sendMessage(plugin.getLanguage().HELP_BASE.replace("%command%", undisguiseCommand + " <target> [ignore]").replace("%description%", plugin.getLanguage().HELP_UNDISGUISE_OTHER));
+				}
+				if(sender.hasPermission("iDisguise.undisguise.all") || sender.hasPermission("iDisguise.undisguise.others")) {
+					sender.sendMessage(plugin.getLanguage().HELP_UNDISGUISE_TIP);
 				}
 			}
 			
