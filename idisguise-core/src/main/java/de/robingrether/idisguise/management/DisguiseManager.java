@@ -21,6 +21,7 @@ import org.bukkit.entity.Player;
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.disguise.Disguise;
 import de.robingrether.idisguise.disguise.PlayerDisguise;
+import de.robingrether.idisguise.management.channel.ChannelInjector;
 import de.robingrether.idisguise.management.hooks.ScoreboardHooks;
 import de.robingrether.idisguise.management.util.DisguiseMap;
 
@@ -260,7 +261,7 @@ public final class DisguiseManager {
 				
 				// send the player info removal if needed
 				if(isPlayer ? disguiseViewSelf || livingEntity != observer : disguisedAsPlayer && isDisguisedTo(livingEntity, observer)) {
-					PacketHandler.sendPacketUnaltered(observer, playerInfoPacket);
+					ChannelInjector.sendPacketUnaltered(observer, playerInfoPacket);
 				}
 				
 			}
@@ -296,7 +297,7 @@ public final class DisguiseManager {
 			
 			// send the player info removal if needed
 			if(isPlayer ? disguiseViewSelf || livingEntity != observer : disguisedAsPlayer && isDisguisedTo(livingEntity, observer)) {
-				PacketHandler.sendPacketUnaltered(observer, playerInfoPacket);
+				ChannelInjector.sendPacketUnaltered(observer, playerInfoPacket);
 			}
 			
 		} catch(Exception e) {
@@ -336,7 +337,7 @@ public final class DisguiseManager {
 				
 				// send the player info
 				if(isPlayer && (disguiseViewSelf || livingEntity != observer)) {
-					PacketHandler.sendPacket(observer, playerInfoPacket);
+					ChannelInjector.sendPacket(observer, playerInfoPacket);
 				}
 				
 				if(livingEntity != observer) {
@@ -389,7 +390,7 @@ public final class DisguiseManager {
 			
 			// send the player info
 			if(isPlayer && (disguiseViewSelf || livingEntity != observer)) {
-				PacketHandler.sendPacket(observer, playerInfoPacket);
+				ChannelInjector.sendPacket(observer, playerInfoPacket);
 			}
 			
 			if(livingEntity != observer) {
@@ -428,16 +429,16 @@ public final class DisguiseManager {
 			actualDimension = location.getWorld().getEnvironment().getId();
 			tempDimension = (int)actualDimension == 1 ? 0 : (int)actualDimension + 1;
 		}
-		PacketHandler.sendPacketUnaltered(player, PacketPlayOutRespawn_new.newInstance(tempDimension, World_getDifficulty.invoke(world), World_getType.invoke(world), PlayerInteractManager_getGameMode.invoke(EntityPlayer_playerInteractManager.get(entityPlayer))));
-		PacketHandler.sendPacketUnaltered(player, PacketPlayOutRespawn_new.newInstance(actualDimension, World_getDifficulty.invoke(world), World_getType.invoke(world), PlayerInteractManager_getGameMode.invoke(EntityPlayer_playerInteractManager.get(entityPlayer))));
+		ChannelInjector.sendPacketUnaltered(player, PacketPlayOutRespawn_new.newInstance(tempDimension, World_getDifficulty.invoke(world), World_getType.invoke(world), PlayerInteractManager_getGameMode.invoke(EntityPlayer_playerInteractManager.get(entityPlayer))));
+		ChannelInjector.sendPacketUnaltered(player, PacketPlayOutRespawn_new.newInstance(actualDimension, World_getDifficulty.invoke(world), World_getType.invoke(world), PlayerInteractManager_getGameMode.invoke(EntityPlayer_playerInteractManager.get(entityPlayer))));
 		
 		if(VersionHelper.require1_9()) {
-			PacketHandler.sendPacketUnaltered(player, PacketPlayOutPosition_new.newInstance(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch(), Collections.emptySet(), 27));
+			ChannelInjector.sendPacketUnaltered(player, PacketPlayOutPosition_new.newInstance(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch(), Collections.emptySet(), 27));
 		} else {
-			PacketHandler.sendPacketUnaltered(player, PacketPlayOutPosition_new.newInstance(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch(), Collections.emptySet()));
+			ChannelInjector.sendPacketUnaltered(player, PacketPlayOutPosition_new.newInstance(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch(), Collections.emptySet()));
 		}
-		PacketHandler.sendPacketUnaltered(player, PacketPlayOutSpawnPosition_new.newInstance(World_getSpawn.invoke(world)));
-		PacketHandler.sendPacketUnaltered(player, PacketPlayOutExperience_new.newInstance(EntityHuman_exp.get(entityPlayer), EntityHuman_expTotal.get(entityPlayer), EntityHuman_expLevel.get(entityPlayer)));
+		ChannelInjector.sendPacketUnaltered(player, PacketPlayOutSpawnPosition_new.newInstance(World_getSpawn.invoke(world)));
+		ChannelInjector.sendPacketUnaltered(player, PacketPlayOutExperience_new.newInstance(EntityHuman_exp.get(entityPlayer), EntityHuman_expTotal.get(entityPlayer), EntityHuman_expLevel.get(entityPlayer)));
 		
 		PlayerList_sendWorldInfo.invoke(MinecraftServer_getPlayerList.invoke(MinecraftServer_getServer.invoke(null)), entityPlayer, world);
 		
@@ -448,7 +449,7 @@ public final class DisguiseManager {
 		EntityPlayer_updateAbilities.invoke(entityPlayer);
 		
 		for(Object effect : (Collection)EntityLiving_getEffects.invoke(entityPlayer)) {
-			PacketHandler.sendPacketUnaltered(player, PacketPlayOutEntityEffect_new.newInstance(player.getEntityId(), effect));
+			ChannelInjector.sendPacketUnaltered(player, PacketPlayOutEntityEffect_new.newInstance(player.getEntityId(), effect));
 		}
 	}
 	

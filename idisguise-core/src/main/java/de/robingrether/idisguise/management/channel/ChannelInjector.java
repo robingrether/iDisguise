@@ -1,61 +1,75 @@
 package de.robingrether.idisguise.management.channel;
 
-import static de.robingrether.idisguise.management.Reflection.*;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import de.robingrether.idisguise.iDisguise;
-import de.robingrether.idisguise.management.VersionHelper;
-import io.netty.channel.Channel;
-
-public final class ChannelInjector {
+public class ChannelInjector {
 	
-	private ChannelInjector() {}
+	private static IChannelInjector channelInjector;
 	
-	private static final Map<Player, InjectedChannelHandler> channelHandlerMap = new ConcurrentHashMap<Player, InjectedChannelHandler>();
-	
-	public static void init() {}
-	
-	public static synchronized void inject(Player player) {
-		if(channelHandlerMap.containsKey(player)) return;
-		try {
-			Channel channel = (Channel)NetworkManager_channel.get(PlayerConnection_networkManager.get(EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(player))));
-			InjectedChannelHandler channelHandler = new InjectedChannelHandler(player, channel);
-			channel.pipeline().addBefore("packet_handler", "iDisguise", channelHandler);
-			channelHandlerMap.put(player, channelHandler);
-		} catch(Exception e) {
-			iDisguise.getInstance().getLogger().log(Level.SEVERE, "Cannot inject the given player connection: " + player.getName(), e);
+	public static void init() {
+		if(Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
+			channelInjector = new ProtocolLibChannelInjector();
+		} else {
+			channelInjector = new NettyChannelInjector();
 		}
+		channelInjector.init();
 	}
 	
-	public static synchronized void remove(Player player) {
-		if(!channelHandlerMap.containsKey(player)) return;
-		try {
-			InjectedChannelHandler channelHandler = channelHandlerMap.remove(player);
-			Channel channel = channelHandler.getChannel();
-			channel.pipeline().remove(channelHandler);
-		} catch(Exception e) {
-			if(VersionHelper.debug()) {
-				iDisguise.getInstance().getLogger().log(Level.INFO, "Cannot remove the given player connection: " + player.getName(), e);
+	public static void terminate() {
+		channelInjector.terminate();
+	}
+	
+	public static void inject(Player player) {
+		channelInjector.inject(player);
+	}
+	
+	public static void remove(Player player) {
+		channelInjector.remove(player);
+	}
+	
+	public static void sendPacket(Player observer, Object packet) {
+		channelInjector.sendPacket(observer, packet);
+	}
+	
+	public static void sendPacketUnaltered(Player observer, Object packet) {
+		channelInjector.sendPacketUnaltered(observer, packet);
+	}
+	
+	public static void injectOnlinePlayers() {
+		channelInjector.injectOnlinePlayers();
+	}
+	
+	public static void removeOnlinePlayers() {
+		channelInjector.removeOnlinePlayers();
+	}
+	
+	static interface IChannelInjector {
+		
+		default void init() {}
+		
+		default void terminate() {}
+		
+		default void inject(Player player) {}
+		
+		default void remove(Player player) {}
+		
+		void sendPacket(Player observer, Object packet);
+		
+		void sendPacketUnaltered(Player observer, Object packet);
+		
+		default void injectOnlinePlayers() {
+			for(Player player : Bukkit.getOnlinePlayers()) {
+				inject(player);
 			}
 		}
-	}
-	
-	public static synchronized void injectOnlinePlayers() {
-		for(Player player : Bukkit.getOnlinePlayers()) {
-			inject(player);
+		
+		default void removeOnlinePlayers() {
+			for(Player player : Bukkit.getOnlinePlayers()) {
+				remove(player);
+			}
 		}
-	}
-	
-	public static synchronized void removeOnlinePlayers() {
-		for(Player player : Bukkit.getOnlinePlayers()) {
-			remove(player);
-		}
+		
 	}
 	
 }

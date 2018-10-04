@@ -5,7 +5,7 @@ api-version: 1.13
 author: RobinGrether
 description: Disguise as a mob or other player
 website: https://www.spigotmc.org/resources/idisguise.5509/
-softdepend: [NametagEdit, ColoredTags]
+softdepend: [NametagEdit, ColoredTags, ProtocolLib]
 loadbefore: [MinecraftTrainSimulator]
 commands:
    disguise:

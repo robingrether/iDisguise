@@ -24,13 +24,12 @@ import org.bukkit.inventory.ItemStack;
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.api.PlayerInteractDisguisedPlayerEvent;
 import de.robingrether.idisguise.disguise.*;
-import de.robingrether.idisguise.management.channel.Unaltered;
+import de.robingrether.idisguise.management.channel.ChannelInjector;
 import de.robingrether.idisguise.management.util.EntityIdList;
 
 import static de.robingrether.idisguise.management.Reflection.*;
 import de.robingrether.util.ObjectUtil;
 import de.robingrether.util.StringUtil;
-import io.netty.channel.Channel;
 
 public final class PacketHandler {
 	
@@ -539,40 +538,6 @@ public final class PacketHandler {
 		return clone;
 	}
 	
-	public static void sendPacket(final Player observer, final Object packet) {
-		try {
-			Channel channel = (Channel)NetworkManager_channel.get(PlayerConnection_networkManager.get(EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))));//.writeAndFlush(packet);
-			if(channel.eventLoop().inEventLoop()) {
-				for(Object p : packet instanceof Object[] ? (Object[])packet : new Object[] {packet}) channel.writeAndFlush(p);
-			} else {
-				channel.eventLoop().execute(() -> {
-					for(Object p : packet instanceof Object[] ? (Object[])packet : new Object[] {packet}) channel.writeAndFlush(p);
-				});
-			}
-		} catch(Exception e) {
-			if(VersionHelper.debug()) {
-				iDisguise.getInstance().getLogger().log(Level.INFO, "Cannot send packet: " + packet.getClass().getSimpleName() + " to " + observer.getName(), e);
-			}
-		}
-	}
-	
-	public static void sendPacketUnaltered(final Player observer, final Object packet) {
-		try {
-			Channel channel = (Channel)NetworkManager_channel.get(PlayerConnection_networkManager.get(EntityPlayer_playerConnection.get(CraftPlayer_getHandle.invoke(observer))));//.writeAndFlush(new Unaltered(packet));
-			if(channel.eventLoop().inEventLoop()) {
-				for(Object p : packet instanceof Object[] ? (Object[])packet : new Object[] {packet}) channel.writeAndFlush(new Unaltered(p));
-			} else {
-				channel.eventLoop().execute(() -> {
-					for(Object p : packet instanceof Object[] ? (Object[])packet : new Object[] {packet}) channel.writeAndFlush(new Unaltered(p));
-				});
-			}
-		} catch(Exception e) {
-			if(VersionHelper.debug()) {
-				iDisguise.getInstance().getLogger().log(Level.INFO, "Cannot send packet (unaltered): " + packet.getClass().getSimpleName() + " to " + observer.getName(), e);
-			}
-		}
-	}
-	
 	public static Object[] handlePacket(final Player observer, Object packet) {
 		try {
 			if(handlers.containsKey(packet.getClass())) {
@@ -592,7 +557,7 @@ public final class PacketHandler {
 	static {
 		Map<Class<?>, IPacketHandler> localHandlers = new HashMap<Class<?>, IPacketHandler>();
 		
-		localHandlers.put(PacketPlayOutNamedEntitySpawn, (final Player observer, final Object packet) -> {
+		localHandlers.put(PacketPlayOutNamedEntitySpawn, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			final UUID disguisable = EntityIdList.getEntityUIDByEntityId(PacketPlayOutNamedEntitySpawn_entityId.getInt(packet));
 			if(disguisable != null && EntityIdList.isPlayer(disguisable) && !observer.getUniqueId().equals(disguisable) && DisguiseManager.isDisguisedTo(disguisable, observer)) {
 				Object[] spawnPackets = VersionHelper.require1_9() ?
@@ -638,9 +603,9 @@ public final class PacketHandler {
 				return spawnPackets;
 			}
 			return new Object[] {packet};
-		});
+		}});
 		
-		localHandlers.put(PacketPlayOutSpawnEntityLiving, (final Player observer, final Object packet) -> {
+		localHandlers.put(PacketPlayOutSpawnEntityLiving, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			final UUID disguisable = EntityIdList.getEntityUIDByEntityId(PacketPlayOutSpawnEntityLiving_entityId.getInt(packet));
 			if(disguisable != null && DisguiseManager.isDisguisedTo(disguisable, observer)) {
 				String customName = getCustomName(PacketPlayOutSpawnEntityLiving_dataWatcher.get(packet));
@@ -669,7 +634,7 @@ public final class PacketHandler {
 					spawnPackets = new Object[] {spawnPackets[0], spawnPackets[1]};
 					Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), () -> {
 						try {
-							sendPacketUnaltered(observer, playerInfoRemovePacket);
+							ChannelInjector.sendPacketUnaltered(observer, playerInfoRemovePacket);
 						} catch(Exception e) {
 							if(VersionHelper.debug()) {
 								iDisguise.getInstance().getLogger().log(Level.INFO, "Cannot handle packet: " + packet.getClass().getSimpleName() + " for " + observer.getName(), e);
@@ -700,9 +665,9 @@ public final class PacketHandler {
 				return spawnPackets;
 			}
 			return new Object[] {packet};
-		});
+		}});
 		
-		localHandlers.put(PacketPlayOutPlayerInfo, (final Player observer, final Object packet) -> {
+		localHandlers.put(PacketPlayOutPlayerInfo, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			Object customizablePacket = clonePacket(packet);
 			List playerInfoList = (List)PacketPlayOutPlayerInfo_playerInfoList.get(customizablePacket);
 			List itemsToAdd = new ArrayList();
@@ -720,17 +685,17 @@ public final class PacketHandler {
 			playerInfoList.removeAll(itemsToRemove);
 			playerInfoList.addAll(itemsToAdd);
 			return customizablePacket;
-		});
+		}});
 		
-		localHandlers.put(PacketPlayOutBed, (final Player observer, final Object packet) -> {
+		localHandlers.put(PacketPlayOutBed, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			final UUID disguisable = EntityIdList.getEntityUIDByEntityId(PacketPlayOutBed_entityId.getInt(packet));
 			if(disguisable != null && !observer.getUniqueId().equals(disguisable) && DisguiseManager.isDisguisedTo(disguisable, observer) && !(DisguiseManager.getDisguise(disguisable) instanceof PlayerDisguise)) {
 				return null;
 			}
 			return packet;
-		});
+		}});
 		
-		localHandlers.put(PacketPlayOutAnimation, (final Player observer, final Object packet) -> {
+		localHandlers.put(PacketPlayOutAnimation, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			final UUID disguisable = EntityIdList.getEntityUIDByEntityId(PacketPlayOutAnimation_entityId.getInt(packet));
 			if(disguisable != null && !observer.getUniqueId().equals(disguisable) && DisguiseManager.isDisguisedTo(disguisable, observer) && !(DisguiseManager.getDisguise(disguisable) instanceof PlayerDisguise)) {
 				if(DisguiseManager.getDisguise(disguisable) instanceof MobDisguise) {
@@ -744,9 +709,9 @@ public final class PacketHandler {
 				}
 			}
 			return packet;
-		});
+		}});
 		
-		localHandlers.put(PacketPlayOutEntityMetadata, (final Player observer, final Object packet) -> {
+		localHandlers.put(PacketPlayOutEntityMetadata, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			final UUID disguisable = EntityIdList.getEntityUIDByEntityId(PacketPlayOutEntityMetadata_entityId.getInt(packet));
 			if(disguisable != null && !observer.getUniqueId().equals(disguisable) && DisguiseManager.isDisguisedTo(disguisable, observer)/* && !(DisguiseManager.getDisguise(livingEntity) instanceof PlayerDisguise)*/) {
 				Object customizablePacket = clonePacket(packet);
@@ -765,9 +730,9 @@ public final class PacketHandler {
 				return customizablePacket;
 			}
 			return packet;
-		});
+		}});
 		
-		IPacketHandler playOutEntityHandler = (final Player observer, final Object packet) -> {
+		IPacketHandler playOutEntityHandler = new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			final UUID disguisable = EntityIdList.getEntityUIDByEntityId(PacketPlayOutEntity_entityId.getInt(packet));
 			if(disguisable != null && !observer.getUniqueId().equals(disguisable) && DisguiseManager.isDisguisedTo(disguisable, observer)) {
 				if(DisguiseManager.getDisguise(disguisable).getType().equals(DisguiseType.FALLING_BLOCK)) {
@@ -789,7 +754,7 @@ public final class PacketHandler {
 								PacketPlayOutEntityTeleport_yaw.setByte(customizablePacket, (byte)(livingEntity.getLocation().getYaw() * 256 / 360));
 								PacketPlayOutEntityTeleport_pitch.setByte(customizablePacket, (byte)(livingEntity.getLocation().getPitch() * 256 / 360));
 								PacketPlayOutEntityTeleport_isOnGround.setBoolean(customizablePacket, PacketPlayOutEntity_isOnGround.getBoolean(packet));
-								sendPacketUnaltered(observer, customizablePacket);
+								ChannelInjector.sendPacketUnaltered(observer, customizablePacket);
 							} catch(Exception e) {
 								if(VersionHelper.debug()) {
 									iDisguise.getInstance().getLogger().log(Level.INFO, "Cannot handle packet: " + packet.getClass().getSimpleName() + " for " + observer.getName(), e);
@@ -811,10 +776,10 @@ public final class PacketHandler {
 				} 
 			}
 			return packet;
-		};
+		}};
 		for(Class<?> clazz : new Class<?>[] {PacketPlayOutEntity, PacketPlayOutEntityLook, PacketPlayOutRelEntityMove, PacketPlayOutRelEntityMoveLook}) localHandlers.put(clazz, playOutEntityHandler);
 		
-		localHandlers.put(PacketPlayOutEntityTeleport, (final Player observer, final Object packet) -> {
+		localHandlers.put(PacketPlayOutEntityTeleport, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			final UUID disguisable = EntityIdList.getEntityUIDByEntityId(PacketPlayOutEntityTeleport_entityId.getInt(packet));
 			if(disguisable != null && !observer.getUniqueId().equals(disguisable) && DisguiseManager.isDisguisedTo(disguisable, observer)) {
 				if(DisguiseManager.getDisguise(disguisable).getType().equals(DisguiseType.FALLING_BLOCK)) {
@@ -844,25 +809,25 @@ public final class PacketHandler {
 				}
 			}
 			return packet;
-		});
+		}});
 		
-		localHandlers.put(PacketPlayOutUpdateAttributes, (final Player observer, final Object packet) -> {
+		localHandlers.put(PacketPlayOutUpdateAttributes, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			final UUID disguisable = EntityIdList.getEntityUIDByEntityId(PacketPlayOutUpdateAttributes_entityId.getInt(packet));
 			if(disguisable != null && !observer.getUniqueId().equals(disguisable) && DisguiseManager.isDisguisedTo(disguisable, observer) && DisguiseManager.getDisguise(disguisable) instanceof ObjectDisguise) {
 				return null;
 			}
 			return packet;
-		});
+		}});
 		
-		localHandlers.put(PacketPlayOutCollect, (final Player observer, final Object packet) -> {
+		localHandlers.put(PacketPlayOutCollect, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			final UUID disguisable = EntityIdList.getEntityUIDByEntityId(PacketPlayOutCollect_entityId.getInt(packet));
 			if(disguisable != null && !observer.getUniqueId().equals(disguisable) && DisguiseManager.isDisguisedTo(disguisable, observer) && DisguiseManager.getDisguise(disguisable) instanceof ObjectDisguise) {
 				return null;
 			}
 			return packet;
-		});
+		}});
 		
-		localHandlers.put(PacketPlayOutNamedSoundEffect, (final Player observer, final Object packet) -> {
+		localHandlers.put(PacketPlayOutNamedSoundEffect, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			if(replaceSoundEffects) {
 				Bukkit.getScheduler().runTask(iDisguise.getInstance(), () -> {
 					try {
@@ -876,7 +841,7 @@ public final class PacketHandler {
 									if(nmsSoundEffect != null) {
 										Object customizablePacket = clonePacket(packet);
 										PacketPlayOutNamedSoundEffect_soundEffect.set(customizablePacket, nmsSoundEffect);
-										sendPacketUnaltered(observer, customizablePacket);
+										ChannelInjector.sendPacketUnaltered(observer, customizablePacket);
 										return;
 									} else {
 										return;
@@ -886,7 +851,7 @@ public final class PacketHandler {
 								}
 							}
 						}
-						sendPacketUnaltered(observer, packet);
+						ChannelInjector.sendPacketUnaltered(observer, packet);
 					} catch(Exception e) {
 						if(VersionHelper.debug()) {
 							iDisguise.getInstance().getLogger().log(Level.INFO, "Cannot handle packet: " + packet.getClass().getSimpleName() + " for " + observer.getName(), e);
@@ -896,9 +861,9 @@ public final class PacketHandler {
 				return null;
 			}
 			return packet;
-		});
+		}});
 		
-		localHandlers.put(PacketPlayOutScoreboardTeam, (final Player observer, final Object packet) -> {
+		localHandlers.put(PacketPlayOutScoreboardTeam, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			if(modifyScoreboardPackets && ObjectUtil.equals(PacketPlayOutScoreboardTeam_action.getInt(packet), 0, 3, 4)) {
 				Bukkit.getScheduler().runTask(iDisguise.getInstance(), () -> {
 					try {
@@ -915,7 +880,7 @@ public final class PacketHandler {
 						}
 						entries.removeAll(itemsToRemove);
 						entries.addAll(itemsToAdd);
-						sendPacketUnaltered(observer, customizablePacket);
+						ChannelInjector.sendPacketUnaltered(observer, customizablePacket);
 					} catch(Exception e) {
 						if(VersionHelper.debug()) {
 							iDisguise.getInstance().getLogger().log(Level.INFO, "Cannot handle packet: " + packet.getClass().getSimpleName() + " for " + observer.getName(), e);
@@ -925,9 +890,9 @@ public final class PacketHandler {
 				return null;
 			}
 			return packet;
-		});
+		}});
 		
-		localHandlers.put(PacketPlayOutScoreboardScore, (final Player observer, final Object packet) -> {
+		localHandlers.put(PacketPlayOutScoreboardScore, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			if(modifyScoreboardPackets) {
 				Bukkit.getScheduler().runTask(iDisguise.getInstance(), () -> {
 					try {
@@ -935,7 +900,7 @@ public final class PacketHandler {
 						if(player != null && player != observer && DisguiseManager.isDisguisedTo(player, observer) && DisguiseManager.getDisguise(player) instanceof PlayerDisguise) {
 							Object customizablePacket = clonePacket(packet);
 							PacketPlayOutScoreboardScore_entry.set(customizablePacket, ((PlayerDisguise)DisguiseManager.getDisguise(player)).getDisplayName());
-							sendPacketUnaltered(observer, customizablePacket);
+							ChannelInjector.sendPacketUnaltered(observer, customizablePacket);
 						}
 					} catch(Exception e) {
 						if(VersionHelper.debug()) {
@@ -946,9 +911,9 @@ public final class PacketHandler {
 				return null;
 			}
 			return packet;
-		});
+		}});
 		
-		localHandlers.put(PacketPlayOutEntityDestroy, (final Player observer, final Object packet) -> {
+		localHandlers.put(PacketPlayOutEntityDestroy, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			int[] entityIds = (int[])PacketPlayOutEntityDestroy_entityIds.get(packet);
 			
 			// construct the player info packet
@@ -968,9 +933,9 @@ public final class PacketHandler {
 			} else {
 				return new Object[] {packet, playerInfoPacket};
 			}
-		});
+		}});
 		
-		localHandlers.put(PacketPlayInUseEntity, (final Player observer, final Object packet) -> {
+		localHandlers.put(PacketPlayInUseEntity, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			final UUID disguisable = EntityIdList.getEntityUIDByEntityId(PacketPlayInUseEntity_entityId.getInt(packet));
 			boolean attack = PacketPlayInUseEntity_getAction.invoke(packet).equals(EnumEntityUseAction_ATTACK.get(null));
 			if(!attack && disguisable != null && !observer.getUniqueId().equals(disguisable) && DisguiseManager.isDisguisedTo(disguisable, observer)) {
@@ -985,7 +950,7 @@ public final class PacketHandler {
 				});
 			}
 			return packet;
-		});
+		}});
 		
 		handlers = Collections.unmodifiableMap(localHandlers);
 	}

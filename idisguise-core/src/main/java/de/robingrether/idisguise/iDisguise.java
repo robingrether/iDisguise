@@ -175,6 +175,7 @@ public class iDisguise extends JavaPlugin {
 			saveDisguises();
 		}
 		ChannelInjector.removeOnlinePlayers();
+		ChannelInjector.terminate();
 		getLogger().log(Level.INFO, String.format("%s disabled!", getFullName()));
 		enabled = false;
 	}
