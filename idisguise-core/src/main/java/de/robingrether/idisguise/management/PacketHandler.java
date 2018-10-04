@@ -210,7 +210,7 @@ public final class PacketHandler {
 				PlayerDisguise playerDisguise = (PlayerDisguise)disguise;
 				
 				if(EntityIdList.isPlayer(disguisable)) {
-					Object gameProfile = ProfileHelper.getInstance().getGameProfile(disguisable, playerDisguise.getSkinName(), playerDisguise.getDisplayName());
+					Object gameProfile = ProfileHelper.getInstance().getGameProfile(observer.getUniqueId().equals(disguisable) ? disguisable : formatUniqueId(disguisable), playerDisguise.getSkinName(), playerDisguise.getDisplayName());
 					
 					Object entity = EntityHumanNonAbstract_new.newInstance(world, gameProfile);
 					Entity_setLocation.invoke(entity, posX, posY, posZ, rotYaw, rotPitch);
