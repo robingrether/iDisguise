@@ -32,6 +32,8 @@ class ProtocolLibChannelInjector implements IChannelInjector {
 				ListenerOptions.ASYNC) {
 			
 			public void onPacketSending(PacketEvent event) {
+				if(event.isCancelled()) return;
+				
 				Object[] alteredMsg = PacketHandler.handlePacket(event.getPlayer(), event.getPacket().getHandle());
 				if(alteredMsg.length == 1) {
 					if(alteredMsg[0] != null) {
@@ -46,11 +48,9 @@ class ProtocolLibChannelInjector implements IChannelInjector {
 									iDisguise.getInstance().getLogger().log(Level.INFO, "Cannot send packet: " + alteredMsg[0].getClass().getSimpleName() + " to " + event.getPlayer().getName(), e);
 								}
 							}
-							event.setPacket(new PacketContainer(event.getPacket().getType()));
 							event.setCancelled(true);
 						}
 					} else {
-						event.setPacket(new PacketContainer(event.getPacketType()));
 						event.setCancelled(true);
 					}
 				} else {
@@ -63,18 +63,18 @@ class ProtocolLibChannelInjector implements IChannelInjector {
 							iDisguise.getInstance().getLogger().log(Level.INFO, "Cannot send packets to " + event.getPlayer().getName(), e);
 						}
 					}
-					event.setPacket(new PacketContainer(event.getPacket().getType()));
 					event.setCancelled(true);
 				}
 			}
 			
 			public void onPacketReceiving(PacketEvent event) {
+				if(event.isCancelled()) return;
+				
 				Object[] alteredMsg = PacketHandler.handlePacket(event.getPlayer(), event.getPacket().getHandle());
 				if(alteredMsg.length == 1) {
 					if(alteredMsg[0] != null) {
 						event.setPacket(PacketContainer.fromPacket(alteredMsg[0]));
 					} else {
-						event.setPacket(new PacketContainer(event.getPacket().getType()));
 						event.setCancelled(true);
 					}
 				}
