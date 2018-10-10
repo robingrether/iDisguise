@@ -424,6 +424,11 @@ public class Reflection {
 	public static Field DimensionManager_OVERWORLD;
 	public static Field DimensionManager_NETHER;
 	
+	public static Class<?> EntityEnderDragon;
+	
+	public static Class<?> PacketPlayOutEntityVelocity;
+	public static Field PacketPlayOutEntityVelocity_entityId;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_\\.{}]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_\\.{}]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");

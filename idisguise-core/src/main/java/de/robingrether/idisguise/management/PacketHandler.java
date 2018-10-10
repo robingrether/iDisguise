@@ -201,7 +201,9 @@ public final class PacketHandler {
 				
 				if(EntityBat.isInstance(entity)) {
 					EntityBat_setAsleep.invoke(entity, false);
-				}
+				}/* else if(EntityEnderDragon.isInstance(entity) && VersionHelper.require1_9()) {
+					// TODO: ender dragon wings
+				}*/
 				
 				Entity_setLocation.invoke(entity, posX, posY, posZ, rotYaw, rotPitch);
 				Entity_setEntityId.invoke(entity, entityId);
@@ -703,14 +705,14 @@ public final class PacketHandler {
 						return null;
 					}
 				} else if(DisguiseManager.getDisguise(disguisable) instanceof ObjectDisguise) {
-					if(ObjectUtil.equals(PacketPlayOutAnimation_animationType.getInt(packet), 0, 2, 3)) {
-						return null;
-					}
+					return null;
 				}
 			}
 			return packet;
 		}});
 		
+		final Object[] metadataIdsLiving = VersionHelper.require1_9() ? new Integer[] {0, 1, 4, 6, 7, 8, 9, 10} : new Integer[] {0, 1, 4, 6, 7, 8, 9, 15};
+		final Object[] metadataIdsNonLiving = new Integer[] {0, 1, 4};
 		localHandlers.put(PacketPlayOutEntityMetadata, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			final UUID disguisable = EntityIdList.getEntityUIDByEntityId(PacketPlayOutEntityMetadata_entityId.getInt(packet));
 			if(disguisable != null && !observer.getUniqueId().equals(disguisable) && DisguiseManager.isDisguisedTo(disguisable, observer)/* && !(DisguiseManager.getDisguise(livingEntity) instanceof PlayerDisguise)*/) {
@@ -720,14 +722,10 @@ public final class PacketHandler {
 				List itemsToRemove = new ArrayList();
 				for(Object metadataItem : metadataList) {
 					int metadataId = getMetadataId(metadataItem);
-					if(living) {
-						if(!ObjectUtil.equals(metadataId, 0, 6, 7, 8, 9, 10)) itemsToRemove.add(metadataItem);
-					} else {
-						if(metadataId != 0) itemsToRemove.add(metadataItem);
-					}
+					if(!ObjectUtil.equals(metadataId, living ? metadataIdsLiving : metadataIdsNonLiving)) itemsToRemove.add(metadataItem);
 				}
 				metadataList.removeAll(itemsToRemove);
-				return customizablePacket;
+				return metadataList.isEmpty() ? null : customizablePacket;
 			}
 			return packet;
 		}});
@@ -935,13 +933,23 @@ public final class PacketHandler {
 			}
 		}});
 		
+		localHandlers.put(PacketPlayOutEntityVelocity, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
+			final UUID disguisable = EntityIdList.getEntityUIDByEntityId(PacketPlayOutEntityVelocity_entityId.getInt(packet));
+			if(disguisable != null && !observer.getUniqueId().equals(disguisable) && DisguiseManager.isDisguisedTo(disguisable, observer) && DisguiseManager.getDisguise(disguisable) instanceof ObjectDisguise) {
+				return null;
+			}
+			return packet;
+		}});
+		
 		localHandlers.put(PacketPlayInUseEntity, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			final UUID disguisable = EntityIdList.getEntityUIDByEntityId(PacketPlayInUseEntity_entityId.getInt(packet));
 			boolean attack = PacketPlayInUseEntity_getAction.invoke(packet).equals(EnumEntityUseAction_ATTACK.get(null));
 			if(!attack && disguisable != null && !observer.getUniqueId().equals(disguisable) && DisguiseManager.isDisguisedTo(disguisable, observer)) {
-				if(ObjectUtil.equals(DisguiseManager.getDisguise(disguisable).getType(), DisguiseType.SHEEP, DisguiseType.WOLF)) {
+				if(ObjectUtil.equals(DisguiseManager.getDisguise(disguisable).getType(), DisguiseType.COD, DisguiseType.PUFFERFISH, DisguiseType.SALMON, DisguiseType.SHEEP, DisguiseType.TROPICAL_FISH, DisguiseType.WOLF)) {
 					Bukkit.getScheduler().runTaskLater(iDisguise.getInstance(), () -> {
-						DisguiseManager.resendPackets(EntityIdList.getEntityByUID(disguisable));
+						LivingEntity livingEntity = EntityIdList.getEntityByUID(disguisable);
+						DisguiseManager.hideEntityFromOne(livingEntity, observer);
+						DisguiseManager.showEntityToOne(livingEntity, observer);
 						observer.updateInventory();
 					}, 2L);
 				}

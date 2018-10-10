@@ -43,6 +43,8 @@ EntityBoat->C{nms}.EntityBoat
 EntityCreeper->C{nms}.EntityCreeper
 EntityCreeper_setPowered->MEntityCreeper$setPowered(boolean)
 
+EntityEnderDragon->C{nms}.EntityEnderDragon
+
 EntityEnderman->C{nms}.EntityEnderman
 EntityEnderman_setCarried->MEntityEnderman$setCarried({nms}.IBlockData)
 
@@ -174,6 +176,9 @@ PacketPlayOutEntityTeleport_x->FPacketPlayOutEntityTeleport$b
 PacketPlayOutEntityTeleport_y->FPacketPlayOutEntityTeleport$c
 PacketPlayOutEntityTeleport_yaw->FPacketPlayOutEntityTeleport$e
 PacketPlayOutEntityTeleport_z->FPacketPlayOutEntityTeleport$d
+
+PacketPlayOutEntityVelocity->C{nms}.PacketPlayOutEntityVelocity
+PacketPlayOutEntityVelocity_entityId->FPacketPlayOutEntityVelocity$a
 
 PacketPlayOutExperience->C{nms}.PacketPlayOutExperience
 PacketPlayOutExperience_new->NPacketPlayOutExperience(float,int,int)
