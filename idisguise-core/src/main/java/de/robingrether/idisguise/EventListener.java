@@ -62,8 +62,8 @@ public class EventListener implements Listener {
 		EntityIdList.addEntity(player);
 	}
 	
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerJoinMonitor(PlayerJoinEvent event) {
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerJoinHighest(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		ProfileHelper.getInstance().registerGameProfile(player);
 		if(DisguiseManager.isDisguised(player)) {
@@ -105,7 +105,7 @@ public class EventListener implements Listener {
 		EntityIdList.removeEntity(player);
 	}
 	
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		if(event.getDeathMessage() != null) {
 			Player player = event.getEntity();
@@ -250,15 +250,15 @@ public class EventListener implements Listener {
 				}
 			}
 			
-		}, 40L);
+		}, 40L); // TODO: increase delay?
 	}
 	
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler
 	public void onPluginEnable(PluginEnableEvent event) {
 		if(plugin.getConfiguration().MODIFY_SCOREBOARD_PACKETS && StringUtil.equals(event.getPlugin().getName(), "NametagEdit", "ColoredTags")) ScoreboardHooks.setup();
 	}
 	
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler
 	public void onPluginDisable(PluginDisableEvent event) {
 		if(plugin.getConfiguration().MODIFY_SCOREBOARD_PACKETS && StringUtil.equals(event.getPlugin().getName(), "NametagEdit", "ColoredTags")) ScoreboardHooks.setup();
 	}
