@@ -26,9 +26,10 @@ class ProtocolLibChannelInjector implements IChannelInjector {
 	public void init() {
 		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(iDisguise.getInstance(), ListenerPriority.NORMAL,
 				Arrays.asList(PacketType.Play.Server.NAMED_ENTITY_SPAWN, PacketType.Play.Server.SPAWN_ENTITY_LIVING, PacketType.Play.Server.PLAYER_INFO, PacketType.Play.Server.BED,
-						PacketType.Play.Server.ANIMATION, PacketType.Play.Server.ENTITY_METADATA, PacketType.Play.Server.ENTITY, PacketType.Play.Server.ENTITY_TELEPORT,
-						PacketType.Play.Server.UPDATE_ATTRIBUTES, PacketType.Play.Server.COLLECT, PacketType.Play.Server.NAMED_SOUND_EFFECT, PacketType.Play.Server.SCOREBOARD_TEAM,
-						PacketType.Play.Server.SCOREBOARD_SCORE, PacketType.Play.Server.ENTITY_DESTROY, PacketType.Play.Client.USE_ENTITY),
+						PacketType.Play.Server.ANIMATION, PacketType.Play.Server.ENTITY_METADATA, PacketType.Play.Server.ENTITY, PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.REL_ENTITY_MOVE,
+						PacketType.Play.Server.REL_ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_TELEPORT, PacketType.Play.Server.UPDATE_ATTRIBUTES, PacketType.Play.Server.COLLECT,
+						PacketType.Play.Server.NAMED_SOUND_EFFECT, PacketType.Play.Server.SCOREBOARD_TEAM, PacketType.Play.Server.SCOREBOARD_SCORE, PacketType.Play.Server.ENTITY_DESTROY,
+						PacketType.Play.Server.ENTITY_VELOCITY, PacketType.Play.Client.USE_ENTITY),
 				ListenerOptions.ASYNC) {
 			
 			public void onPacketSending(PacketEvent event) {
@@ -77,7 +78,9 @@ class ProtocolLibChannelInjector implements IChannelInjector {
 					} else {
 						event.setCancelled(true);
 					}
-				}
+				}/* else {
+					// my in-bound handlers always return one packet (or null)
+				}*/
 			}
 			
 		});
