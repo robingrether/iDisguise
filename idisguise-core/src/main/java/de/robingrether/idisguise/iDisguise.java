@@ -391,12 +391,12 @@ public class iDisguise extends JavaPlugin {
 		language.saveData();
 		
 		// reset config values
-		DisguiseManager.disguiseViewSelf = PacketHandler.disguiseViewSelf = configuration.DISGUISE_VIEW_SELF;
 		PacketHandler.showOriginalPlayerName = configuration.NAME_TAG_SHOWN;
 		PacketHandler.modifyPlayerListEntry = configuration.MODIFY_PLAYER_LIST_ENTRY;
 		DisguiseManager.modifyScoreboardPackets = PacketHandler.modifyScoreboardPackets = configuration.MODIFY_SCOREBOARD_PACKETS;
 		PacketHandler.replaceSoundEffects = configuration.REPLACE_SOUND_EFFECTS;
 		PacketHandler.bungeeCord = configuration.BUNGEE_CORD;
+		DisguiseManager.disguiseViewSelf = PacketHandler.disguiseViewSelf = configuration.DISGUISE_VIEW_SELF && !configuration.BUNGEE_CORD; // view-self does not work via Bungee
 		
 		// setup hooks
 		if(configuration.MODIFY_SCOREBOARD_PACKETS) {

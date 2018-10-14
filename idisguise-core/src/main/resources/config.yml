@@ -2,7 +2,8 @@
 disguise:
    
    # Do disguised players see their own disguise in 3rd person view.
-   # This ONLY works for PLAYER DISGUISES at the moment.
+   # This only works for player disguises at the moment.
+   # WARNING: DON'T ENABLE THIS FEATURE IF YOU USE BUNGEECORD, it will crash Minecraft clients.
    view-self: DISGUISE_VIEW_SELF
    
    # Do disguised players keep their disguise when they leave the server
