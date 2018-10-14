@@ -196,7 +196,7 @@ public class AreaEffectCloudDisguise extends ObjectDisguise {
 			}
 		} else {
 			if(!parameterType.isInstance(parameter)) {
-				throw new IllegalArgumentException(String.format("Illegal argument type: Particle %s requires %s", particle.name(), particle.getClass().getSimpleName()));
+				throw new IllegalArgumentException(String.format("Illegal argument type: Particle %s requires %s", particle.name(), getParameterType(particle).getSimpleName()));
 			}
 		}
 		this.parameter = parameter;
@@ -319,6 +319,7 @@ public class AreaEffectCloudDisguise extends ObjectDisguise {
 	 */
 	public static Class<?> getParameterType(Particle particle) {
 		if(particle.equals(Particle.SPELL_MOB)) return Color.class;
+		else if(VersionHelper.require1_13() && particle.equals(Particle.REDSTONE)) return Color.class;
 		else return particle.getDataType();
 	}
 	

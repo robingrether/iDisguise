@@ -17,6 +17,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -308,8 +309,12 @@ public final class PacketHandler {
 						if(parameterType.equals(Void.class)) {
 							EntityAreaEffectCloud_setParticle.invoke(entity, VersionHelper.require1_13() ? CraftParticle_toNMS.invoke(null, aecDisguise.getParticle(), null) : CraftParticle_toNMS.invoke(null, aecDisguise.getParticle()));
 						} else if(parameterType.equals(Color.class)) {
-							EntityAreaEffectCloud_setParticle.invoke(entity, VersionHelper.require1_13() ? CraftParticle_toNMS.invoke(null, aecDisguise.getParticle(), null) : CraftParticle_toNMS.invoke(null, aecDisguise.getParticle()));
-							EntityAreaEffectCloud_setColor.invoke(entity, ((Color)aecDisguise.getParameter()).asRGB());
+							if(aecDisguise.getParticle().equals(Particle.REDSTONE)) {
+								EntityAreaEffectCloud_setParticle.invoke(entity, CraftParticle_toNMS.invoke(null, aecDisguise.getParticle(), new Particle.DustOptions((Color)aecDisguise.getParameter(), 1.0f)));
+							} else {
+								EntityAreaEffectCloud_setParticle.invoke(entity, VersionHelper.require1_13() ? CraftParticle_toNMS.invoke(null, aecDisguise.getParticle(), null) : CraftParticle_toNMS.invoke(null, aecDisguise.getParticle()));
+								EntityAreaEffectCloud_setColor.invoke(entity, ((Color)aecDisguise.getParameter()).asRGB());
+							}
 						} else {
 							EntityAreaEffectCloud_setParticle.invoke(entity, VersionHelper.require1_13() ? CraftParticle_toNMS.invoke(null, aecDisguise.getParticle(), aecDisguise.getParameter()) : CraftParticle_toNMS.invoke(null, aecDisguise.getParticle()));
 							if(VersionHelper.require1_10() && !VersionHelper.require1_13()) {
