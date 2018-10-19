@@ -280,6 +280,7 @@ permissions:
          iDisguise.mob.sheep.color.gray: true
          iDisguise.mob.sheep.color.green: true
          iDisguise.mob.sheep.color.light-blue: true
+         iDisguise.mob.sheep.color.light-gray: true
          iDisguise.mob.sheep.color.lime: true
          iDisguise.mob.sheep.color.magenta: true
          iDisguise.mob.sheep.color.orange: true
@@ -302,6 +303,8 @@ permissions:
    iDisguise.mob.sheep.color.green:
       default: op
    iDisguise.mob.sheep.color.light-blue:
+      default: op
+   iDisguise.mob.sheep.color.light-gray:
       default: op
    iDisguise.mob.sheep.color.lime:
       default: op
@@ -393,6 +396,7 @@ permissions:
          iDisguise.mob.wolf.collar.gray: true
          iDisguise.mob.wolf.collar.green: true
          iDisguise.mob.wolf.collar.light-blue: true
+         iDisguise.mob.wolf.collar.light-gray: true
          iDisguise.mob.wolf.collar.lime: true
          iDisguise.mob.wolf.collar.magenta: true
          iDisguise.mob.wolf.collar.orange: true
@@ -415,6 +419,8 @@ permissions:
    iDisguise.mob.wolf.collar.green:
       default: op
    iDisguise.mob.wolf.collar.light-blue:
+      default: op
+   iDisguise.mob.wolf.collar.light-gray:
       default: op
    iDisguise.mob.wolf.collar.lime:
       default: op
