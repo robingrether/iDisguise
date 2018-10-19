@@ -868,50 +868,34 @@ public final class PacketHandler {
 		
 		localHandlers.put(PacketPlayOutScoreboardTeam, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			if(modifyScoreboardPackets && ObjectUtil.equals(PacketPlayOutScoreboardTeam_action.getInt(packet), 0, 3, 4)) {
-				Bukkit.getScheduler().runTask(iDisguise.getInstance(), () -> {
-					try {
-						Object customizablePacket = clonePacket(packet);
-						List<String> entries = (List<String>)PacketPlayOutScoreboardTeam_entries.get(customizablePacket);
-						List<String> itemsToRemove = new ArrayList<String>();
-						List<String> itemsToAdd = new ArrayList<String>();
-						for(String entry : entries) {
-							Player player = Bukkit.getPlayer(entry);
-							if(player != null && player != observer && DisguiseManager.isDisguisedTo(player, observer) && DisguiseManager.getDisguise(player) instanceof PlayerDisguise) {
-								itemsToRemove.add(entry);
-								itemsToAdd.add(((PlayerDisguise)DisguiseManager.getDisguise(player)).getDisplayName());
-							}
-						}
-						entries.removeAll(itemsToRemove);
-						entries.addAll(itemsToAdd);
-						ChannelInjector.sendPacketUnaltered(observer, customizablePacket);
-					} catch(Exception e) {
-						if(VersionHelper.debug()) {
-							iDisguise.getInstance().getLogger().log(Level.INFO, "Cannot handle packet: " + packet.getClass().getSimpleName() + " for " + observer.getName(), e);
-						}
+				List<String> itemsToRemove = new ArrayList<String>();
+				List<String> itemsToAdd = new ArrayList<String>();
+				for(String entry : (List<String>)PacketPlayOutScoreboardTeam_entries.get(packet)) {
+					UUID player = EntityIdList.getPlayerByName(entry);
+					if(player != null && !observer.getUniqueId().equals(player) && DisguiseManager.isDisguisedTo(player, observer) && DisguiseManager.getDisguise(player) instanceof PlayerDisguise) {
+						itemsToRemove.add(entry);
+						itemsToAdd.add(((PlayerDisguise)DisguiseManager.getDisguise(player)).getDisplayName());
 					}
-				});
-				return null;
+				}
+				if(!itemsToRemove.isEmpty() || !itemsToAdd.isEmpty()) {
+					Object customizablePacket = clonePacket(packet);
+					List<String> entries = (List<String>)PacketPlayOutScoreboardTeam_entries.get(customizablePacket);
+					entries.removeAll(itemsToRemove);
+					entries.addAll(itemsToAdd);
+					return customizablePacket;
+				}
 			}
 			return packet;
 		}});
 		
 		localHandlers.put(PacketPlayOutScoreboardScore, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			if(modifyScoreboardPackets) {
-				Bukkit.getScheduler().runTask(iDisguise.getInstance(), () -> {
-					try {
-						Player player = Bukkit.getPlayer((String)PacketPlayOutScoreboardScore_entry.get(packet));
-						if(player != null && player != observer && DisguiseManager.isDisguisedTo(player, observer) && DisguiseManager.getDisguise(player) instanceof PlayerDisguise) {
-							Object customizablePacket = clonePacket(packet);
-							PacketPlayOutScoreboardScore_entry.set(customizablePacket, ((PlayerDisguise)DisguiseManager.getDisguise(player)).getDisplayName());
-							ChannelInjector.sendPacketUnaltered(observer, customizablePacket);
-						}
-					} catch(Exception e) {
-						if(VersionHelper.debug()) {
-							iDisguise.getInstance().getLogger().log(Level.INFO, "Cannot handle packet: " + packet.getClass().getSimpleName() + " for " + observer.getName(), e);
-						}
-					}
-				});
-				return null;
+				UUID player = EntityIdList.getPlayerByName((String)PacketPlayOutScoreboardScore_entry.get(packet));
+				if(player != null && !observer.getUniqueId().equals(player) && DisguiseManager.isDisguisedTo(player, observer) && DisguiseManager.getDisguise(player) instanceof PlayerDisguise) {
+					Object customizablePacket = clonePacket(packet);
+					PacketPlayOutScoreboardScore_entry.set(customizablePacket, ((PlayerDisguise)DisguiseManager.getDisguise(player)).getDisplayName());
+					return customizablePacket;
+				}
 			}
 			return packet;
 		}});

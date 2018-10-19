@@ -17,6 +17,10 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Maps;
+
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.idisguise.management.VersionHelper;
 
@@ -27,12 +31,12 @@ public final class EntityIdList {
 	private EntityIdList() {}
 	
 	private static Map<Integer, UUID> entityUIDs;
-	private static Map<UUID, String> playerNames;
+	private static BiMap<UUID, String> playerNames;
 	private static Map<UUID, EntityType> entityTypes;
 	
 	public static void init() {
 		entityUIDs = new ConcurrentHashMap<Integer, UUID>();
-		playerNames = new ConcurrentHashMap<UUID, String>();
+		playerNames = Maps.synchronizedBiMap(HashBiMap.<UUID, String>create());
 		entityTypes = new ConcurrentHashMap<UUID, EntityType>();
 		for(World world : Bukkit.getWorlds()) {
 			for(LivingEntity livingEntity : world.getLivingEntities()) {
@@ -131,6 +135,10 @@ public final class EntityIdList {
 	
 	public static String getPlayerName(UUID uniqueId) {
 		return playerNames.get(uniqueId);
+	}
+	
+	public static UUID getPlayerByName(String name) {
+		return playerNames.inverse().get(name);
 	}
 	
 }
