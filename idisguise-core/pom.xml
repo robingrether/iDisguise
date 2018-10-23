@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.robingrether.idisguise</groupId>
   <artifactId>idisguise-core</artifactId>
-  <version>5.8.1-SNAPSHOT</version>
+  <version>5.8.1</version>
   <name>iDisguise</name>
   
   <properties>
@@ -36,7 +36,7 @@
   	<dependency>
   		<groupId>org.bukkit</groupId>
   		<artifactId>bukkit</artifactId>
-  		<version>1.13.1-R0.1-SNAPSHOT</version>
+  		<version>1.13.2-R0.1-SNAPSHOT</version>
   		<scope>provided</scope>
   	</dependency>
   	<dependency>
