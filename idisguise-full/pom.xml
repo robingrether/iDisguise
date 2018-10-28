@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.robingrether.idisguise</groupId>
   <artifactId>idisguise-full</artifactId>
-  <version>5.8.1</version>
+  <version>5.8.2-SNAPSHOT</version>
   <name>iDisguise full plugin</name>
   
   <properties>
@@ -26,37 +26,37 @@
   	<dependency>
   		<groupId>de.robingrether.idisguise</groupId>
   		<artifactId>idisguise-impl-v1_13_R2</artifactId>
-  		<version>5.8.1</version>
+  		<version>5.8.2-SNAPSHOT</version>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>de.robingrether.idisguise</groupId>
   		<artifactId>idisguise-impl-v1_12_R1</artifactId>
-  		<version>5.8.1</version>
+  		<version>5.8.2-SNAPSHOT</version>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>de.robingrether.idisguise</groupId>
   		<artifactId>idisguise-impl-v1_11_R1</artifactId>
-  		<version>5.8.1</version>
+  		<version>5.8.2-SNAPSHOT</version>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>de.robingrether.idisguise</groupId>
   		<artifactId>idisguise-impl-v1_10_R1</artifactId>
-  		<version>5.8.1</version>
+  		<version>5.8.2-SNAPSHOT</version>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>de.robingrether.idisguise</groupId>
   		<artifactId>idisguise-impl-v1_9_R2</artifactId>
-  		<version>5.8.1</version>
+  		<version>5.8.2-SNAPSHOT</version>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>de.robingrether.idisguise</groupId>
   		<artifactId>idisguise-impl-v1_8_R3</artifactId>
-  		<version>5.8.1</version>
+  		<version>5.8.2-SNAPSHOT</version>
   		<scope>compile</scope>
   	</dependency>
   </dependencies>

@@ -9,6 +9,8 @@ public class EntityHumanNonAbstract1121 extends EntityHuman {
 	
 	public EntityHumanNonAbstract1121(World world, GameProfile gameProfile) {
 		super(world, gameProfile);
+		
+		getDataWatcher().set(br, (byte)0x7f);
 	}
 	
 	public boolean isSpectator() { return false; }
