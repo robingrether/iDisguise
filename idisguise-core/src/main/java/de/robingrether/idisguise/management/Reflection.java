@@ -420,9 +420,7 @@ public class Reflection {
 	public static Method DataWatcher_getString;
 	
 	public static Class<?> DimensionManager;
-	public static Method DimensionManager_getDimensionID;
-	public static Field DimensionManager_OVERWORLD;
-	public static Field DimensionManager_NETHER;
+	public static Method DimensionManager_fromDimensionID;
 	
 	public static Class<?> EntityEnderDragon;
 	

@@ -12,9 +12,7 @@ DataWatcherObject->C{nms}.DataWatcherObject
 DataWatcherObject_getId->MDataWatcherObject$a()
 
 DimensionManager->C{nms}.DimensionManager
-DimensionManager_getDimensionID->MDimensionManager$getDimensionID()
-DimensionManager_OVERWORLD->FDimensionManager$OVERWORLD
-DimensionManager_NETHER->FDimensionManager$NETHER
+DimensionManager_fromDimensionID->MDimensionManager$a(int)
 
 Entity_setEntityId->MEntity$e(int)
 Entity_setCustomName->MEntity$setCustomName({nms}.IChatBaseComponent)
