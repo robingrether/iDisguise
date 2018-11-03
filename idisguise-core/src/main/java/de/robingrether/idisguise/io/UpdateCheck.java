@@ -13,10 +13,7 @@ import java.net.URLConnection;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Locale;
 import java.util.logging.Level;
-
-import javax.xml.bind.DatatypeConverter;
 
 import org.bukkit.command.CommandSender;
 import org.json.simple.JSONArray;
@@ -25,6 +22,7 @@ import org.json.simple.JSONValue;
 
 import de.robingrether.idisguise.iDisguise;
 import de.robingrether.util.ObjectUtil;
+import de.robingrether.util.StringUtil;
 
 public class UpdateCheck implements Runnable {
 	
@@ -145,7 +143,7 @@ public class UpdateCheck implements Runnable {
 				}
 				input.close();
 				output.close();
-				if(DatatypeConverter.printHexBinary(messageDigest.digest()).toLowerCase(Locale.ENGLISH).equals(checksum.toLowerCase(Locale.ENGLISH))) {
+				if(StringUtil.bytesToHex(messageDigest.digest()).equalsIgnoreCase(this.checksum)) {
 					toBeNotified.sendMessage(plugin.getLanguage().UPDATE_DOWNLOAD_SUCCEEDED);
 				} else {
 					newFile.delete();
