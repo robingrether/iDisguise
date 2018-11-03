@@ -6,7 +6,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Level;
 
-import org.bstats.Metrics;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -83,49 +83,19 @@ public class iDisguise extends JavaPlugin {
 		language = new Language(this);
 		loadConfigFiles();
 		cmdExecutor = new CommandExecutor(this);
+		
+		/* Metrics start */
 		metrics = new Metrics(this);
-		metrics.addCustomChart(new Metrics.SingleLineChart("disguisedPlayers") {
-			
-			public int getValue() {
-				return DisguiseManager.getNumberOfDisguisedPlayers();
-			}
-			
-		});
-		metrics.addCustomChart(new Metrics.SimplePie("storageType") {
-			
-			public String getValue() {
-				return configuration.KEEP_DISGUISE_SHUTDOWN ? "file" : "none";
-			}
-			
-		});
-		metrics.addCustomChart(new Metrics.SimplePie("updateChecking") {
-			
-			public String getValue() {
-				return configuration.UPDATE_CHECK ? configuration.UPDATE_DOWNLOAD ? "check and download" : "check only" : "disabled";
-			}
-			
-		});
-		metrics.addCustomChart(new Metrics.SimplePie("realisticSoundEffects") {
-			
-			public String getValue() {
-				return configuration.REPLACE_SOUND_EFFECTS ? "enabled" : "disabled";
-			}
-			
-		});
-		metrics.addCustomChart(new Metrics.SimplePie("undisguisePermission") {
-			
-			public String getValue() {
-				return configuration.UNDISGUISE_PERMISSION ? "enabled" : "disabled";
-			}
-			
-		});
-		metrics.addCustomChart(new Metrics.SimplePie("ghostDisguise") {
-			
-			public String getValue() {
-				return "unavailable";
-			}
-			
-		});
+		metrics.addCustomChart(new Metrics.SingleLineChart("disguisedPlayers", () -> DisguiseManager.getNumberOfDisguisedPlayers()));
+		metrics.addCustomChart(new Metrics.SimplePie("storageType", () -> configuration.KEEP_DISGUISE_SHUTDOWN ? "file" : "none"));
+		metrics.addCustomChart(new Metrics.SimplePie("updateChecking", () -> configuration.UPDATE_CHECK ? configuration.UPDATE_DOWNLOAD ? "check and download" : "check only" : "disabled"));
+		metrics.addCustomChart(new Metrics.SimplePie("realisticSoundEffects", () -> configuration.REPLACE_SOUND_EFFECTS ? "enabled" : "disabled"));
+		metrics.addCustomChart(new Metrics.SimplePie("undisguisePermission", () -> configuration.UNDISGUISE_PERMISSION ? "enabled" : "disabled"));
+		metrics.addCustomChart(new Metrics.SimplePie("viewableDisguises", () -> configuration.DISGUISE_VIEW_SELF ? "enabled" : "disabled"));
+		metrics.addCustomChart(new Metrics.SimplePie("channelInjector", () -> ChannelInjector.getImplementationName()));
+		metrics.addCustomChart(new Metrics.SimplePie("ghostDisguise", () -> "unavailable"));
+		/* Metrics end */
+		
 		if(configuration.KEEP_DISGUISE_SHUTDOWN) {
 			loadDisguises();
 		}

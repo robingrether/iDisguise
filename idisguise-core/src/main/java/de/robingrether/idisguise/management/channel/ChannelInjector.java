@@ -44,6 +44,10 @@ public class ChannelInjector {
 		channelInjector.removeOnlinePlayers();
 	}
 	
+	public static String getImplementationName() {
+		return channelInjector instanceof NettyChannelInjector ? "Netty" : channelInjector instanceof ProtocolLibChannelInjector ? "ProtocolLib" : "unknown";
+	}
+	
 	static interface IChannelInjector {
 		
 		default void init() {}
