@@ -131,11 +131,16 @@ public class ProfileHelperUID extends ProfileHelper {
 					}
 					profilesById.put(uniqueId, profile);
 					profilesByName.put(profile.getName().toLowerCase(Locale.ENGLISH), profile);
-					UserCache_putProfile.invoke(MinecraftServer_getUserCache.invoke(MinecraftServer_getServer.invoke(null)), profile);
+					final GameProfile profile2 = profile;
 					final String skinName = name;
 					Bukkit.getScheduler().runTask(iDisguise.getInstance(), new Runnable() {
 						
 						public void run() {
+							try {
+								UserCache_putProfile.invoke(MinecraftServer_getUserCache.invoke(MinecraftServer_getServer.invoke(null)), profile2);
+							} catch(Exception e) { // fail silently
+							}
+							
 							for(Object disguisable : DisguiseManager.getDisguisedEntities()) {
 								if(disguisable instanceof OfflinePlayer) {
 									OfflinePlayer player = (OfflinePlayer)disguisable;

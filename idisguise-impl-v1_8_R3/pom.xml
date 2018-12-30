@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.robingrether.idisguise</groupId>
   <artifactId>idisguise-impl-v1_8_R3</artifactId>
-  <version>5.8.2</version>
+  <version>5.8.3-SNAPSHOT</version>
   <name>iDisguise Implementation 1.8 R3</name>
   
   <repositories>
