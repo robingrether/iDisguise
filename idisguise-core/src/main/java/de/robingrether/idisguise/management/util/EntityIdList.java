@@ -73,16 +73,10 @@ public final class EntityIdList {
 	}
 	
 	public static LivingEntity getEntityByEntityId(int entityId) {
-		if(VersionHelper.require1_12()) {
-			Entity entity = Bukkit.getEntity(entityUIDs.get(entityId));
-			return entity instanceof LivingEntity ? (LivingEntity)entity : null;
+		UUID uniqueId = entityUIDs.get(entityId);
+		if(uniqueId != null) {
+			return getEntityByUID(uniqueId);
 		} else {
-			try {
-				Object entity = MinecraftServer_getEntityByUID.invoke(MinecraftServer_getServer.invoke(null), entityUIDs.get(entityId));
-				return entity != null && Entity_getBukkitEntity.invoke(entity) instanceof LivingEntity ? (LivingEntity)Entity_getBukkitEntity.invoke(entity) : null;
-			} catch(IllegalAccessException|InvocationTargetException e) {
-				iDisguise.getInstance().getLogger().log(Level.SEVERE, "An unexpected exception occured.", e);
-			}
 			return null;
 		}
 	}
