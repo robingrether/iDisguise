@@ -427,6 +427,13 @@ public class Reflection {
 	public static Class<?> PacketPlayOutEntityVelocity;
 	public static Field PacketPlayOutEntityVelocity_entityId;
 	
+	public static Class<?> PacketPlayOutEntityStatus;
+	public static Field PacketPlayOutEntityStatus_entityId;
+	public static Field PacketPlayOutEntityStatus_statusCode;
+	
+	public static Class<?> PacketPlayOutEntityEquipment;
+	public static Constructor<?> PacketPlayOutEntityEquipment_new;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_\\.{}]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_\\.{}]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");
