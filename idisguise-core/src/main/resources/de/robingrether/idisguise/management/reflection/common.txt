@@ -169,6 +169,10 @@ PacketPlayOutEntityMetadata_metadataList->FPacketPlayOutEntityMetadata$b
 PacketPlayOutEntityMetadata_new_empty->NPacketPlayOutEntityMetadata()
 PacketPlayOutEntityMetadata_new_full->NPacketPlayOutEntityMetadata(int,{nms}.DataWatcher,boolean)
 
+PacketPlayOutEntityStatus->C{nms}.PacketPlayOutEntityStatus
+PacketPlayOutEntityStatus_entityId->FPacketPlayOutEntityStatus$a
+PacketPlayOutEntityStatus_statusCode->FPacketPlayOutEntityStatus$b
+
 PacketPlayOutEntityTeleport->C{nms}.PacketPlayOutEntityTeleport
 PacketPlayOutEntityTeleport_entityId->FPacketPlayOutEntityTeleport$a
 PacketPlayOutEntityTeleport_isOnGround->FPacketPlayOutEntityTeleport$g
