@@ -44,6 +44,8 @@ MinecraftServer_getEntityByUID->MMinecraftServer$a(java.util.UUID)
 
 PacketPlayInUseEntity_getAction->MPacketPlayInUseEntity$a()
 
+PacketPlayOutEntityEquipment_new->NPacketPlayOutEntityEquipment(int,int,{nms}.ItemStack)
+
 PacketPlayOutNamedEntitySpawn_dataWatcher->FPacketPlayOutNamedEntitySpawn$i
 
 PacketPlayOutNamedSoundEffect_pitch->FPacketPlayOutNamedSoundEffect$f

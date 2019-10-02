@@ -161,6 +161,8 @@ PacketPlayOutEntityDestroy_entityIds->FPacketPlayOutEntityDestroy$a
 PacketPlayOutEntityEffect->C{nms}.PacketPlayOutEntityEffect
 PacketPlayOutEntityEffect_new->NPacketPlayOutEntityEffect(int,{nms}.MobEffect)
 
+PacketPlayOutEntityEquipment->C{nms}.PacketPlayOutEntityEquipment
+
 PacketPlayOutEntityMetadata->C{nms}.PacketPlayOutEntityMetadata
 PacketPlayOutEntityMetadata_entityId->FPacketPlayOutEntityMetadata$a
 PacketPlayOutEntityMetadata_metadataList->FPacketPlayOutEntityMetadata$b

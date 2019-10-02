@@ -930,6 +930,22 @@ public final class PacketHandler {
 			return packet;
 		}});
 		
+		localHandlers.put(PacketPlayOutEntityStatus, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
+			if(PacketPlayOutEntityStatus_statusCode.getInt(packet) == 3) {
+				final UUID disguisable = EntityIdList.getEntityUIDByEntityId(PacketPlayOutEntityStatus_entityId.getInt(packet));
+				if(disguisable != null && !EntityIdList.isPlayer(disguisable) && DisguiseManager.isDisguisedTo(disguisable, observer) && DisguiseManager.getDisguise(disguisable) instanceof PlayerDisguise) {
+					List packets = new ArrayList();
+					int entityId = PacketPlayOutEntityStatus_entityId.getInt(packet);
+					for(Object slot : (VersionHelper.require1_9() ? (Object[])EnumItemSlot_values.invoke(null) : new Integer[] {0, 1, 2, 3, 4, 5})) {
+						packets.add(PacketPlayOutEntityEquipment_new.newInstance(entityId, slot, CraftItemStack_asNMSCopy.invoke(null, null)));
+					}
+					packets.add(packet);
+					return packets.toArray();
+				}
+			}
+			return packet;
+		}});
+		
 		localHandlers.put(PacketPlayInUseEntity, new IPacketHandler() { public Object handlePacket(final Player observer, final Object packet) throws Exception {
 			final UUID disguisable = EntityIdList.getEntityUIDByEntityId(PacketPlayInUseEntity_entityId.getInt(packet));
 			boolean attack = PacketPlayInUseEntity_getAction.invoke(packet).equals(EnumEntityUseAction_ATTACK.get(null));

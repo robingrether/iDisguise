@@ -434,6 +434,9 @@ public class Reflection {
 	public static Class<?> PacketPlayOutEntityEquipment;
 	public static Constructor<?> PacketPlayOutEntityEquipment_new;
 	
+	public static Class<?> EnumItemSlot;
+	public static Method EnumItemSlot_values;
+	
 	private static final Pattern basicPattern = Pattern.compile("([A-Za-z0-9_]+)->(C|F|M|N)(.+)");
 	private static final Pattern fieldPattern = Pattern.compile("([A-Za-z0-9_\\.{}]+)\\$(.+)");
 	private static final Pattern methodPattern = Pattern.compile("([A-Za-z0-9_\\.{}]+)\\$([^\\(\\)]+)\\(([^\\(\\)]*)\\)");

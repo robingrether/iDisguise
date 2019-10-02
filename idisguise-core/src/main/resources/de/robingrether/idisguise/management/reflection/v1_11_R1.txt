@@ -49,6 +49,9 @@ EnumEntityUseAction_ATTACK->FEnumEntityUseAction$ATTACK
 EnumGamemode->C{nms}.EnumGamemode
 EnumGamemode_SURVIVAL->FEnumGamemode$SURVIVAL
 
+EnumItemSlot->C{nms}.EnumItemSlot
+EnumItemSlot_values->MEnumItemSlot$values()
+
 CraftParticle->C{obc}.CraftParticle
 CraftParticle_toNMS->MCraftParticle$toNMS(org.bukkit.Particle)
 CraftParticle_getData->MCraftParticle$toData(org.bukkit.Particle,java.lang.Object)
@@ -69,6 +72,8 @@ MinecraftServer_getSessionService->MMinecraftServer$az()
 MinecraftServer_getEntityByUID->MMinecraftServer$a(java.util.UUID)
 
 PacketPlayInUseEntity_getAction->MPacketPlayInUseEntity$a()
+
+PacketPlayOutEntityEquipment_new->NPacketPlayOutEntityEquipment(int,EnumItemSlot,{nms}.ItemStack)
 
 PacketPlayOutNamedEntitySpawn_dataWatcher->FPacketPlayOutNamedEntitySpawn$h
 

@@ -48,6 +48,9 @@ EnumGamemode_SURVIVAL->FEnumGamemode$SURVIVAL
 EnumHorseType->C{nms}.EnumHorseType
 EnumHorseType_fromIndex->MEnumHorseType$a(int)
 
+EnumItemSlot->C{nms}.EnumItemSlot
+EnumItemSlot_values->MEnumItemSlot$values()
+
 CraftParticle->C{obc}.CraftParticle
 CraftParticle_toNMS->MCraftParticle$toNMS(org.bukkit.Particle)
 
@@ -67,6 +70,8 @@ MinecraftServer_getSessionService->MMinecraftServer$ay()
 MinecraftServer_getEntityByUID->MMinecraftServer$a(java.util.UUID)
 
 PacketPlayInUseEntity_getAction->MPacketPlayInUseEntity$a()
+
+PacketPlayOutEntityEquipment_new->NPacketPlayOutEntityEquipment(int,EnumItemSlot,{nms}.ItemStack)
 
 PacketPlayOutNamedEntitySpawn_dataWatcher->FPacketPlayOutNamedEntitySpawn$h
 
