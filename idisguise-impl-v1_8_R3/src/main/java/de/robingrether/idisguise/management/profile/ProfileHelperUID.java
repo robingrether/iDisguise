@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -119,7 +120,7 @@ public class ProfileHelperUID extends ProfileHelper {
 				connection.connect();
 				if(connection.getResponseCode() == 200) {
 					reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-					String response = reader.readLine();
+					String response = reader.lines().collect(Collectors.joining());
 					JSONObject object = (JSONObject)JSONValue.parse(response);
 					name = (String)object.get(API_UID_NAME);
 					profile = new GameProfile(uniqueId, name);
