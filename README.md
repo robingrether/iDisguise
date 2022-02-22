@@ -1,7 +1,7 @@
 # iDisguise
 Plugin for CraftBukkit and Spigot
 
-**This project is abandoned since November 2018!**
+**This project is recoded in early 2022!**
 
 ## Basic information
 This plugin allows you to turn into almost every entity that exists in Minecraft.  
@@ -20,26 +20,15 @@ So if you would like to develop your own fork of this repository, make sure to b
   <id>robingrether-repo</id>
   <url>http://repo.robingrether.de/</url>
 </repository>
-````
 
-If you need the core plugin (API...):
-````
+
 <dependency>
   <groupId>de.robingrether.idisguise</groupId>
-  <artifactId>idisguise-core</artifactId>
-  <version>5.8.2</version>
-</dependency>
-````
-
-If you need everything:
-````
-<dependency>
-  <groupId>de.robingrether.idisguise</groupId>
-  <artifactId>idisguise-full</artifactId>
-  <version>5.8.2</version>
+  <artifactId>idisguise</artifactId>
+  <version>6.0.1-SNAPSHOT</version>
 </dependency>
 ````
 
 ## Compiling
-In order to compile the whole plugin you have to clone/download this repository and build the project _idisguise-full_ using Maven.  
-Run _mvn build package_ and you will find the final jar file under _/idisguise-full/target/iDisguise-&lt;VERSION&gt;-&lt;TIMESTAMP&gt;.jar_.
+In order to compile the whole plugin you have to clone/download this repository and build the project _idisguise_ using Maven.  
+Run _mvn build package_ and you will find the final jar file under _/idisguise/target/idisguise-&lt;VERSION&gt;.jar_.
