@@ -17,7 +17,7 @@
   	</repository>
   	<repository>
   		<id>robingrether-repo</id>
-  		<url>http://repo.robingrether.de/</url>
+  		<url>https://www.robingrether.de/mc/repo/</url>
   	</repository>
   </repositories>
   

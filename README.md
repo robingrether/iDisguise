@@ -18,7 +18,7 @@ So if you would like to develop your own fork of this repository, make sure to b
 ````
 <repository>
   <id>robingrether-repo</id>
-  <url>http://repo.robingrether.de/</url>
+  <url>https://www.robingrether.de/mc/repo/</url>
 </repository>
 
 
