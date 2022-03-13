@@ -1,7 +1,9 @@
 package de.robingrether.idisguise;
 
 import java.beans.Statement;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -13,6 +15,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,13 +31,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import de.robingrether.util.ObjectUtil;
 
-import static de.robingrether.idisguise.Reflection.*;
+//import static de.robingrether.idisguise.Reflection.*;
 
 public class iDisguise extends JavaPlugin implements Listener {
 	
+	public static final List<String> BLACKLIST = Arrays.asList("DRAGON_FIREBALL", "EGG", "ENDER_CRYSTAL", "ENDER_DRAGON", "ENDER_PEARL", "ENDER_SIGNAL", "EVOKER_FANGS", "EXPERIENCE_ORB", "FALLING_BLOCK",
+			"FIREBALL", "FIREWORK", "FISHING_HOOK", "GLOW_ITEM_FRAME", "ITEM_FRAME", "LEASH_HITCH", "LIGHTNING", "LLAMA_SPIT", "PAINTING", "PRIMED_TNT", "SHULKER_BULLET", "SMALL_FIREBALL", "SNOWBALL", "SPLASH_POTION", "THROWN_EXP_BOTTLE",
+			"UNKNOWN", "WITHER_SKULL");
+	
 	public static final Pattern INT_VAL = Pattern.compile("[+-]?[0-9]+");
 	public static final Pattern DOUBLE_VAL = Pattern.compile("[+-]?[0-9]*\\.[0-9]+");
-	public static final Pattern ENUM_VAL = Pattern.compile("([A-Za-z0-9]+)\\.([A-Za-z0-9_]+)");
+	public static final Pattern ENUM_VAL = Pattern.compile("([A-Za-z0-9.]+)\\.([A-Za-z0-9_]+)");
 	public static final Pattern STRING_VAL = Pattern.compile("\".*\"");
 	
 	private static iDisguise INSTANCE;
@@ -83,39 +90,73 @@ public class iDisguise extends JavaPlugin implements Listener {
 			} else {
 				try {
 					EntityType type = EntityType.valueOf(args[0].toUpperCase(Locale.ENGLISH).replace('-', '_'));
-					Entity entity = disguise((Player)sender, type);
-					for(int i = 1; i < args.length; i++) {
-						String codeLine = args[i];
-						String[] codeFrags = codeLine.split("[()]", -1);
-						Statement statement = null;
-						if(codeFrags[1].length() == 0) {
-							statement = new Statement(entity, codeFrags[0], new Object[0]);
-						} else if(codeFrags[1].equals("true")) {
-							statement = new Statement(entity, codeFrags[0], new Object[] {true});
-						} else if(codeFrags[1].equals("false")) {
-							statement = new Statement(entity, codeFrags[0], new Object[] {false});
-						} else if(INT_VAL.matcher(codeFrags[1]).matches()) {
-							statement = new Statement(entity, codeFrags[0], new Object[] {Integer.valueOf(codeFrags[1])});
-						} else if(DOUBLE_VAL.matcher(codeFrags[1]).matches()) {
-							statement = new Statement(entity, codeFrags[0], new Object[] {Double.valueOf(codeFrags[1])});
-						} else if(ENUM_VAL.matcher(codeFrags[1]).matches()) {
-							Matcher m = ENUM_VAL.matcher(codeFrags[1]);
-							// TODO
-							statement = new Statement(entity, codeFrags[0], new Object[] {null});
-						} else if(STRING_VAL.matcher(codeFrags[1]).matches()) {
-							statement = new Statement(entity, codeFrags[0], new Object[] {codeFrags[1].substring(1, codeFrags[1].length() - 1)});
-						}
-						if(statement != null) {
-							try {
-								statement.execute();
-							} catch (Exception e) {
-								sender.sendMessage("Something went wrong with your additional statement!");
-								e.printStackTrace();
+					if(BLACKLIST.contains(type.name())) {
+						sender.sendMessage("Currently not supported!");
+					} else {
+						Entity entity = disguise((Player)sender, type);
+						for(int i = 1; i < args.length; i++) {
+							String codeLine = args[i];
+							String[] codeFrags = codeLine.split("[()]", -1);
+							Statement statement = null;
+							Matcher m;
+							if(codeFrags[1].length() == 0) {
+								statement = new Statement(entity, codeFrags[0], new Object[0]);
+							} else if(codeFrags[1].equals("true")) {
+								statement = new Statement(entity, codeFrags[0], new Object[] {true});
+							} else if(codeFrags[1].equals("false")) {
+								statement = new Statement(entity, codeFrags[0], new Object[] {false});
+							} else if(INT_VAL.matcher(codeFrags[1]).matches()) {
+								statement = new Statement(entity, codeFrags[0], new Object[] {Integer.valueOf(codeFrags[1])});
+							} else if(DOUBLE_VAL.matcher(codeFrags[1]).matches()) {
+								statement = new Statement(entity, codeFrags[0], new Object[] {Double.valueOf(codeFrags[1])});
+							} else if((m = ENUM_VAL.matcher(codeFrags[1])).matches()) {
+								Class<?> enumClazz = null;
+								try {
+									enumClazz = Class.forName(m.group(1));
+								} catch(ClassNotFoundException e) {
+									try {
+										enumClazz = Class.forName("org.bukkit.entity." + m.group(1));
+									} catch(ClassNotFoundException e2) {
+										for(Class<?> innerClazz : entity.getClass().getInterfaces()[0].getDeclaredClasses()) {
+											if(innerClazz.getSimpleName().equalsIgnoreCase(m.group(1))) {
+												enumClazz = innerClazz;
+												break;
+											}
+										}
+										if(enumClazz == null) {
+											try {
+												enumClazz = Class.forName("org.bukkit." + m.group(1));
+											} catch(ClassNotFoundException e3) {
+											}
+										}
+									}
+								}
+								if(enumClazz != null) {
+									try {
+										statement = new Statement(entity, codeFrags[0], new Object[] {enumClazz.getDeclaredField(m.group(2)).get(null)});
+									} catch(NoSuchFieldException|IllegalAccessException e) {
+										sender.sendMessage("Something went wrong with your additional statement!");
+										e.printStackTrace();
+									}
+								} else {
+									sender.sendMessage("Something went wrong with your additional statement!");
+								}
+							} else if(STRING_VAL.matcher(codeFrags[1]).matches()) {
+								statement = new Statement(entity, codeFrags[0], new Object[] {codeFrags[1].substring(1, codeFrags[1].length() - 1)});
+							}
+							if(statement != null) {
+								try {
+									statement.execute();
+								} catch (Exception e) {
+									sender.sendMessage("Something went wrong with your additional statement!");
+									e.printStackTrace();
+								}
 							}
 						}
+						sender.sendMessage("Disguised successfully!");
 					}
-					sender.sendMessage("Disguised successfully!");
 				} catch(IllegalArgumentException e) {
+					e.printStackTrace();
 					sender.sendMessage("I'm sorry. I do not know this disguise type.");
 				}
 			}
@@ -146,15 +187,17 @@ public class iDisguise extends JavaPlugin implements Listener {
 		entity.setMetadata("iDisguise", new FixedMetadataValue(this, player.getUniqueId()));
 		if(entity instanceof LivingEntity) {
 			((LivingEntity)entity).setAI(false);
-			Bukkit.getScheduler().runTaskLater(this, () -> {
+			/*Bukkit.getScheduler().runTaskLater(this, () -> {
 				try {
 					EntityTrackerEntry_clear.invoke(IntHashMap_get.invoke(EntityTracker_trackedEntities.get(WorldServer_entityTracker.get(Entity_world.get(CraftLivingEntity_getHandle.invoke(entity)))), entity.getEntityId()), CraftPlayer_getHandle.invoke(player));
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
-			}, 10L);
+			}, 10L);*/
 			//((LivingEntity)entity).setCollidable(false);
 			//player.setCollidable(false);
+		} else if(entity instanceof Item) {
+			((Item)entity).setPickupDelay(Integer.MAX_VALUE);
 		}
 		disguiseMap.put(player.getUniqueId(), entity);
 		for(Player observer : Bukkit.getOnlinePlayers()) {
